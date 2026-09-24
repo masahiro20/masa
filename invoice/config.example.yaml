@@ -1,0 +1,61 @@
+# 請求書設定のサンプル。
+# 実際の値は GitHub Secret「INVOICE_CONFIG」にこのYAMLを丸ごと貼り付けて管理する
+# （口座番号や取引先情報をリポジトリに置かないため）。
+
+issuer:
+  name: 山田 太郎                 # 屋号 or 氏名
+  postal: "〒100-0001"
+  address: 東京都千代田区千代田1-1
+  email: you@example.com
+  tel: 090-0000-0000
+  registration_number: ""        # インボイス登録番号（例: T1234567890123）。無ければ空
+  bank: |
+    ○○銀行 △△支店
+    普通 1234567
+    ヤマダ タロウ
+
+tax_rate: 0.10                   # 消費税率
+billing_month: previous          # 請求対象月: previous（前月分）/ current（当月分）
+prices_include_tax: false        # 単価が税込みなら true
+due: end_of_month                # 支払期限: end_of_month（当月末）/ end_of_next_month（翌月末）
+number_prefix: INV               # 請求番号 = INV-YYYYMM-01
+
+# 本文テンプレートで使える変数: {client_name} {contact} {year} {month} {total} {due_date} {issuer_name}
+mail:
+  subject: "【請求書】{year}年{month}月分 ご請求のご案内"
+  body: |
+    {client_name}
+    {contact}
+
+    いつもお世話になっております。{issuer_name}です。
+
+    {year}年{month}月分の請求書を添付にてお送りいたします。
+    ご請求金額：{total}円（税込）
+    お支払期限：{due_date}
+
+    ご確認のほど、よろしくお願いいたします。
+
+    {issuer_name}
+  bcc_self: true                 # 送信記録として自分にもBCC
+
+invoices:
+  - client_name: 株式会社サンプルA
+    honorific: 御中
+    contact: ご担当者様
+    to: [billing-a@example.com]
+    cc: []
+    subject: "{month}月分 業務委託費"   # 請求書の件名
+    items:
+      - name: "{month}月分 業務委託費"
+        quantity: 1
+        unit_price: 10000
+  - client_name: 株式会社サンプルB
+    honorific: 御中
+    contact: ご担当者様
+    to: [billing-b@example.com]
+    cc: []
+    subject: "{month}月分 利用料"
+    items:
+      - name: "{month}月分 利用料"
+        quantity: 1
+        unit_price: 5000

@@ -1,0 +1,40 @@
+name: 月次請求書の送信
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"   # 毎月1日 9:00 JST（GitHubの混雑で数十分遅れることあり）
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "pdf_only=作るだけ / test=自分宛てにテスト送信 / send=取引先に本番送信"
+        type: choice
+        options: [test, pdf_only, send]
+        default: test
+
+concurrency:
+  group: monthly-invoice
+  cancel-in-progress: false
+
+jobs:
+  invoice:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r invoice/requirements.txt
+      - name: 請求書の作成・送信
+        env:
+          INVOICE_CONFIG: ${{ secrets.INVOICE_CONFIG }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          MODE: ${{ github.event_name == 'schedule' && 'send' || inputs.mode }}
+        run: |
+          case "$MODE" in
+            pdf_only) python invoice/generate.py ;;
+            test)     python invoice/generate.py --send --test-to "$GMAIL_ADDRESS" ;;
+            send)     python invoice/generate.py --send ;;
+          esac
+      # PDFはArtifactにアップロードしない（公開リポジトリだと第三者がダウンロードできるため）。
+      # 控えは bcc_self で自分のGmailに残る。
