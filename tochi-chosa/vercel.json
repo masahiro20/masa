@@ -1,0 +1,6 @@
+{
+  "functions": {
+    "api/insight.js": { "maxDuration": 300 },
+    "api/survey.js": { "maxDuration": 60 }
+  }
+}

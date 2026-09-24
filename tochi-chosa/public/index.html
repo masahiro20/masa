@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>土地調査アシスタント</title>
+  <meta name="description" content="住所から用途地域・建蔽率・容積率・高さ制限・防火・ハザード・ライフラインの確認事項をまとめる一次調査ツール">
+  <meta name="theme-color" content="#1f5f8b">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>土地調査アシスタント</h1>
+    <button id="historyBtn" class="ghost" type="button">履歴</button>
+  </header>
+
+  <main>
+    <section class="card search">
+      <form id="searchForm" autocomplete="off">
+        <label for="address" class="sr-only">住所</label>
+        <input id="address" name="address" type="search" placeholder="例：愛知県名古屋市中区三の丸3-1-1" required>
+        <button type="submit" class="primary">調査</button>
+      </form>
+      <div class="search-sub">
+        <button id="locateBtn" type="button" class="ghost small">📍 現在地で調査</button>
+        <span class="hint">地図をタップ・ピンを移動して地点を微調整できます</span>
+      </div>
+      <ul id="candidates" class="candidates" hidden></ul>
+    </section>
+
+    <div id="status" class="status" hidden></div>
+
+    <section id="mapCard" class="card map-card" hidden>
+      <div id="map"></div>
+      <div class="map-tools">
+        <label><input type="checkbox" id="floodLayer"> 洪水浸水を重ねる</label>
+        <button id="resurveyBtn" type="button" class="small" hidden>この地点で再調査</button>
+      </div>
+      <p id="placeInfo" class="place-info"></p>
+    </section>
+
+    <div id="report" hidden>
+      <div id="keyNotice" class="notice" hidden>
+        不動産情報ライブラリの APIキーが未設定のため、用途地域・建蔽率・容積率・防火地域などは取得できていません。README の手順で設定してください。
+      </div>
+
+      <section class="card">
+        <h2>必須チェック項目</h2>
+        <dl id="mustList" class="checklist"></dl>
+      </section>
+
+      <section class="card">
+        <h2>現地・役所で確認した内容</h2>
+        <p class="hint">入力すると容積率の道路幅員制限・セットバック・概算ボリュームを自動で計算します（この端末に保存）。</p>
+        <form id="manualForm" class="manual">
+          <fieldset>
+            <legend>前面道路</legend>
+            <label>道路種別
+              <select name="roadType">
+                <option value="">未確認</option>
+                <option value="1-1">42条1項1号（道路法の道路）</option>
+                <option value="1-2">42条1項2号（開発道路等）</option>
+                <option value="1-3">42条1項3号（既存道路）</option>
+                <option value="1-4">42条1項4号（計画道路）</option>
+                <option value="1-5">42条1項5号（位置指定道路）</option>
+                <option value="2">42条2項道路</option>
+                <option value="43">法43条2項（例外許可・認定）</option>
+                <option value="none">建築基準法上の道路でない</option>
+              </select>
+            </label>
+            <label>幅員（m）<input name="roadWidth" type="number" inputmode="decimal" step="0.1" min="0"></label>
+            <label>接道長さ（m）<input name="frontage" type="number" inputmode="decimal" step="0.1" min="0"></label>
+            <label class="inline"><input name="corner" type="checkbox"> 角地</label>
+            <label>敷地面積（㎡）<input name="lotArea" type="number" inputmode="decimal" step="0.01" min="0"></label>
+          </fieldset>
+          <fieldset>
+            <legend>ライフライン</legend>
+            <label>上水 前面本管（mm）
+              <select name="waterMain">
+                <option value="">未確認</option>
+                <option>50</option><option>75</option><option>100</option><option>150</option><option>200</option>
+              </select>
+            </label>
+            <label>上水 既存引込（mm）
+              <select name="waterService">
+                <option value="">未確認／なし</option>
+                <option>13</option><option>20</option><option>25</option>
+              </select>
+            </label>
+            <label>下水
+              <select name="sewer">
+                <option value="">未確認</option>
+                <option value="public">公共下水道</option>
+                <option value="septic">浄化槽</option>
+                <option value="rural">農業集落排水</option>
+              </select>
+            </label>
+            <label>ガス
+              <select name="gas">
+                <option value="">未確認</option>
+                <option value="city">都市ガス</option>
+                <option value="lp">プロパン</option>
+                <option value="allElectric">オール電化予定</option>
+              </select>
+            </label>
+            <label>ガス本管（口径・位置など）<input name="gasMain" type="text" placeholder="例：前面道路に中圧B φ100"></label>
+          </fieldset>
+          <label class="full">メモ（電柱位置・高低差・越境・境界標など）
+            <textarea name="memo" rows="3"></textarea>
+          </label>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>ハザード</h2>
+        <ul id="hazardList" class="plain-list"></ul>
+      </section>
+
+      <section class="card">
+        <h2>その他の法令・周辺情報</h2>
+        <dl id="otherList" class="checklist"></dl>
+      </section>
+
+      <section class="card ai">
+        <div class="card-head">
+          <h2>AIによる見解</h2>
+          <button id="aiBtn" type="button" class="primary small">見解を生成</button>
+        </div>
+        <div id="aiOut" class="ai-out"><p class="hint">調査データと上の入力内容をもとに、プランへの影響・要確認事項・お客様への説明ポイントをまとめます。</p></div>
+      </section>
+
+      <section class="card">
+        <h2>確認先リンク</h2>
+        <div id="links"></div>
+      </section>
+
+      <div class="actions">
+        <button id="printBtn" type="button">印刷・PDF保存</button>
+      </div>
+
+      <p class="disclaimer">
+        本ツールの結果は公開データにもとづく一次調査です。データの更新時期・精度には限りがあり、地点の位置もずれる場合があります。
+        重要事項説明や設計の根拠とする際は、必ず市町村・各事業者の原本で確認してください。
+        <span id="fetchedAt"></span>
+      </p>
+    </div>
+  </main>
+
+  <dialog id="historyDialog">
+    <h2>調査履歴（この端末）</h2>
+    <ul id="historyList" class="history-list"></ul>
+    <form method="dialog"><button>閉じる</button></form>
+  </dialog>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
