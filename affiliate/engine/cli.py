@@ -21,6 +21,8 @@ from .quality import check_article
 
 log = logging.getLogger("engine")
 CHANGED_FILE = DATA_DIR / "last_changed.json"
+ALERT_FILE = DATA_DIR / "ALERT.md"
+ASP_MILESTONE = 10  # この記事数に達したら ASP 審査の申請を促す
 STATUS_FILE = DATA_DIR / "STATUS.md"
 
 
@@ -41,6 +43,7 @@ def cmd_autopilot(cfg: Config, args) -> int:
            "rejected": [], "errors": []}
     changed: list[str] = []
     base = cfg.site["base_url"].rstrip("/")
+    articles_before = len(load_articles())
 
     if not _has_credentials():
         log.warning("ANTHROPIC_API_KEY が未設定のため記事生成をスキップし、サイト生成のみ行います")
@@ -135,7 +138,30 @@ def cmd_autopilot(cfg: Config, args) -> int:
     with RUN_LOG_FILE.open("a", encoding="utf-8") as f:
         f.write(json.dumps(run, ensure_ascii=False) + "\n")
     write_status(cfg)
+    write_alerts(cfg, run, articles_before, len(load_articles()))
     return 0
+
+
+def write_alerts(cfg: Config, run: dict, articles_before: int, articles_after: int) -> None:
+    """人間の対応が必要なときだけ data/ALERT.md を書く（ワークフローが Issue コメントで通知する）。"""
+    alerts: list[str] = []
+    if any("ANTHROPIC_API_KEY" in e for e in run["errors"]):
+        alerts.append("**APIキーが未設定です。** GitHub の Settings → Secrets and variables → Actions に "
+                      "`ANTHROPIC_API_KEY` を登録してください。登録するまで記事は生成されません。")
+    elif any(e.startswith(("API:", "中断:")) for e in run["errors"]):
+        alerts.append("**API エラーで記事生成が止まりました。** APIのクレジット残高・キーの有効期限をご確認ください。\n\n"
+                      + "\n".join(f"- {e[:200]}" for e in run["errors"][:5]))
+    if any("上限に達しました" in e for e in run["errors"]):
+        alerts.append(f"**今月のAPI予算（${cfg.autopilot['monthly_budget_usd']}）に達したため生成を停止しました。** "
+                      "来月1日に自動で再開します。上限を変える場合は Claude Code のセッションで金額を伝えてください。")
+    unlinked = [p for p in cfg.programs if not (p.get("url") or "").strip()]
+    if articles_before < ASP_MILESTONE <= articles_after and unlinked:
+        alerts.append(f"**記事が{articles_after}本になりました。ASPの審査申請のタイミングです。** "
+                      f"A8.net・もしもアフィリエイトなどに登録し、提携できた案件の広告リンクを Claude Code のセッションに貼ってください（設定への反映はClaudeが行います）。")
+    if alerts:
+        ALERT_FILE.write_text("## 対応が必要です\n\n" + "\n\n".join(alerts) + "\n", encoding="utf-8")
+    elif ALERT_FILE.exists():
+        ALERT_FILE.unlink()
 
 
 def cmd_build(cfg: Config, args) -> int:

@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
   pages: write
   id-token: write
 
@@ -78,6 +79,22 @@ jobs:
             git pull --rebase origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
+
+      # 運用状況を1つの Issue にまとめ、対応が必要なときだけコメントで通知する（スマホに通知が届く）
+      - name: Report to issue
+        if: github.event_name != 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="アフィリエイト運用レポート"
+          NUM=$(gh issue list --state open --limit 100 --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -n1)
+          if [ -z "$NUM" ]; then
+            URL=$(gh issue create --title "$TITLE" --body-file data/STATUS.md)
+            NUM="${URL##*/}"
+          else
+            gh issue edit "$NUM" --body-file data/STATUS.md
+          fi
+          if [ -f data/ALERT.md ]; then gh issue comment "$NUM" --body-file data/ALERT.md; fi
 
       - uses: actions/upload-pages-artifact@v3
         with:

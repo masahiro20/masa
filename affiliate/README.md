@@ -44,7 +44,12 @@
 | ⑤ | 独自ドメインを取得し、`config/site.yaml` の `base_url` を変更して Pages のカスタムドメインに設定 | 15分 | 推奨 |
 | ⑥ | Search Console の API 用サービスアカウントを作り、JSON キーを `GSC_SERVICE_ACCOUNT_JSON`（Secret）、プロパティURLを `GSC_SITE_URL`（Variable）に登録 | 20分 | 任意 |
 
-①②が終われば毎朝自動で動きます。すぐに記事を増やしたいときは **Actions → affiliate-autopilot → Run workflow** で「今回生成する記事数」に `10` などを入れて実行してください。
+①②が終われば毎朝自動で動きます。
+
+運用状況は GitHub の Issue「アフィリエイト運用レポート」に毎日自動で反映されます。**対応が必要なとき（APIキー切れ・予算上限・ASP申請のタイミングなど）だけ Issue にコメントが付き、GitHub から通知が届きます。** 普段は何もしなくて大丈夫です。
+広告リンクや Search Console の確認コードなどは、Claude Code のセッションに貼るだけで設定ファイルへの反映まで行います（APIキーだけは GitHub の Secrets に直接登録してください）。
+
+すぐに記事を増やしたいときは **Actions → affiliate-autopilot → Run workflow** で「今回生成する記事数」に `10` などを入れて実行してください。
 
 提携前の案件は、記事中で「リンクなしの紹介」として表示されるだけなので、サイトが壊れることはありません。提携済みかどうかは `data/STATUS.md` で確認できます。
 
