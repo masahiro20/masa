@@ -87,3 +87,9 @@ test("用途地域が未取得なら高さ制限を『指定なし』と判定�
   assert.equal(get(r, "height").level, "none");
   assert.match(get(r, "height").value, /未取得/);
 });
+
+test("液状化は『しやすい』のときだけ注意", () => {
+  const liq = (傾向, 強弱6段階) => deriveFindings({ reinfo: [{ id: "liquefaction", status: "ok", hits: [{ 地形: "丘陵", 傾向, 強弱6段階 }] }], hazards: [] });
+  assert.equal(get(liq("液状化しにくい", 5), "liquefaction").level, "info");
+  assert.equal(get(liq("やや液状化しやすい", 3), "liquefaction").level, "warn");
+});

@@ -157,6 +157,8 @@ async function queryLandPrices(apiKey, lon, lat) {
       const points = features
         .map((f) => ({ p: f.properties || {}, d: distanceToGeometryM(f.geometry, lon, lat) }))
         .sort((a, b) => a.d - b.d)
+        // 同じ地点が地価公示（1月）と地価調査（7月）の両方に載ることがあるので、所在で重複を除く
+        .filter(({ p }, i, arr) => arr.findIndex((x) => (x.p.location || x.p.point_id) === (p.location || p.point_id)) === i)
         .slice(0, 3)
         .map(({ p, d }) => ({
           距離: `約${Math.round(d)}m`,

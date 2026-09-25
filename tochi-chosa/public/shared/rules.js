@@ -222,7 +222,7 @@ export function deriveFindings({ reinfo = [], hazards = [], manual = {}, city = 
     const advancedUse = firstHit(reinfo, "advancedUse");
     const nearbyAltitude = (reinfo.find((r) => r.id === "landPrice")?.hits || []).map((p) => p.高度地区).find(Boolean);
     add("height", "高さ制限", [h.absolute, ...h.lines].join(" ／ "), zone == null ? "check" : "info",
-      [h.shadow, nearbyAltitude ? `近隣の地価公示地点に「${nearbyAltitude}」の指定あり。高度地区を要確認` : "高度地区（北側・絶対高さ）の指定は市町村の都市計画図で要確認", advancedUse ? `高度利用地区：${advancedUse.名称}` : ""].filter(Boolean).join("。"));
+      [h.shadow, nearbyAltitude ? `近隣の地価公示地点に「${nearbyAltitude}」の指定あり。高度地区を要確認` : "高度地区（北側・絶対高さ）の指定は市町村の都市計画図で要確認", advancedUse ? `高度利用地区：${advancedUse.名称 || advancedUse.区分 || "指定あり"}（容積率の最低限度・壁面の位置等を要確認）` : ""].filter(Boolean).join("。"));
     add("wallSetback", "壁面後退", district ? `地区計画「${district.計画名}」区域内` : h.wallSetback,
       district ? "warn" : zone && LOW_RISE.includes(zone) ? "check" : "info",
       district ? "地区計画で壁面の位置・高さ・用途・最低敷地面積・垣柵等が定められている可能性大。計画書を要確認" : "建築協定・景観計画の有無もあわせて確認");
@@ -272,7 +272,8 @@ export function deriveFindings({ reinfo = [], hazards = [], manual = {}, city = 
       id === "disasterZone" ? "条例による建築制限（床高・構造等）あり" : id === "embankment" ? "地盤調査・擁壁の状況を確認" : "");
   }
   const liq = firstHit(reinfo, "liquefaction");
-  if (liq) add("liquefaction", "液状化の傾向", `${liq.傾向 || ""}（${liq.地形 || ""}）`, Number(liq.強弱6段階) >= 4 ? "warn" : "info");
+  // 強弱6段階は数値が小さいほど液状化しやすい。表記（しやすい／しにくい）で判定する
+  if (liq) add("liquefaction", "液状化の傾向", `${liq.傾向 || ""}（${liq.地形 || ""}）`, /しやすい/.test(liq.傾向 || "") ? "warn" : "info");
 
   // --- ライフライン ---
   const lp = (reinfo.find((r) => r.id === "landPrice")?.hits || [])[0];

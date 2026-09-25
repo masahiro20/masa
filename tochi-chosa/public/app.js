@@ -197,11 +197,14 @@ function renderAll() {
 
   // 必須項目
   const mustRows = MUST.map((m) => row(m.label, m.keys.flatMap(byKey), m.empty));
-  const hz = findings.filter((f) => HAZARD_KEY(f.key));
+  // 注意以上のハザードだけを並べ、「液状化しにくい」などの情報は補足に回す
+  const hzAll = findings.filter((f) => HAZARD_KEY(f.key));
+  const hz = hzAll.filter((f) => f.level !== "info");
+  const hzInfo = hzAll.filter((f) => f.level === "info").map((f) => `${f.label}：${f.value}`);
   mustRows.push(
     hz.length
-      ? row("ハザード", hz.map((f) => ({ ...f, value: `${f.label}：${f.value}` })))
-      : `<div class="row"><dt>ハザード</dt><dd>${badge("info")}洪水・高潮・津波・土砂災害の想定区域に該当なし（地点）<span class="note">内水氾濫・ため池は市町村のハザードマップで確認</span></dd></div>`
+      ? row("ハザード", [...hz.map((f) => ({ ...f, value: `${f.label}：${f.value}` })), ...hzInfo.map((v) => ({ level: "info", value: v }))])
+      : `<div class="row"><dt>ハザード</dt><dd>${badge("info")}洪水・高潮・津波・土砂災害の想定区域に該当なし（地点）<span class="note">${esc([...hzInfo, "内水氾濫・ため池は市町村のハザードマップで確認"].join("。"))}</span></dd></div>`
   );
   $("#mustList").innerHTML = mustRows.join("");
 
