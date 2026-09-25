@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page_title %}{{ page_title }}｜{% endif %}{{ site.name }}</title>
+{% if page_description %}<meta name="description" content="{{ page_description }}">{% endif %}
+<link rel="canonical" href="{{ url }}">
+{% if noindex %}<meta name="robots" content="noindex">{% endif %}
+{% if site.gsc_verification %}<meta name="google-site-verification" content="{{ site.gsc_verification }}">{% endif %}
+<meta property="og:type" content="{% if article %}article{% else %}website{% endif %}">
+<meta property="og:title" content="{{ page_title or site.name }}">
+<meta property="og:description" content="{{ page_description }}">
+<meta property="og:url" content="{{ url }}">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="{{ base_url }}/feed.xml">
+<link rel="stylesheet" href="{{ base_url }}/static/style.css">
+{% if site.ga4_measurement_id %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.ga4_measurement_id }}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{{ site.ga4_measurement_id }}');
+document.addEventListener('click',function(e){var a=e.target.closest('a[rel~="sponsored"]');if(a){gtag('event','affiliate_click',{link_url:a.href,page_path:location.pathname});}});</script>
+{% endif %}
+{% block head %}{% endblock %}
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-name" href="{{ base_url }}/">{{ site.name }}</a>
+    <nav class="cat-nav">
+      {% for slug, name in categories.items() %}<a href="{{ base_url }}/category/{{ slug }}/">{{ name }}</a>{% endfor %}
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+{% block content %}{% endblock %}
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-note">当サイトはアフィリエイトプログラムを利用して商品・サービスを紹介しており、記事内のリンクから申込があった場合に広告主から報酬を受け取ることがあります。掲載内容は公開情報をもとに編集部が作成しています。</p>
+    <nav class="footer-nav">
+      <a href="{{ base_url }}/about/">運営者情報</a>
+      <a href="{{ base_url }}/ad-policy/">広告掲載ポリシー</a>
+      <a href="{{ base_url }}/privacy/">プライバシーポリシー</a>
+      <a href="{{ base_url }}/contact/">お問い合わせ</a>
+    </nav>
+    <p class="copy">&copy; {{ year }} {{ site.name }}</p>
+  </div>
+</footer>
+</body>
+</html>

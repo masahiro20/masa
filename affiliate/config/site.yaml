@@ -1,0 +1,46 @@
+# サイト全体の設定。ここを書き換えるだけでジャンル・公開先・投稿ペースを変えられます。
+
+site:
+  name: "キャリアとスキルの羅針盤"
+  tagline: "プログラミング学習・IT転職・Web開発ツールを、公開情報をもとに比較・解説"
+  # 独自ドメイン取得後は https://example.com のように変更する（末尾スラッシュなし）
+  base_url: "https://masahiro20.github.io/masa"
+  language: "ja"
+  operator_name: "キャリアとスキルの羅針盤 編集部"
+  contact_email: ""          # 空のままだと問い合わせページはフォーム案内なしで表示
+  contact_form_url: ""       # Googleフォーム等のURL
+  ga4_measurement_id: ""     # 例: G-XXXXXXXXXX（任意）
+  gsc_verification: ""       # Search Console の HTML タグ認証用 content 値（任意）
+
+# 扱うジャンル。planner（キーワード選定）と writer（記事生成）に渡される。
+niche:
+  theme: "プログラミング学習・IT転職・Web制作ツール"
+  audience: "未経験〜初級からITスキルを身につけて転職・副業・キャリアアップを目指す20〜40代の社会人"
+  categories:
+    - slug: school
+      name: プログラミングスクール
+    - slug: career
+      name: IT転職・エージェント
+    - slug: tools
+      name: サーバー・Webツール
+    - slug: learning
+      name: 独学・学習法
+
+# 自動運用の設定
+autopilot:
+  model: "claude-opus-5"
+  articles_per_run: 2            # 1回の実行で公開する最大記事数（1日1回実行 → 月約60本）
+  min_queue_size: 15             # キーワードの在庫がこれを下回ったら自動で補充
+  refresh_per_run: 1             # 1回の実行で見直す既存記事の最大数
+  refresh_after_days: 90         # 公開からこの日数を超えた記事は情報更新の対象
+  monthly_budget_usd: 150        # API費用の月間上限（超えたら生成を停止）
+  max_repair_attempts: 1         # 品質チェック不合格時の自動修正回数
+  min_editor_score: 7            # AI編集長レビューの合格点（10点満点）
+
+# 品質ゲート（自動チェック）の基準
+quality:
+  min_chars: 4000
+  max_chars: 20000
+  min_h2: 4
+  min_sources: 2
+  max_similarity: 0.45           # 既存記事との類似度上限（文字3-gram Jaccard）

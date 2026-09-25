@@ -1,0 +1,76 @@
+# 記事テーマの在庫（キュー）。planner が自動で補充・並べ替えし、writer が上から順に記事化します。
+# status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
+# intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
+keywords:
+  - keyword: プログラミングスクール 選び方 社会人
+    intent: commercial
+    category: school
+    program: school-general
+    score: 0
+    status: queued
+  - keyword: プログラミングスクール 給付金 対象 条件
+    intent: commercial
+    category: school
+    program: school-kyufukin
+    score: 0
+    status: queued
+  - keyword: 未経験 エンジニア転職 エージェント 使い方
+    intent: commercial
+    category: career
+    program: career-it-agent
+    score: 0
+    status: queued
+  - keyword: プログラミングスクール 無料カウンセリング 聞くべきこと
+    intent: transactional
+    category: school
+    program: school-general
+    score: 0
+    status: queued
+  - keyword: レンタルサーバー 選び方 初心者 WordPress
+    intent: commercial
+    category: tools
+    program: tools-rental-server
+    score: 0
+    status: queued
+  - keyword: 30代 未経験 エンジニア 転職 現実
+    intent: informational
+    category: career
+    program: career-it-agent
+    score: 0
+    status: queued
+  - keyword: フリーランスエンジニア 案件 獲得 方法
+    intent: commercial
+    category: career
+    program: career-freelance
+    score: 0
+    status: queued
+  - keyword: Python 独学 ロードマップ 社会人
+    intent: informational
+    category: learning
+    program: learning-online-course
+    score: 0
+    status: queued
+  - keyword: プログラミングスクール 後悔 理由 対策
+    intent: commercial
+    category: school
+    program: school-general
+    score: 0
+    status: queued
+  - keyword: ブログ 始め方 WordPress サーバー ドメイン 手順
+    intent: transactional
+    category: tools
+    program: tools-rental-server
+    score: 0
+    status: queued
+  - keyword: 転職エージェント IT 複数登録 メリット
+    intent: commercial
+    category: career
+    program: career-it-agent
+    score: 0
+    status: queued
+  - keyword: Webデザイナー 未経験 スクール 必要か
+    intent: commercial
+    category: school
+    program: school-general
+    score: 0
+    status: queued
