@@ -31,11 +31,23 @@ PRICES = {
 WEB_SEARCH_USD = 10.0 / 1000
 
 
+_BAD_KEY_CHARS = re.compile(r"[\s\x00-\x1f\x7f]")
+
+
 def api_key_from_env() -> str | None:
-    """Secrets に貼り付けたキーの前後に改行・空白が混ざっていても動くようにする。
+    """Secrets に貼り付けたキーに改行・空白が混ざっていても動くようにする。
+    APIキー自体に空白は含まれないので、前後・途中を問わずすべて取り除く。
     （混ざったままだと HTTP ヘッダーが不正になり「Connection error.」になる）"""
-    key = os.environ.get("ANTHROPIC_API_KEY")
-    return key.strip() if key and key.strip() else None
+    key = _BAD_KEY_CHARS.sub("", os.environ.get("ANTHROPIC_API_KEY") or "")
+    return key or None
+
+
+def api_key_diagnostics() -> str:
+    """キーそのものは出さずに、形式の問題を見つけるための情報だけを返す。"""
+    raw = os.environ.get("ANTHROPIC_API_KEY") or ""
+    key = api_key_from_env() or ""
+    return (f"APIキー: sk-ant-で始まる={key.startswith('sk-ant-')} 長さ={len(key)} "
+            f"取り除いた空白・改行={len(raw) - len(key)}文字 ASCIIのみ={key.isascii()}")
 
 
 _KEY_RE = re.compile(r"sk-ant-[A-Za-z0-9_\-]+")

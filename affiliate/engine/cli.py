@@ -33,7 +33,7 @@ def _has_credentials() -> bool:
 def cmd_autopilot(cfg: Config, args) -> int:
     import anthropic
 
-    from .llm import LLM, BudgetExceeded, RefusedError, describe_error
+    from .llm import LLM, BudgetExceeded, RefusedError, api_key_diagnostics, describe_error
     from .optimizer import fetch_gsc_pages, select_refresh_candidates
     from .planner import KeywordQueue, replenish
     from .writer import Writer
@@ -49,6 +49,7 @@ def cmd_autopilot(cfg: Config, args) -> int:
         log.warning("ANTHROPIC_API_KEY が未設定のため記事生成をスキップし、サイト生成のみ行います")
         run["errors"].append("ANTHROPIC_API_KEY 未設定")
     else:
+        log.info("%s", api_key_diagnostics())
         llm = LLM(ap["model"], ap["monthly_budget_usd"])
         writer = Writer(cfg, llm)
         queue = KeywordQueue()
