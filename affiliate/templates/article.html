@@ -1,35 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="wrap">
-  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>›</span><a href="{{ base_url }}/category/{{ article.category }}/">{{ category.name }}</a></nav>
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>/</span><a href="{{ base_url }}/category/{{ article.category }}/">{{ category.name }}</a></nav>
   <article class="article">
     <header class="article-header">
-      <a class="chip" href="{{ base_url }}/category/{{ article.category }}/" style="--cat: {{ category.color }}">{{ category.name }}</a>
+      <a class="label" href="{{ base_url }}/category/{{ article.category }}/" style="--cat: {{ category.color }}">{{ category.name }}</a>
       <h1>{{ article.title }}</h1>
-      <p class="meta">
+      <p class="lead">{{ article.description }}</p>
+      <p class="byline">
+        <span>文・編集　<a href="{{ base_url }}/about/">{{ site.operator_name }}</a></span>
         {% if article.updated and article.updated != article.published %}<span>更新 <time datetime="{{ article.updated }}">{{ article.updated | replace('-', '.') }}</time></span>{% endif %}
         <span>公開 <time datetime="{{ article.published }}">{{ article.published | replace('-', '.') }}</time></span>
-        <span>約{{ minutes }}分で読めます</span>
-        <span><a href="{{ base_url }}/about/">{{ site.operator_name }}</a></span>
+        <span>約{{ minutes }}分</span>
       </p>
-      <p class="pr-notice"><span class="pr-badge">PR</span>本記事にはアフィリエイト広告（プロモーション）が含まれています。</p>
     </header>
+    <p class="pr-notice"><span class="pr-tag">PR</span>本記事にはアフィリエイト広告が含まれています。</p>
     <img class="cover" src="{{ cover_url(article) }}" alt="{{ article.title }}" width="1200" height="630" fetchpriority="high">
-    {% if toc %}<details class="toc" open><summary>目次</summary>{{ toc | safe }}</details>{% endif %}
+    {% if toc %}<nav class="toc" aria-label="目次"><p class="toc-title">目次</p>{{ toc | safe }}</nav>{% endif %}
     <div class="body">{{ body | safe }}</div>
 
     {% if article.sources %}
     <section class="sources">
       <h2>参考情報・出典</h2>
       <ol>{% for s in article.sources %}<li><a href="{{ s.url }}" target="_blank" rel="noopener nofollow">{{ s.title }}</a></li>{% endfor %}</ol>
-      <p class="note">料金・条件などは変更される場合があります。お申込み前に必ず各公式サイトで最新情報をご確認ください。</p>
+      <p class="note">料金・条件などは変更される場合があります。お申込み前に各公式サイトで最新情報をご確認ください。</p>
     </section>
     {% endif %}
 
-    <aside class="editor-box">
-      <div class="editor-head">{{ logo | safe }}<div><p class="editor-name">{{ site.operator_name }}</p><p class="editor-role">記事の調査・執筆・編集</p></div></div>
-      <p>公式サイトや公的機関の公開情報をもとに、サービス選びの判断材料を整理しています。料金や制度などの事実には出典を示し、定期的に内容を見直しています。誤りにお気づきの場合は<a href="{{ base_url }}/contact/">お問い合わせ</a>からお知らせください。</p>
-      <p class="editor-links"><a href="{{ base_url }}/about/">編集方針</a><a href="{{ base_url }}/ad-policy/">広告掲載ポリシー</a></p>
+    <aside class="about-article">
+      <p class="about-title">この記事について</p>
+      <p>{{ site.operator_name }}が、公式サイトや公的機関の公開情報をもとに調査・執筆しました。料金や制度などの事実には出典を示し、定期的に内容を見直しています。誤りにお気づきの場合は<a href="{{ base_url }}/contact/">お問い合わせ</a>からお知らせください。</p>
+      <p class="about-links"><a href="{{ base_url }}/about/">編集方針</a><a href="{{ base_url }}/ad-policy/">広告掲載ポリシー</a></p>
     </aside>
   </article>
 </div>
@@ -37,8 +38,8 @@
 {% if related %}
 <section class="related">
   <div class="wrap wide">
-    <h2 class="section-title">あわせて読みたい</h2>
-    <ul class="cards">{% for a in related %}{% include "_card.html" %}{% endfor %}</ul>
+    <h2 class="section-title"><span>関連する記事</span></h2>
+    <ul class="grid">{% for a in related %}{% include "_card.html" %}{% endfor %}</ul>
   </div>
 </section>
 {% endif %}
