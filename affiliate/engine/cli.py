@@ -33,7 +33,7 @@ def _has_credentials() -> bool:
 def cmd_autopilot(cfg: Config, args) -> int:
     import anthropic
 
-    from .llm import LLM, BudgetExceeded, RefusedError
+    from .llm import LLM, BudgetExceeded, RefusedError, describe_error
     from .optimizer import fetch_gsc_pages, select_refresh_candidates
     from .planner import KeywordQueue, replenish
     from .writer import Writer
@@ -68,15 +68,15 @@ def cmd_autopilot(cfg: Config, args) -> int:
                     result = writer.write(item)
                 except anthropic.APIError as e:
                     # 認証・障害などテーマと無関係のエラー: テーマは在庫に残して今回は終了
-                    log.error("API エラーのため今回の執筆を中断: %s", e)
-                    run["errors"].append(f"API: {e}")
+                    log.error("API エラーのため今回の執筆を中断: %s", describe_error(e))
+                    run["errors"].append(f"API: {describe_error(e)}")
                     break
                 except (RefusedError, RuntimeError, json.JSONDecodeError, KeyError) as e:
                     if isinstance(e, BudgetExceeded):
                         raise
-                    log.error("執筆エラー: %s", e)
+                    log.error("執筆エラー: %s", describe_error(e))
                     result = None
-                    run["errors"].append(f"{item['keyword']}: {e}")
+                    run["errors"].append(f"{item['keyword']}: {describe_error(e)}")
                 if result is not None and result.article is not None:
                     path = result.article.save()
                     item["status"] = "published"
@@ -95,7 +95,7 @@ def cmd_autopilot(cfg: Config, args) -> int:
                 try:
                     gsc = fetch_gsc_pages()
                 except Exception as e:  # noqa: BLE001 - GSC 障害で全体を止めない
-                    log.warning("Search Console の取得に失敗: %s", e)
+                    log.warning("Search Console の取得に失敗: %s", describe_error(e))
                     gsc = None
                 candidates = select_refresh_candidates(
                     load_articles(), base_url=base, limit=refresh_n,
@@ -106,12 +106,12 @@ def cmd_autopilot(cfg: Config, args) -> int:
                     try:
                         result = writer.refresh(article, reason)
                     except anthropic.APIError as e:
-                        run["errors"].append(f"API: {e}")
+                        run["errors"].append(f"API: {describe_error(e)}")
                         break
                     except (RefusedError, RuntimeError, json.JSONDecodeError, KeyError) as e:
                         if isinstance(e, BudgetExceeded):
                             raise
-                        run["errors"].append(f"refresh {article.slug}: {e}")
+                        run["errors"].append(f"refresh {article.slug}: {describe_error(e)}")
                         continue
                     if result.article is not None:
                         result.article.save()
@@ -120,12 +120,12 @@ def cmd_autopilot(cfg: Config, args) -> int:
                     else:
                         run["errors"].append(f"refresh {article.slug} 不合格: {result.issues[:3]}")
         except BudgetExceeded as e:
-            log.warning("%s", e)
+            log.warning("%s", describe_error(e))
             run["errors"].append(str(e))
         except (anthropic.APIError, RefusedError, json.JSONDecodeError) as e:
             # キーワード補充などの失敗でもサイト生成・公開までは必ず進める
-            log.error("生成処理を中断: %s", e)
-            run["errors"].append(f"中断: {e}")
+            log.error("生成処理を中断: %s", describe_error(e))
+            run["errors"].append(f"中断: {describe_error(e)}")
         queue.save()
 
     from .site import build_site

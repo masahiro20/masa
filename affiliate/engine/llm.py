@@ -7,6 +7,8 @@
 from __future__ import annotations
 
 import json
+import os
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -27,6 +29,24 @@ PRICES = {
     "claude-haiku-4-5": (1.0, 5.0),
 }
 WEB_SEARCH_USD = 10.0 / 1000
+
+
+def api_key_from_env() -> str | None:
+    """Secrets に貼り付けたキーの前後に改行・空白が混ざっていても動くようにする。
+    （混ざったままだと HTTP ヘッダーが不正になり「Connection error.」になる）"""
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    return key.strip() if key and key.strip() else None
+
+
+_KEY_RE = re.compile(r"sk-ant-[A-Za-z0-9_\-]+")
+
+
+def describe_error(e: BaseException) -> str:
+    """ログ・Issue・コミットに残すエラー文。APIキーらしき文字列は必ず伏せる。"""
+    text = f"{type(e).__name__}: {e}"
+    if e.__cause__ is not None:
+        text += f"（原因: {type(e.__cause__).__name__}）"
+    return _KEY_RE.sub("sk-ant-***", text)
 
 
 class BudgetExceeded(RuntimeError):
@@ -64,7 +84,7 @@ def month_spend(usage_file: Path = USAGE_FILE, now: datetime | None = None) -> f
 
 class LLM:
     def __init__(self, model: str, monthly_budget_usd: float, usage_file: Path = USAGE_FILE):
-        self.client = anthropic.Anthropic(max_retries=4)
+        self.client = anthropic.Anthropic(api_key=api_key_from_env(), max_retries=4)
         self.model = model
         self.monthly_budget_usd = monthly_budget_usd
         self.usage_file = usage_file
