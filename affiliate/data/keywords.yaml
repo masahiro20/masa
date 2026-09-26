@@ -2,41 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 40代 未経験 IT転職 可能性 戦略
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 12000.0
-  status: published
-  slug: it-career-change-40s-inexperienced-strategy
-- keyword: プログラミングスクール 無料カウンセリング 聞くべきこと
-  intent: transactional
-  category: school
-  program: school-general
-  score: 10000.0
-  status: published
-  slug: programming-school-counseling-questions
-- keyword: プログラミングスクール 給付金 対象 条件
-  intent: commercial
-  category: school
-  program: school-kyufukin
-  score: 9600.0
-  status: published
-  slug: programming-school-kyufukin-conditions
-- keyword: リスキリング 補助金 個人 使える 制度 比較
-  intent: commercial
-  category: school
-  program: school-kyufukin
-  score: 9600.0
-  status: published
-  slug: reskilling-hojokin-kojin-hikaku
-- keyword: プログラミングスクール 給付金 併用 転職エージェント
-  intent: commercial
-  category: school
-  program: school-kyufukin
-  score: 9600.0
-  status: published
-  slug: programming-school-kyufukin-heiyo-agent
 - keyword: プログラミングスクール 選び方 社会人
   intent: commercial
   category: school
@@ -183,6 +148,13 @@ keywords:
   score: 16000.0
   status: published
   slug: freelance-engineer-unit-price-by-skill
+- keyword: 40代 未経験 IT転職 可能性 戦略
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 12000.0
+  status: published
+  slug: it-career-change-40s-inexperienced-strategy
 - keyword: 未経験 エンジニア転職 エージェント 使い方
   intent: commercial
   category: career
@@ -204,3 +176,31 @@ keywords:
   score: 12000.0
   status: published
   slug: infra-engineer-mikeiken-tenshoku-kyujin
+- keyword: プログラミングスクール 無料カウンセリング 聞くべきこと
+  intent: transactional
+  category: school
+  program: school-general
+  score: 10000.0
+  status: published
+  slug: programming-school-counseling-questions
+- keyword: プログラミングスクール 給付金 対象 条件
+  intent: commercial
+  category: school
+  program: school-kyufukin
+  score: 9600.0
+  status: published
+  slug: programming-school-kyufukin-conditions
+- keyword: リスキリング 補助金 個人 使える 制度 比較
+  intent: commercial
+  category: school
+  program: school-kyufukin
+  score: 9600.0
+  status: published
+  slug: reskilling-hojokin-kojin-hikaku
+- keyword: プログラミングスクール 給付金 併用 転職エージェント
+  intent: commercial
+  category: school
+  program: school-kyufukin
+  score: 9600.0
+  status: published
+  slug: programming-school-kyufukin-heiyo-agent
