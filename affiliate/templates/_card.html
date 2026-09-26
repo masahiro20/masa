@@ -1,0 +1,11 @@
+{% set c = categories.get(a.category) %}
+<li class="card">
+  <a href="{{ base_url }}/{{ a.url_path }}">
+    <img class="card-img" src="{{ cover_url(a) }}" alt="" width="1200" height="630" loading="lazy" decoding="async">
+    <span class="card-text">
+      {% if c %}<span class="chip" style="--cat: {{ c.color }}">{{ c.name }}</span>{% endif %}
+      <span class="card-title">{{ a.title }}</span>
+      <time class="card-date" datetime="{{ a.updated }}">{{ a.updated | replace('-', '.') }} 更新</time>
+    </span>
+  </a>
+</li>

@@ -92,6 +92,30 @@ def cmd_autopilot(cfg: Config, args) -> int:
                     run["rejected"].append(item["keyword"])
                 queue.save()
 
+            enhance_n = args.enhance if args.enhance is not None else ap.get("enhance_per_run", 0)
+            if enhance_n:
+                from .blocks import count_blocks
+
+                targets = [a for a in load_articles() if a.origin == "ai" and count_blocks(a.body) == 0]
+                for article in targets[:enhance_n]:
+                    log.info("リニューアル: %s", article.slug)
+                    try:
+                        result = writer.enhance(article)
+                    except anthropic.APIError as e:
+                        run["errors"].append(f"API: {describe_error(e)}")
+                        break
+                    except (RefusedError, RuntimeError, json.JSONDecodeError, KeyError) as e:
+                        if isinstance(e, BudgetExceeded):
+                            raise
+                        run["errors"].append(f"enhance {article.slug}: {describe_error(e)}")
+                        continue
+                    if result.article is not None:
+                        result.article.save()
+                        run.setdefault("enhanced", []).append(article.slug)
+                        changed.append(f"{base}/{article.url_path}")
+                    else:
+                        run["errors"].append(f"enhance {article.slug} 不合格: {result.issues[:3]}")
+
             refresh_n = args.refresh if args.refresh is not None else ap["refresh_per_run"]
             if refresh_n:
                 try:
@@ -184,8 +208,9 @@ def cmd_check(cfg: Config, args) -> int:
     articles = load_articles()
     failed = 0
     for a in articles:
+        # 公開済み記事の図解不足は enhance ステップで自動リニューアルされるので、ここでは失敗扱いにしない
         report = check_article(a, quality=cfg.quality, programs=cfg.programs_by_id,
-                               categories=set(cfg.category_names), existing=articles)
+                               categories=set(cfg.category_names), existing=articles, require_blocks=False)
         if not report.passed:
             failed += 1
             print(f"NG {a.slug}: " + " / ".join(report.issues))
@@ -232,7 +257,7 @@ def write_status(cfg: Config) -> None:
         lines += ["## 直近の実行", "", "| 日時 | 公開 | 改善 | 見送り | エラー |", "|---|---|---|---|---|"]
         for r in runs[-10:][::-1]:
             errs = "; ".join(r.get("errors", []))[:120].replace("|", "/")
-            lines.append(f"| {r['ts']} | {len(r['published'])} | {len(r['refreshed'])} | {len(r['rejected'])} | {errs} |")
+            lines.append(f"| {r['ts']} | {len(r['published'])} | {len(r['refreshed']) + len(r.get('enhanced', []))} | {len(r['rejected'])} | {errs} |")
         lines.append("")
     STATUS_FILE.write_text("\n".join(lines), encoding="utf-8")
 
@@ -250,6 +275,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("autopilot")
     p.add_argument("--articles", type=int, default=None, help="今回生成する記事数（既定は設定値）")
     p.add_argument("--refresh", type=int, default=None, help="今回改善する既存記事数（既定は設定値）")
+    p.add_argument("--enhance", type=int, default=None, help="今回リニューアルする既存記事数（既定は設定値）")
     for name in ("build", "check", "ping", "status"):
         sub.add_parser(name)
     args = parser.parse_args(argv)

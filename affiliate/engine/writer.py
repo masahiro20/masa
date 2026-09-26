@@ -62,6 +62,10 @@ def _article_json(article: Article) -> dict:
     }
 
 
+def _existing(articles: list[Article], exclude: str = "") -> list[dict]:
+    return [{"slug": a.slug, "title": a.title} for a in articles if a.slug != exclude][:80]
+
+
 class Writer:
     def __init__(self, cfg: Config, llm: LLM):
         self.cfg = cfg
@@ -122,7 +126,7 @@ class Writer:
         data = self.llm.structured(
             task="write",
             system=self.system,
-            prompt=prompts.write_prompt(keyword, item, research, sources, today),
+            prompt=prompts.write_prompt(keyword, item, research, sources, today, _existing(existing)),
             schema=prompts.ARTICLE_SCHEMA,
         )
         slug = unique_slug(data["slug"], {a.slug for a in existing})
@@ -144,7 +148,8 @@ class Writer:
         data = self.llm.structured(
             task="refresh",
             system=self.system,
-            prompt=prompts.refresh_prompt(_article_json(article), research, sources, reason, today),
+            prompt=prompts.refresh_prompt(_article_json(article), research, sources, reason, today,
+                                          _existing(existing, article.slug)),
             schema=prompts.ARTICLE_SCHEMA,
         )
 
@@ -153,3 +158,24 @@ class Writer:
                                published=article.published, updated=today)
 
         return self._polish(build(data), research, sources, existing, build)
+
+    def enhance(self, article: Article) -> WriteResult:
+        """事実は変えずに、図解ブロック・要約・内部リンクを加えて読みやすくリニューアルする（調査なし）。"""
+        existing = load_articles()
+        data = self.llm.structured(
+            task="enhance",
+            system=self.system,
+            prompt=prompts.enhance_prompt(_article_json(article), _existing(existing, article.slug)),
+            schema=prompts.ARTICLE_SCHEMA,
+        )
+
+        def build(d: dict) -> Article:
+            new = _to_article(d, keyword=article.keyword, sources=article.sources, slug=article.slug,
+                              published=article.published, updated=article.updated)
+            new.category = article.category
+            return new
+
+        research = "（リニューアルのため新たな調査なし。元記事の事実と出典のみを使うこと）\n" + "\n".join(
+            f"- {s['title']}: {s['url']}" for s in article.sources
+        )
+        return self._polish(build(data), research, article.sources, existing, build)

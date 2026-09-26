@@ -19,17 +19,26 @@ niche:
   categories:
     - slug: school
       name: プログラミングスクール
+      color: "#2f6fdf"
+      description: 料金・サポート・給付金制度など、スクール選びで失敗しないための判断材料をまとめています。
     - slug: career
       name: IT転職・エージェント
+      color: "#138a6c"
+      description: 未経験からのIT転職、エージェントの使い方、フリーランスの案件獲得まで、キャリアの選択肢を整理します。
     - slug: tools
       name: サーバー・Webツール
+      color: "#7650d8"
+      description: レンタルサーバーやドメインなど、ブログ・Web制作を始めるための道具選びを解説します。
     - slug: learning
       name: 独学・学習法
+      color: "#d4731f"
+      description: 働きながら学ぶための学習計画、教材の選び方、挫折しないコツを紹介します。
 
 # 自動運用の設定
 autopilot:
   model: "claude-opus-5"
   workspace_id: "wrkspc_0159o3VjVNMSCssUgJUVKoZD"  # ワークスペースに紐づかないAPIキーの場合に指定（wrkspc_...）。秘密情報ではない
+  enhance_per_run: 3             # 図解ボックス等が入っていない既存記事を1回あたり何本リニューアルするか
   articles_per_run: 2            # 1回の実行で公開する最大記事数（1日1回実行 → 月約60本）
   min_queue_size: 15             # キーワードの在庫がこれを下回ったら自動で補充
   refresh_per_run: 1             # 1回の実行で見直す既存記事の最大数
@@ -45,3 +54,4 @@ quality:
   min_h2: 4
   min_sources: 2
   max_similarity: 0.45           # 既存記事との類似度上限（文字3-gram Jaccard）
+  min_blocks: 2                  # 図解ボックス（:::point など）の最低数
