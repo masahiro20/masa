@@ -33,6 +33,21 @@ def editorial_system(cfg) -> str:
 7. 広告表記（PR表記）はサイトのテンプレートが自動で入れるので本文には書かない。
 8. 本文は4,500〜9,000字程度。水増しの繰り返しはしない。
 
+# 読みやすさと図解（プロの編集部の記事として見せる）
+9. 冒頭の結論の直後に、この記事で得られることを3〜4項目の箇条書きで示す「:::summary」ブロックを置く。
+10. 本文中に次の図解ブロックを合計3〜6個、内容に合う場所で使う。ブロックの中に見出し（#）は書かない。
+    - :::point 見出し … 判断のポイント・結論の要約
+    - :::warning 見出し … 注意点・よくある失敗
+    - :::check 見出し … 申込前・比較時のチェックリスト（箇条書き）
+    - :::merit と :::demerit … メリットとデメリット（この順で続けて書くと左右に並ぶ）
+    - :::steps 見出し … 手順（中身は「1. **ステップ名**：説明」の番号付きリスト）
+    書式は「:::種類 見出し」の行、中身、「:::」だけの行で閉じる。見出しは省略可。
+11. 段落は2〜4文で区切り、1文を長くしない。重要な結論は **太字** にする（1見出しあたり1〜2箇所まで）。
+12. 関連する既存記事がある場合は、本文の自然な文脈で {{{{link:記事slug}}}} または {{{{link:記事slug|リンク文言}}}} を使って1〜3本リンクする。
+    リンクしてよいのは、指示の中で示された既存記事の slug だけ。
+13. 「いかがでしたか」「〜について解説しました」のような決まり文句や、AIが書いたと感じさせる定型的な言い回しは使わない。
+    読者に直接語りかける自然な編集記事の文体にする。
+
 # カテゴリ一覧
 {json.dumps(categories, ensure_ascii=False)}
 
@@ -61,7 +76,14 @@ def research_prompt(keyword: str, cfg) -> str:
 最後に「記事構成案」として、読者の疑問に答える見出し案を8個程度挙げてください。"""
 
 
-def write_prompt(keyword: str, item: dict, research: str, sources: list[dict], today: str) -> str:
+def existing_list(existing: list[dict]) -> str:
+    if not existing:
+        return "（まだありません）"
+    return json.dumps(existing, ensure_ascii=False)
+
+
+def write_prompt(keyword: str, item: dict, research: str, sources: list[dict], today: str,
+                 existing: list[dict] | None = None) -> str:
     return f"""次のキーワードで記事を1本書いてください。今日の日付: {today}
 
 キーワード: {keyword}
@@ -75,8 +97,28 @@ def write_prompt(keyword: str, item: dict, research: str, sources: list[dict], t
 # 使用可能な出典（source_urls にはこの中から、本文で実際に根拠にしたものだけを入れる）
 {json.dumps(sources, ensure_ascii=False)}
 
-slug は内容を表す半角英小文字とハイフン（例: programming-school-how-to-choose）。
-title は32字前後でキーワードを自然に含める。description は80〜120字。"""
+# 内部リンクできる既存記事（slug とタイトル）
+{existing_list(existing or [])}
+
+slug は内容を表す短い英単語をハイフンでつなぐ（3〜5語。ローマ字は避ける。例: programming-school-how-to-choose）。
+title は28〜36字。検索キーワードの主要語をできるだけ前半に置き、読者のメリットや具体的な数字（公式情報にあるもの）で
+クリックしたくなる表現にする。「｜」で主題と副題を分けてよい。description は80〜120字。"""
+
+
+def enhance_prompt(article_json: dict, existing: list[dict]) -> str:
+    return f"""公開済みの次の記事を、編集方針の「読みやすさと図解」に沿ってリニューアルしてください。
+
+- 事実・数値・出典・主張は変えない。新しい事実を足さない（source_urls もそのまま出力する）。
+- :::summary を冒頭の結論の直後に追加し、図解ブロックを合計3〜6個に整理する。
+- 冗長な文を削り、段落を短くし、重要な結論を太字にする。
+- 関連する既存記事へ {{{{link:slug}}}} で1〜3本内部リンクする（自分自身の slug にはリンクしない）。
+- slug・category は変えない。title と description は検索でクリックされやすいよう改善してよい。
+
+# 内部リンクできる既存記事
+{existing_list(existing)}
+
+# 記事
+{json.dumps(article_json, ensure_ascii=False)}"""
 
 
 def repair_prompt(article: dict, issues: list[str]) -> str:
@@ -109,7 +151,8 @@ score は10点満点の整数。公開水準は7点以上。problems には修�
 {json.dumps(article, ensure_ascii=False)}"""
 
 
-def refresh_prompt(article_json: dict, research: str, sources: list[dict], reason: str, today: str) -> str:
+def refresh_prompt(article_json: dict, research: str, sources: list[dict], reason: str, today: str,
+                   existing: list[dict] | None = None) -> str:
     return f"""公開済みの次の記事を最新情報に更新し、より読者の役に立つ内容に改善してください。今日の日付: {today}
 更新理由: {reason}
 
@@ -122,6 +165,9 @@ def refresh_prompt(article_json: dict, research: str, sources: list[dict], reaso
 
 # 使用可能な出典
 {json.dumps(sources, ensure_ascii=False)}
+
+# 内部リンクできる既存記事
+{existing_list(existing or [])}
 
 # 現在の記事
 {json.dumps(article_json, ensure_ascii=False)}"""

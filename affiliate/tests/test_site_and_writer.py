@@ -20,6 +20,14 @@ def test_build_site(cfg, good_article, tmp_path):
     assert (out / "robots.txt").exists() and (out / "feed.xml").exists()
     assert (out / "about" / "index.html").exists() and (out / "privacy" / "index.html").exists()
     assert (out / "static" / "style.css").exists()
+    assert (out / "articles" / good_article.slug / "cover.png").stat().st_size > 5000
+    assert (out / "static" / "og-default.png").exists() and (out / "favicon.svg").exists()
+    assert "summary_large_image" in page and "cover.png" in page
+    assert 'class="box box-summary"' in page
+    assert '"FAQPage"' in page
+    home = (out / "index.html").read_text(encoding="utf-8")
+    assert '"WebSite"' in home and "card-img" in home
+    assert (out / "category" / "school" / "index.html").exists()
     assert info["articles"] == 1
 
 

@@ -57,3 +57,13 @@ def test_short_and_h1(cfg, good_article):
     issues = run(cfg, good_article).issues
     assert any("短すぎ" in i for i in issues)
     assert any("H1" in i for i in issues)
+
+
+def test_blocks_and_internal_links(cfg, good_article):
+    import copy
+    a = copy.deepcopy(good_article)
+    a.body = a.body.replace(":::summary", "").replace(":::point 最初に決めること", "")
+    assert any("図解ブロック" in i for i in run(cfg, a).issues)
+    b = copy.deepcopy(good_article)
+    b.body += "\n\n{{link:no-such-article}}"
+    assert any("内部リンク" in i for i in run(cfg, b).issues)

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="wrap wide">
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>›</span>{{ category.name }}</nav>
+  <header class="cat-header" style="--cat: {{ category.color }}">
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.description }}</p>
+  </header>
+  {% if articles %}
+  <ul class="cards">{% for a in articles %}{% include "_card.html" %}{% endfor %}</ul>
+  {% else %}<p class="empty">このカテゴリの記事は準備中です。</p>{% endif %}
+</div>
+{% endblock %}

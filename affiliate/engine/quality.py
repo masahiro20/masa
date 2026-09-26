@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from urllib.parse import urlparse
 
 from .articles import SLUG_RE, Article
+from .blocks import count_blocks, find_links
 from .links import find_shortcodes
 
 # 実体験を装う表現（AIは実際に受講・利用していないため禁止）
@@ -115,6 +116,17 @@ def check_article(
         issues.append("アフィリエイトのショートコード {{aff:ID}} が1つもありません")
     elif len(codes) > 6:
         issues.append(f"アフィリエイトリンクが多すぎます（{len(codes)}個 > 6個）。読者の役に立つ位置に絞ってください")
+
+    if article.origin == "ai":
+        blocks = count_blocks(body)
+        if blocks < quality.get("min_blocks", 0):
+            issues.append(f"図解ブロック（:::summary / :::point など）が少なすぎます（{blocks}個 < {quality['min_blocks']}個）")
+    known_slugs = {a.slug for a in existing}
+    bad_links = sorted({s for s in find_links(body) if s not in known_slugs or s == article.slug})
+    if bad_links:
+        issues.append(f"存在しない記事・自分自身への内部リンクがあります: {', '.join(bad_links)}")
+    if len(re.findall(r"^:::", body, re.M)) % 2:
+        issues.append("図解ブロックの閉じ忘れ（:::）があります")
 
     for pattern in FAKE_EXPERIENCE_PATTERNS:
         m = re.search(pattern, body)

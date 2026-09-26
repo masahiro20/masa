@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<article class="article">
-  <h1>{{ page.title }}</h1>
-  <div class="body">{{ body | safe }}</div>
-</article>
+<div class="wrap">
+  <article class="article page">
+    <h1>{{ page.title }}</h1>
+    <div class="body">{{ body | safe }}</div>
+  </article>
+</div>
 {% endblock %}

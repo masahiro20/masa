@@ -1,25 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
-{% if heading %}
-<h1 class="list-heading">{{ heading }}</h1>
-{% else %}
 <section class="hero">
-  <h1>{{ site.name }}</h1>
-  <p>{{ site.tagline }}</p>
+  <div class="wrap">
+    <p class="hero-eyebrow">IT・Webキャリアの判断材料を、ひとつずつ丁寧に。</p>
+    <h1>{{ site.name }}</h1>
+    <p class="hero-lead">{{ site.tagline }}</p>
+    <ul class="trust">
+      <li>{{ icon('check') | safe }}公式情報・公的データの出典を明記</li>
+      <li>{{ icon('merit') | safe }}メリットだけでなく注意点も解説</li>
+      <li>{{ icon('summary') | safe }}料金・制度は定期的に見直し</li>
+    </ul>
+  </div>
 </section>
-{% endif %}
-{% if articles %}
-<ul class="cards">
-{% for a in articles %}
-  <li><a href="{{ base_url }}/{{ a.url_path }}">
-    <span class="card-cat">{{ categories.get(a.category, a.category) }}</span>
-    <span class="card-title">{{ a.title }}</span>
-    <span class="card-desc">{{ a.description }}</span>
-    <time class="card-date" datetime="{{ a.updated }}">{{ a.updated }}</time>
-  </a></li>
-{% endfor %}
-</ul>
-{% else %}
-<p class="empty">記事を準備中です。</p>
-{% endif %}
+
+<div class="wrap wide">
+  <section class="section">
+    <h2 class="section-title">カテゴリから探す</h2>
+    <ul class="cat-grid">
+      {% for slug, c in categories.items() %}
+      <li><a class="cat-card" href="{{ base_url }}/category/{{ slug }}/" style="--cat: {{ c.color }}">
+        <span class="cat-name">{{ c.name }}</span>
+        <span class="cat-desc">{{ c.description }}</span>
+        <span class="cat-count">{{ counts[slug] }} 記事</span>
+      </a></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">新着記事</h2>
+    {% if articles %}
+    <ul class="cards">{% for a in articles %}{% include "_card.html" %}{% endfor %}</ul>
+    {% else %}<p class="empty">記事を準備中です。</p>{% endif %}
+  </section>
+
+  <section class="section policy">
+    <h2 class="section-title">編集方針</h2>
+    <p>{{ site.name }}は、スクール・転職サービス・Webツールを選ぶときに必要な情報を、公式サイトや公的機関の公開情報にもとづいて整理しています。料金や条件などの事実には出典を示し、サービスのデメリットや向いていない人、無料でできる代替手段もあわせて紹介します。</p>
+    <p><a href="{{ base_url }}/about/">運営者情報・編集方針を見る</a></p>
+  </section>
+</div>
 {% endblock %}

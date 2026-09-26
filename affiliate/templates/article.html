@@ -1,29 +1,45 @@
 {% extends "base.html" %}
-{% block head %}<script type="application/ld+json">{{ json_ld | safe }}</script>{% endblock %}
 {% block content %}
-<nav class="breadcrumb"><a href="{{ base_url }}/">ホーム</a> › <a href="{{ base_url }}/category/{{ article.category }}/">{{ category_name }}</a></nav>
-<article class="article">
-  <p class="pr-notice"><span class="pr-badge">PR</span>本記事にはアフィリエイト広告（プロモーション）が含まれています。</p>
-  <h1>{{ article.title }}</h1>
-  <p class="meta">
-    <time datetime="{{ article.published }}">公開 {{ article.published }}</time>
-    {% if article.updated and article.updated != article.published %}<time datetime="{{ article.updated }}">更新 {{ article.updated }}</time>{% endif %}
-    <span>{{ site.operator_name }}</span>
-  </p>
-  {% if toc %}<details class="toc" open><summary>目次</summary>{{ toc | safe }}</details>{% endif %}
-  <div class="body">{{ body | safe }}</div>
-  {% if article.sources %}
-  <section class="sources">
-    <h2>参考情報・出典</h2>
-    <ul>{% for s in article.sources %}<li><a href="{{ s.url }}" target="_blank" rel="noopener nofollow">{{ s.title }}</a></li>{% endfor %}</ul>
-    <p class="note">料金・条件などは変更される場合があります。お申込み前に必ず各公式サイトで最新情報をご確認ください。</p>
-  </section>
-  {% endif %}
-</article>
+<div class="wrap">
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>›</span><a href="{{ base_url }}/category/{{ article.category }}/">{{ category.name }}</a></nav>
+  <article class="article">
+    <header class="article-header">
+      <a class="chip" href="{{ base_url }}/category/{{ article.category }}/" style="--cat: {{ category.color }}">{{ category.name }}</a>
+      <h1>{{ article.title }}</h1>
+      <p class="meta">
+        {% if article.updated and article.updated != article.published %}<span>更新 <time datetime="{{ article.updated }}">{{ article.updated | replace('-', '.') }}</time></span>{% endif %}
+        <span>公開 <time datetime="{{ article.published }}">{{ article.published | replace('-', '.') }}</time></span>
+        <span>約{{ minutes }}分で読めます</span>
+        <span><a href="{{ base_url }}/about/">{{ site.operator_name }}</a></span>
+      </p>
+      <p class="pr-notice"><span class="pr-badge">PR</span>本記事にはアフィリエイト広告（プロモーション）が含まれています。</p>
+    </header>
+    <img class="cover" src="{{ cover_url(article) }}" alt="{{ article.title }}" width="1200" height="630" fetchpriority="high">
+    {% if toc %}<details class="toc" open><summary>目次</summary>{{ toc | safe }}</details>{% endif %}
+    <div class="body">{{ body | safe }}</div>
+
+    {% if article.sources %}
+    <section class="sources">
+      <h2>参考情報・出典</h2>
+      <ol>{% for s in article.sources %}<li><a href="{{ s.url }}" target="_blank" rel="noopener nofollow">{{ s.title }}</a></li>{% endfor %}</ol>
+      <p class="note">料金・条件などは変更される場合があります。お申込み前に必ず各公式サイトで最新情報をご確認ください。</p>
+    </section>
+    {% endif %}
+
+    <aside class="editor-box">
+      <div class="editor-head">{{ logo | safe }}<div><p class="editor-name">{{ site.operator_name }}</p><p class="editor-role">記事の調査・執筆・編集</p></div></div>
+      <p>公式サイトや公的機関の公開情報をもとに、サービス選びの判断材料を整理しています。料金や制度などの事実には出典を示し、定期的に内容を見直しています。誤りにお気づきの場合は<a href="{{ base_url }}/contact/">お問い合わせ</a>からお知らせください。</p>
+      <p class="editor-links"><a href="{{ base_url }}/about/">編集方針</a><a href="{{ base_url }}/ad-policy/">広告掲載ポリシー</a></p>
+    </aside>
+  </article>
+</div>
+
 {% if related %}
 <section class="related">
-  <h2>関連記事</h2>
-  <ul class="cards">{% for r in related %}<li><a href="{{ base_url }}/{{ r.url_path }}"><span class="card-title">{{ r.title }}</span><span class="card-desc">{{ r.description }}</span></a></li>{% endfor %}</ul>
+  <div class="wrap wide">
+    <h2 class="section-title">あわせて読みたい</h2>
+    <ul class="cards">{% for a in related %}{% include "_card.html" %}{% endfor %}</ul>
+  </div>
 </section>
 {% endif %}
 {% endblock %}
