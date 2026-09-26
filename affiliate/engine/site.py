@@ -15,10 +15,10 @@ import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from .articles import Article, load_articles
-from .blocks import expand_links, extract_faq, icon, render_blocks
+from .blocks import expand_links, extract_faq, render_blocks
 from .config import PAGES_DIR, PUBLIC_DIR, STATIC_DIR, TEMPLATES_DIR, Config
 from .links import expand_shortcodes
-from .visuals import logo_svg, save_cover, site_cover
+from .visuals import logo_png, logo_svg, save_cover, site_cover
 
 COVER_NAME = "cover.png"
 
@@ -139,11 +139,12 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         path.write_text(content, encoding="utf-8")
 
     # ロゴ・ファビコン・サイト共通の OGP 画像
-    write("static/logo.svg", logo_svg(64, ring="#162238", needle="#162238"))
-    write("favicon.svg", logo_svg(64, ring="#162238", needle="#162238"))
-    site_img = site_cover(cfg.site["name"], cfg.site["tagline"])
-    site_img.save(out_dir / "static" / "og-default.png", "PNG", optimize=True)
-    site_img.crop((850, 140, 1170, 460)).resize((256, 256)).save(out_dir / "static" / "logo.png", "PNG")
+    brand_en = cfg.site.get("name_en", "")
+    write("static/logo.svg", logo_svg(64, ring="#1b1b1b"))
+    write("favicon.svg", logo_svg(64, ring="#1b1b1b"))
+    site_cover(cfg.site["name"], cfg.site["tagline"], brand_en).save(
+        out_dir / "static" / "og-default.png", "PNG", optimize=True)
+    logo_png(256).save(out_dir / "static" / "logo.png", "PNG")
 
     def cover_url(a: Article) -> str:
         return f"{base}/{a.url_path}{COVER_NAME}"
@@ -154,8 +155,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         "categories": cats,
         "counts": counts,
         "year": date.today().year,
-        "logo": logo_svg(30),
-        "icon": icon,
+        "logo": logo_svg(34),
         "cover_url": cover_url,
         "og_image": f"{base}/static/og-default.png",
     }
@@ -164,7 +164,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
     for a in articles:
         cat = cats.get(a.category, {"name": a.category, "color": "#162238", "slug": a.category})
         save_cover(out_dir / a.url_path / COVER_NAME, title=a.title, category_name=cat["name"],
-                   category_slug=a.category, color=cat["color"], site_name=cfg.site["name"])
+                   category_slug=a.category, color=cat["color"], site_name=cfg.site["name"], brand_en=brand_en)
         body_html, toc = render_markdown(a.body, cfg.programs_by_id, link_targets)
         url = f"{base}/{a.url_path}"
         write(f"{a.url_path}index.html", env.get_template("article.html").render(

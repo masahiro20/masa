@@ -26,7 +26,7 @@ def test_build_site(cfg, good_article, tmp_path):
     assert 'class="box box-summary"' in page
     assert '"FAQPage"' in page
     home = (out / "index.html").read_text(encoding="utf-8")
-    assert '"WebSite"' in home and "card-img" in home
+    assert '"WebSite"' in home and "feature-img" in home
     assert (out / "category" / "school" / "index.html").exists()
     assert info["articles"] == 1
 

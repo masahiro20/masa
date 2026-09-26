@@ -1,12 +1,13 @@
 # サイト全体の設定。ここを書き換えるだけでジャンル・公開先・投稿ペースを変えられます。
 
 site:
-  name: "キャリアとスキルの羅針盤"
-  tagline: "プログラミング学習・IT転職・Web開発ツールを、公開情報をもとに比較・解説"
+  name: "スキルコンパス"
+  name_en: "SKILL COMPASS"
+  tagline: "プログラミング学習、IT転職、Web制作の道具選び。公開情報と出典をもとに比較・解説するメディア"
   # 独自ドメイン取得後は https://example.com のように変更する（末尾スラッシュなし）
   base_url: "https://masahiro20.github.io/masa"
   language: "ja"
-  operator_name: "キャリアとスキルの羅針盤 編集部"
+  operator_name: "スキルコンパス編集部"
   contact_email: ""          # 空のままだと問い合わせページはフォーム案内なしで表示
   contact_form_url: ""       # Googleフォーム等のURL
   ga4_measurement_id: ""     # 例: G-XXXXXXXXXX（任意）
@@ -19,19 +20,19 @@ niche:
   categories:
     - slug: school
       name: プログラミングスクール
-      color: "#2f6fdf"
+      color: "#2d4a6b"
       description: 料金・サポート・給付金制度など、スクール選びで失敗しないための判断材料をまとめています。
     - slug: career
       name: IT転職・エージェント
-      color: "#138a6c"
+      color: "#2f5646"
       description: 未経験からのIT転職、エージェントの使い方、フリーランスの案件獲得まで、キャリアの選択肢を整理します。
     - slug: tools
       name: サーバー・Webツール
-      color: "#7650d8"
+      color: "#4b3f63"
       description: レンタルサーバーやドメインなど、ブログ・Web制作を始めるための道具選びを解説します。
     - slug: learning
       name: 独学・学習法
-      color: "#d4731f"
+      color: "#7a4b2a"
       description: 働きながら学ぶための学習計画、教材の選び方、挫折しないコツを紹介します。
 
 # 自動運用の設定

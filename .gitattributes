@@ -1,0 +1,2 @@
+# 追記型のログは、同時に更新されても両方の行を残して自動マージする
+affiliate/data/*.jsonl merge=union

@@ -1,57 +1,60 @@
 """記事ごとのアイキャッチ画像（OGP兼用 1200×630 PNG）とロゴを生成する。
 
-写真素材のライセンスや「それっぽいAI画像」の違和感を避けるため、カテゴリごとの
-オリジナル図形イラスト＋タイトルで統一感のあるブランドビジュアルを作る。
-日本語フォントが見つからない環境ではタイトル文字なしの図形のみで生成する。
+雑誌の表紙のような「文字組み」で見せるデザイン。カテゴリごとの落ち着いた単色の面に、
+明朝体の見出しと、ブランド（コンパス）を表す細い同心円のラインだけを置く。
+写真素材のライセンス問題や、いかにも生成っぽいイラストの違和感を避けるため。
 """
 from __future__ import annotations
 
-import hashlib
 from functools import lru_cache
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
 W, H = 1200, 630
-NAVY = (22, 34, 56)
-MUTED = (92, 102, 118)
-PAPER = (251, 250, 247)
+INK = (27, 27, 27)
+ACCENT = (179, 67, 43)
 
-FONT_CANDIDATES = [
+SERIF_BOLD = [
+    ("/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc", 0),
+    ("/usr/share/fonts/truetype/noto/NotoSerifCJK-Bold.ttc", 0),
+]
+SANS = [
+    ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc", 0),
     ("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", 0),
-    ("/usr/share/fonts/opentype/noto/NotoSansCJKjp-Bold.otf", 0),
-    ("/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc", 0),
     ("/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf", 0),
     ("/usr/share/fonts/truetype/fonts-japanese-gothic.ttf", 0),
     ("/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc", 0),
 ]
+SANS_BOLD = [("/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc", 0)] + SANS
 NO_LINE_START = set("、。，．・：；？！）」』】〕｝〉》ー…ぁぃぅぇぉっゃゅょァィゥェォッャュョ")
 
 LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="{size}" height="{size}" aria-hidden="true">
-<circle cx="32" cy="32" r="28" fill="none" stroke="{ring}" stroke-width="5"/>
-<path d="M32 10 L39 32 L32 54 L25 32 Z" fill="{needle}"/>
-<path d="M32 10 L39 32 L25 32 Z" fill="{accent}"/>
-<circle cx="32" cy="32" r="4" fill="{ring}"/>
+<circle cx="32" cy="32" r="27" fill="none" stroke="{ring}" stroke-width="3"/>
+<path d="M32 9 L37 32 L32 55 L27 32 Z" fill="{ring}"/>
+<path d="M32 9 L37 32 L27 32 Z" fill="{accent}"/>
 </svg>"""
 
 
-def logo_svg(size: int = 32, ring: str = "currentColor", needle: str = "currentColor", accent: str = "#e0662a") -> str:
-    return LOGO_SVG.format(size=size, ring=ring, needle=needle, accent=accent)
+def logo_svg(size: int = 32, ring: str = "currentColor", accent: str = "#b3432b", **_: str) -> str:
+    return LOGO_SVG.format(size=size, ring=ring, accent=accent)
 
 
 @lru_cache(maxsize=None)
-def _font_source() -> tuple[str, int] | None:
-    for path, index in FONT_CANDIDATES:
+def _find(candidates: tuple[tuple[str, int], ...]) -> tuple[str, int] | None:
+    for path, index in candidates:
         if Path(path).exists():
             return path, index
     return None
 
 
+def _font(candidates: list[tuple[str, int]], size: int) -> ImageFont.FreeTypeFont | None:
+    src = _find(tuple(candidates))
+    return ImageFont.truetype(src[0], size, index=src[1]) if src else None
+
+
 def font(size: int) -> ImageFont.FreeTypeFont | None:
-    src = _font_source()
-    if not src:
-        return None
-    return ImageFont.truetype(src[0], size, index=src[1])
+    return _font(SANS_BOLD, size)
 
 
 def hex_rgb(color: str) -> tuple[int, int, int]:
@@ -75,7 +78,6 @@ def wrap(text: str, fnt: ImageFont.FreeTypeFont, max_width: int, max_lines: int)
 
 
 def _wrap(text: str, fnt: ImageFont.FreeTypeFont, max_width: int, max_lines: int) -> list[str]:
-    """日本語を文字単位で折り返す（行頭禁則つき）。入りきらなければ末尾を「…」にする。"""
     lines, line = [], ""
     for ch in text:
         if fnt.getlength(line + ch) <= max_width or not line:
@@ -97,107 +99,93 @@ def _wrap(text: str, fnt: ImageFont.FreeTypeFont, max_width: int, max_lines: int
     return lines
 
 
-def _motif(d: ImageDraw.ImageDraw, kind: str, color: tuple[int, int, int], ox: int, oy: int) -> None:
-    """カテゴリを表す図形イラスト（右側 360×360 の領域）。"""
-    light = mix(color, (255, 255, 255), 0.72)
-    mid = mix(color, (255, 255, 255), 0.35)
-    white = (255, 255, 255)
-    d.ellipse([ox, oy, ox + 360, oy + 360], fill=light)
-    if kind == "school":  # ノートPCと吹き出しのコード
-        d.rounded_rectangle([ox + 70, oy + 95, ox + 290, oy + 235], 14, fill=color)
-        d.rounded_rectangle([ox + 84, oy + 109, ox + 276, oy + 221], 6, fill=white)
-        for i, w in enumerate((120, 150, 90, 130)):
-            d.rounded_rectangle([ox + 102, oy + 124 + i * 22, ox + 102 + w, oy + 134 + i * 22], 5,
-                                fill=mid if i % 2 else color)
-        d.polygon([(ox + 40, oy + 250), (ox + 320, oy + 250), (ox + 300, oy + 270), (ox + 60, oy + 270)], fill=NAVY)
-    elif kind == "career":  # 階段と上向き矢印
-        for i in range(4):
-            x = ox + 60 + i * 60
-            top = oy + 260 - (i + 1) * 45
-            d.rectangle([x, top, x + 60, oy + 270], fill=color if i % 2 == 0 else mid)
-        d.line([(ox + 80, oy + 190), (ox + 280, oy + 70)], fill=NAVY, width=14)
-        d.polygon([(ox + 300, oy + 58), (ox + 250, oy + 62), (ox + 283, oy + 102)], fill=NAVY)
-    elif kind == "tools":  # サーバーラック
-        for i in range(3):
-            y = oy + 80 + i * 70
-            d.rounded_rectangle([ox + 90, y, ox + 270, y + 56], 10, fill=color if i != 1 else NAVY)
-            d.ellipse([ox + 108, y + 20, ox + 124, y + 36], fill=white)
-            d.ellipse([ox + 132, y + 20, ox + 148, y + 36], fill=mid)
-            for j in range(3):
-                d.rounded_rectangle([ox + 180 + j * 26, y + 16, ox + 194 + j * 26, y + 40], 3, fill=light)
-    else:  # learning: 開いた本と電球
-        d.polygon([(ox + 60, oy + 150), (ox + 180, oy + 175), (ox + 180, oy + 285), (ox + 60, oy + 260)], fill=color)
-        d.polygon([(ox + 300, oy + 150), (ox + 180, oy + 175), (ox + 180, oy + 285), (ox + 300, oy + 260)], fill=mid)
-        d.ellipse([ox + 140, oy + 45, ox + 220, oy + 125], fill=(255, 196, 61))
-        d.rounded_rectangle([ox + 163, oy + 120, ox + 197, oy + 142], 5, fill=NAVY)
-        for dx, dy in ((-60, -10), (60, -10), (0, -55)):
-            cx, cy = ox + 180 + dx, oy + 85 + dy
-            d.line([(cx, cy), (cx + dx * 0.25, cy + dy * 0.25)], fill=(255, 196, 61), width=8)
+def _compass_lines(d: ImageDraw.ImageDraw, cx: int, cy: int, color: tuple[int, int, int], scale: float = 1.0) -> None:
+    """ブランドモチーフ：細い同心円と方位線（画面の右端で切れるように置く）。"""
+    for r in (120, 200, 280, 360, 440):
+        r = int(r * scale)
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=color, width=2)
+    reach = int(470 * scale)
+    d.line([(cx - reach, cy), (cx + reach, cy)], fill=color, width=2)
+    d.line([(cx, cy - reach), (cx, cy + reach)], fill=color, width=2)
+    n = int(44 * scale)
+    d.polygon([(cx, cy - int(200 * scale)), (cx + n // 2, cy), (cx, cy + int(200 * scale)), (cx - n // 2, cy)],
+              outline=color, width=2)
 
 
-def _logo_mark(d: ImageDraw.ImageDraw, x: int, y: int, r: int) -> None:
-    d.ellipse([x - r, y - r, x + r, y + r], outline=NAVY, width=max(3, r // 6))
-    d.polygon([(x, y - r * 0.72), (x + r * 0.24, y), (x, y + r * 0.72), (x - r * 0.24, y)], fill=NAVY)
-    d.polygon([(x, y - r * 0.72), (x + r * 0.24, y), (x - r * 0.24, y)], fill=(224, 102, 42))
-
-
-def cover_image(title: str, category_name: str, category_slug: str, color: str, site_name: str) -> Image.Image:
+def cover_image(title: str, category_name: str, category_slug: str, color: str, site_name: str,
+                brand_en: str = "SKILL COMPASS") -> Image.Image:
     base = hex_rgb(color)
-    img = Image.new("RGB", (W, H), PAPER)
+    img = Image.new("RGB", (W, H), base)
     d = ImageDraw.Draw(img)
-    # 背景: 淡い色面と装飾の円（タイトルごとに位置を少し変えて単調にしない）
-    seed = int(hashlib.md5(title.encode()).hexdigest()[:6], 16)
-    d.rectangle([0, 0, W, H], fill=mix(base, PAPER, 0.93))
-    d.ellipse([-160 + seed % 80, 380, 240 + seed % 80, 780], fill=mix(base, PAPER, 0.82))
-    d.rectangle([0, 0, 18, H], fill=base)
-    _motif(d, category_slug, base, 790, 120)
+    _compass_lines(d, 1080, 330, mix(base, (255, 255, 255), 0.10))
 
-    f_chip, f_title, f_sub, f_site = font(30), font(60), font(34), font(30)
-    if f_chip is None:
-        _logo_mark(d, 100, 560, 26)
+    f_title = _font(SERIF_BOLD, 64) or _font(SANS_BOLD, 60)
+    f_sub = _font(SANS, 30)
+    f_label = _font(SANS_BOLD, 24)
+    white = (255, 255, 255)
+    soft = mix(base, white, 0.72)
+    if f_title is None or f_sub is None or f_label is None:
         return img
 
-    chip_w = int(f_chip.getlength(category_name)) + 44
-    d.rounded_rectangle([80, 70, 80 + chip_w, 124], 27, fill=base)
-    d.text((102, 97), category_name, font=f_chip, fill=(255, 255, 255), anchor="lm")
+    # カテゴリ名（上）と細い線
+    d.text((84, 84), category_name, font=f_label, fill=soft)
+    d.line([(84, 128), (160, 128)], fill=mix(base, white, 0.5), width=2)
 
     main, _, sub = title.partition("｜")
-    lines = wrap(main.strip(), f_title, 660, 3)
-    y = 170
+    lines = wrap(main.strip(), f_title, 780, 3)
+    sub_lines = wrap(sub.strip(), f_sub, 820, 2) if sub.strip() else []
+    block_h = len(lines) * 92 + (len(sub_lines) * 46 + 22 if sub_lines else 0)
+    y = max(170, 330 - block_h // 2)
     for line in lines:
-        d.text((80, y), line, font=f_title, fill=NAVY)
-        y += 84
-    if sub.strip():
-        for line in wrap(sub.strip(), f_sub, 660, 2):
-            d.text((82, y + 8), line, font=f_sub, fill=MUTED)
-            y += 50
+        d.text((84, y), line, font=f_title, fill=white)
+        y += 92
+    y += 22
+    for line in sub_lines:
+        d.text((86, y), line, font=f_sub, fill=soft)
+        y += 46
 
-    _logo_mark(d, 104, 556, 26)
-    d.text((146, 556), site_name, font=f_site, fill=NAVY, anchor="lm")
+    # ブランド（下）
+    f_brand = _font(SANS_BOLD, 22)
+    x = 84
+    for ch in brand_en:  # 字間を広げたロゴタイプ
+        d.text((x, 526), ch, font=f_brand, fill=white)
+        x += int(f_brand.getlength(ch)) + 6
+    d.text((x + 18, 526), site_name, font=_font(SANS, 22), fill=soft)
     return img
 
 
 def save_cover(path: Path, **kwargs) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    cover_image(**kwargs).save(path, "PNG", optimize=True)
+    cover_image(**kwargs).convert("P", palette=Image.ADAPTIVE, colors=64).save(path, "PNG", optimize=True)
 
 
-def site_cover(site_name: str, tagline: str) -> Image.Image:
-    img = Image.new("RGB", (W, H), NAVY)
+def site_cover(site_name: str, tagline: str, brand_en: str = "SKILL COMPASS") -> Image.Image:
+    base = (33, 37, 41)
+    img = Image.new("RGB", (W, H), base)
     d = ImageDraw.Draw(img)
-    d.ellipse([760, -120, 1320, 440], fill=(32, 50, 80))
-    d.ellipse([880, 300, 1260, 680], fill=(28, 44, 70))
-    f_big, f_sub = font(72), font(34)
-    cx, cy, r = 1010, 300, 150
-    d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=(255, 255, 255), width=18)
-    d.polygon([(cx, cy - r * 0.75), (cx + r * 0.25, cy), (cx, cy + r * 0.75), (cx - r * 0.25, cy)], fill=(255, 255, 255))
-    d.polygon([(cx, cy - r * 0.75), (cx + r * 0.25, cy), (cx - r * 0.25, cy)], fill=(224, 102, 42))
-    if f_big:
-        y = 210
-        for line in wrap(site_name, f_big, 640, 2):
-            d.text((80, y), line, font=f_big, fill=(255, 255, 255))
-            y += 96
-        for line in wrap(tagline, f_sub, 640, 3):
-            d.text((82, y + 20), line, font=f_sub, fill=(200, 210, 225))
+    _compass_lines(d, 1000, 315, (58, 63, 69))
+    f_big = _font(SERIF_BOLD, 88) or _font(SANS_BOLD, 80)
+    f_sub = _font(SANS, 32)
+    f_brand = _font(SANS_BOLD, 26)
+    if f_big and f_sub and f_brand:
+        x = 84
+        for ch in brand_en:
+            d.text((x, 190), ch, font=f_brand, fill=(214, 120, 96))
+            x += int(f_brand.getlength(ch)) + 8
+        d.text((80, 240), site_name, font=f_big, fill=(255, 255, 255))
+        y = 380
+        for line in wrap(tagline, f_sub, 760, 2):
+            d.text((84, y), line, font=f_sub, fill=(190, 195, 200))
             y += 50
+    return img
+
+
+def logo_png(size: int = 256) -> Image.Image:
+    """構造化データ用の正方形ロゴ。"""
+    img = Image.new("RGB", (size, size), (255, 255, 255))
+    d = ImageDraw.Draw(img)
+    c, r = size // 2, int(size * 0.42)
+    d.ellipse([c - r, c - r, c + r, c + r], outline=INK, width=max(4, size // 24))
+    d.polygon([(c, c - r * 0.85), (c + r * 0.19, c), (c, c + r * 0.85), (c - r * 0.19, c)], fill=INK)
+    d.polygon([(c, c - r * 0.85), (c + r * 0.19, c), (c - r * 0.19, c)], fill=ACCENT)
     return img

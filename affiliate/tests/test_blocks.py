@@ -35,7 +35,7 @@ def test_count_and_render():
     out = render_blocks(BODY)
     assert 'class="box box-summary"' in out and "この記事でわかること" in out
     assert '<div class="box-pair">' in out  # メリット・デメリットは左右に並ぶ
-    assert out.count('class="flow-num"') == 2 and "STEP 2" in out
+    assert out.count('class="flow-num"') == 2 and ">2<" in out
     assert "申込の流れ" in out and ":::" not in out
 
 

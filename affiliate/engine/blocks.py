@@ -89,7 +89,7 @@ def _steps_html(text: str) -> str:
     if not items:
         return _inner_html(text)
     lis = "".join(
-        f'<li><span class="flow-num">STEP {n}</span><div class="flow-body">{_inner_html(item)}</div></li>'
+        f'<li><span class="flow-num">{n}</span><div class="flow-body">{_inner_html(item)}</div></li>'
         for n, item in enumerate(items, 1)
     )
     return f'<ol class="flow">{lis}</ol>'
@@ -105,7 +105,7 @@ def render_blocks(body: str) -> str:
         label = html.escape(title or LABELS[kind])
         content = _steps_html(inner) if kind == "steps" else _inner_html(inner)
         return (
-            f'\n\n<div class="box box-{kind}"><p class="box-title">{icon(kind)}<span>{label}</span></p>'
+            f'\n\n<div class="box box-{kind}"><p class="box-title">{label}</p>'
             f'<div class="box-body">{content}</div></div>\n\n'
         )
 
