@@ -1,0 +1,86 @@
+# アフィリエイト案件の一覧。
+#
+# ■ 人間がやること（1回だけ）
+#   ASP（A8.net / もしもアフィリエイト / afb / バリューコマース など）で提携承認を受けたら、
+#   その案件の「広告リンクURL」を url に貼り付けるだけです。
+#   url が空の案件は、記事中ではリンクなしの紹介文として表示されます（サイトは壊れません）。
+#
+# ■ est_reward_jpy について
+#   記事テーマの優先順位づけにだけ使う「仮の目安」です。実際の報酬額ではありません。
+#   提携後、ASP管理画面の報酬額に書き換えると優先順位の精度が上がります。
+#
+# ■ 記事での書き方
+#   本文中に {{aff:ID}} と書くとCTAボックス、{{aff:ID|リンク文言}} と書くと文中リンクになります。
+
+programs:
+  - id: school-general
+    name: "プログラミングスクール（無料カウンセリング）"
+    category: school
+    asp: ""
+    url: ""
+    est_reward_jpy: 10000
+    keywords: ["プログラミングスクール", "おすすめ", "比較", "評判", "無料カウンセリング"]
+    cta: "無料カウンセリングで学習プランを相談する"
+
+  - id: school-kyufukin
+    name: "給付金対象のプログラミング講座"
+    category: school
+    asp: ""
+    url: ""
+    est_reward_jpy: 12000
+    keywords: ["給付金", "リスキリング", "教育訓練給付", "専門実践教育訓練"]
+    cta: "給付金対象講座の条件を確認する"
+
+  - id: career-it-agent
+    name: "IT・Web業界特化の転職エージェント"
+    category: career
+    asp: ""
+    url: ""
+    est_reward_jpy: 15000
+    keywords: ["IT転職", "エンジニア転職", "転職エージェント", "未経験"]
+    cta: "無料でキャリア相談をしてみる"
+
+  - id: career-freelance
+    name: "ITフリーランス案件紹介サービス"
+    category: career
+    asp: ""
+    url: ""
+    est_reward_jpy: 20000
+    keywords: ["フリーランスエンジニア", "案件", "独立", "単価"]
+    cta: "公開されている案件を見てみる"
+
+  - id: tools-rental-server
+    name: "レンタルサーバー"
+    category: tools
+    asp: ""
+    url: ""
+    est_reward_jpy: 8000
+    keywords: ["レンタルサーバー", "WordPress", "ブログ 始め方", "サーバー 比較"]
+    cta: "公式サイトで料金プランを確認する"
+
+  - id: tools-domain
+    name: "ドメイン取得サービス"
+    category: tools
+    asp: ""
+    url: ""
+    est_reward_jpy: 300
+    keywords: ["ドメイン 取得", "独自ドメイン"]
+    cta: "使いたいドメインが空いているか調べる"
+
+  - id: learning-online-course
+    name: "オンライン動画講座"
+    category: learning
+    asp: ""
+    url: ""
+    est_reward_jpy: 500
+    keywords: ["独学", "動画講座", "オンライン講座", "Python 学習"]
+    cta: "講座の内容とレビューを見てみる"
+
+  - id: learning-books
+    name: "技術書・学習書（Amazon / 楽天）"
+    category: learning
+    asp: ""
+    url: ""
+    est_reward_jpy: 100
+    keywords: ["本", "参考書", "入門書"]
+    cta: "書籍の詳細を見る"

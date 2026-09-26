@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+{% if heading %}
+<h1 class="list-heading">{{ heading }}</h1>
+{% else %}
+<section class="hero">
+  <h1>{{ site.name }}</h1>
+  <p>{{ site.tagline }}</p>
+</section>
+{% endif %}
+{% if articles %}
+<ul class="cards">
+{% for a in articles %}
+  <li><a href="{{ base_url }}/{{ a.url_path }}">
+    <span class="card-cat">{{ categories.get(a.category, a.category) }}</span>
+    <span class="card-title">{{ a.title }}</span>
+    <span class="card-desc">{{ a.description }}</span>
+    <time class="card-date" datetime="{{ a.updated }}">{{ a.updated }}</time>
+  </a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p class="empty">記事を準備中です。</p>
+{% endif %}
+{% endblock %}
