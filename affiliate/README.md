@@ -56,7 +56,7 @@
 ## 費用
 
 - 記事1本あたりのAPI費用は、調査・執筆・レビュー・修正込みで概算 1〜1.5ドル（約150〜230円）です。
-- 月の上限は `config/site.yaml` の `monthly_budget_usd`（初期値 150ドル）で、超えるとその月は生成を止めます。
+- 月の上限は `config/site.yaml` の `monthly_budget_usd`（初期値 50ドル）で、超えるとその月は生成を止めます。
 - GitHub Pages と GitHub Actions は公開リポジトリなら無料です。
 
 ## 法令・ポリシーへの対応

@@ -33,7 +33,7 @@ autopilot:
   min_queue_size: 15             # キーワードの在庫がこれを下回ったら自動で補充
   refresh_per_run: 1             # 1回の実行で見直す既存記事の最大数
   refresh_after_days: 90         # 公開からこの日数を超えた記事は情報更新の対象
-  monthly_budget_usd: 150        # API費用の月間上限（超えたら生成を停止）
+  monthly_budget_usd: 50         # API費用の月間上限（超えたら生成を停止）。軌道に乗ったら引き上げる
   max_repair_attempts: 1         # 品質チェック不合格時の自動修正回数
   min_editor_score: 7            # AI編集長レビューの合格点（10点満点）
 
