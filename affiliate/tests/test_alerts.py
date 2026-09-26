@@ -14,3 +14,11 @@ def test_alerts(cfg, tmp_path, monkeypatch):
 
     cli.write_alerts(cfg, {"errors": []}, 11, 13)
     assert not (tmp_path / "ALERT.md").exists()
+
+
+def test_workspace_and_invalid_key_alerts(cfg, tmp_path, monkeypatch):
+    monkeypatch.setattr(cli, "ALERT_FILE", tmp_path / "ALERT.md")
+    cli.write_alerts(cfg, {"errors": ["中断: BadRequestError: ... This API key is not scoped to a workspace ..."]}, 0, 0)
+    assert "ワークスペース" in (tmp_path / "ALERT.md").read_text()
+    cli.write_alerts(cfg, {"errors": ["中断: AuthenticationError: ... invalid x-api-key ..."]}, 0, 0)
+    assert "APIキーが無効" in (tmp_path / "ALERT.md").read_text()

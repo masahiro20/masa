@@ -50,7 +50,8 @@ def cmd_autopilot(cfg: Config, args) -> int:
         run["errors"].append("ANTHROPIC_API_KEY 未設定")
     else:
         log.info("%s", api_key_diagnostics())
-        llm = LLM(ap["model"], ap["monthly_budget_usd"])
+        workspace_id = (os.environ.get("ANTHROPIC_WORKSPACE_ID") or ap.get("workspace_id") or "").strip() or None
+        llm = LLM(ap["model"], ap["monthly_budget_usd"], workspace_id=workspace_id)
         writer = Writer(cfg, llm)
         queue = KeywordQueue()
         try:
@@ -149,6 +150,12 @@ def write_alerts(cfg: Config, run: dict, articles_before: int, articles_after: i
     if any("ANTHROPIC_API_KEY" in e for e in run["errors"]):
         alerts.append("**APIキーが未設定です。** GitHub の Settings → Secrets and variables → Actions に "
                       "`ANTHROPIC_API_KEY` を登録してください。登録するまで記事は生成されません。")
+    elif any("not scoped to a workspace" in e for e in run["errors"]):
+        alerts.append("**APIキーがワークスペースに紐づいていません。** Anthropic Console の Settings → Workspaces で"
+                      "使うワークスペースの ID（`wrkspc_` で始まる文字列）をコピーし、Claude Code のセッションに貼ってください。")
+    elif any("invalid x-api-key" in e for e in run["errors"]):
+        alerts.append("**APIキーが無効です。** Anthropic Console で `sk-ant-api03-` で始まるキーを作り直し、"
+                      "GitHub の Secrets の `ANTHROPIC_API_KEY` を置き換えてください。")
     elif any(e.startswith(("API:", "中断:")) for e in run["errors"]):
         alerts.append("**API エラーで記事生成が止まりました。** APIのクレジット残高・キーの有効期限をご確認ください。\n\n"
                       + "\n".join(f"- {e[:200]}" for e in run["errors"][:5]))
