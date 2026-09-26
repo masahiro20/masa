@@ -7,14 +7,37 @@ keywords:
   category: career
   program: career-freelance
   score: 16000.0
-  status: queued
+  status: published
+  slug: freelance-engineer-how-to-get-projects
+- keyword: フリーランスエンジニア 単価 相場 スキル別
+  intent: commercial
+  category: career
+  program: career-freelance
+  score: 16000.0
+  status: published
+  slug: freelance-engineer-unit-price-by-skill
 - keyword: 未経験 エンジニア転職 エージェント 使い方
   intent: commercial
   category: career
   program: career-it-agent
   score: 12000.0
-  status: queued
+  status: published
+  slug: mikeiken-engineer-tenshoku-agent-how-to-use
 - keyword: 転職エージェント IT 複数登録 メリット
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 12000.0
+  status: published
+  slug: it-tenshoku-agent-multiple-registration
+- keyword: インフラエンジニア 未経験 転職 求人 探し方
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 12000.0
+  status: published
+  slug: infra-engineer-mikeiken-tenshoku-kyujin
+- keyword: 40代 未経験 IT転職 可能性 戦略
   intent: commercial
   category: career
   program: career-it-agent
@@ -27,6 +50,18 @@ keywords:
   score: 10000.0
   status: queued
 - keyword: プログラミングスクール 給付金 対象 条件
+  intent: commercial
+  category: school
+  program: school-kyufukin
+  score: 9600.0
+  status: queued
+- keyword: リスキリング 補助金 個人 使える 制度 比較
+  intent: commercial
+  category: school
+  program: school-kyufukin
+  score: 9600.0
+  status: queued
+- keyword: プログラミングスクール 給付金 併用 転職エージェント
   intent: commercial
   category: school
   program: school-kyufukin
@@ -56,7 +91,31 @@ keywords:
   program: school-general
   score: 8000.0
   status: queued
+- keyword: プログラミングスクール 転職保証 デメリット
+  intent: commercial
+  category: school
+  program: school-general
+  score: 8000.0
+  status: queued
+- keyword: プログラミングスクール 料金 相場 分割払い
+  intent: commercial
+  category: school
+  program: school-general
+  score: 8000.0
+  status: queued
+- keyword: レンタルサーバー 乗り換え 移行 手順 注意点
+  intent: transactional
+  category: tools
+  program: tools-rental-server
+  score: 8000.0
+  status: queued
 - keyword: レンタルサーバー 選び方 初心者 WordPress
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 6400.0
+  status: queued
+- keyword: 会社員 副業 Web制作 始め方 手順
   intent: commercial
   category: tools
   program: tools-rental-server
@@ -68,9 +127,75 @@ keywords:
   program: career-it-agent
   score: 6000.0
   status: queued
+- keyword: ITエンジニア 職種 種類 違い 向いている人
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 6000.0
+  status: queued
+- keyword: 在職中 転職活動 進め方 エンジニア
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 6000.0
+  status: queued
+- keyword: 未経験 ポートフォリオ 評価されない 理由
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 6000.0
+  status: queued
+- keyword: 教育訓練給付金 申請 流れ 必要書類
+  intent: informational
+  category: school
+  program: school-kyufukin
+  score: 4800.0
+  status: queued
+- keyword: WordPress ポートフォリオ 作り方 未経験
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 3200.0
+  status: queued
+- keyword: オンライン講座 プログラミングスクール 違い 比較
+  intent: commercial
+  category: learning
+  program: learning-online-course
+  score: 400.0
+  status: queued
+- keyword: 独自ドメイン 取り方 初心者 おすすめ
+  intent: transactional
+  category: tools
+  program: tools-domain
+  score: 300.0
+  status: queued
 - keyword: Python 独学 ロードマップ 社会人
   intent: informational
   category: learning
   program: learning-online-course
   score: 200.0
+  status: queued
+- keyword: 働きながら プログラミング 学習時間 確保 方法
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 200.0
+  status: queued
+- keyword: 社会人 独学 プログラミング 挫折 対策
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 200.0
+  status: queued
+- keyword: プログラミング 入門書 選び方 言語別
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 80.0
+  status: queued
+- keyword: セキュリティエンジニア 未経験 勉強 何から
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 40.0
   status: queued
