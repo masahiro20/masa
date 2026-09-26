@@ -1,6 +1,6 @@
 # 運用ステータス（自動更新）
 
-- 最終更新: 2026-09-26 14:33 UTC
+- 最終更新: 2026-09-26 14:36 UTC
 - 公開記事数: 0
 - キーワード在庫: 12件（見送り 0件）
 - 今月のAPI費用（概算）: $0.00 / 上限 $50
@@ -23,6 +23,7 @@ ASPで提携したら `config/programs.yaml` の `url` に広告リンクを貼�
 
 | 日時 | 公開 | 改善 | 見送り | エラー |
 |---|---|---|---|---|
+| 2026-09-26T14:36:20+00:00 | 0 | 0 | 0 | 中断: AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'inval |
 | 2026-09-26T14:33:44+00:00 | 0 | 0 | 0 | 中断: APIConnectionError: Connection error.（原因: LocalProtocolError） |
 | 2026-09-26T14:27:05+00:00 | 0 | 0 | 0 | 中断: Connection error. |
 | 2026-09-26T14:19:27+00:00 | 0 | 0 | 0 | ANTHROPIC_API_KEY 未設定 |
