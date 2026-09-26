@@ -95,8 +95,11 @@ def month_spend(usage_file: Path = USAGE_FILE, now: datetime | None = None) -> f
 
 
 class LLM:
-    def __init__(self, model: str, monthly_budget_usd: float, usage_file: Path = USAGE_FILE):
-        self.client = anthropic.Anthropic(api_key=api_key_from_env(), max_retries=4)
+    def __init__(self, model: str, monthly_budget_usd: float, usage_file: Path = USAGE_FILE,
+                 workspace_id: str | None = None):
+        # ワークスペースに紐づかないAPIキーは、リクエストごとにワークスペースIDの指定が必要
+        headers = {"anthropic-workspace-id": workspace_id} if workspace_id else None
+        self.client = anthropic.Anthropic(api_key=api_key_from_env(), max_retries=4, default_headers=headers)
         self.model = model
         self.monthly_budget_usd = monthly_budget_usd
         self.usage_file = usage_file
