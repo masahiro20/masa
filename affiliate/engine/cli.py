@@ -208,8 +208,9 @@ def cmd_check(cfg: Config, args) -> int:
     articles = load_articles()
     failed = 0
     for a in articles:
+        # 公開済み記事の図解不足は enhance ステップで自動リニューアルされるので、ここでは失敗扱いにしない
         report = check_article(a, quality=cfg.quality, programs=cfg.programs_by_id,
-                               categories=set(cfg.category_names), existing=articles)
+                               categories=set(cfg.category_names), existing=articles, require_blocks=False)
         if not report.passed:
             failed += 1
             print(f"NG {a.slug}: " + " / ".join(report.issues))

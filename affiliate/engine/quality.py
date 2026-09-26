@@ -75,6 +75,7 @@ def check_article(
     programs: dict[str, dict],
     categories: set[str],
     existing: list[Article],
+    require_blocks: bool = True,
 ) -> QualityReport:
     issues: list[str] = []
     body = article.body
@@ -117,7 +118,7 @@ def check_article(
     elif len(codes) > 6:
         issues.append(f"アフィリエイトリンクが多すぎます（{len(codes)}個 > 6個）。読者の役に立つ位置に絞ってください")
 
-    if article.origin == "ai":
+    if article.origin == "ai" and require_blocks:
         blocks = count_blocks(body)
         if blocks < quality.get("min_blocks", 0):
             issues.append(f"図解ブロック（:::summary / :::point など）が少なすぎます（{blocks}個 < {quality['min_blocks']}個）")
