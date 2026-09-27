@@ -299,7 +299,7 @@ async function createCycle(issueDate, forceYm) {
 }
 function snapshot(c) {
   return { name: c.name, honorific: c.honorific || "御中", contact: c.contact || "", greeting: c.greeting || "",
-    postal: c.postal || "", address: c.address || "", memo: c.memo || "", to: c.to || [], cc: c.cc || [],
+    postal: c.postal || "", address: c.address || "", memo: c.memo || "", driveFolder: c.driveFolder || "", to: c.to || [], cc: c.cc || [],
     subject: c.subject || "", items: (c.items || []).map((it) => ({ name: it.name, quantity: Number(it.quantity ?? 1), unitPrice: Number(it.unitPrice) })) };
 }
 
@@ -459,6 +459,7 @@ function clientForm(c) {
     <div class="field full"><label>品目（{month} は請求対象の月に置き換わります）</label>
       <div class="items" id="items">${items.map(itemRow).join("")}</div>
       <div><button type="button" class="btn ghost" data-act="add-item">＋ 品目を追加</button></div></div>
+    <div class="field full"><label for="c-drive">請求書の保存先（Googleドライブ）</label><input id="c-drive" value="${esc(c.driveFolder)}" placeholder="01.WEB制作/〇〇/請求書"><span class="hint">マイドライブからのフォルダの道すじ</span></div>
     <div class="field full"><label for="c-memo">備考（請求書の備考欄・任意）</label><input id="c-memo" value="${esc(c.memo)}"></div>
     <div class="field"><label for="c-active">毎月の自動作成</label><select id="c-active"><option value="1" ${c.active !== false ? "selected" : ""}>する</option><option value="0" ${c.active === false ? "selected" : ""}>停止する</option></select></div>
     <div class="field"><label for="c-order">並び順（請求番号の連番）</label><input id="c-order" type="number" value="${esc(c.order ?? S.clients.length + 1)}"></div>
@@ -542,7 +543,7 @@ function readClientForm() {
   })).filter((i) => i.name);
   return {
     name: $("#c-name").value.trim(), honorific: $("#c-hon").value, contact: $("#c-contact").value.trim(), greeting: $("#c-greeting").value.trim(),
-    postal: $("#c-postal").value.trim(), address: $("#c-address").value.trim(), memo: $("#c-memo").value.trim(),
+    postal: $("#c-postal").value.trim(), address: $("#c-address").value.trim(), memo: $("#c-memo").value.trim(), driveFolder: $("#c-drive").value.trim().replace(/\\/g, "/").replace(/^.*マイドライブ\//, ""),
     subject: $("#c-subject").value.trim(), to: splitMails($("#c-to").value), cc: splitMails($("#c-cc").value),
     items, active: $("#c-active").value === "1", order: Number($("#c-order").value || 0),
   };

@@ -83,7 +83,8 @@
       subject: fill(c.subject, vars),
       mailSubject: fill(settings.mailSubject, mailVars),
       mailBody: fill(settings.mailBody, mailVars),
-      filename: `${c.name}${c.honorific || "御中"} ${year}.${pad(month)}ご請求書.pdf`,
+      // ファイル名は「年.月_宛名_請求書」で統一（フォルダ内で月順に並ぶ）
+      filename: `${year}.${pad(month)}_${c.name}${c.honorific || "御中"}_請求書.pdf`,
     };
   }
 
