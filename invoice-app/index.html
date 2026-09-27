@@ -87,23 +87,27 @@ details.mail pre{white-space:pre-wrap;font:inherit;background:var(--sunken);bord
 .paper{aspect-ratio:210/297;max-width:100%;background:var(--paper);color:var(--paper-ink);border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.08),0 6px 18px rgba(0,0,0,.08);padding:7% 7%;font-size:5.4px;line-height:1.5;overflow:hidden;cursor:zoom-in;border:0;text-align:left;width:100%}
 .paper.big{cursor:zoom-out}
 .paper *{font-size:inherit}
-.p-title{font:600 1.9em/1 var(--mincho);text-align:center;letter-spacing:.4em;margin-bottom:2.2em}
+.p-title{font-size:1.9em;text-align:center;margin-bottom:1.6em;letter-spacing:.05em}
 .p-head{display:flex;justify-content:space-between;gap:2em}
-.p-to{font-size:1.35em;border-bottom:.12em solid var(--paper-ink);padding-bottom:.2em;min-width:55%}
-.p-meta{text-align:right;color:#5b6470}
-.p-iss{text-align:right;margin-top:1em}
-.p-box{display:grid;grid-template-columns:auto auto;width:62%;margin-top:1.4em;border:.08em solid var(--paper-rule)}
-.p-box div{padding:.4em .7em;border-bottom:.08em solid var(--paper-rule)}
-.p-box div:nth-child(odd){background:var(--paper-tint)}
-.p-box div:nth-child(even){text-align:right}
-.p-box .big{font-size:1.5em;font-weight:700}
-table.p-items{width:100%;border-collapse:collapse;margin-top:1.6em}
-.p-items th{background:var(--paper-head);color:#fff;font-weight:500;padding:.35em}
-.p-items td{border:.08em solid var(--paper-rule);padding:.35em .5em;text-align:right}
-.p-items td:first-child{text-align:left}
-.p-items tr.sum td:first-child,.p-items tr.sum td:nth-child(2){border:0}
-.p-items tr.sum td:nth-child(3){background:var(--paper-tint)}
-.p-bank{margin-top:1.6em;white-space:pre-line}
+.p-to b{font-weight:500;font-size:1.1em;display:block;margin-bottom:.6em}
+.p-iss{min-width:36%}
+.p-meta{margin-top:1.2em}
+.p-subj{margin-top:2.4em}
+.p-box{border:.1em solid #9a9a9a;padding:.9em 1.2em;margin-top:.8em;font-size:1.2em}
+.p-box b{font-weight:700;margin-right:1.6em}
+table.p-items{width:100%;border-collapse:collapse;margin-top:1.8em;font-size:.9em}
+.p-items th{font-weight:400;text-align:left;border-bottom:.1em solid #9a9a9a;padding:.2em 0}
+.p-items td{padding:.5em 0}
+.p-items .n{text-align:right}
+.p-sum{display:grid;grid-template-columns:1fr 1fr;gap:2em;margin-top:1em;align-items:start}
+.p-sum dl{margin:0;display:grid;grid-template-columns:1fr auto;border-top:.1em solid #9a9a9a}
+.p-sum dt,.p-sum dd{margin:0;padding:.35em 0}
+.p-sum .tot{border-top:.1em solid #9a9a9a;border-bottom:.1em solid #9a9a9a;font-size:1.15em;padding:.6em 0}
+.p-tax{font-size:.75em;border-collapse:collapse;width:100%;margin-top:2.4em}
+.p-tax td,.p-tax th{border-bottom:.1em solid #cfcfcf;padding:.3em .2em;font-weight:400;text-align:right}
+.p-tax td:first-child,.p-tax th:first-child{text-align:left}
+.p-lab{margin-top:1.6em}
+.p-bank{border:.1em solid #cfcfcf;padding:.8em 1em;margin-top:.4em;white-space:pre-line;min-height:3em}
 .paper-col{display:flex;flex-direction:column;gap:8px;container-type:inline-size}
 @supports (font-size:1cqi){.paper{font-size:1.75cqi}}
 
@@ -174,7 +178,7 @@ const ymLabel = (ym) => { const [y, m] = ym.split("-").map(Number); return `${y}
 
 const DEFAULT_SETTINGS = {
   name: "", representative: "", postal: "", address: "", tel: "", email: "", registrationNumber: "", bank: "",
-  billingMonth: "previous", due: "end_of_month", taxRate: 0.1, pricesIncludeTax: true, numberPrefix: "INV", bccSelf: true,
+  billingMonth: "previous", due: "end_of_month", taxRate: 0.1, pricesIncludeTax: true, nextNumber: 1, bccSelf: true,
   mailSubject: "{month}月度請求書",
   mailBody: "{greeting}\n\nお世話になっております。{issuer_name}です。\n{month}月度の請求書を送らせていただきます。\nご確認よろしくお願いいたします。",
 };
@@ -278,40 +282,49 @@ async function createCycle(issueDate, forceYm) {
   const active = S.clients.filter((c) => c.active !== false).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   if (!active.length) { toast("先に請求先を登録してください"); return; }
   let made = 0;
-  for (const [i, c] of active.entries()) {
+  let next = Number(st.nextNumber) || 1;
+  for (const c of active) {
     const id = `${ym}-${c.id}`;
     const ref = S.db.doc("invoices/" + id);
     if ((await ref.get()).exists) continue;
     await ref.set({
-      ym, clientId: c.id, no: `${st.numberPrefix || "INV"}-${ym.replace("-", "")}-${String(i + 1).padStart(2, "0")}`,
+      ym, clientId: c.id, no: String(next++),
       issueDate, status: "pending", client: snapshot(c), createdAt: nowIso(), createdBy: "app",
     });
     made++;
   }
+  if (made) await S.db.doc("settings/issuer").update({ nextNumber: next });
   S.ym = ym;
   toast(made ? `${ymLabel(ym)}の請求書を${made}通作成しました` : "この月の請求書はすでに作成済みです");
 }
 function snapshot(c) {
-  return { name: c.name, honorific: c.honorific || "御中", contact: c.contact || "", greeting: c.greeting || "", to: c.to || [], cc: c.cc || [],
+  return { name: c.name, honorific: c.honorific || "御中", contact: c.contact || "", greeting: c.greeting || "",
+    postal: c.postal || "", address: c.address || "", memo: c.memo || "", to: c.to || [], cc: c.cc || [],
     subject: c.subject || "", items: (c.items || []).map((it) => ({ name: it.name, quantity: Number(it.quantity ?? 1), unitPrice: Number(it.unitPrice) })) };
 }
 
 // ---------- 画面 ----------
 function paperHTML(inv, r) {
-  const st = settings();
-  const iss = [st.name, st.representative, st.postal, st.address, st.tel && "TEL：" + st.tel, st.email, st.registrationNumber && "登録番号：" + st.registrationNumber].filter(Boolean);
+  const st = settings(), c = inv.client, br = (t) => r.lines(t).map(esc).join("<br>");
+  const post = (p) => (p ? "〒" + esc(String(p).replace(/^〒/, "")) + "<br>" : "");
   return `<div class="p-title">請求書</div>
-  <div class="p-head"><div><div class="p-to">${esc(r.recipient)}</div><div>${esc(inv.client.contact)}</div></div>
-    <div class="p-meta">請求番号：${esc(inv.no)}<br>請求日：${IC.jpDate(inv.issueDate)}</div></div>
-  <div class="p-iss">${iss.map(esc).join("<br>")}</div>
-  <div>件名：${esc(r.subject)}</div>
-  <div class="p-box"><div>ご請求金額（税込）</div><div class="big">￥${IC.yen(r.total)}-</div><div>お支払期限</div><div>${IC.jpDate(r.dueDate)}</div></div>
-  <table class="p-items"><tr><th>品目</th><th>数量</th><th>単価</th><th>金額</th></tr>
-  ${r.items.map((i) => `<tr><td>${esc(i.name)}</td><td>${IC.yen(i.quantity)}</td><td>${IC.yen(i.unitPrice)}</td><td>${IC.yen(i.amount)}</td></tr>`).join("")}
-  <tr class="sum"><td></td><td></td><td>小計（税抜）</td><td>${IC.yen(r.subtotal)}</td></tr>
-  <tr class="sum"><td></td><td></td><td>消費税（${Math.round(r.rate * 100)}%）</td><td>${IC.yen(r.tax)}</td></tr>
-  <tr class="sum"><td></td><td></td><td>合計（税込）</td><td>${IC.yen(r.total)}</td></tr></table>
-  <div class="p-bank">【お振込先】\n${esc(st.bank || "（未設定）")}</div>`;
+  <div class="p-head">
+    <div class="p-to"><b>${esc(r.recipient)}</b>${post(c.postal)}${br(c.address)}${c.contact ? "<br>" + esc(c.contact) : ""}</div>
+    <div class="p-iss">${esc(st.name)}${st.registrationNumber ? "<br>登録番号:" + esc(st.registrationNumber) : ""}
+      <div style="margin-top:.6em">${post(st.postal)}${br(st.address)}${st.tel ? "<br>TEL: " + esc(st.tel) : ""}</div>
+      <div class="p-meta">請求書番号: ${esc(inv.no)}<br>請求日: ${IC.slashDate(inv.issueDate)}<br>お支払期限: ${IC.slashDate(r.dueDate)}</div></div>
+  </div>
+  <div class="p-subj">件名: ${esc(r.subject)}</div>
+  <div class="p-box"><b>ご請求金額</b>${IC.yen(r.total)} 円</div>
+  <table class="p-items"><tr><th>品目</th><th class="n">単価</th><th class="n">数量</th><th class="n">価格</th></tr>
+  ${r.items.map((i) => `<tr><td>${esc(i.name)}</td><td class="n">${IC.yen(i.netUnitPrice)}</td><td class="n">${IC.yen(i.quantity)}</td><td class="n">${IC.yen(i.netAmount)}</td></tr>`).join("")}</table>
+  <div class="p-sum">
+    <table class="p-tax"><tr><th>税率別内訳</th><th>税抜金額</th><th>消費税額</th><th>税込金額</th></tr>
+      <tr><td>${Math.round(r.rate * 100)}%</td><td>${IC.yen(r.subtotal)}</td><td>${IC.yen(r.tax)}</td><td>${IC.yen(r.total)}</td></tr></table>
+    <dl><dt>小計</dt><dd>${IC.yen(r.subtotal)}</dd><dt>消費税額合計</dt><dd>${IC.yen(r.tax)}</dd><dt class="tot">合計</dt><dd class="tot">${IC.yen(r.total)}</dd></dl>
+  </div>
+  <div class="p-lab">振込先</div><div class="p-bank">${esc(st.bank || "（未設定）")}</div>
+  <div class="p-lab">備考</div><div class="p-bank" style="min-height:1.6em">${esc(c.memo || "")}</div>`;
 }
 
 function cycles() {
@@ -387,7 +400,7 @@ function invCard(inv) {
 }
 
 function viewApprove() {
-  const list = S.invoices.filter((i) => i.ym === S.ym).sort((a, b) => a.no.localeCompare(b.no));
+  const list = S.invoices.filter((i) => i.ym === S.ym).sort((a, b) => String(a.no).localeCompare(String(b.no), "ja", { numeric: true }));
   const st = settings();
   const nextYm = IC.billingMonthFor(IC.todayJST(), st);
   const hasNext = S.invoices.some((i) => i.ym === nextYm);
@@ -436,7 +449,9 @@ function clientForm(c) {
   <div class="grid2">
     <div class="field"><label for="c-name">会社名・氏名</label><input id="c-name" required value="${esc(c.name)}" placeholder="株式会社〇〇"></div>
     <div class="field"><label for="c-hon">敬称</label><select id="c-hon">${["御中", "様"].map((h) => `<option ${h === (c.honorific || "御中") ? "selected" : ""}>${h}</option>`).join("")}</select></div>
-    <div class="field"><label for="c-contact">担当者（本文・請求書に表示）</label><input id="c-contact" value="${esc(c.contact)}" placeholder="経理ご担当者様"></div>
+    <div class="field"><label for="c-postal">郵便番号</label><input id="c-postal" value="${esc(c.postal)}" placeholder="460-0007"></div>
+    <div class="field"><label for="c-address">住所（改行可）</label><textarea id="c-address" style="min-height:64px">${esc(c.address)}</textarea></div>
+    <div class="field"><label for="c-contact">担当者（請求書に表示）</label><input id="c-contact" value="${esc(c.contact)}" placeholder="経理ご担当者様"></div>
     <div class="field full"><label for="c-greeting">メール冒頭の宛名（改行可）</label><textarea id="c-greeting" style="min-height:64px" placeholder="株式会社〇〇&#10;〇〇様">${esc(c.greeting)}</textarea></div>
     <div class="field"><label for="c-subject">請求書の件名</label><input id="c-subject" value="${esc(c.subject || "{month}月分 業務委託費")}"></div>
     <div class="field"><label for="c-to">送信先メールアドレス</label><input id="c-to" required value="${esc((c.to || []).join(", "))}" placeholder="billing@example.co.jp"><span class="hint">複数はカンマ区切り</span></div>
@@ -444,6 +459,7 @@ function clientForm(c) {
     <div class="field full"><label>品目（{month} は請求対象の月に置き換わります）</label>
       <div class="items" id="items">${items.map(itemRow).join("")}</div>
       <div><button type="button" class="btn ghost" data-act="add-item">＋ 品目を追加</button></div></div>
+    <div class="field full"><label for="c-memo">備考（請求書の備考欄・任意）</label><input id="c-memo" value="${esc(c.memo)}"></div>
     <div class="field"><label for="c-active">毎月の自動作成</label><select id="c-active"><option value="1" ${c.active !== false ? "selected" : ""}>する</option><option value="0" ${c.active === false ? "selected" : ""}>停止する</option></select></div>
     <div class="field"><label for="c-order">並び順（請求番号の連番）</label><input id="c-order" type="number" value="${esc(c.order ?? S.clients.length + 1)}"></div>
   </div>
@@ -468,10 +484,10 @@ function viewSettings() {
   <div class="sec-title"><h2>発行者（あなた）</h2></div>
   <div class="grid2">
     ${f("name", "屋号・氏名", st.name)}
-    ${f("representative", "代表者名（請求書に表示・任意）", st.representative)}
+    ${f("representative", "代表者名（任意）", st.representative)}
     ${f("email", "メールアドレス（承認のお知らせ・控えのBCC・テスト送信先）", st.email)}
     ${f("postal", "郵便番号", st.postal)}
-    ${f("address", "住所", st.address)}
+    <div class="field"><label for="s-address">住所（改行可）</label><textarea id="s-address" style="min-height:64px">${esc(st.address)}</textarea></div>
     ${f("tel", "電話番号", st.tel)}
     ${f("registrationNumber", "インボイス登録番号（T+13桁、なければ空欄）", st.registrationNumber)}
     <div class="field full"><label for="s-bank">振込先</label><textarea id="s-bank" placeholder="〇〇銀行 △△支店&#10;普通 1234567&#10;ヤマダ タロウ">${esc(st.bank)}</textarea></div>
@@ -487,7 +503,7 @@ function viewSettings() {
     <div class="field"><label for="s-tax">金額の扱い</label><select id="s-tax">
       <option value="incl" ${st.pricesIncludeTax !== false ? "selected" : ""}>登録金額は税込（消費税10%を内訳表示）</option>
       <option value="excl" ${st.pricesIncludeTax === false ? "selected" : ""}>登録金額は税抜（消費税10%を加算）</option></select></div>
-    ${f("numberPrefix", "請求番号の頭文字", st.numberPrefix)}
+    <div class="field"><label for="s-nextNumber">次の請求書番号</label><input id="s-nextNumber" type="number" min="1" value="${esc(st.nextNumber ?? 1)}"><span class="hint">作成するたびに1ずつ増えます</span></div>
   </div>
   <div class="sec-title" style="margin-top:22px"><h2>送信メール</h2></div>
   <div class="grid2">
@@ -501,7 +517,7 @@ function viewSettings() {
 }
 
 function viewHistory() {
-  const rows = [...S.invoices].sort((a, b) => (b.ym + b.no).localeCompare(a.ym + a.no));
+  const rows = [...S.invoices].sort((a, b) => (b.ym + String(b.no).padStart(8, "0")).localeCompare(a.ym + String(a.no).padStart(8, "0")));
   if (!rows.length) return `<div class="empty">まだ履歴はありません。</div>`;
   const st = settings();
   return `<div class="tbl-wrap"><table class="hist"><thead><tr><th>対象月</th><th>請求番号</th><th>請求先</th><th>金額（税込）</th><th>状態</th><th>送信日時</th></tr></thead><tbody>
@@ -526,6 +542,7 @@ function readClientForm() {
   })).filter((i) => i.name);
   return {
     name: $("#c-name").value.trim(), honorific: $("#c-hon").value, contact: $("#c-contact").value.trim(), greeting: $("#c-greeting").value.trim(),
+    postal: $("#c-postal").value.trim(), address: $("#c-address").value.trim(), memo: $("#c-memo").value.trim(),
     subject: $("#c-subject").value.trim(), to: splitMails($("#c-to").value), cc: splitMails($("#c-cc").value),
     items, active: $("#c-active").value === "1", order: Number($("#c-order").value || 0),
   };
@@ -605,10 +622,10 @@ document.addEventListener("submit", async (ev) => {
       const email = v("email");
       if (email && !isMail(email)) { toast("メールアドレスの形式を確認してください"); return; }
       await S.db.doc("settings/issuer").set({
-        ...settings(), name: v("name"), representative: v("representative"), email, postal: v("postal"), address: v("address"), tel: v("tel"),
+        ...settings(), name: v("name"), representative: v("representative"), email, postal: v("postal"), address: $("#s-address").value.trim(), tel: v("tel"),
         registrationNumber: v("registrationNumber"), bank: $("#s-bank").value.trim(),
         billingMonth: v("billingMonth"), due: v("due"), pricesIncludeTax: v("tax") === "incl",
-        numberPrefix: v("numberPrefix") || "INV", mailSubject: v("mailSubject"), mailBody: $("#s-mailBody").value,
+        nextNumber: Number(v("nextNumber")) || 1, mailSubject: v("mailSubject"), mailBody: $("#s-mailBody").value,
         bccSelf: v("bccSelf") === "1", updatedAt: nowIso(),
       });
       toast("設定を保存しました");

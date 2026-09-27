@@ -21,6 +21,7 @@
     const [y, m] = ym.split("-").map(Number);
     return `${ym}-${pad(new Date(Date.UTC(y, m, 0)).getUTCDate())}`;
   }
+  function slashDate(iso) { return iso.replace(/-/g, "/"); }
   function jpDate(iso) {
     const [y, m, d] = iso.split("-").map(Number);
     return `${y}年${m}月${d}日`;
@@ -55,20 +56,30 @@
       total = gross;
       tax = Math.floor((total * rate) / (1 + rate)); // 内税: 1円未満切り捨て
       subtotal = total - tax;
+      // 明細は税抜で表示する。端数の差は最後の行で合わせる
+      let rest = subtotal;
+      items.forEach((it, i) => {
+        const net = i === items.length - 1 ? rest : Math.round(it.amount / (1 + rate));
+        rest -= net;
+        it.netAmount = net;
+        it.netUnitPrice = it.quantity ? Math.round(net / it.quantity) : net;
+      });
     } else {
       subtotal = gross;
       tax = Math.floor(subtotal * rate);
       total = subtotal + tax;
+      items.forEach((it) => { it.netAmount = it.amount; it.netUnitPrice = it.unitPrice; });
     }
     const dueDate = inv.dueDate || dueDateFor(inv.issueDate, settings);
     const recipient = `${c.name} ${c.honorific || "御中"}`;
+    const lines = (t) => String(t || "").split("\n").map((x) => x.trim()).filter(Boolean);
     const mailVars = {
       ...vars, client_name: recipient, contact: c.contact || "", total: yen(total),
       greeting: c.greeting || [recipient, c.contact].filter(Boolean).join("\n"),
       due_date: jpDate(dueDate), issuer_name: settings.name || "", invoice_no: inv.no,
     };
     return {
-      year, month, items, subtotal, tax, total, rate, dueDate, recipient,
+      year, month, items, subtotal, tax, total, rate, dueDate, recipient, lines,
       subject: fill(c.subject, vars),
       mailSubject: fill(settings.mailSubject, mailVars),
       mailBody: fill(settings.mailBody, mailVars),
@@ -140,85 +151,94 @@
   }
 
   function drawInvoice(cv, inv, settings, r) {
-    const L = 20 * MM, R = A4.w - 20 * MM, W = R - L;
-    const INK = "#1d2430", MUTED = "#5b6470", RULE = "#b9bec4", TINT = "#eef1f4", HEAD = "#2b3645";
+    const L = 34, R = A4.w - 34, INK = "#1a1a1a", RULE = "#9a9a9a", LIGHT = "#cfcfcf";
+    const c = inv.client, lines = r.lines;
 
-    cv.text(A4.w / 2, 70, "請 求 書", 22, { align: "center" });
+    cv.text(A4.w / 2, 50, "請求書", 20, { align: "center", color: INK });
 
-    // 宛先
-    cv.text(L, 118, r.recipient, 14);
-    cv.line(L, 126, L + 95 * MM, 126, { width: 0.8, color: INK });
-    if (inv.client.contact) cv.text(L, 142, inv.client.contact, 10);
+    // 宛先（左）
+    let y = 88;
+    cv.text(L, y, r.recipient, 11);
+    y += 20;
+    for (const s of [c.postal && `〒${String(c.postal).replace(/^〒/, "")}`, ...lines(c.address), c.contact].filter(Boolean)) {
+      cv.text(L, y, s, 9.5); y += 13.5;
+    }
 
-    // 請求番号・日付
-    cv.text(R, 110, `請求番号：${inv.no}`, 9, { align: "right", color: MUTED });
-    cv.text(R, 124, `請求日：${jpDate(inv.issueDate)}`, 9, { align: "right", color: MUTED });
+    // 発行者（右）
+    const RX = 432;
+    let ry = 84;
+    cv.text(RX, ry, settings.name || "", 9.5); ry += 13;
+    if (settings.registrationNumber) { cv.text(RX, ry, `登録番号:${settings.registrationNumber}`, 9.5); ry += 13; }
+    ry += 7;
+    const addr = [settings.postal && `〒${String(settings.postal).replace(/^〒/, "")}`, ...lines(settings.address),
+      settings.tel && `TEL: ${settings.tel}`].filter(Boolean);
+    for (const s of addr) { cv.text(RX, ry, s, 9.5); ry += 13; }
+    ry = Math.max(ry + 14, 186);
+    [["請求書番号:", inv.no], ["請求日:", slashDate(inv.issueDate)], ["お支払期限:", slashDate(r.dueDate)]].forEach(([k, v]) => {
+      cv.text(RX, ry, k, 9.5); cv.text(RX + 52, ry, v, 9.5); ry += 12;
+    });
 
-    // 発行者
-    const iss = [settings.name, settings.representative, settings.postal, settings.address,
-      settings.tel && `TEL：${settings.tel}`, settings.email,
-      settings.registrationNumber && `登録番号：${settings.registrationNumber}`].filter(Boolean);
-    let y = 150;
-    iss.forEach((s, i) => { cv.text(R, y, s, i === 0 ? 11 : 9, { align: "right" }); y += i === 0 ? 16 : 13; });
-
-    // 件名と金額
-    y = Math.max(y + 10, 226);
-    if (r.subject) cv.text(L, y, `件名：${r.subject}`, 10);
-    cv.text(L, y + 16, "下記のとおりご請求申し上げます。", 10);
-    y += 30;
-    const bw1 = 45 * MM, bw2 = 60 * MM, bh = 30;
-    cv.rect(L, y, bw1, bh, { fill: TINT, stroke: RULE });
-    cv.rect(L + bw1, y, bw2, bh, { stroke: RULE });
-    cv.text(L + 8, y + 19, "ご請求金額（税込）", 10);
-    cv.text(L + bw1 + bw2 - 8, y + 21, `￥${yen(r.total)}-`, 16, { align: "right" });
-    y += bh;
-    cv.rect(L, y, bw1, 22, { fill: TINT, stroke: RULE });
-    cv.rect(L + bw1, y, bw2, 22, { stroke: RULE });
-    cv.text(L + 8, y + 15, "お支払期限", 10);
-    cv.text(L + bw1 + bw2 - 8, y + 15, jpDate(r.dueDate), 10, { align: "right" });
+    // 件名・ご請求金額
+    y = Math.max(y, ry) + 26;
+    cv.text(L, y, `件名: ${r.subject}`, 10.5);
+    y += 20;
+    cv.rect(L, y, R - L, 38, { stroke: RULE, width: 0.8 });
+    cv.text(L + 14, y + 24, "ご請求金額", 12.5);
+    cv.text(L + 96, y + 24, `${yen(r.total)} 円`, 12.5);
 
     // 明細
-    y += 44;
-    const cols = [W - 70 * MM, 18 * MM, 26 * MM, 26 * MM];
-    const xs = cols.reduce((a, w) => [...a, a[a.length - 1] + w], [L]);
-    const hh = 20;
-    cv.rect(L, y, W, hh, { fill: HEAD });
-    ["品目", "数量", "単価", "金額"].forEach((h, i) =>
-      cv.text((xs[i] + xs[i + 1]) / 2, y + 13.5, h, 9, { align: "center", color: "#ffffff" }));
-    y += hh;
+    y += 64;
+    const X = { date: L, name: L + 70, price: 355, qty: 408, unit: 418, amount: R };
+    cv.text(X.date, y, "納品日", 8.5); cv.text(X.name, y, "品目・納品書番号", 8.5);
+    cv.text(X.price, y, "単価", 8.5, { align: "right" }); cv.text(X.qty, y, "数量", 8.5, { align: "right" });
+    cv.text(X.unit, y, "単位", 8.5); cv.text(X.amount, y, "価格", 8.5, { align: "right" });
+    y += 5; cv.line(L, y, R, y, { color: RULE });
     for (const it of r.items) {
-      const lines = wrap(it.name, 9, cols[0] - 12);
-      const rh = Math.max(20, 8 + lines.length * 13);
-      cv.rect(L, y, W, rh, { stroke: RULE });
-      for (let i = 1; i < 4; i++) cv.line(xs[i], y, xs[i], y + rh, { color: RULE });
-      lines.forEach((s, i) => cv.text(L + 6, y + 13.5 + i * 13, s, 9));
-      cv.text(xs[2] - 6, y + 13.5, yen(it.quantity), 9, { align: "right" });
-      cv.text(xs[3] - 6, y + 13.5, yen(it.unitPrice), 9, { align: "right" });
-      cv.text(xs[4] - 6, y + 13.5, yen(it.amount), 9, { align: "right" });
-      y += rh;
+      const nameLines = wrap(it.name, 9, X.price - X.name - 60);
+      nameLines.forEach((s, i) => cv.text(X.name, y + 14 + i * 12, s, 9));
+      cv.text(X.price, y + 14, yen(it.netUnitPrice), 9, { align: "right" });
+      cv.text(X.qty, y + 14, yen(it.quantity), 9, { align: "right" });
+      cv.text(X.amount, y + 14, yen(it.netAmount), 9, { align: "right" });
+      y += 8 + nameLines.length * 12 + 2;
     }
-    const sums = [
-      ["小計（税抜）", r.subtotal], [`消費税（${Math.round(r.rate * 100)}%）`, r.tax], ["合計（税込）", r.total],
-    ];
-    sums.forEach(([label, v], i) => {
-      const last = i === sums.length - 1;
-      cv.rect(xs[2], y, cols[2], 20, { fill: TINT, stroke: RULE });
-      cv.rect(xs[3], y, cols[3], 20, { stroke: RULE });
-      cv.text(xs[3] - 6, y + 13.5, label, last ? 9 : 8.5, { align: "right" });
-      cv.text(xs[4] - 6, y + 13.5, yen(v), last ? 10 : 9, { align: "right" });
-      y += 20;
-    });
-    cv.text(L, y + 16, `10%対象 ${yen(r.total)}円（うち消費税 ${yen(r.tax)}円）`, 8.5, { color: MUTED });
+    y += 12;
 
-    // 振込先
-    y += 44;
-    cv.text(L, y, "【お振込先】", 10);
-    y += 16;
-    for (const s of String(settings.bank || "").split("\n").filter((s) => s.trim())) {
-      cv.text(L + 4, y, s.trim(), 10);
-      y += 15;
-    }
-    cv.text(L, y + 6, "※お振込手数料は貴社にてご負担くださいますようお願いいたします。", 8, { color: MUTED });
+    // 合計（右）
+    const SX = 326;
+    cv.line(SX, y, R, y, { color: RULE });
+    cv.text(SX + 4, y + 15, "小計", 9); cv.text(R, y + 15, yen(r.subtotal), 9, { align: "right" });
+    cv.text(SX + 4, y + 33, "消費税額合計", 9); cv.text(R, y + 33, yen(r.tax), 9, { align: "right" });
+    cv.line(SX, y + 42, R, y + 42, { color: RULE });
+    cv.text(SX + 4, y + 62, "合計", 10.5); cv.text(R, y + 62, yen(r.total), 12, { align: "right" });
+    cv.line(SX, y + 72, R, y + 72, { color: RULE });
+
+    // 税率別内訳（左）
+    const TX = [L, L + 60, 170, 228, 286];
+    const ty = y + 28;
+    cv.text(L, ty, "税率別内訳", 7.5);
+    cv.line(L, ty + 5, TX[4], ty + 5, { color: LIGHT });
+    ["税抜金額", "消費税額", "税込金額"].forEach((h, i) => cv.text(TX[i + 2], ty + 16, h, 6.5, { align: "right" }));
+    cv.line(L, ty + 21, TX[4], ty + 21, { color: LIGHT });
+    cv.text(L + 2, ty + 32, `${Math.round(r.rate * 100)}%`, 7);
+    [r.subtotal, r.tax, r.total].forEach((v, i) => cv.text(TX[i + 2], ty + 32, yen(v), 7, { align: "right" }));
+    cv.line(L + 58, ty + 5, L + 58, ty + 37, { color: LIGHT });
+    cv.line(L, ty + 37, TX[4], ty + 37, { color: LIGHT });
+
+    // 振込先・備考
+    y += 104;
+    cv.text(L, y, "振込先", 9);
+    const bank = lines(settings.bank);
+    const bh = Math.max(46, 14 + bank.length * 12);
+    cv.rect(L, y + 6, R - L, bh, { stroke: LIGHT, width: 0.8 });
+    bank.forEach((s, i) => cv.text(L + 10, y + 22 + i * 12, s, 9.5));
+    y += bh + 30;
+    cv.text(L, y, "備考", 9);
+    const memo = lines(c.memo || settings.memo);
+    const mh = Math.max(24, 12 + memo.length * 12);
+    cv.rect(L, y + 6, R - L, mh, { stroke: LIGHT, width: 0.8 });
+    memo.forEach((s, i) => cv.text(L + 10, y + 20 + i * 12, s, 9));
+
+    cv.text(A4.w / 2, A4.h - 24, "1 / 1", 9, { align: "center" });
   }
 
   // 請求書PDFを作り、PDFのバイト列をlatin1文字列で返す（中身はすべてASCII）
@@ -253,6 +273,6 @@
   }
 
   root.InvoiceCore = {
-    yen, todayJST, addMonths, monthEnd, jpDate, billingMonthFor, dueDateFor, fill, calc, buildPdf, pdfBase64,
+    yen, todayJST, slashDate, addMonths, monthEnd, jpDate, billingMonthFor, dueDateFor, fill, calc, buildPdf, pdfBase64,
   };
 })(typeof window !== "undefined" ? window : globalThis);
