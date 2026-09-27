@@ -1,0 +1,629 @@
+<title>請求書デスク</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{
+  --bg:#f1f3f0; --surface:#ffffff; --sunken:#e8ebe6; --ink:#1b2029; --muted:#5d6570; --rule:#d8dcd5;
+  --accent:#c43d2a; --accent-ink:#ffffff; --accent-soft:#f7e3df;
+  --ok:#2e7a58; --ok-soft:#e1f0e8; --warn:#9a620e; --warn-soft:#f6ecd9; --bad:#b3261e; --bad-soft:#f8e1df;
+  --paper:#ffffff; --paper-ink:#1d2430; --paper-rule:#b9bec4; --paper-tint:#eef1f4; --paper-head:#2b3645;
+  --sans:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --mincho:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --bg:#14171b; --surface:#1d2127; --sunken:#252a31; --ink:#e7e9e5; --muted:#9aa2ab; --rule:#2f353d;
+  --accent:#e0624d; --accent-ink:#1a0d0a; --accent-soft:#3a211c;
+  --ok:#62bb91; --ok-soft:#1a3328; --warn:#dca64a; --warn-soft:#352a16; --bad:#f07a70; --bad-soft:#3a1e1c;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#14171b; --surface:#1d2127; --sunken:#252a31; --ink:#e7e9e5; --muted:#9aa2ab; --rule:#2f353d;
+  --accent:#e0624d; --accent-ink:#1a0d0a; --accent-soft:#3a211c;
+  --ok:#62bb91; --ok-soft:#1a3328; --warn:#dca64a; --warn-soft:#352a16; --bad:#f07a70; --bad-soft:#3a1e1c;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.7 var(--sans);font-variant-numeric:tabular-nums}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:20px 64px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.35}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;padding-bottom:16px;border-bottom:1px solid var(--rule)}
+.brand{font-size:13px;letter-spacing:.12em;color:var(--muted)}
+.cycle{font-size:26px;font-weight:700}
+.summary{display:flex;gap:8px;flex-wrap:wrap}
+nav.tabs{display:flex;gap:4px;margin-block:16px 20px;overflow-x:auto}
+nav.tabs button{border:0;background:none;padding:8px 14px;border-radius:999px;color:var(--muted);font-weight:500;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;padding:2px 10px;border-radius:999px;background:var(--sunken);color:var(--muted);white-space:nowrap}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.chip.pending{background:var(--warn-soft);color:var(--warn)}
+.chip.sent{background:var(--ok-soft);color:var(--ok)}
+.chip.error,.chip.sending{background:var(--bad-soft);color:var(--bad)}
+
+/* buttons */
+.btn{border:1px solid var(--rule);background:var(--surface);padding:8px 16px;border-radius:8px;font-weight:500;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn.ghost{border-color:transparent;background:none;color:var(--muted);padding-inline:10px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* notices */
+.notice{border-radius:var(--r);padding:12px 16px;background:var(--surface);border:1px solid var(--rule);margin-bottom:16px}
+.notice.warn{background:var(--warn-soft);border-color:transparent}
+.notice.bad{background:var(--bad-soft);border-color:transparent}
+.notice.ok{background:var(--ok-soft);border-color:transparent}
+
+/* invoice cards */
+.bulk{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.inv{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:20px;background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:18px;margin-bottom:16px;position:relative}
+.inv.wide{grid-template-columns:1fr}
+@media (max-width:680px){.inv{grid-template-columns:1fr}}
+.inv h3{font-size:19px}
+.amount{font-size:30px;font-weight:700;letter-spacing:.01em}
+.amount small{font-size:14px;font-weight:500;color:var(--muted);margin-left:4px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:10px 0 14px;font-size:13.5px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;overflow-wrap:anywhere}
+details.mail{border-top:1px dashed var(--rule);margin-top:4px;padding-top:8px;font-size:13.5px}
+details.mail summary{cursor:pointer;color:var(--muted)}
+details.mail pre{white-space:pre-wrap;font:inherit;background:var(--sunken);border-radius:8px;padding:10px 12px;margin:8px 0 0}
+.confirm{margin-top:12px;padding:12px;border-radius:10px;background:var(--accent-soft)}
+.stamp{position:absolute;right:22px;top:16px;width:74px;height:74px;border:3px solid var(--accent);border-radius:50%;color:var(--accent);display:grid;place-items:center;font:600 20px/1 var(--mincho);transform:rotate(-12deg);opacity:.85;pointer-events:none}
+.stamp span{display:block;text-align:center;font-size:10px;font-family:var(--sans);margin-top:3px}
+
+/* paper preview (A4 ratio) */
+.paper{aspect-ratio:210/297;max-width:100%;background:var(--paper);color:var(--paper-ink);border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.08),0 6px 18px rgba(0,0,0,.08);padding:7% 7%;font-size:5.4px;line-height:1.5;overflow:hidden;cursor:zoom-in;border:0;text-align:left;width:100%}
+.paper.big{cursor:zoom-out}
+.paper *{font-size:inherit}
+.p-title{font:600 1.9em/1 var(--mincho);text-align:center;letter-spacing:.4em;margin-bottom:2.2em}
+.p-head{display:flex;justify-content:space-between;gap:2em}
+.p-to{font-size:1.35em;border-bottom:.12em solid var(--paper-ink);padding-bottom:.2em;min-width:55%}
+.p-meta{text-align:right;color:#5b6470}
+.p-iss{text-align:right;margin-top:1em}
+.p-box{display:grid;grid-template-columns:auto auto;width:62%;margin-top:1.4em;border:.08em solid var(--paper-rule)}
+.p-box div{padding:.4em .7em;border-bottom:.08em solid var(--paper-rule)}
+.p-box div:nth-child(odd){background:var(--paper-tint)}
+.p-box div:nth-child(even){text-align:right}
+.p-box .big{font-size:1.5em;font-weight:700}
+table.p-items{width:100%;border-collapse:collapse;margin-top:1.6em}
+.p-items th{background:var(--paper-head);color:#fff;font-weight:500;padding:.35em}
+.p-items td{border:.08em solid var(--paper-rule);padding:.35em .5em;text-align:right}
+.p-items td:first-child{text-align:left}
+.p-items tr.sum td:first-child,.p-items tr.sum td:nth-child(2){border:0}
+.p-items tr.sum td:nth-child(3){background:var(--paper-tint)}
+.p-bank{margin-top:1.6em;white-space:pre-line}
+.paper-col{display:flex;flex-direction:column;gap:8px;container-type:inline-size}
+@supports (font-size:1cqi){.paper{font-size:1.75cqi}}
+
+/* forms */
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:14px;padding:18px;margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px}
+@media (max-width:600px){.grid2{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:4px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12.5px;color:var(--muted);font-weight:500;letter-spacing:.02em}
+.field input,.field select,.field textarea{border:1px solid var(--rule);background:var(--bg);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+.field textarea{min-height:88px;resize:vertical}
+.hint{font-size:12px;color:var(--muted)}
+.items{display:flex;flex-direction:column;gap:8px}
+.item-row{display:grid;grid-template-columns:minmax(0,1fr) 72px 120px auto;gap:8px;align-items:center}
+@media (max-width:600px){.item-row{grid-template-columns:minmax(0,1fr) 60px 96px auto}}
+.item-row input{border:1px solid var(--rule);background:var(--bg);border-radius:8px;padding:8px 10px;min-width:0;width:100%}
+.client-list{display:flex;flex-direction:column;gap:10px}
+.client{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:14px 16px}
+.client b{font-size:16px}
+.sec-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.sec-title h2{font-size:18px}
+
+/* history */
+.tbl-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:14px}
+table.hist{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+table.hist th{text-align:left;font-weight:500;color:var(--muted);font-size:12.5px;padding:10px 14px;border-bottom:1px solid var(--rule)}
+table.hist td{padding:10px 14px;border-bottom:1px solid var(--rule)}
+table.hist tr:last-child td{border-bottom:0}
+table.hist td.num{text-align:right}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;max-width:calc(100% - 32px);box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.empty{text-align:center;padding:40px 16px;color:var(--muted);background:var(--surface);border:1px dashed var(--rule);border-radius:14px}
+@media (prefers-reduced-motion:no-preference){.stamp{animation:stamp .35s cubic-bezier(.2,1.6,.4,1)}@keyframes stamp{from{transform:rotate(-12deg) scale(1.6);opacity:0}}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brand">請求書デスク</div>
+      <h1 class="cycle" id="cycleTitle">読み込み中…</h1>
+    </div>
+    <div class="summary" id="summary"></div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="画面">
+    <button role="tab" id="tab-approve" aria-selected="true" data-tab="approve">承認</button>
+    <button role="tab" id="tab-clients" aria-selected="false" data-tab="clients">請求先</button>
+    <button role="tab" id="tab-settings" aria-selected="false" data-tab="settings">発行者・メール設定</button>
+    <button role="tab" id="tab-history" aria-selected="false" data-tab="history">履歴</button>
+  </nav>
+
+  <div id="banner"></div>
+  <main id="view"></main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="invoice-core.js"></script>
+<script>
+"use strict";
+const IC = window.InvoiceCore;
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const splitMails = (s) => String(s || "").split(/[,\s、]+/).map((x) => x.trim()).filter(Boolean);
+const isMail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+const nowIso = () => new Date().toISOString();
+const ymLabel = (ym) => { const [y, m] = ym.split("-").map(Number); return `${y}年${m}月分`; };
+
+const DEFAULT_SETTINGS = {
+  name: "", representative: "", postal: "", address: "", tel: "", email: "", registrationNumber: "", bank: "",
+  billingMonth: "previous", due: "end_of_month", taxRate: 0.1, pricesIncludeTax: true, numberPrefix: "INV", bccSelf: true,
+  mailSubject: "{month}月度請求書",
+  mailBody: "{greeting}\n\nお世話になっております。{issuer_name}です。\n{month}月度の請求書を送らせていただきます。\nご確認よろしくお願いいたします。",
+};
+const STATUS = {
+  pending: ["pending", "承認待ち"], sending: ["sending", "送信確認が必要"], sent: ["sent", "送信済み"],
+  skipped: ["", "今回は送らない"], error: ["error", "送信エラー"],
+};
+
+const S = { db: null, mcp: null, downloads: null, settings: null, clients: [], invoices: [], tab: "approve",
+  ym: null, confirming: null, busy: new Set(), editing: null, big: new Set(), dbError: null };
+
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 4200);
+}
+function settings() { return { ...DEFAULT_SETTINGS, ...(S.settings || {}) }; }
+
+// ---------- Gmail ----------
+function gmailErrorText(e) {
+  switch (e && e.code) {
+    case "needs_reauth": return "Gmailの接続が切れています。claude.ai の 設定 → コネクタ でGmailを再接続してから、もう一度押してください。";
+    case "server_not_connected": return "Gmailがまだ連携されていません。claude.ai の 設定 → コネクタ でGmailを追加してから、もう一度押してください。";
+    case "selection_required": return "Gmailの接続が複数あります。表示された画面で使うアカウントを選んでください。";
+    case "not_in_manifest": return "このページでのGmail利用が許可されていません。ページを再読み込みして、Gmailの利用を許可してください。";
+    case "blocked_by_policy": case "approval_required": return "組織のポリシーでこのページからのGmail送信が止められています。";
+    case "tool_error": return "Gmailが送信を受け付けませんでした：" + (e.message || "") ;
+    case "not_granted": case "capability_disabled": case "capability_removed": return "この表示ではGmail連携が使えません。claude.ai 上でページを開いてください。";
+    default: return null;
+  }
+}
+// 結果が不明なエラー（送れたかもしれない）
+const ambiguous = (e) => !e || ["server_unavailable", "upstream_error", "cancelled", "rate_limited"].includes(e.code) || !gmailErrorText(e);
+
+async function gmailSend(input) {
+  if (!S.mcp) throw { code: "not_granted" };
+  const res = await S.mcp.callTool("Gmail", "send_message", input, { cache: false });
+  return res && (res.payload || res);
+}
+
+function mailInput(inv, r, { test }) {
+  const st = settings();
+  const input = {
+    to: test ? [st.email] : inv.client.to,
+    subject: (test ? "[テスト] " : "") + r.mailSubject,
+    body: r.mailBody,
+    attachments: [{ content: IC.pdfBase64(IC.buildPdf(inv, st).pdf), filename: r.filename, mimeType: "application/pdf" }],
+  };
+  if (!test) {
+    if (inv.client.cc && inv.client.cc.length) input.cc = inv.client.cc;
+    if (st.bccSelf && isMail(st.email)) input.bcc = [st.email];
+  }
+  return input;
+}
+
+function problems(inv) {
+  const st = settings(), out = [];
+  if (!st.name) out.push("発行者名が未設定です（発行者・メール設定）");
+  if (!st.bank) out.push("振込先が未設定です（発行者・メール設定）");
+  if (!inv.client.to || !inv.client.to.length || !inv.client.to.every(isMail)) out.push("宛先メールアドレスが正しくありません（請求先）");
+  if (!inv.client.items || !inv.client.items.length) out.push("品目がありません（請求先）");
+  else if (!(IC.calc(inv, st).total > 0)) out.push("金額が未設定です（請求先で金額を入れてから「請求先の最新内容で作り直す」を押してください）");
+  return out;
+}
+
+async function sendInvoice(inv, { test = false } = {}) {
+  const st = settings();
+  if (test && !isMail(st.email)) { toast("テスト送信先（発行者メールアドレス）を設定してください"); return; }
+  const r = IC.calc(inv, st);
+  const ref = S.db.doc("invoices/" + inv.id);
+  S.busy.add(inv.id); render();
+  try {
+    if (!test) {
+      const cur = await ref.get();
+      if (cur.exists && cur.data().status !== "pending" && cur.data().status !== "error") { toast("この請求書はすでに処理されています"); return; }
+      await ref.update({ status: "sending", sendingAt: nowIso() });
+    }
+    const out = await gmailSend(mailInput(inv, r, { test }));
+    if (test) { toast(`テストメールを ${st.email} に送りました`); return; }
+    await ref.update({
+      status: "sent", sentAt: nowIso(), sentTo: inv.client.to, gmailMessageId: (out && out.id) || null,
+      total: r.total, tax: r.tax, dueDate: r.dueDate, lastError: null,
+    }).catch(() => ref.update({ status: "sent", sentAt: nowIso() }));
+    toast(`${inv.client.name} に送信しました`);
+  } catch (e) {
+    console.error(e);
+    if (test) { toast(gmailErrorText(e) || "テスト送信の結果がわかりませんでした。Gmailの送信済みを確認してください。"); return; }
+    if (ambiguous(e)) {
+      await ref.update({ status: "sending", lastError: "送信されたか確認できませんでした。Gmailの「送信済み」を確認してください。" }).catch(() => {});
+    } else {
+      await ref.update({ status: "error", lastError: gmailErrorText(e) }).catch(() => {});
+    }
+  } finally {
+    S.busy.delete(inv.id); S.confirming = null; render();
+  }
+}
+
+// ---------- 請求書の作成 ----------
+async function createCycle(issueDate) {
+  const st = settings();
+  const ym = IC.billingMonthFor(issueDate, st);
+  const active = S.clients.filter((c) => c.active !== false).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  if (!active.length) { toast("先に請求先を登録してください"); return; }
+  let made = 0;
+  for (const [i, c] of active.entries()) {
+    const id = `${ym}-${c.id}`;
+    const ref = S.db.doc("invoices/" + id);
+    if ((await ref.get()).exists) continue;
+    await ref.set({
+      ym, clientId: c.id, no: `${st.numberPrefix || "INV"}-${ym.replace("-", "")}-${String(i + 1).padStart(2, "0")}`,
+      issueDate, status: "pending", client: snapshot(c), createdAt: nowIso(), createdBy: "app",
+    });
+    made++;
+  }
+  S.ym = ym;
+  toast(made ? `${ymLabel(ym)}の請求書を${made}通作成しました` : "この月の請求書はすでに作成済みです");
+}
+function snapshot(c) {
+  return { name: c.name, honorific: c.honorific || "御中", contact: c.contact || "", greeting: c.greeting || "", to: c.to || [], cc: c.cc || [],
+    subject: c.subject || "", items: (c.items || []).map((it) => ({ name: it.name, quantity: Number(it.quantity ?? 1), unitPrice: Number(it.unitPrice) })) };
+}
+
+// ---------- 画面 ----------
+function paperHTML(inv, r) {
+  const st = settings();
+  const iss = [st.name, st.representative, st.postal, st.address, st.tel && "TEL：" + st.tel, st.email, st.registrationNumber && "登録番号：" + st.registrationNumber].filter(Boolean);
+  return `<div class="p-title">請求書</div>
+  <div class="p-head"><div><div class="p-to">${esc(r.recipient)}</div><div>${esc(inv.client.contact)}</div></div>
+    <div class="p-meta">請求番号：${esc(inv.no)}<br>請求日：${IC.jpDate(inv.issueDate)}</div></div>
+  <div class="p-iss">${iss.map(esc).join("<br>")}</div>
+  <div>件名：${esc(r.subject)}</div>
+  <div class="p-box"><div>ご請求金額（税込）</div><div class="big">￥${IC.yen(r.total)}-</div><div>お支払期限</div><div>${IC.jpDate(r.dueDate)}</div></div>
+  <table class="p-items"><tr><th>品目</th><th>数量</th><th>単価</th><th>金額</th></tr>
+  ${r.items.map((i) => `<tr><td>${esc(i.name)}</td><td>${IC.yen(i.quantity)}</td><td>${IC.yen(i.unitPrice)}</td><td>${IC.yen(i.amount)}</td></tr>`).join("")}
+  <tr class="sum"><td></td><td></td><td>小計（税抜）</td><td>${IC.yen(r.subtotal)}</td></tr>
+  <tr class="sum"><td></td><td></td><td>消費税（${Math.round(r.rate * 100)}%）</td><td>${IC.yen(r.tax)}</td></tr>
+  <tr class="sum"><td></td><td></td><td>合計（税込）</td><td>${IC.yen(r.total)}</td></tr></table>
+  <div class="p-bank">【お振込先】\n${esc(st.bank || "（未設定）")}</div>`;
+}
+
+function cycles() {
+  return [...new Set(S.invoices.map((i) => i.ym))].sort().reverse();
+}
+
+function renderHeader() {
+  const list = S.invoices.filter((i) => i.ym === S.ym);
+  $("#cycleTitle").textContent = S.ym ? `${ymLabel(S.ym)}の請求書` : "請求書はまだありません";
+  const count = (k) => list.filter((i) => i.status === k).length;
+  const bits = [];
+  if (count("pending") + count("error")) bits.push(`<span class="chip pending">承認待ち ${count("pending") + count("error")}通</span>`);
+  if (count("sending")) bits.push(`<span class="chip sending">確認が必要 ${count("sending")}通</span>`);
+  if (count("sent")) bits.push(`<span class="chip sent">送信済み ${count("sent")}通</span>`);
+  $("#summary").innerHTML = bits.join("");
+}
+
+function renderBanner() {
+  const b = [];
+  if (S.dbError) b.push(`<div class="notice bad">${esc(S.dbError)}</div>`);
+  if (!S.mcp && S.ready) b.push(`<div class="notice warn">この表示ではGmail連携が使えません。claude.ai にサインインした状態でこのページを開くと、承認ボタンから送信できます。</div>`);
+  const st = settings();
+  if (S.ready && (!st.name || !st.email || !st.bank)) b.push(`<div class="notice warn">発行者の名前・メールアドレス・振込先が未設定です。<button class="btn ghost" data-go="settings">設定する →</button></div>`);
+  if (S.ready && S.clients.some((c) => c.sample)) b.push(`<div class="notice">「サンプル」と付いた請求先は動作確認用で、宛先はあなた自身のアドレスです。本物の請求先に書き換えてください。<button class="btn ghost" data-go="clients">請求先を開く →</button></div>`);
+  $("#banner").innerHTML = b.join("");
+}
+
+function invCard(inv) {
+  const st = settings(), r = IC.calc(inv, st), busy = S.busy.has(inv.id);
+  const [cls, label] = STATUS[inv.status] || ["", inv.status];
+  const probs = inv.status === "sent" ? [] : problems(inv);
+  const confirm = S.confirming === inv.id;
+  const big = S.big.has(inv.id);
+  let actions = "";
+  if (inv.status === "pending" || inv.status === "error") {
+    actions = confirm
+      ? `<div class="confirm"><div><b>${esc(inv.client.to.join(", "))}</b> に送信します。よろしいですか？</div>
+          <div class="row" style="margin-top:8px"><button class="btn primary" data-act="send" data-id="${inv.id}" ${busy ? "disabled" : ""}>${busy ? "送信中…" : "送信する"}</button>
+          <button class="btn" data-act="cancel">やめる</button></div></div>`
+      : `<div class="row"><button class="btn primary" data-act="ask" data-id="${inv.id}" ${probs.length || busy ? "disabled" : ""}>承認して送信</button>
+          <button class="btn" data-act="test" data-id="${inv.id}" ${busy ? "disabled" : ""}>自分宛てにテスト送信</button>
+          <button class="btn ghost" data-act="pdf" data-id="${inv.id}">PDFを保存</button>
+          <button class="btn ghost" data-act="refresh" data-id="${inv.id}">請求先の最新内容で作り直す</button>
+          <button class="btn ghost" data-act="skip" data-id="${inv.id}">今回は送らない</button></div>`;
+  } else if (inv.status === "sending") {
+    actions = `<div class="row"><button class="btn" data-act="mark-sent" data-id="${inv.id}">送信済みだった</button>
+      <button class="btn" data-act="reset" data-id="${inv.id}">送れていなかった（承認待ちに戻す）</button></div>`;
+  } else if (inv.status === "skipped") {
+    actions = `<div class="row"><button class="btn" data-act="reset" data-id="${inv.id}">承認待ちに戻す</button></div>`;
+  } else if (inv.status === "sent") {
+    actions = `<div class="row"><button class="btn ghost" data-act="pdf" data-id="${inv.id}">PDFを保存</button></div>`;
+  }
+  return `<article class="inv ${big ? "wide" : ""}">
+    ${inv.status === "sent" ? `<div class="stamp" aria-hidden="true"><div>送信<span>${esc((inv.sentAt || "").slice(5, 10).replace("-", "/"))}</span></div></div>` : ""}
+    <div class="paper-col"><button class="paper ${big ? "big" : ""}" data-act="zoom" data-id="${inv.id}" aria-label="請求書のプレビューを拡大">${paperHTML(inv, r)}</button></div>
+    <div>
+      <div class="row" style="justify-content:space-between"><h3>${esc(r.recipient)}</h3></div>
+      <div class="row small" style="margin-top:2px"><span class="chip ${cls}">${label}</span><span class="muted">${esc(inv.no)}</span></div>
+      <div class="amount" style="margin-top:8px">￥${IC.yen(r.total)}<small>税込（うち消費税 ${IC.yen(r.tax)}円）</small></div>
+      <dl class="kv">
+        <dt>宛先</dt><dd>${esc((inv.client.to || []).join(", ") || "未設定")}${inv.client.cc && inv.client.cc.length ? `<br><span class="muted">CC: ${esc(inv.client.cc.join(", "))}</span>` : ""}</dd>
+        <dt>請求日</dt><dd>${IC.jpDate(inv.issueDate)}</dd>
+        <dt>支払期限</dt><dd>${IC.jpDate(r.dueDate)}</dd>
+        ${inv.sentAt ? `<dt>送信日時</dt><dd>${new Date(inv.sentAt).toLocaleString("ja-JP")}</dd>` : ""}
+      </dl>
+      ${inv.lastError && inv.status !== "sent" ? `<div class="notice bad small">${esc(inv.lastError)}</div>` : ""}
+      ${probs.length ? `<div class="notice warn small">${probs.map(esc).join("<br>")}</div>` : ""}
+      ${actions}
+      <details class="mail"><summary>送信されるメールを見る</summary>
+        <pre><b>件名：</b>${esc(r.mailSubject)}\n<b>添付：</b>${esc(r.filename)}\n\n${esc(r.mailBody)}</pre></details>
+    </div>
+  </article>`;
+}
+
+function viewApprove() {
+  const list = S.invoices.filter((i) => i.ym === S.ym).sort((a, b) => a.no.localeCompare(b.no));
+  const st = settings();
+  const nextYm = IC.billingMonthFor(IC.todayJST(), st);
+  const hasNext = S.invoices.some((i) => i.ym === nextYm);
+  const opts = cycles();
+  let head = `<div class="bulk"><div class="row">
+    ${opts.length > 1 ? `<label class="small muted" for="ymSel">表示する月</label><select id="ymSel" class="btn">${opts.map((y) => `<option value="${y}" ${y === S.ym ? "selected" : ""}>${ymLabel(y)}</option>`).join("")}</select>` : ""}
+    </div><div class="row">
+    ${!hasNext ? `<button class="btn" data-act="create">${ymLabel(nextYm)}を今すぐ作成</button>` : ""}
+    ${list.filter((i) => i.status === "pending" && !problems(i).length).length > 1 ? `<button class="btn primary" data-act="ask-all">承認待ちをまとめて送信（${list.filter((i) => i.status === "pending" && !problems(i).length).length}通）</button>` : ""}
+    </div></div>`;
+  if (S.confirming === "__all") {
+    const pend = list.filter((i) => i.status === "pending" && !problems(i).length);
+    head += `<div class="confirm" style="margin-bottom:16px"><div>${pend.map((i) => `<b>${esc(i.client.name)}</b>（${esc(i.client.to.join(", "))}）`).join("、")} に送信します。よろしいですか？</div>
+      <div class="row" style="margin-top:8px"><button class="btn primary" data-act="send-all">まとめて送信する</button><button class="btn" data-act="cancel">やめる</button></div></div>`;
+  }
+  if (!list.length) {
+    return head + `<div class="empty">まだ請求書がありません。<br>毎月1日の朝9時に自動で作成され、承認のお知らせがメールで届きます。<br>今すぐ作る場合は上のボタンを押してください。</div>`;
+  }
+  return head + list.map(invCard).join("");
+}
+
+function viewClients() {
+  if (S.editing) return clientForm(S.editing);
+  const cs = [...S.clients].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const st = settings();
+  return `<div class="sec-title"><h2>請求先</h2><button class="btn primary" data-act="new-client">請求先を追加</button></div>
+  <p class="muted small" style="margin-top:0">ここに登録した請求先へ、毎月自動で請求書を作ります。金額は${st.pricesIncludeTax !== false ? "税込" : "税抜"}で入力します。</p>
+  <div class="client-list">${cs.length ? cs.map((c) => {
+    const total = (c.items || []).reduce((s, i) => s + Number(i.quantity ?? 1) * Number(i.unitPrice || 0), 0);
+    return `<div class="client"><div><b>${esc(c.name)} ${esc(c.honorific || "御中")}</b> ${c.sample ? '<span class="chip">サンプル</span>' : ""} ${c.active === false ? '<span class="chip">停止中</span>' : ""}
+      <div class="small muted">${esc((c.to || []).join(", "))} ・ 毎月 ￥${IC.yen(total)}</div></div>
+      <button class="btn" data-act="edit-client" data-id="${c.id}">編集</button></div>`;
+  }).join("") : `<div class="empty">まだ請求先がありません。「請求先を追加」から登録してください。</div>`}</div>`;
+}
+
+function clientForm(c) {
+  const items = c.items && c.items.length ? c.items : [{ name: "{month}月分 業務委託費", quantity: 1, unitPrice: "" }];
+  return `<form class="panel" id="clientForm">
+  <div class="sec-title"><h2>${c.id ? "請求先を編集" : "請求先を追加"}</h2></div>
+  <div class="grid2">
+    <div class="field"><label for="c-name">会社名・氏名</label><input id="c-name" required value="${esc(c.name)}" placeholder="株式会社〇〇"></div>
+    <div class="field"><label for="c-hon">敬称</label><select id="c-hon">${["御中", "様"].map((h) => `<option ${h === (c.honorific || "御中") ? "selected" : ""}>${h}</option>`).join("")}</select></div>
+    <div class="field"><label for="c-contact">担当者（本文・請求書に表示）</label><input id="c-contact" value="${esc(c.contact)}" placeholder="経理ご担当者様"></div>
+    <div class="field full"><label for="c-greeting">メール冒頭の宛名（改行可）</label><textarea id="c-greeting" style="min-height:64px" placeholder="株式会社〇〇&#10;〇〇様">${esc(c.greeting)}</textarea></div>
+    <div class="field"><label for="c-subject">請求書の件名</label><input id="c-subject" value="${esc(c.subject || "{month}月分 業務委託費")}"></div>
+    <div class="field"><label for="c-to">送信先メールアドレス</label><input id="c-to" required value="${esc((c.to || []).join(", "))}" placeholder="billing@example.co.jp"><span class="hint">複数はカンマ区切り</span></div>
+    <div class="field"><label for="c-cc">CC（任意）</label><input id="c-cc" value="${esc((c.cc || []).join(", "))}"></div>
+    <div class="field full"><label>品目（{month} は請求対象の月に置き換わります）</label>
+      <div class="items" id="items">${items.map(itemRow).join("")}</div>
+      <div><button type="button" class="btn ghost" data-act="add-item">＋ 品目を追加</button></div></div>
+    <div class="field"><label for="c-active">毎月の自動作成</label><select id="c-active"><option value="1" ${c.active !== false ? "selected" : ""}>する</option><option value="0" ${c.active === false ? "selected" : ""}>停止する</option></select></div>
+    <div class="field"><label for="c-order">並び順（請求番号の連番）</label><input id="c-order" type="number" value="${esc(c.order ?? S.clients.length + 1)}"></div>
+  </div>
+  <div class="row" style="margin-top:16px;justify-content:space-between">
+    <div class="row"><button class="btn primary" type="submit">保存</button><button class="btn" type="button" data-act="close-form">戻る</button></div>
+    ${c.id ? (S.confirming === "del-" + c.id
+      ? `<div class="row"><span class="small">本当に削除しますか？</span><button class="btn" type="button" data-act="del-client" data-id="${c.id}">削除する</button></div>`
+      : `<button class="btn ghost" type="button" data-act="ask-del" data-id="${c.id}">この請求先を削除</button>`) : ""}
+  </div></form>`;
+}
+function itemRow(it = {}, i) {
+  return `<div class="item-row"><input aria-label="品目名" class="it-name" value="${esc(it.name)}" placeholder="品目名">
+    <input aria-label="数量" class="it-qty" type="number" min="0" step="any" value="${esc(it.quantity ?? 1)}">
+    <input aria-label="単価（円）" class="it-price" type="number" min="0" step="1" value="${esc(it.unitPrice)}" placeholder="単価（円）">
+    <button type="button" class="btn ghost" data-act="rm-item" aria-label="この品目を削除">✕</button></div>`;
+}
+
+function viewSettings() {
+  const st = settings();
+  const f = (id, label, val, extra = "") => `<div class="field ${extra}"><label for="s-${id}">${label}</label><input id="s-${id}" value="${esc(val)}"></div>`;
+  return `<form class="panel" id="settingsForm">
+  <div class="sec-title"><h2>発行者（あなた）</h2></div>
+  <div class="grid2">
+    ${f("name", "屋号・氏名", st.name)}
+    ${f("representative", "代表者名（請求書に表示・任意）", st.representative)}
+    ${f("email", "メールアドレス（承認のお知らせ・控えのBCC・テスト送信先）", st.email)}
+    ${f("postal", "郵便番号", st.postal)}
+    ${f("address", "住所", st.address)}
+    ${f("tel", "電話番号", st.tel)}
+    ${f("registrationNumber", "インボイス登録番号（T+13桁、なければ空欄）", st.registrationNumber)}
+    <div class="field full"><label for="s-bank">振込先</label><textarea id="s-bank" placeholder="〇〇銀行 △△支店&#10;普通 1234567&#10;ヤマダ タロウ">${esc(st.bank)}</textarea></div>
+  </div>
+  <div class="sec-title" style="margin-top:22px"><h2>請求のルール</h2></div>
+  <div class="grid2">
+    <div class="field"><label for="s-billingMonth">毎月1日に作る請求書</label><select id="s-billingMonth">
+      <option value="previous" ${st.billingMonth === "previous" ? "selected" : ""}>前月分（10/1に9月分を請求）</option>
+      <option value="current" ${st.billingMonth === "current" ? "selected" : ""}>当月分（10/1に10月分を請求）</option></select></div>
+    <div class="field"><label for="s-due">支払期限</label><select id="s-due">
+      <option value="end_of_month" ${st.due === "end_of_month" ? "selected" : ""}>請求日の月末</option>
+      <option value="end_of_next_month" ${st.due === "end_of_next_month" ? "selected" : ""}>請求日の翌月末</option></select></div>
+    <div class="field"><label for="s-tax">金額の扱い</label><select id="s-tax">
+      <option value="incl" ${st.pricesIncludeTax !== false ? "selected" : ""}>登録金額は税込（消費税10%を内訳表示）</option>
+      <option value="excl" ${st.pricesIncludeTax === false ? "selected" : ""}>登録金額は税抜（消費税10%を加算）</option></select></div>
+    ${f("numberPrefix", "請求番号の頭文字", st.numberPrefix)}
+  </div>
+  <div class="sec-title" style="margin-top:22px"><h2>送信メール</h2></div>
+  <div class="grid2">
+    ${f("mailSubject", "件名", st.mailSubject, "full")}
+    <div class="field full"><label for="s-mailBody">本文</label><textarea id="s-mailBody" style="min-height:220px">${esc(st.mailBody)}</textarea>
+      <span class="hint">使える差し込み：{greeting}（請求先ごとの宛名） {client_name} {contact} {year} {month} {total} {due_date} {issuer_name} {invoice_no}</span></div>
+    <div class="field"><label for="s-bccSelf">控えを自分にBCC</label><select id="s-bccSelf"><option value="1" ${st.bccSelf ? "selected" : ""}>する</option><option value="0" ${!st.bccSelf ? "selected" : ""}>しない</option></select></div>
+  </div>
+  <div class="row" style="margin-top:16px"><button class="btn primary" type="submit">保存</button></div>
+  </form>`;
+}
+
+function viewHistory() {
+  const rows = [...S.invoices].sort((a, b) => (b.ym + b.no).localeCompare(a.ym + a.no));
+  if (!rows.length) return `<div class="empty">まだ履歴はありません。</div>`;
+  const st = settings();
+  return `<div class="tbl-wrap"><table class="hist"><thead><tr><th>対象月</th><th>請求番号</th><th>請求先</th><th>金額（税込）</th><th>状態</th><th>送信日時</th></tr></thead><tbody>
+  ${rows.map((i) => { const [cls, label] = STATUS[i.status] || ["", i.status]; const total = i.total ?? IC.calc(i, st).total;
+    return `<tr><td>${ymLabel(i.ym)}</td><td>${esc(i.no)}</td><td>${esc(i.client.name)}</td><td class="num">￥${IC.yen(total)}</td><td><span class="chip ${cls}">${label}</span></td><td>${i.sentAt ? new Date(i.sentAt).toLocaleString("ja-JP") : "—"}</td></tr>`; }).join("")}
+  </tbody></table></div>`;
+}
+
+function render() {
+  document.querySelectorAll("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.tab === S.tab)));
+  if (!S.ym || !cycles().includes(S.ym)) S.ym = cycles()[0] || null;
+  renderHeader(); renderBanner();
+  if (!S.ready) { $("#view").innerHTML = `<div class="empty">読み込み中…</div>`; return; }
+  const v = { approve: viewApprove, clients: viewClients, settings: viewSettings, history: viewHistory }[S.tab];
+  $("#view").innerHTML = v();
+}
+
+// ---------- 操作 ----------
+function readClientForm() {
+  const items = [...document.querySelectorAll("#items .item-row")].map((r) => ({
+    name: $(".it-name", r).value.trim(), quantity: Number($(".it-qty", r).value || 1), unitPrice: Number($(".it-price", r).value || 0),
+  })).filter((i) => i.name);
+  return {
+    name: $("#c-name").value.trim(), honorific: $("#c-hon").value, contact: $("#c-contact").value.trim(), greeting: $("#c-greeting").value.trim(),
+    subject: $("#c-subject").value.trim(), to: splitMails($("#c-to").value), cc: splitMails($("#c-cc").value),
+    items, active: $("#c-active").value === "1", order: Number($("#c-order").value || 0),
+  };
+}
+
+document.addEventListener("click", async (ev) => {
+  const t = ev.target.closest("[data-tab],[data-act],[data-go]");
+  if (!t) return;
+  if (t.dataset.tab || t.dataset.go) { S.tab = t.dataset.tab || t.dataset.go; S.editing = null; S.confirming = null; render(); return; }
+  const id = t.dataset.id, inv = S.invoices.find((i) => i.id === id);
+  const act = t.dataset.act;
+  try {
+    switch (act) {
+      case "zoom": S.big.has(id) ? S.big.delete(id) : S.big.add(id); render(); break;
+      case "ask": S.confirming = id; render(); break;
+      case "ask-all": S.confirming = "__all"; render(); break;
+      case "cancel": S.confirming = null; render(); break;
+      case "send": await sendInvoice(inv); break;
+      case "send-all": {
+        const pend = S.invoices.filter((i) => i.ym === S.ym && i.status === "pending" && !problems(i).length);
+        S.confirming = null;
+        for (const i of pend) await sendInvoice(i);
+        break;
+      }
+      case "test": await sendInvoice(inv, { test: true }); break;
+      case "pdf": {
+        if (!S.downloads) { toast("この表示ではPDFを保存できません"); break; }
+        const { pdf, r } = IC.buildPdf(inv, settings());
+        const bytes = Uint8Array.from(pdf, (ch) => ch.charCodeAt(0));
+        await S.downloads.save({ filename: r.filename, data: new Blob([bytes], { type: "application/pdf" }) }).catch((e) => { if (e && e.code !== "cancelled") toast("PDFを保存できませんでした"); });
+        break;
+      }
+      case "refresh": {
+        const c = S.clients.find((x) => x.id === inv.clientId);
+        if (!c) { toast("元の請求先が見つかりません"); break; }
+        await S.db.doc("invoices/" + id).update({ client: snapshot(c), lastError: null });
+        toast("最新の請求先情報で作り直しました"); break;
+      }
+      case "skip": await S.db.doc("invoices/" + id).update({ status: "skipped" }); break;
+      case "reset": await S.db.doc("invoices/" + id).update({ status: "pending", lastError: null }); break;
+      case "mark-sent": await S.db.doc("invoices/" + id).update({ status: "sent", sentAt: inv.sendingAt || nowIso(), lastError: null }); break;
+      case "create": await createCycle(IC.todayJST()); break;
+      case "new-client": S.editing = { active: true }; render(); break;
+      case "edit-client": S.editing = { ...S.clients.find((c) => c.id === id) }; render(); break;
+      case "close-form": S.editing = null; S.confirming = null; render(); break;
+      case "add-item": $("#items").insertAdjacentHTML("beforeend", itemRow({ quantity: 1 })); break;
+      case "rm-item": t.closest(".item-row").remove(); break;
+      case "ask-del": S.editing = { ...S.editing, ...readClientForm() }; S.confirming = "del-" + id; render(); break;
+      case "del-client": await S.db.doc("clients/" + id).delete(); S.editing = null; S.confirming = null; toast("削除しました"); render(); break;
+    }
+  } catch (e) {
+    console.error(e);
+    toast(e && e.code === "invalid_argument" ? "保存できませんでした。この請求書デスクを編集する権限がありません。" : "うまくいきませんでした。もう一度お試しください。");
+  }
+});
+
+document.addEventListener("change", (ev) => {
+  if (ev.target.id === "ymSel") { S.ym = ev.target.value; S.confirming = null; render(); }
+});
+
+document.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  try {
+    if (ev.target.id === "clientForm") {
+      const data = readClientForm();
+      if (!data.name) { toast("会社名・氏名を入力してください"); return; }
+      if (!data.to.length || !data.to.every(isMail) || !data.cc.every(isMail)) { toast("メールアドレスの形式を確認してください"); return; }
+      if (!data.items.length || data.items.some((i) => !(i.unitPrice > 0))) { toast("品目名と単価（1円以上）を入力してください"); return; }
+      const id = S.editing.id || "c" + Date.now().toString(36);
+      const prev = S.clients.find((c) => c.id === id) || {};
+      const { id: _drop, ...rest } = { ...prev, ...data, sample: false, updatedAt: nowIso() };
+      await S.db.doc("clients/" + id).set(rest);
+      S.editing = null; toast("請求先を保存しました"); render();
+    }
+    if (ev.target.id === "settingsForm") {
+      const v = (k) => $("#s-" + k).value.trim();
+      const email = v("email");
+      if (email && !isMail(email)) { toast("メールアドレスの形式を確認してください"); return; }
+      await S.db.doc("settings/issuer").set({
+        ...settings(), name: v("name"), representative: v("representative"), email, postal: v("postal"), address: v("address"), tel: v("tel"),
+        registrationNumber: v("registrationNumber"), bank: $("#s-bank").value.trim(),
+        billingMonth: v("billingMonth"), due: v("due"), pricesIncludeTax: v("tax") === "incl",
+        numberPrefix: v("numberPrefix") || "INV", mailSubject: v("mailSubject"), mailBody: $("#s-mailBody").value,
+        bccSelf: v("bccSelf") === "1", updatedAt: nowIso(),
+      });
+      toast("設定を保存しました");
+    }
+  } catch (e) {
+    console.error(e);
+    toast(e && e.code === "invalid_argument" ? "保存できませんでした。編集する権限がありません。" : "保存できませんでした。もう一度お試しください。");
+  }
+});
+
+// ---------- 起動 ----------
+(async function boot() {
+  render();
+  const use = async (n) => { try { return (await window.claude?.use?.(n)) || null; } catch { return null; } };
+  const [db, mcp, downloads] = await Promise.all(["db", "mcp", "downloads"].map(use));
+  S.db = db; S.mcp = mcp; S.downloads = downloads;
+  if (!db) { S.dbError = "データを読み込めませんでした。claude.ai にサインインした状態でこのページを開いてください。"; S.ready = true; render(); return; }
+  let got = 0; const ready = () => { if (++got >= 3) { S.ready = true; } render(); };
+  const onErr = (e) => { S.dbError = "データの読み込みが止まりました。ページを再読み込みしてください。"; render(); };
+  db.doc("settings/issuer").onSnapshot((s) => { S.settings = s.exists ? s.data() : null; ready(); }, onErr);
+  db.collection("clients").onSnapshot((q) => { S.clients = q.docs.map((d) => ({ id: d.id, ...d.data() })); ready(); }, onErr);
+  db.collection("invoices").onSnapshot((q) => { S.invoices = q.docs.map((d) => ({ id: d.id, ...d.data() })); ready(); }, onErr);
+})();
+</script>
