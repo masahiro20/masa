@@ -71,8 +71,8 @@ nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
 .inv.wide{grid-template-columns:1fr}
 @media (max-width:680px){.inv{grid-template-columns:1fr}}
 .inv h3{font-size:19px}
-.amount{font-size:30px;font-weight:700;letter-spacing:.01em}
-.amount small{font-size:14px;font-weight:500;color:var(--muted);margin-left:4px}
+.amount{font-size:30px;font-weight:700;letter-spacing:.01em;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px}
+.amount small{font-size:14px;font-weight:500;color:var(--muted)}
 dl.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:10px 0 14px;font-size:13.5px}
 dl.kv dt{color:var(--muted)}
 dl.kv dd{margin:0;overflow-wrap:anywhere}
@@ -272,9 +272,9 @@ async function sendInvoice(inv, { test = false } = {}) {
 }
 
 // ---------- 請求書の作成 ----------
-async function createCycle(issueDate) {
+async function createCycle(issueDate, forceYm) {
   const st = settings();
-  const ym = IC.billingMonthFor(issueDate, st);
+  const ym = forceYm || IC.billingMonthFor(issueDate, st);
   const active = S.clients.filter((c) => c.active !== false).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   if (!active.length) { toast("先に請求先を登録してください"); return; }
   let made = 0;
@@ -395,7 +395,6 @@ function viewApprove() {
   let head = `<div class="bulk"><div class="row">
     ${opts.length > 1 ? `<label class="small muted" for="ymSel">表示する月</label><select id="ymSel" class="btn">${opts.map((y) => `<option value="${y}" ${y === S.ym ? "selected" : ""}>${ymLabel(y)}</option>`).join("")}</select>` : ""}
     </div><div class="row">
-    ${!hasNext ? `<button class="btn" data-act="create">${ymLabel(nextYm)}を今すぐ作成</button>` : ""}
     ${list.filter((i) => i.status === "pending" && !problems(i).length).length > 1 ? `<button class="btn primary" data-act="ask-all">承認待ちをまとめて送信（${list.filter((i) => i.status === "pending" && !problems(i).length).length}通）</button>` : ""}
     </div></div>`;
   if (S.confirming === "__all") {
@@ -403,9 +402,16 @@ function viewApprove() {
     head += `<div class="confirm" style="margin-bottom:16px"><div>${pend.map((i) => `<b>${esc(i.client.name)}</b>（${esc(i.client.to.join(", "))}）`).join("、")} に送信します。よろしいですか？</div>
       <div class="row" style="margin-top:8px"><button class="btn primary" data-act="send-all">まとめて送信する</button><button class="btn" data-act="cancel">やめる</button></div></div>`;
   }
+  const today = IC.todayJST(), curYm = today.slice(0, 7);
+  const choices = [IC.addMonths(curYm, -1), curYm].filter((y) => !S.invoices.some((i) => i.ym === y));
+  const manual = choices.length ? `<div class="row small" style="justify-content:center;margin-top:14px">
+      <label for="mkYm" class="muted">待たずに作る：</label>
+      <select id="mkYm" class="btn">${choices.map((y) => `<option value="${y}" ${y === nextYm ? "selected" : ""}>${ymLabel(y)}</option>`).join("")}</select>
+      <button class="btn" data-act="create">を作成（まだ送信はしません）</button></div>` : "";
   if (!list.length) {
-    return head + `<div class="empty">まだ請求書がありません。<br>毎月1日の朝9時に自動で作成され、承認のお知らせがメールで届きます。<br>今すぐ作る場合は上のボタンを押してください。</div>`;
+    return head + `<div class="empty">まだ請求書がありません。<br>毎月1日の朝9時に自動で「承認待ち」の請求書が作られ、スマホに通知が届きます。${manual}</div>`;
   }
+  if (!hasNext) head = head.replace('<div class="row">', `<div class="row">${manual}`);
   return head + list.map(invCard).join("");
 }
 
@@ -561,7 +567,7 @@ document.addEventListener("click", async (ev) => {
       case "skip": await S.db.doc("invoices/" + id).update({ status: "skipped" }); break;
       case "reset": await S.db.doc("invoices/" + id).update({ status: "pending", lastError: null }); break;
       case "mark-sent": await S.db.doc("invoices/" + id).update({ status: "sent", sentAt: inv.sendingAt || nowIso(), lastError: null }); break;
-      case "create": await createCycle(IC.todayJST()); break;
+      case "create": await createCycle(IC.todayJST(), ($("#mkYm") || {}).value); break;
       case "new-client": S.editing = { active: true }; render(); break;
       case "edit-client": S.editing = { ...S.clients.find((c) => c.id === id) }; render(); break;
       case "close-form": S.editing = null; S.confirming = null; render(); break;
