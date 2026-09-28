@@ -218,6 +218,31 @@ async function gmailSend(input) {
   return res && (res.payload || res);
 }
 
+// 送ったPDFを請求先ごとのGoogleドライブのフォルダへ保存する（控え）
+async function saveToDrive(inv) {
+  const st = settings(), r = IC.calc(inv, st);
+  const c = S.clients.find((x) => x.id === inv.clientId) || {};
+  const folderId = c.driveFolderId || inv.client.driveFolderId;
+  if (!folderId) return;
+  const ref = S.db.doc("invoices/" + inv.id);
+  try {
+    if (!S.mcp) throw { code: "not_granted" };
+    const res = await S.mcp.callTool("Google Drive", "create_file", {
+      title: r.filename, parentId: folderId, base64Content: IC.pdfBase64(IC.buildPdf(inv, st).pdf),
+      contentMimeType: "application/pdf", disableConversionToGoogleType: true,
+    }, { cache: false });
+    const f = (res && (res.payload || res)) || {};
+    await ref.update({ driveFileId: f.id || "saved", driveUrl: f.viewUrl || "", driveError: null });
+  } catch (e) {
+    console.error(e);
+    const why = e && e.code === "server_not_connected" ? "Googleドライブが連携されていません。"
+      : e && e.code === "needs_reauth" ? "Googleドライブの接続が切れています。claude.ai の設定で再接続してください。"
+      : e && e.code === "not_in_manifest" ? "このページでのGoogleドライブ利用が許可されていません。"
+      : "ドライブに保存できたか確認できませんでした。フォルダを確認してください。";
+    await ref.update({ driveError: why }).catch(() => {});
+  }
+}
+
 function mailInput(inv, r, { test }) {
   const st = settings();
   const input = {
@@ -262,6 +287,7 @@ async function sendInvoice(inv, { test = false } = {}) {
       total: r.total, tax: r.tax, dueDate: r.dueDate, lastError: null,
     }).catch(() => ref.update({ status: "sent", sentAt: nowIso() }));
     toast(`${inv.client.name} に送信しました`);
+    await saveToDrive(inv);
   } catch (e) {
     console.error(e);
     if (test) { toast(gmailErrorText(e) || "テスト送信の結果がわかりませんでした。Gmailの送信済みを確認してください。"); return; }
@@ -375,7 +401,9 @@ function invCard(inv) {
   } else if (inv.status === "skipped") {
     actions = `<div class="row"><button class="btn" data-act="reset" data-id="${inv.id}">承認待ちに戻す</button></div>`;
   } else if (inv.status === "sent") {
-    actions = `<div class="row"><button class="btn ghost" data-act="pdf" data-id="${inv.id}">PDFを保存</button></div>`;
+    actions = `${inv.driveError && !inv.driveFileId ? `<div class="notice warn small">${esc(inv.driveError)}</div>` : ""}
+      <div class="row">${!inv.driveFileId ? `<button class="btn" data-act="drive" data-id="${inv.id}" ${busy ? "disabled" : ""}>ドライブに保存</button>` : ""}
+      <button class="btn ghost" data-act="pdf" data-id="${inv.id}">PDFを保存</button></div>`;
   }
   return `<article class="inv ${big ? "wide" : ""}">
     ${inv.status === "sent" ? `<div class="stamp" aria-hidden="true"><div>送信<span>${esc((inv.sentAt || "").slice(5, 10).replace("-", "/"))}</span></div></div>` : ""}
@@ -389,6 +417,7 @@ function invCard(inv) {
         <dt>請求日</dt><dd>${IC.jpDate(inv.issueDate)}</dd>
         <dt>支払期限</dt><dd>${IC.jpDate(r.dueDate)}</dd>
         ${inv.sentAt ? `<dt>送信日時</dt><dd>${new Date(inv.sentAt).toLocaleString("ja-JP")}</dd>` : ""}
+        ${inv.status === "sent" && inv.driveFileId ? `<dt>ドライブ</dt><dd>保存済み ${inv.driveUrl ? `<a href="${esc(inv.driveUrl)}" target="_blank" rel="noopener">開く</a>` : ""}</dd>` : ""}
       </dl>
       ${inv.lastError && inv.status !== "sent" ? `<div class="notice bad small">${esc(inv.lastError)}</div>` : ""}
       ${probs.length ? `<div class="notice warn small">${probs.map(esc).join("<br>")}</div>` : ""}
@@ -569,6 +598,7 @@ document.addEventListener("click", async (ev) => {
         break;
       }
       case "test": await sendInvoice(inv, { test: true }); break;
+      case "drive": S.busy.add(id); render(); await saveToDrive(inv); S.busy.delete(id); render(); toast("ドライブへの保存を実行しました"); break;
       case "pdf": {
         if (!S.downloads) { toast("この表示ではPDFを保存できません"); break; }
         const { pdf, r } = IC.buildPdf(inv, settings());
