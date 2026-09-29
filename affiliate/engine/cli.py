@@ -1,5 +1,7 @@
 """コマンドライン: python -m engine <command>
 
+  （Routine から記事を書くためのコマンドは engine/manual.py を参照）
+
   autopilot  キーワード補充 → 記事生成 → 既存記事の改善 → サイト生成 まで全自動で実行
   build      サイトだけ生成（public/ に出力）
   check      全記事に品質ゲートをかける（CI用）
@@ -222,7 +224,11 @@ def cmd_check(cfg: Config, args) -> int:
 def cmd_ping(cfg: Config, args) -> int:
     from .indexnow import ping
 
-    urls = json.loads(CHANGED_FILE.read_text(encoding="utf-8")) if CHANGED_FILE.exists() else []
+    base = cfg.site["base_url"].rstrip("/")
+    if args.slugs:  # 指定された記事（Routine で追加・更新したもの）とトップページを通知
+        urls = [f"{base}/articles/{s}/" for s in args.slugs] + [f"{base}/"]
+    else:
+        urls = json.loads(CHANGED_FILE.read_text(encoding="utf-8")) if CHANGED_FILE.exists() else []
     ping(cfg.site["base_url"], urls)
     return 0  # 通知失敗で運用を止めない
 
@@ -276,17 +282,23 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--articles", type=int, default=None, help="今回生成する記事数（既定は設定値）")
     p.add_argument("--refresh", type=int, default=None, help="今回改善する既存記事数（既定は設定値）")
     p.add_argument("--enhance", type=int, default=None, help="今回リニューアルする既存記事数（既定は設定値）")
-    for name in ("build", "check", "ping", "status"):
+    for name in ("build", "check", "status"):
         sub.add_parser(name)
-    args = parser.parse_args(argv)
-    cfg = load_config()
-    return {
+    p = sub.add_parser("ping")
+    p.add_argument("--slugs", nargs="*", default=None, help="通知する記事の slug（省略時は直近の autopilot の変更分）")
+    from .manual import register
+
+    commands = {
         "autopilot": cmd_autopilot,
         "build": cmd_build,
         "check": cmd_check,
         "ping": cmd_ping,
         "status": cmd_status,
-    }[args.command](cfg, args)
+        **register(sub),
+    }
+    args = parser.parse_args(argv)
+    cfg = load_config()
+    return commands[args.command](cfg, args)
 
 
 if __name__ == "__main__":

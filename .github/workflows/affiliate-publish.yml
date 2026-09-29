@@ -1,0 +1,56 @@
+name: affiliate-publish
+
+# Claude Code の Routine が書いた記事（claude/articles-* ブランチ）を検証して main に取り込み、公開を起動する。
+on:
+  push:
+    branches: ["claude/articles-**"]
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: affiliate-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: affiliate
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: affiliate/requirements.txt
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q tests
+      - name: Quality gate on all articles
+        run: python -m engine check
+
+      - name: Merge into main
+        id: merge
+        run: |
+          git config user.name "affiliate-publish[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          BRANCH="${GITHUB_REF_NAME}"
+          git fetch origin main
+          SLUGS=$(git diff --name-only --diff-filter=AM origin/main...HEAD -- content/articles \
+            | sed -n 's#^affiliate/content/articles/\(.*\)\.md$#\1#p' | tr '\n' ' ')
+          echo "slugs=${SLUGS}" >> "$GITHUB_OUTPUT"
+          git checkout -B main origin/main
+          git merge --no-ff "origin/${BRANCH}" -m "publish: ${BRANCH} を公開"
+          git push origin main
+          git push origin --delete "${BRANCH}" || true
+
+      - name: Trigger site build and deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SLUGS: ${{ steps.merge.outputs.slugs }}
+        run: gh workflow run affiliate-autopilot.yml --ref main -f mode=build -f slugs="${SLUGS}"

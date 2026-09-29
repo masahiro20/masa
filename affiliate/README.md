@@ -31,6 +31,23 @@
 2. **独自ドメイン**（ASPの審査と検索評価の両方に効きます）
 3. **Search Console の接続**（伸びしろのある記事を実データで選んでリライトできるようになります）
 
+## 記事作成の方式（2026年9月〜：月額プランで運用）
+
+記事の調査・執筆は、Claude Code の **Routine**（claude.ai/code/routines）が毎朝1本行います。API のクレジットは使わず、Claude の月額プラン（Pro／Max）の利用枠内で動きます。
+
+```
+毎朝 6:48 (JST)  Routine（クラウド上の Claude Code セッション）
+  ├─ python -m engine next       次のテーマと既存記事を確認
+  ├─ Web検索・公式ページで調査し、記事ファイルを書く
+  ├─ python -m engine validate   品質ゲート（不合格なら直す）
+  ├─ python -m engine publish    公開済みとして記録
+  └─ claude/articles-日付 ブランチに push
+        ↓ affiliate-publish.yml が品質チェック → main に取り込み
+        ↓ affiliate-autopilot.yml がサイト生成 → 公開 → 検索エンジンに通知
+```
+
+従来の API での生成は、GitHub Actions の affiliate-autopilot を手動実行して `mode=generate` を選んだときだけ動きます（クレジットを消費します）。
+
 ## 人間がやること（最初の1回だけ）
 
 本人確認・支払い・口座登録が必要な作業は、法律上も規約上も本人しかできません。以下だけお願いします。

@@ -1,21 +1,31 @@
 name: affiliate-autopilot
 
-# 毎朝 6:07 (JST) に「キーワード補充 → 記事生成 → 既存記事の改善 → サイト生成 → 公開 → 検索エンジン通知」を全自動で実行する。
+# サイトの生成・公開・検索エンジンへの通知を行う。
+# 記事の執筆は Claude Code の Routine（月額プランの利用枠）が毎朝行い、affiliate-publish.yml 経由でここを呼び出す。
+# 手動実行で mode=generate を選ぶと、従来どおり API キーを使って記事を生成する（クレジットを消費する）。
 on:
-  schedule:
-    - cron: "7 21 * * *"
   workflow_dispatch:
     inputs:
+      mode:
+        description: "build = 公開のみ（既定） / generate = APIで記事生成（クレジット消費）"
+        required: false
+        default: "build"
+        type: choice
+        options: [build, generate]
+      slugs:
+        description: "検索エンジンに通知する記事の slug（空白区切り・任意）"
+        required: false
+        default: ""
       articles:
-        description: "今回生成する記事数（空欄なら設定値。初回は 10 などで一気に作成可）"
+        description: "[generate] 今回生成する記事数（空欄なら設定値）"
         required: false
         default: ""
       refresh:
-        description: "今回改善する既存記事数（空欄なら設定値）"
+        description: "[generate] 今回改善する既存記事数（空欄なら設定値）"
         required: false
         default: ""
       enhance:
-        description: "今回リニューアル（図解・内部リンク追加）する既存記事数（空欄なら設定値）"
+        description: "[generate] 今回リニューアルする既存記事数（空欄なら設定値）"
         required: false
         default: ""
   push:
@@ -58,7 +68,7 @@ jobs:
       - run: python -m pytest -q tests
 
       - name: Generate articles and build site
-        if: github.event_name != 'push'
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'generate'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           ANTHROPIC_WORKSPACE_ID: ${{ vars.ANTHROPIC_WORKSPACE_ID }}
@@ -75,11 +85,11 @@ jobs:
           python -m engine autopilot "${ARGS[@]}"
 
       - name: Build site only
-        if: github.event_name == 'push'
+        if: github.event_name != 'workflow_dispatch' || inputs.mode != 'generate'
         run: python -m engine build
 
       - name: Commit generated content
-        if: github.event_name != 'push'
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'generate'
         run: |
           git config user.name "affiliate-autopilot[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -94,7 +104,7 @@ jobs:
 
       # 運用状況を1つの Issue にまとめ、対応が必要なときだけコメントで通知する（スマホに通知が届く）
       - name: Report to issue
-        if: github.event_name != 'push'
+        if: github.event_name == 'workflow_dispatch'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -129,7 +139,7 @@ jobs:
 
   notify-search-engines:
     needs: deploy
-    if: github.event_name != 'push'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -142,4 +152,14 @@ jobs:
           name: changed-urls
           path: affiliate/data
         continue-on-error: true
-      - run: python -m engine ping
+      - name: Notify IndexNow
+        env:
+          INPUT_SLUGS: ${{ inputs.slugs }}
+        run: |
+          if [ -n "$INPUT_SLUGS" ]; then
+            # slug は英小文字・数字・ハイフンのみ受け付ける
+            SLUGS=$(echo "$INPUT_SLUGS" | tr ' ' '\n' | grep -E '^[a-z0-9-]+$' | tr '\n' ' ')
+            python -m engine ping --slugs $SLUGS
+          else
+            python -m engine ping
+          fi
