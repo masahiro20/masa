@@ -36,7 +36,7 @@
 記事の調査・執筆は、Claude Code の **Routine**（claude.ai/code/routines）が毎朝1本行います。API のクレジットは使わず、Claude の月額プラン（Pro／Max）の利用枠内で動きます。
 
 ```
-毎朝 6:48 (JST)  Routine（クラウド上の Claude Code セッション）
+毎朝 6:47 (JST)  Routine（クラウド上の Claude Code セッション）
   ├─ python -m engine next       次のテーマと既存記事を確認
   ├─ Web検索・公式ページで調査し、記事ファイルを書く
   ├─ python -m engine validate   品質ゲート（不合格なら直す）
