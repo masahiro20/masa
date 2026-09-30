@@ -5,7 +5,7 @@ site:
   name_en: "SKILL COMPASS"
   tagline: "プログラミング学習、IT転職、Web制作の道具選び。公開情報と出典をもとに比較・解説するメディア"
   # 独自ドメイン取得後は https://example.com のように変更する（末尾スラッシュなし）
-  base_url: "https://masahiro20.github.io/masa"
+  base_url: "https://skill-compass.jp"
   language: "ja"
   operator_name: "スキルコンパス編集部"
   contact_email: ""          # 空のままだと問い合わせページはフォーム案内なしで表示
