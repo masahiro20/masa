@@ -8,10 +8,10 @@ site:
   base_url: "https://skill-compass.jp"
   language: "ja"
   operator_name: "スキルコンパス編集部"
-  contact_email: ""          # 空のままだと問い合わせページはフォーム案内なしで表示
+  contact_email: "info@aquaokapi50.sakura.ne.jp"  # 空のままだと問い合わせページはフォーム案内なしで表示
   contact_form_url: ""       # Googleフォーム等のURL
   ga4_measurement_id: ""     # 例: G-XXXXXXXXXX（任意）
-  gsc_verification: ""       # Search Console の HTML タグ認証用 content 値（任意）
+  gsc_verification: "K3a1gyVNkXPvUw1vqq4Rwu0J1Pz8zjMqYdScHal3YKU"  # Search Console の HTML タグ認証用 content 値（任意）
 
 # 扱うジャンル。planner（キーワード選定）と writer（記事生成）に渡される。
 niche:
