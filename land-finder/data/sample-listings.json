@@ -1,0 +1,1858 @@
+[
+  {
+    "id": "sample-001",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "成城6丁目 風致地区の閑静な住宅地",
+    "prefecture": "東京都",
+    "city": "世田谷区",
+    "address": "成城6丁目",
+    "lat": 35.642906,
+    "lng": 139.599472,
+    "price": 9980,
+    "landArea": 165.3,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "小田急線",
+        "name": "成城学園前",
+        "walk": 9
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 40,
+    "floorAreaRatio": 80,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 5,
+        "frontage": 8,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01",
+    "otherRestrictions": [
+      "風致地区",
+      "第一種高度地区",
+      "準防火地域"
+    ],
+    "heightDistrict": "第一種高度地区"
+  },
+  {
+    "id": "sample-002",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "等々力2丁目 駅徒歩7分・整形地",
+    "prefecture": "東京都",
+    "city": "世田谷区",
+    "address": "等々力2丁目",
+    "lat": 35.606564,
+    "lng": 139.649384,
+    "price": 7480,
+    "landArea": 110.2,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急大井町線",
+        "name": "等々力",
+        "walk": 7
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "東",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01",
+    "heightDistrict": "第一種高度地区"
+  },
+  {
+    "id": "sample-003",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "玉川3丁目 二子玉川エリア・南道路",
+    "prefecture": "東京都",
+    "city": "世田谷区",
+    "address": "玉川3丁目",
+    "lat": 35.614063,
+    "lng": 139.624649,
+    "price": 8280,
+    "landArea": 120.5,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急田園都市線",
+        "name": "二子玉川",
+        "walk": 11
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 150,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 4.5,
+        "frontage": 9.5,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-004",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "善福寺2丁目 古家あり・善福寺公園近く",
+    "prefecture": "東京都",
+    "city": "杉並区",
+    "address": "善福寺2丁目",
+    "lat": 35.712677,
+    "lng": 139.590866,
+    "price": 6180,
+    "landArea": 125.8,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR中央線",
+        "name": "西荻窪",
+        "walk": 18
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "北",
+        "width": 3.6,
+        "frontage": 8.2,
+        "kind": "公道",
+        "article": "42条2項"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "古家あり",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-005",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "荻窪4丁目 荻窪駅徒歩8分",
+    "prefecture": "東京都",
+    "city": "杉並区",
+    "address": "荻窪4丁目",
+    "lat": 35.70163,
+    "lng": 139.622101,
+    "price": 6980,
+    "landArea": 99.6,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR中央線",
+        "name": "荻窪",
+        "walk": 8
+      }
+    ],
+    "zoning": "第一種中高層住居専用地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "西",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-006",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "大泉学園町6丁目 ゆとりの130㎡・南道路",
+    "prefecture": "東京都",
+    "city": "練馬区",
+    "address": "大泉学園町6丁目",
+    "lat": 35.770954,
+    "lng": 139.582779,
+    "price": 4280,
+    "landArea": 130.1,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "西武池袋線",
+        "name": "大泉学園",
+        "bus": 8,
+        "walk": 3
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-007",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "石神井町4丁目 角地・石神井公園徒歩圏",
+    "prefecture": "東京都",
+    "city": "練馬区",
+    "address": "石神井町4丁目",
+    "lat": 35.747044,
+    "lng": 139.604172,
+    "price": 5380,
+    "landArea": 115.7,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "西武池袋線",
+        "name": "石神井公園",
+        "walk": 10
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "東",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      },
+      {
+        "direction": "南",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-008",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "南大泉3丁目 建築条件付き・旗竿地",
+    "prefecture": "東京都",
+    "city": "練馬区",
+    "address": "南大泉3丁目",
+    "lat": 35.743702,
+    "lng": 139.570435,
+    "price": 3680,
+    "landArea": 105.2,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "西武池袋線",
+        "name": "保谷",
+        "walk": 13
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "北",
+        "width": 4,
+        "frontage": 2.5,
+        "kind": "私道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "旗竿地",
+    "terrain": "平坦",
+    "buildingCondition": true,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-009",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "玉川学園3丁目 高台の閑静な住宅地",
+    "prefecture": "東京都",
+    "city": "町田市",
+    "address": "玉川学園3丁目",
+    "lat": 35.562199,
+    "lng": 139.455933,
+    "price": 2480,
+    "landArea": 165,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "小田急線",
+        "name": "玉川学園前",
+        "walk": 9
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 40,
+    "floorAreaRatio": 80,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "北",
+        "width": 5,
+        "frontage": 8,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "ひな壇",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01",
+    "otherRestrictions": [
+      "宅地造成等工事規制区域"
+    ]
+  },
+  {
+    "id": "sample-010",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "鶴間6丁目 南町田・南6m道路",
+    "prefecture": "東京都",
+    "city": "町田市",
+    "address": "鶴間6丁目",
+    "lat": 35.503338,
+    "lng": 139.475372,
+    "price": 2980,
+    "landArea": 132.4,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急田園都市線",
+        "name": "南町田グランベリーパーク",
+        "walk": 12
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-011",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "金森2丁目 整形地・建築条件なし",
+    "prefecture": "東京都",
+    "city": "町田市",
+    "address": "金森2丁目",
+    "lat": 35.532837,
+    "lng": 139.458633,
+    "price": 2280,
+    "landArea": 120.8,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR横浜線",
+        "name": "成瀬",
+        "walk": 15
+      }
+    ],
+    "zoning": "第一種中高層住居専用地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "西",
+        "width": 4.5,
+        "frontage": 9.5,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-012",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "めじろ台2丁目 計画住宅地・駅徒歩6分",
+    "prefecture": "東京都",
+    "city": "八王子市",
+    "address": "めじろ台2丁目",
+    "lat": 35.641613,
+    "lng": 139.310791,
+    "price": 1780,
+    "landArea": 165.2,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "京王高尾線",
+        "name": "めじろ台",
+        "walk": 6
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 40,
+    "floorAreaRatio": 80,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "ひな壇",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-013",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "高尾町 自然豊かな高尾エリア",
+    "prefecture": "東京都",
+    "city": "八王子市",
+    "address": "高尾町",
+    "lat": 35.633018,
+    "lng": 139.25798,
+    "price": 1280,
+    "landArea": 198.5,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR中央線",
+        "name": "高尾",
+        "walk": 16
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 40,
+    "floorAreaRatio": 80,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "東",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "傾斜地",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-014",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "西葛西5丁目 西葛西駅徒歩9分",
+    "prefecture": "東京都",
+    "city": "江戸川区",
+    "address": "西葛西5丁目",
+    "lat": 35.666058,
+    "lng": 139.861359,
+    "price": 4380,
+    "landArea": 100.3,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東京メトロ東西線",
+        "name": "西葛西",
+        "walk": 9
+      }
+    ],
+    "zoning": "第一種住居地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-015",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "南小岩4丁目 小岩駅徒歩圏・整形地",
+    "prefecture": "東京都",
+    "city": "江戸川区",
+    "address": "南小岩4丁目",
+    "lat": 35.722542,
+    "lng": 139.883408,
+    "price": 3980,
+    "landArea": 95.2,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR総武線",
+        "name": "小岩",
+        "walk": 10
+      }
+    ],
+    "zoning": "第一種住居地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "北",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-016",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "篠崎町3丁目 江戸川近く・セットバックあり",
+    "prefecture": "東京都",
+    "city": "江戸川区",
+    "address": "篠崎町3丁目",
+    "lat": 35.704552,
+    "lng": 139.913574,
+    "price": 3480,
+    "landArea": 110.6,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "都営新宿線",
+        "name": "篠崎",
+        "walk": 12
+      }
+    ],
+    "zoning": "第一種中高層住居専用地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "東",
+        "width": 3.64,
+        "frontage": 8.48,
+        "kind": "公道",
+        "article": "42条2項"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-017",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "若松町2丁目 東府中駅徒歩8分",
+    "prefecture": "東京都",
+    "city": "府中市",
+    "address": "若松町2丁目",
+    "lat": 35.67173,
+    "lng": 139.500015,
+    "price": 3880,
+    "landArea": 120.4,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "京王線",
+        "name": "東府中",
+        "walk": 8
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 5,
+        "frontage": 8,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-018",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "是政2丁目 多摩川近く・整形地",
+    "prefecture": "東京都",
+    "city": "府中市",
+    "address": "是政2丁目",
+    "lat": 35.660061,
+    "lng": 139.494598,
+    "price": 3180,
+    "landArea": 125.9,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR南武線",
+        "name": "府中本町",
+        "walk": 14
+      }
+    ],
+    "zoning": "第一種中高層住居専用地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "西",
+        "width": 5,
+        "frontage": 8,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-019",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "美しが丘2丁目 美しが丘・建築協定の街並み",
+    "prefecture": "神奈川県",
+    "city": "横浜市青葉区",
+    "address": "美しが丘2丁目",
+    "lat": 35.583092,
+    "lng": 139.558716,
+    "price": 5480,
+    "landArea": 165,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急田園都市線",
+        "name": "たまプラーザ",
+        "walk": 10
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 40,
+    "floorAreaRatio": 80,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01",
+    "otherRestrictions": [
+      "地区計画",
+      "建築協定"
+    ]
+  },
+  {
+    "id": "sample-020",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "藤が丘1丁目 駅徒歩6分・高台",
+    "prefecture": "神奈川県",
+    "city": "横浜市青葉区",
+    "address": "藤が丘1丁目",
+    "lat": 35.546459,
+    "lng": 139.530472,
+    "price": 3980,
+    "landArea": 140.2,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急田園都市線",
+        "name": "藤が丘",
+        "walk": 6
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "東",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "高低差あり",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-021",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "つつじが丘 建築条件付き分譲地",
+    "prefecture": "神奈川県",
+    "city": "横浜市青葉区",
+    "address": "つつじが丘",
+    "lat": 35.538448,
+    "lng": 139.519623,
+    "price": 3780,
+    "landArea": 155.3,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急田園都市線",
+        "name": "江田",
+        "walk": 12
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "北",
+        "width": 5,
+        "frontage": 8,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": true,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-022",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "日吉本町3丁目 日吉の高台・南道路",
+    "prefecture": "神奈川県",
+    "city": "横浜市港北区",
+    "address": "日吉本町3丁目",
+    "lat": 35.549862,
+    "lng": 139.637497,
+    "price": 4980,
+    "landArea": 125.6,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急東横線",
+        "name": "日吉",
+        "walk": 14
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "高低差あり",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-023",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "綱島東2丁目 綱島駅徒歩9分",
+    "prefecture": "神奈川県",
+    "city": "横浜市港北区",
+    "address": "綱島東2丁目",
+    "lat": 35.538948,
+    "lng": 139.638733,
+    "price": 4380,
+    "landArea": 110.8,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急東横線",
+        "name": "綱島",
+        "walk": 9
+      }
+    ],
+    "zoning": "第一種住居地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "西",
+        "width": 5,
+        "frontage": 8,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-024",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "有馬5丁目 ゆとりの敷地・南道路",
+    "prefecture": "神奈川県",
+    "city": "川崎市宮前区",
+    "address": "有馬5丁目",
+    "lat": 35.573261,
+    "lng": 139.580887,
+    "price": 3680,
+    "landArea": 130.5,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急田園都市線",
+        "name": "鷺沼",
+        "bus": 7,
+        "walk": 2
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 5,
+        "frontage": 8,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-025",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "宮崎3丁目 宮崎台駅徒歩8分",
+    "prefecture": "神奈川県",
+    "city": "川崎市宮前区",
+    "address": "宮崎3丁目",
+    "lat": 35.591564,
+    "lng": 139.591248,
+    "price": 4580,
+    "landArea": 115,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東急田園都市線",
+        "name": "宮崎台",
+        "walk": 8
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "北",
+        "width": 4,
+        "frontage": 2.5,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "旗竿地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-026",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "鵠沼海岸3丁目 海まで徒歩圏の湘南ライフ",
+    "prefecture": "神奈川県",
+    "city": "藤沢市",
+    "address": "鵠沼海岸3丁目",
+    "lat": 35.320469,
+    "lng": 139.467987,
+    "price": 5280,
+    "landArea": 150.2,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "小田急江ノ島線",
+        "name": "鵠沼海岸",
+        "walk": 7
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01",
+    "otherRestrictions": [
+      "景観計画区域"
+    ]
+  },
+  {
+    "id": "sample-027",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "湘南台4丁目 角地・湘南台",
+    "prefecture": "神奈川県",
+    "city": "藤沢市",
+    "address": "湘南台4丁目",
+    "lat": 35.400452,
+    "lng": 139.463165,
+    "price": 3580,
+    "landArea": 132.1,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "小田急江ノ島線",
+        "name": "湘南台",
+        "walk": 11
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "東",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      },
+      {
+        "direction": "南",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-028",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "由比ガ浜3丁目 由比ガ浜・海近の邸宅地",
+    "prefecture": "神奈川県",
+    "city": "鎌倉市",
+    "address": "由比ガ浜3丁目",
+    "lat": 35.313347,
+    "lng": 139.542465,
+    "price": 7280,
+    "landArea": 145.6,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR横須賀線",
+        "name": "鎌倉",
+        "walk": 15
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 40,
+    "floorAreaRatio": 80,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "北",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01",
+    "otherRestrictions": [
+      "風致地区",
+      "景観地区",
+      "周知の埋蔵文化財包蔵地"
+    ]
+  },
+  {
+    "id": "sample-029",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "山ノ内 北鎌倉の緑に囲まれた土地",
+    "prefecture": "神奈川県",
+    "city": "鎌倉市",
+    "address": "山ノ内",
+    "lat": 35.33556,
+    "lng": 139.548477,
+    "price": 4680,
+    "landArea": 210.3,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR横須賀線",
+        "name": "北鎌倉",
+        "walk": 8
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 40,
+    "floorAreaRatio": 80,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 3.5,
+        "frontage": 12.5,
+        "kind": "公道",
+        "article": "42条2項"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "傾斜地",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01",
+    "otherRestrictions": [
+      "風致地区",
+      "歴史的風土保存区域",
+      "宅地造成等工事規制区域"
+    ]
+  },
+  {
+    "id": "sample-030",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "常盤7丁目 文教地区・北浦和駅徒歩8分",
+    "prefecture": "埼玉県",
+    "city": "さいたま市浦和区",
+    "address": "常盤7丁目",
+    "lat": 35.865715,
+    "lng": 139.644791,
+    "price": 5880,
+    "landArea": 132.4,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR京浜東北線",
+        "name": "北浦和",
+        "walk": 8
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 5,
+        "frontage": 8,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-031",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "岸町5丁目 浦和駅徒歩圏",
+    "prefecture": "埼玉県",
+    "city": "さいたま市浦和区",
+    "address": "岸町5丁目",
+    "lat": 35.851383,
+    "lng": 139.652313,
+    "price": 5280,
+    "landArea": 118.9,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR京浜東北線",
+        "name": "浦和",
+        "walk": 13
+      }
+    ],
+    "zoning": "第一種中高層住居専用地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "東",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-032",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "芝3丁目 蕨駅徒歩12分・整形地",
+    "prefecture": "埼玉県",
+    "city": "川口市",
+    "address": "芝3丁目",
+    "lat": 35.835464,
+    "lng": 139.697021,
+    "price": 2980,
+    "landArea": 105.6,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR京浜東北線",
+        "name": "蕨",
+        "walk": 12
+      }
+    ],
+    "zoning": "第一種住居地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "西",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-033",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "戸塚2丁目 戸塚安行・南道路",
+    "prefecture": "埼玉県",
+    "city": "川口市",
+    "address": "戸塚2丁目",
+    "lat": 35.873024,
+    "lng": 139.746948,
+    "price": 2680,
+    "landArea": 128.4,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "埼玉高速鉄道",
+        "name": "戸塚安行",
+        "walk": 9
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 4.5,
+        "frontage": 9.5,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-034",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "東越谷4丁目 ゆとりの135㎡",
+    "prefecture": "埼玉県",
+    "city": "越谷市",
+    "address": "東越谷4丁目",
+    "lat": 35.899506,
+    "lng": 139.796356,
+    "price": 1880,
+    "landArea": 135.8,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "東武スカイツリーライン",
+        "name": "越谷",
+        "walk": 15
+      }
+    ],
+    "zoning": "第一種中高層住居専用地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-035",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "レイクタウン5丁目 計画的な街並み・地区計画",
+    "prefecture": "埼玉県",
+    "city": "越谷市",
+    "address": "レイクタウン5丁目",
+    "lat": 35.877121,
+    "lng": 139.828751,
+    "price": 2580,
+    "landArea": 125.1,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR武蔵野線",
+        "name": "越谷レイクタウン",
+        "walk": 10
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "東",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01",
+    "otherRestrictions": [
+      "地区計画"
+    ]
+  },
+  {
+    "id": "sample-036",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "小手指町3丁目 小手指駅徒歩9分",
+    "prefecture": "埼玉県",
+    "city": "所沢市",
+    "address": "小手指町3丁目",
+    "lat": 35.799622,
+    "lng": 139.436783,
+    "price": 2380,
+    "landArea": 125.3,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "西武池袋線",
+        "name": "小手指",
+        "walk": 9
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 5,
+        "frontage": 8,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-037",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "東所沢和田2丁目 古家あり・広め",
+    "prefecture": "埼玉県",
+    "city": "所沢市",
+    "address": "東所沢和田2丁目",
+    "lat": 35.793545,
+    "lng": 139.508331,
+    "price": 1980,
+    "landArea": 140.7,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR武蔵野線",
+        "name": "東所沢",
+        "walk": 11
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "北",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "古家あり",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-038",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "前原西5丁目 前原駅徒歩7分・南道路",
+    "prefecture": "千葉県",
+    "city": "船橋市",
+    "address": "前原西5丁目",
+    "lat": 35.698318,
+    "lng": 140.021927,
+    "price": 2780,
+    "landArea": 125,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "新京成線",
+        "name": "前原",
+        "walk": 7
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-039",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "本中山4丁目 下総中山駅徒歩9分",
+    "prefecture": "千葉県",
+    "city": "船橋市",
+    "address": "本中山4丁目",
+    "lat": 35.710258,
+    "lng": 139.942261,
+    "price": 3280,
+    "landArea": 100.2,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR総武線",
+        "name": "下総中山",
+        "walk": 9
+      }
+    ],
+    "zoning": "第一種住居地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "準防火地域",
+    "roads": [
+      {
+        "direction": "東",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-040",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "旭町5丁目 柏駅徒歩圏",
+    "prefecture": "千葉県",
+    "city": "柏市",
+    "address": "旭町5丁目",
+    "lat": 35.85675,
+    "lng": 139.962128,
+    "price": 2280,
+    "landArea": 120.5,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR常磐線",
+        "name": "柏",
+        "walk": 14
+      }
+    ],
+    "zoning": "第一種中高層住居専用地域",
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-041",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "大室 広い敷地（調整区域）",
+    "prefecture": "千葉県",
+    "city": "柏市",
+    "address": "大室",
+    "lat": 35.90826,
+    "lng": 139.95816,
+    "price": 980,
+    "landArea": 250.4,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR常磐線",
+        "name": "柏",
+        "bus": 20,
+        "walk": 5
+      }
+    ],
+    "coverageRatio": 60,
+    "floorAreaRatio": 200,
+    "cityPlanning": "市街化調整区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "西",
+        "width": 4,
+        "frontage": 11,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "畑",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01"
+  },
+  {
+    "id": "sample-042",
+    "source": "sample",
+    "sourceLabel": "サンプルデータ",
+    "title": "富岡2丁目 浦安の計画住宅地",
+    "prefecture": "千葉県",
+    "city": "浦安市",
+    "address": "富岡2丁目",
+    "lat": 35.64624,
+    "lng": 139.905594,
+    "price": 3880,
+    "landArea": 115.4,
+    "landAreaNote": "公簿",
+    "stations": [
+      {
+        "line": "JR京葉線",
+        "name": "新浦安",
+        "bus": 10,
+        "walk": 2
+      }
+    ],
+    "zoning": "第一種低層住居専用地域",
+    "coverageRatio": 50,
+    "floorAreaRatio": 100,
+    "cityPlanning": "市街化区域",
+    "fireZone": "指定なし",
+    "roads": [
+      {
+        "direction": "南",
+        "width": 6,
+        "frontage": 10,
+        "kind": "公道",
+        "article": "42条1項1号"
+      }
+    ],
+    "landCategory": "宅地",
+    "shape": "整形地",
+    "terrain": "平坦",
+    "buildingCondition": false,
+    "status": "更地",
+    "rights": "所有権",
+    "delivery": "相談",
+    "updatedAt": "2026-09-01",
+    "otherRestrictions": [
+      "地区計画"
+    ]
+  }
+]
