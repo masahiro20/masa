@@ -2,31 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: プログラミングスクール 選び方 社会人
-  intent: commercial
-  category: school
-  program: school-general
-  score: 8000.0
-  status: published
-  slug: programming-school-choice-for-workers
-- keyword: プログラミングスクール 後悔 理由 対策
-  intent: commercial
-  category: school
-  program: school-general
-  score: 8000.0
-  status: rejected
-  issues:
-  - 編集長レビュー 6点（合格 7点以上）
-  - 内部リンクの数と対象がルール違反。{{link:}}は1〜3本までで、かつ指示内で提示された既存記事slugのみ使用可だが、本文では programming-school-choice-for-workers / it-career-change-40s-inexperienced-strategy / reskilling-hojokin-kojin-hikaku / programming-school-kyufukin-conditions / programming-school-counseling-questions / programming-school-kyufukin-heiyo-agent の6本を使用しており、いずれも存在を確認できないslug（リンク切れ＝信頼性毀損）。最大でも実在slug 1〜3本に削減すること。
-  - 図解ブロックが過多。ルールは合計3〜6個だが、point×4・warning×3・merit/demerit・check・steps で10個超。セクションごとにブロックが並び、地の文が痩せて『装飾で埋めた』印象になっている。効果の高い4〜6個（給付金のwarning、契約前check、stepsなど）に絞り、残りは本文の文章に戻す。
-  - フロントマターの programs に career-it-agent が含まれていないのに本文で {{aff:career-it-agent}} を使用しており、メタ情報と本文が不整合。programs を実際の使用IDに合わせるか、CTAを差し替える。
-  - 出典表記が『データサイエンスコラム』『教育訓練給付金.JP』『ライフィ保険ニュース解説』など媒体名の略記にとどまり、読者が一次情報にたどり着けない。特に給付率・上限額（80%・年間64万円）や2024年10月改正は、厚生労働省／政府広報オンラインという公的出所と『◯年◯月時点』の時点表記を本文に明記すべき。民間スクール公式ページ由来の数値（最大80%・64万円・192万円）は『民間スクールの公式説明による』と出所の性質を明示すること。
-- keyword: ブログ 始め方 WordPress サーバー ドメイン 手順
-  intent: transactional
-  category: tools
-  program: tools-rental-server
-  score: 8000.0
-  status: queued
 - keyword: Webデザイナー 未経験 スクール 必要か
   intent: commercial
   category: school
@@ -211,3 +186,29 @@ keywords:
   score: 9600.0
   status: published
   slug: programming-school-kyufukin-heiyo-agent
+- keyword: ブログ 始め方 WordPress サーバー ドメイン 手順
+  intent: transactional
+  category: tools
+  program: tools-rental-server
+  score: 8000.0
+  status: published
+  slug: wordpress-blog-start-server-domain-steps
+- keyword: プログラミングスクール 選び方 社会人
+  intent: commercial
+  category: school
+  program: school-general
+  score: 8000.0
+  status: published
+  slug: programming-school-choice-for-workers
+- keyword: プログラミングスクール 後悔 理由 対策
+  intent: commercial
+  category: school
+  program: school-general
+  score: 8000.0
+  status: rejected
+  issues:
+  - 編集長レビュー 6点（合格 7点以上）
+  - 内部リンクの数と対象がルール違反。{{link:}}は1〜3本までで、かつ指示内で提示された既存記事slugのみ使用可だが、本文では programming-school-choice-for-workers / it-career-change-40s-inexperienced-strategy / reskilling-hojokin-kojin-hikaku / programming-school-kyufukin-conditions / programming-school-counseling-questions / programming-school-kyufukin-heiyo-agent の6本を使用しており、いずれも存在を確認できないslug（リンク切れ＝信頼性毀損）。最大でも実在slug 1〜3本に削減すること。
+  - 図解ブロックが過多。ルールは合計3〜6個だが、point×4・warning×3・merit/demerit・check・steps で10個超。セクションごとにブロックが並び、地の文が痩せて『装飾で埋めた』印象になっている。効果の高い4〜6個（給付金のwarning、契約前check、stepsなど）に絞り、残りは本文の文章に戻す。
+  - フロントマターの programs に career-it-agent が含まれていないのに本文で {{aff:career-it-agent}} を使用しており、メタ情報と本文が不整合。programs を実際の使用IDに合わせるか、CTAを差し替える。
+  - 出典表記が『データサイエンスコラム』『教育訓練給付金.JP』『ライフィ保険ニュース解説』など媒体名の略記にとどまり、読者が一次情報にたどり着けない。特に給付率・上限額（80%・年間64万円）や2024年10月改正は、厚生労働省／政府広報オンラインという公的出所と『◯年◯月時点』の時点表記を本文に明記すべき。民間スクール公式ページ由来の数値（最大80%・64万円・192万円）は『民間スクールの公式説明による』と出所の性質を明示すること。
