@@ -263,8 +263,10 @@ function fillManualForm() {
   const form = $("#manualForm");
   for (const el of form.elements) {
     if (!el.name) continue;
-    if (el.type === "checkbox") el.checked = Boolean(state.manual[el.name]);
-    else el.value = state.manual[el.name] ?? "";
+    const [k, sub] = el.name.split(".");
+    const v = sub ? state.manual[k]?.[sub] : state.manual[k];
+    if (el.type === "checkbox") el.checked = Boolean(v);
+    else el.value = v ?? "";
   }
 }
 
@@ -273,8 +275,12 @@ $("#manualForm").addEventListener("input", () => {
   const m = {};
   for (const el of form.elements) {
     if (!el.name) continue;
-    if (el.type === "checkbox") m[el.name] = el.checked;
-    else if (el.value !== "") m[el.name] = el.value;
+    // 「customer.name1」のような名前は manual.customer.name1 に入れる
+    const [k, sub] = el.name.split(".");
+    const v = el.type === "checkbox" ? el.checked : el.value;
+    if (v === "") continue;
+    if (sub) (m[k] ||= {})[sub] = v;
+    else m[k] = v;
   }
   state.manual = m;
   renderAll();

@@ -24,6 +24,7 @@ const CB = {
   sewer: 1066, septic: 1111, centralSeptic: 1067,
   cityGas: 1112, lpIndividual: 1113, lpCentral: 1114,
   surveyFixed: 1121, surveyCurrent: 1122,
+  loanFlat35: 1093, loanBank: 1094,
 };
 
 const ROAD_ARTICLE = {
@@ -74,6 +75,20 @@ export async function buildKakuninsho({ survey, manual = {}, insight = "" }) {
   const f = (key) => findings.find((x) => x.key === key);
   const notes = []; // 備考欄
   const todo = []; // 要確認
+
+  // --- お客様情報（入力があるときだけ。無ければ営業が手書き・手入力する欄なので触らない） ---
+  const c = manual.customer || {};
+  if (c.sales) set("B2", c.sales);
+  if (c.kana1) set("B3", c.kana1);
+  if (c.kana2) set("F3", c.kana2);
+  if (c.name1) set("B4", c.name1);
+  if (c.name2) set("F4", c.name2);
+  if (c.phone1) set("B5", c.phone1);
+  if (c.phone2) set("F5", c.phone2);
+  if (c.zip) set("B6", `〒${c.zip}`);
+  if (c.address) set("D6", c.address);
+  if (manual.loan === "flat35") check(CB.loanFlat35);
+  if (manual.loan === "bank") check(CB.loanBank);
 
   // --- 建築地住所・地番 ---
   set("D7", survey.address || "");

@@ -42,3 +42,16 @@ test("確認書の欄とチェックボックスを埋める", { skip: !hasTempl
   const book = await zip.file("xl/workbook.xml").async("string");
   assert.match(book, /name="調査結果・AI見解"/);
 });
+
+test("お客様情報と融資のチェックも入れられる", { skip: !hasTemplate && "テンプレート未配置" }, async () => {
+  const buf = await buildKakuninsho({
+    survey,
+    manual: { customer: { name1: "山田 太郎", kana1: "ヤマダ タロウ", phone1: "090-0000-0000", zip: "100-0001", address: "東京都千代田区千代田1-1" }, loan: "bank" },
+  });
+  const zip = await JSZip.loadAsync(buf);
+  const sheet = await zip.file("xl/worksheets/sheet1.xml").async("string");
+  assert.match(sheet, /<c r="B4"[^>]*><is><t[^>]*>山田 太郎</);
+  assert.match(sheet, /<c r="B6"[^>]*><is><t[^>]*>〒100-0001</);
+  const vml = await zip.file("xl/drawings/vmlDrawing1.vml").async("string");
+  assert.match(vml, /_x0000_s1094"(?:(?!<\/v:shape>)[\s\S])*?<x:Checked>1/);
+});

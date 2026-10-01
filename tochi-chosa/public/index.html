@@ -58,6 +58,21 @@
         <p class="hint">入力すると容積率の道路幅員制限・セットバック・概算ボリュームを自動で計算します（この端末に保存）。</p>
         <form id="manualForm" class="manual">
           <fieldset>
+            <legend>お客様情報（確認書に入れる場合のみ）</legend>
+            <label>担当営業<input name="customer.sales" type="text"></label>
+            <label>ご主人様 氏名<input name="customer.name1" type="text"></label>
+            <label>ご主人様 フリガナ<input name="customer.kana1" type="text"></label>
+            <label>奥様 氏名<input name="customer.name2" type="text"></label>
+            <label>奥様 フリガナ<input name="customer.kana2" type="text"></label>
+            <label>電話番号①<input name="customer.phone1" type="tel"></label>
+            <label>電話番号②<input name="customer.phone2" type="tel"></label>
+            <label>現住所 〒<input name="customer.zip" type="text" inputmode="numeric"></label>
+            <label>現住所<input name="customer.address" type="text"></label>
+            <label>融資
+              <select name="loan"><option value="">未定</option><option value="flat35">フラット35</option><option value="bank">金融機関</option></select>
+            </label>
+          </fieldset>
+          <fieldset>
             <legend>敷地</legend>
             <label>地番（該当地）<input name="lotNumber" type="text" placeholder="例：○○町字△△123番4"></label>
             <label>郵便番号<input name="zip" type="text" inputmode="numeric" placeholder="例：455-0000"></label>
