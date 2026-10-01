@@ -431,4 +431,33 @@ $("#floodLayer").addEventListener("change", (e) => {
 
 $("#aiBtn").addEventListener("click", generateAi);
 $("#printBtn").addEventListener("click", () => window.print());
+$("#xlsxBtn").addEventListener("click", () => downloadKakuninsho().catch(showError));
+
+// 法令制限確認書（Excel）をダウンロード
+async function downloadKakuninsho() {
+  const btn = $("#xlsxBtn");
+  btn.disabled = true;
+  try {
+    const res = await api("/api/kakuninsho", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ survey: state.survey, manual: state.manual, insight: state.ai }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || `Excel の作成に失敗しました（HTTP ${res.status}）`);
+    }
+    const blob = await res.blob();
+    const name = decodeURIComponent(res.headers.get("content-disposition")?.match(/filename\*=UTF-8''([^;]+)/)?.[1] || "法令制限確認書.xlsx");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+  } finally {
+    btn.disabled = false;
+  }
+}
 $("#historyBtn").addEventListener("click", openHistory);

@@ -4,14 +4,18 @@
   "private": true,
   "description": "住所から土地の法令制限・ライフライン・ハザードを一次調査するツール（愛知・岐阜・三重）",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "node --env-file-if-exists=.env server.js",
     "start": "node server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "kakuninsho": "node --env-file-if-exists=.env scripts/kakuninsho.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.128.0",
+    "jszip": "^3.10.2",
     "pngjs": "^7.0.0"
   }
 }

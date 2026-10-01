@@ -278,13 +278,13 @@ export function deriveFindings({ reinfo = [], hazards = [], manual = {}, city = 
   // --- ライフライン ---
   const lp = (reinfo.find((r) => r.id === "landPrice")?.hits || [])[0];
   const lpRef = lp ? `参考：最寄りの地価公示地点（${lp.距離}）は 水道${yesNo(lp.水道) ?? "-"}／ガス${yesNo(lp.ガス) ?? "-"}／下水道${yesNo(lp.下水道) ?? "-"}` : "";
-  const water = [manual.waterMain && `前面本管 φ${manual.waterMain}`, manual.waterService && `引込 φ${manual.waterService}`].filter(Boolean).join("、");
+  const water = [manual.waterMain && `前面本管 φ${manual.waterMain}`, manual.waterService === "none" ? "既存引込なし（新設引込が必要）" : manual.waterService && `引込 φ${manual.waterService}`].filter(Boolean).join("、");
   add("water", "上水道", water || "未確認", water ? "info" : "check",
     water ? (Number(manual.waterService) && Number(manual.waterService) < 20 ? "引込φ13の場合、2世帯・散水等で口径増径（負担金）が必要になることが多い" : "") : [`${city || "市町村"}の水道課で給水管・配水管図を照会`, lpRef].filter(Boolean).join("。"));
-  const SEWER = { public: "公共下水道", septic: "浄化槽（下水道区域外）", rural: "農業集落排水", none: "なし" };
+  const SEWER = { public: "公共下水道", septic: "個別浄化槽（下水道区域外）", central: "集中浄化槽", rural: "農業集落排水", none: "なし" };
   add("sewer", "下水道", SEWER[manual.sewer] || "未確認", manual.sewer ? (manual.sewer === "septic" ? "warn" : "info") : "check",
     manual.sewer === "septic" ? "浄化槽の設置スペース・放流先（側溝・水路）と放流同意の要否を確認" : manual.sewer ? "公共桝の有無・位置・深さを確認" : [`${city || "市町村"}の下水道課で下水道台帳（本管・公共桝）を照会`, lpRef].filter(Boolean).join("。"));
-  const GAS = { city: "都市ガス（本管あり）", lp: "プロパン（LPガス）", allElectric: "オール電化予定" };
+  const GAS = { city: "都市ガス（本管あり）", lp: "プロパン（個別）", lpCentral: "プロパン（集中）", allElectric: "オール電化予定" };
   add("gas", "ガス", GAS[manual.gas] || "未確認", manual.gas ? "info" : "check",
     manual.gas ? (manual.gas === "city" && manual.gasMain ? `本管 ${manual.gasMain}` : "") : ["ガス事業者（愛知・岐阜・三重の多くは東邦ガス、東三河は中部ガス等）に埋設管を照会", lpRef].filter(Boolean).join("。"));
 

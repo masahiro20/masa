@@ -5,10 +5,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import geocode from "./api/geocode.js";
 import survey from "./api/survey.js";
+import kakuninsho from "./api/kakuninsho.js";
 import insight from "./api/insight.js";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "public");
-const routes = { "/api/geocode": geocode, "/api/survey": survey, "/api/insight": insight };
+const routes = { "/api/geocode": geocode, "/api/survey": survey, "/api/insight": insight, "/api/kakuninsho": kakuninsho };
 const types = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
