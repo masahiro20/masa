@@ -55,7 +55,7 @@ a:hover { color: var(--accent); }
 .empty { color: var(--ink-3); }
 
 /* home */
-.intro { margin: 28px 0 24px; font-size: 13.5px; color: var(--ink-2); letter-spacing: .08em; }
+.intro { margin: 28px 0 24px; font-family: inherit; font-weight: 400; line-height: 1.7; font-size: 13.5px; color: var(--ink-2); letter-spacing: .08em; }
 .feature-link { display: grid; grid-template-columns: 1.35fr 1fr; gap: 36px; align-items: center; text-decoration: none; color: var(--ink); padding-bottom: 36px; border-bottom: 1px solid var(--rule); }
 .feature-img { width: 100%; aspect-ratio: 1200 / 630; }
 .feature-title { font-family: var(--serif); font-size: clamp(22px, 2.6vw, 30px); line-height: 1.55; letter-spacing: .06em; margin: 10px 0 14px; }

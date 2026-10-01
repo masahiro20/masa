@@ -75,6 +75,7 @@ def _organization(cfg: Config, base: str) -> dict:
     return {
         "@type": "Organization",
         "name": cfg.site["name"],
+        "alternateName": cfg.site.get("name_en", ""),
         "url": f"{base}/",
         "logo": {"@type": "ImageObject", "url": f"{base}/static/logo.png"},
     }
@@ -176,8 +177,9 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         urls.append((url, a.updated or a.published))
 
     home_ld = _dump_ld([
-        {"@context": "https://schema.org", "@type": "WebSite", "name": cfg.site["name"], "url": f"{base}/",
-         "inLanguage": "ja"},
+        {"@context": "https://schema.org", "@type": "WebSite", "name": cfg.site["name"],
+         "alternateName": cfg.site.get("name_en", ""), "url": f"{base}/",
+         "description": cfg.site["tagline"], "inLanguage": "ja"},
         {"@context": "https://schema.org", **_organization(cfg, base)},
     ])
     write("index.html", env.get_template("index.html").render(
