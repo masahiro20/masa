@@ -3,6 +3,7 @@
 site:
   name: "スキルコンパス"
   name_en: "SKILL COMPASS"
+  home_title: "プログラミング学習・IT転職の比較メディア"   # トップページの <title> の後半
   tagline: "プログラミング学習、IT転職、Web制作の道具選び。公開情報と出典をもとに比較・解説するメディア"
   # 独自ドメイン取得後は https://example.com のように変更する（末尾スラッシュなし）
   base_url: "https://skill-compass.jp"

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="wrap wide">
-  <p class="intro">{{ site.tagline }}</p>
+  <h1 class="intro">{{ site.tagline }}</h1>
 
   {% if articles %}
   {% set f = articles[0] %}{% set fc = categories.get(f.category) %}
