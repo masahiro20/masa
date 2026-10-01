@@ -61,6 +61,8 @@
             <legend>敷地</legend>
             <label>地番（該当地）<input name="lotNumber" type="text" placeholder="例：○○町字△△123番4"></label>
             <label>郵便番号<input name="zip" type="text" inputmode="numeric" placeholder="例：455-0000"></label>
+            <label class="inline"><input name="surveyFixed" type="checkbox"> 確定測量 する／予定</label>
+            <label class="inline"><input name="surveyCurrent" type="checkbox"> 現況測量 する</label>
           </fieldset>
           <fieldset>
             <legend>前面道路</legend>
@@ -158,7 +160,7 @@
             </label>
             <label>ガス本管（口径・位置など）<input name="gasMain" type="text" placeholder="例：前面道路に中圧B φ100"></label>
           </fieldset>
-          <label class="full">メモ（電柱位置・高低差・越境・境界標など）
+          <label class="full">メモ（電柱位置・高低差・越境・境界標など。確認書の備考にも入ります）
             <textarea name="memo" rows="3"></textarea>
           </label>
         </form>

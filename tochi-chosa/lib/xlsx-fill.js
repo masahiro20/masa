@@ -72,6 +72,14 @@ export function setCell(sheetXml, ref, value, style) {
   return sheetXml.replace(rowRe, `${r[1]}>${newInner}</row>`);
 }
 
+// 行の高さ（pt）を設定する
+export function setRowHeight(sheetXml, row, ht) {
+  return sheetXml.replace(new RegExp(`<row r="${row}"([^>]*?)(/?)>`), (all, attrs, slash) => {
+    const a = attrs.replace(/\sht="[^"]*"/, "").replace(/\scustomHeight="[^"]*"/, "");
+    return `<row r="${row}"${a} ht="${ht}" customHeight="1"${slash}>`;
+  });
+}
+
 // 既存スタイル（cellXfs の index）を複製し、配置だけ差し替えた新しいスタイル番号を返す
 export async function addAlignedStyle(wb, baseIndex, alignmentXml) {
   let styles = await wb.get("xl/styles.xml");

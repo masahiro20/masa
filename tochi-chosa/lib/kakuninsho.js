@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { deriveFindings, normalizeZone, pct } from "../public/shared/rules.js";
 import {
-  openWorkbook, saveWorkbook, sheetPath, setCell, setCheckboxes, addAlignedStyle, addSimpleSheet, forceRecalc,
+  openWorkbook, saveWorkbook, sheetPath, setCell, setRowHeight, setCheckboxes, addAlignedStyle, addSimpleSheet, forceRecalc,
 } from "./xlsx-fill.js";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -23,6 +23,7 @@ const CB = {
   waterYes: 1063, waterNo: 1064, waterCheck: 1065,
   sewer: 1066, septic: 1111, centralSeptic: 1067,
   cityGas: 1112, lpIndividual: 1113, lpCentral: 1114,
+  surveyFixed: 1121, surveyCurrent: 1122,
 };
 
 const ROAD_ARTICLE = {
@@ -203,11 +204,16 @@ export async function buildKakuninsho({ survey, manual = {}, insight = "" }) {
   else todo.push("ガス（都市ガス本管の有無）");
   if (manual.gasMain) notes.push(`ガス本管：${manual.gasMain}`);
 
+  // --- 測量 ---
+  if (manual.surveyFixed) check(CB.surveyFixed);
+  if (manual.surveyCurrent) check(CB.surveyCurrent);
+
   // --- 高さ制限・ハザード（専用欄が無いので「その他地区」と備考へ） ---
   if (zoneKey && LOW_RISE.includes(zoneKey)) other.push("絶対高さ10m/12m（要確認）");
-  const hz = findings.filter((x) => (x.key.startsWith("hz_") || x.key.startsWith("rf_")) && ["warn", "danger"].includes(x.level));
+  const hz = findings.filter((x) => (x.key.startsWith("hz_") || x.key.startsWith("rf_") || x.key === "liquefaction") && ["warn", "danger"].includes(x.level));
   if (hz.length) notes.push(`ハザード：${hz.map((x) => `${x.label.replace(/（.*）/, "")} ${x.value}`).join("、")}`);
 
+  if (manual.memo) notes.push(...manual.memo.split(/\n+/).filter(Boolean));
   if (todo.length) notes.push(`要確認：${todo.join("、")}`);
   notes.push("※詳細は「調査結果・AI見解」シート");
 
@@ -216,6 +222,10 @@ export async function buildKakuninsho({ survey, manual = {}, insight = "" }) {
   const shrinkStyle = await addAlignedStyle(wb, 75, '<alignment horizontal="center" vertical="center" shrinkToFit="1"/>');
   set("B18", other.join("／") || (zones ? "地区計画等の指定なし（データ上）" : ""), shrinkStyle);
   set("B50", notes.map((n) => `・${n}`).join("\n"), wrapStyle);
+  // 備考の行数に合わせて 50・51 行目を広げる（1行あたり約14pt、全角約45文字で折り返し）
+  const lines = notes.reduce((n, t) => n + Math.ceil((t.length + 1) / 45), 0);
+  const ht = Math.max(20, Math.ceil((lines * 14) / 2));
+  xml = setRowHeight(setRowHeight(xml, 50, ht), 51, ht);
 
   wb.set(main, xml);
   await setCheckboxes(wb, main, checks);
