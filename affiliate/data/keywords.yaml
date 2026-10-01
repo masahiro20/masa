@@ -2,12 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: プログラミングスクール 転職保証 デメリット
-  intent: commercial
-  category: school
-  program: school-general
-  score: 8000.0
-  status: queued
 - keyword: プログラミングスクール 料金 相場 分割払い
   intent: commercial
   category: school
@@ -180,6 +174,13 @@ keywords:
   score: 9600.0
   status: published
   slug: programming-school-kyufukin-heiyo-agent
+- keyword: プログラミングスクール 転職保証 デメリット
+  intent: commercial
+  category: school
+  program: school-general
+  score: 8000.0
+  status: published
+  slug: programming-school-tenshoku-hosho-demerit
 - keyword: Webデザイナー 未経験 スクール 必要か
   intent: commercial
   category: school
