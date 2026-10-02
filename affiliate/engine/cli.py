@@ -286,6 +286,7 @@ def main(argv: list[str] | None = None) -> int:
         sub.add_parser(name)
     p = sub.add_parser("ping")
     p.add_argument("--slugs", nargs="*", default=None, help="通知する記事の slug（省略時は直近の autopilot の変更分）")
+    from .ads import register as register_ads
     from .manual import register
 
     commands = {
@@ -295,6 +296,7 @@ def main(argv: list[str] | None = None) -> int:
         "ping": cmd_ping,
         "status": cmd_status,
         **register(sub),
+        **register_ads(sub),
     }
     args = parser.parse_args(argv)
     cfg = load_config()

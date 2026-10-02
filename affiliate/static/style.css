@@ -205,3 +205,5 @@ a.internal-link { font-weight: 700; }
   .body h2 { margin-top: 56px; }
   .toc { padding: 16px 18px 12px; }
 }
+
+.aff-pixel { position: absolute; width: 1px; height: 1px; border: 0; opacity: 0; pointer-events: none; }
