@@ -11,10 +11,15 @@ def find_shortcodes(body: str) -> list[str]:
     return [m.group(1) for m in SHORTCODE_RE.finditer(body)]
 
 
-def _anchor(url: str, text: str) -> str:
+def _anchor(url: str, text: str, pixel: str = "") -> str:
+    # pixel は ASP の広告コードに含まれる 1×1 の表示回数計測用画像。規約上、リンクと一緒に残す
+    tracker = (
+        f'<img class="aff-pixel" src="{html.escape(pixel, quote=True)}" width="1" height="1" alt="">'
+        if pixel else ""
+    )
     return (
         f'<a href="{html.escape(url, quote=True)}" rel="sponsored noopener" '
-        f'target="_blank">{html.escape(text)}</a>'
+        f'referrerpolicy="no-referrer-when-downgrade" target="_blank">{html.escape(text)}</a>{tracker}'
     )
 
 
@@ -27,12 +32,13 @@ def expand_shortcodes(body: str, programs: dict[str, dict]) -> str:
         if program is None:
             return html.escape(label or "")
         url = (program.get("url") or "").strip()
+        pixel = (program.get("pixel") or "").strip()
         if label:  # 文中リンク
-            return _anchor(url, label) if url else html.escape(label)
+            return _anchor(url, label, pixel) if url else html.escape(label)
         name = html.escape(program["name"])
         cta = program.get("cta") or "公式サイトを見る"
         button = (
-            _anchor(url, cta).replace("<a ", '<a class="cta-button" ', 1)
+            _anchor(url, cta, pixel).replace("<a ", '<a class="cta-button" ', 1)
             if url
             else f'<span class="cta-button is-disabled">{html.escape(cta)}</span>'
         )
