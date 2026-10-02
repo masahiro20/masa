@@ -2,12 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 会社員 副業 Web制作 始め方 手順
-  intent: commercial
-  category: tools
-  program: tools-rental-server
-  score: 6400.0
-  status: queued
 - keyword: 30代 未経験 エンジニア 転職 現実
   intent: informational
   category: career
@@ -198,6 +192,13 @@ keywords:
   score: 8000.0
   status: published
   slug: programming-school-choice-for-workers
+- keyword: 会社員 副業 Web制作 始め方 手順
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 6400.0
+  status: published
+  slug: kaishain-fukugyo-web-seisaku-hajimekata
 - keyword: レンタルサーバー 選び方 初心者 WordPress
   intent: commercial
   category: tools
