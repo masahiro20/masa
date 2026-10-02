@@ -79,10 +79,11 @@ programs:
     cta: "講座の内容とレビューを見てみる"
 
   - id: learning-books
-    name: "技術書・学習書（Amazon / 楽天）"
+    name: "技術書・学習書（楽天市場）"
     category: learning
-    asp: ""
-    url: ""
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5829884&p_id=54&pc_id=54&pl_id=622"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5829884&p_id=54&pc_id=54&pl_id=622"
     est_reward_jpy: 100
     keywords: ["本", "参考書", "入門書"]
-    cta: "書籍の詳細を見る"
+    cta: "楽天市場で技術書を探す"
