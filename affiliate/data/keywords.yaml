@@ -38,12 +38,6 @@ keywords:
   program: tools-rental-server
   score: 3200.0
   status: queued
-- keyword: オンライン講座 プログラミングスクール 違い 比較
-  intent: commercial
-  category: learning
-  program: learning-online-course
-  score: 400.0
-  status: queued
 - keyword: 独自ドメイン 取り方 初心者 おすすめ
   intent: transactional
   category: tools
@@ -206,6 +200,13 @@ keywords:
   score: 6400.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: オンライン講座 プログラミングスクール 違い 比較
+  intent: commercial
+  category: learning
+  program: learning-online-course
+  score: 400.0
+  status: published
+  slug: online-course-vs-programming-school
 - keyword: プログラミングスクール 後悔 理由 対策
   intent: commercial
   category: school
