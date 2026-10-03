@@ -38,12 +38,6 @@ keywords:
   program: tools-rental-server
   score: 3200.0
   status: queued
-- keyword: 独自ドメイン 取り方 初心者 おすすめ
-  intent: transactional
-  category: tools
-  program: tools-domain
-  score: 300.0
-  status: queued
 - keyword: Python 独学 ロードマップ 社会人
   intent: informational
   category: learning
@@ -207,6 +201,13 @@ keywords:
   score: 400.0
   status: published
   slug: online-course-vs-programming-school
+- keyword: 独自ドメイン 取り方 初心者 おすすめ
+  intent: transactional
+  category: tools
+  program: tools-domain
+  score: 300.0
+  status: published
+  slug: dokuji-domain-torikata-shoshinsha
 - keyword: プログラミングスクール 後悔 理由 対策
   intent: commercial
   category: school
