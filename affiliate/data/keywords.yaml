@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: フリーランスエンジニア 未経験 案件
-  intent: commercial
-  category: career
-  program: career-freelance
-  score: 24000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 未経験 エンジニア やめとけ
   intent: commercial
   category: career
@@ -228,6 +220,15 @@ keywords:
   program: learning-books
   score: 40.0
   status: queued
+- keyword: フリーランスエンジニア 未経験 案件
+  intent: commercial
+  category: career
+  program: career-freelance
+  score: 24000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: freelance-engineer-mikeiken-anken
 - keyword: フリーランスエンジニア 週3
   intent: commercial
   category: career
