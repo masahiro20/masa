@@ -53,3 +53,10 @@ def test_faq_extraction():
     faqs = extract_faq(BODY)
     assert faqs[0] == ("何社登録すべき？", "2〜3社から始めるのが目安です。")
     assert faqs[1][0] == "費用はかかる？"
+
+
+def test_extract_faq_keeps_leading_dot_and_strips_q_prefix():
+    body = "## よくある質問\n\n### .comと.jpはどちらがいい？\n用途によります。\n\n### Q1. 費用は？\n無料です。\n"
+    faqs = extract_faq(body)
+    assert faqs[0][0] == ".comと.jpはどちらがいい？"
+    assert faqs[1][0] == "費用は？"

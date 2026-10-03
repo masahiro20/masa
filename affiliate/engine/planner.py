@@ -1,6 +1,7 @@
 """記事テーマ（キーワード）の在庫管理と自動補充。
 
-優先度 = 案件の報酬目安 × 検索意図の重み。申込に近い意図・報酬の高い案件ほど先に記事化する。
+優先度 = 案件の報酬目安 × 検索意図の重み × 需要係数（boost）。申込に近い意図・報酬の高い案件ほど先に記事化する。
+boost は Google のサジェスト等で実際に検索されていると確認できたキーワードに付ける（既定 1.0）。
 """
 from __future__ import annotations
 
@@ -28,7 +29,8 @@ def normalize(keyword: str) -> str:
 
 def score(item: dict, programs: dict[str, dict]) -> float:
     reward = programs.get(item.get("program", ""), {}).get("est_reward_jpy", 0)
-    return round(reward * INTENT_WEIGHT.get(item.get("intent", ""), 0.4), 1)
+    boost = float(item.get("boost", 1.0) or 1.0)
+    return round(reward * INTENT_WEIGHT.get(item.get("intent", ""), 0.4) * boost, 1)
 
 
 class KeywordQueue:
@@ -62,14 +64,19 @@ class KeywordQueue:
                 continue
             if c.get("category") not in cfg.category_names:
                 c["category"] = cfg.programs_by_id[c["program"]]["category"]
-            self.items.append({
+            item = {
                 "keyword": c["keyword"].strip(),
                 "intent": c["intent"],
                 "category": c["category"],
                 "program": c["program"],
                 "score": 0,
                 "status": "queued",
-            })
+            }
+            if c.get("boost"):
+                item["boost"] = float(c["boost"])
+            if c.get("source"):
+                item["source"] = str(c["source"])
+            self.items.append(item)
             known.add(key)
             added += 1
         return added

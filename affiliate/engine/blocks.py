@@ -131,7 +131,7 @@ def extract_faq(body: str) -> list[tuple[str, str]]:
         a = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", a)
         a = re.sub(r"[*_`#>]", "", a)
         a = re.sub(r"\s+", " ", a).strip()
-        q = q.strip().lstrip("Q").lstrip("：:.． ").strip()
+        q = re.sub(r"^Q\d*\s*[：:.．]\s*", "", q.strip()).strip()
         if q and a:
             faqs.append((q, a[:500]))
     return faqs
