@@ -1,5 +1,5 @@
 ---
-title: WordPress向けレンタルサーバーの選び方｜初心者が見る8項目
+title: レンタルサーバーの選び方｜初心者がWordPress用に見る8項目
 slug: rental-server-erabikata-shoshinsha-wordpress
 description: 初心者がWordPress用のレンタルサーバーを選ぶときに確認したい8つの項目を、公式の推奨動作環境や各社の公式マニュアルをもとに整理。料金の見方、自動バックアップ、無料SSL、簡単インストール、サポートなど、比較の手順と失敗しやすい点も解説します。
 category: tools

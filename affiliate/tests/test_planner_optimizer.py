@@ -47,3 +47,11 @@ def test_refresh_prefers_gsc_opportunities():
                                       today=date(2026, 9, 25))
     assert picks[0][0].slug == "striking"
     assert "9.2位" in picks[0][1]
+
+
+def test_boost_raises_score():
+    from engine.planner import score
+    programs = {"p": {"est_reward_jpy": 1000}}
+    base = score({"program": "p", "intent": "commercial"}, programs)
+    boosted = score({"program": "p", "intent": "commercial", "boost": 1.5}, programs)
+    assert boosted == base * 1.5

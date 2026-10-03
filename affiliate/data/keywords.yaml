@@ -2,6 +2,94 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: フリーランスエンジニア 週3
+  intent: commercial
+  category: career
+  program: career-freelance
+  score: 24000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: フリーランスエンジニア 未経験 案件
+  intent: commercial
+  category: career
+  program: career-freelance
+  score: 24000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 未経験 エンジニア やめとけ
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: プログラミングスクール 社会人 無料
+  intent: commercial
+  category: school
+  program: school-kyufukin
+  score: 14400.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: プログラミングスクール やめとけ
+  intent: commercial
+  category: school
+  program: school-general
+  score: 12000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: プログラミングスクール 社会人 安い
+  intent: commercial
+  category: school
+  program: school-general
+  score: 12000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 40代 プログラミングスクール おすすめ
+  intent: commercial
+  category: school
+  program: school-general
+  score: 12000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: エンジニア 転職 未経験 志望動機
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 9000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: リスキリング 補助金 転職しない
+  intent: informational
+  category: school
+  program: school-kyufukin
+  score: 7200.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: リスキリング 補助金 いつもらえる
+  intent: informational
+  category: school
+  program: school-kyufukin
+  score: 7200.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ハロートレーニング 評判
+  intent: informational
+  category: school
+  program: school-kyufukin
+  score: 7200.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: 30代 未経験 エンジニア 転職 現実
   intent: informational
   category: career
@@ -26,18 +114,66 @@ keywords:
   program: career-it-agent
   score: 6000.0
   status: queued
+- keyword: webデザイナー 未経験 30代 無理
+  intent: informational
+  category: school
+  program: school-general
+  score: 6000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: 教育訓練給付金 申請 流れ 必要書類
   intent: informational
   category: school
   program: school-kyufukin
   score: 4800.0
   status: queued
+- keyword: レンタルサーバー 費用 勘定科目
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 4800.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: WordPress ポートフォリオ 作り方 未経験
   intent: informational
   category: tools
   program: tools-rental-server
   score: 3200.0
   status: queued
+- keyword: web制作 副業 稼げない
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: web制作 副業 ロードマップ
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: プログラミング 独学 何から
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: python 独学 何時間
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: Python 独学 ロードマップ 社会人
   intent: informational
   category: learning
@@ -56,12 +192,44 @@ keywords:
   program: learning-online-course
   score: 200.0
   status: queued
+- keyword: itパスポート おすすめ 参考書
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 120.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: プログラミング 入門書 選び方 言語別
   intent: commercial
   category: learning
   program: learning-books
   score: 80.0
   status: queued
+- keyword: エンジニア 転職 未経験 資格
+  intent: informational
+  category: career
+  program: learning-books
+  score: 60.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: itパスポート 勉強時間 社会人
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 60.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 基本情報技術者 未経験 独学
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 60.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: セキュリティエンジニア 未経験 勉強 何から
   intent: informational
   category: learning
