@@ -131,6 +131,7 @@ export async function buildKakuninsho({ survey, manual = {}, insight = "" }) {
   const fireName = fire?.[0]?.地域 || "";
   if (fireName.includes("準防火")) check(CB.quasiFire);
   else if (fireName.includes("防火")) check(CB.fire);
+  else if (manual.art22) check(CB.art22); // 役所・県告示で確認できた場合
   else todo.push("法22条区域の指定");
 
   // --- 高度地区（データが無いので要確認。近隣の地価公示に記載があれば参考に書く） ---
