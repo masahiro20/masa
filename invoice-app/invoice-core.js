@@ -48,7 +48,8 @@
     const items = (c.items || []).map((it) => {
       const quantity = Number(it.quantity ?? 1);
       const unitPrice = Number(it.unitPrice);
-      return { name: fill(it.name, vars), quantity, unitPrice, amount: quantity * unitPrice };
+      return { name: fill(it.name, vars), quantity, unitPrice, amount: quantity * unitPrice,
+        date: it.date || "", unit: it.unit || "", note: it.note || "" };
     });
     const gross = items.reduce((s, i) => s + i.amount, 0);
     let subtotal, tax, total;
@@ -196,11 +197,14 @@
     y += 5; cv.line(L, y, R, y, { color: RULE });
     for (const it of r.items) {
       const nameLines = wrap(it.name, 9, X.price - X.name - 60);
+      if (it.date) cv.text(X.date, y + 14, slashDate(it.date), 9);
+      if (it.unit) cv.text(X.unit, y + 14, it.unit, 9);
       nameLines.forEach((s, i) => cv.text(X.name, y + 14 + i * 12, s, 9));
+      if (it.note) cv.text(X.name, y + 14 + nameLines.length * 12 - 1, it.note, 7.5, { color: "#8a8a8a" });
       cv.text(X.price, y + 14, yen(it.netUnitPrice), 9, { align: "right" });
       cv.text(X.qty, y + 14, yen(it.quantity), 9, { align: "right" });
       cv.text(X.amount, y + 14, yen(it.netAmount), 9, { align: "right" });
-      y += 8 + nameLines.length * 12 + 2;
+      y += 8 + nameLines.length * 12 + 2 + (it.note ? 11 : 0);
     }
     y += 12;
 
