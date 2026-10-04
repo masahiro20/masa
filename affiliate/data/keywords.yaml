@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 未経験 エンジニア やめとけ
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: プログラミングスクール 社会人 無料
   intent: commercial
   category: school
@@ -238,6 +230,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: freelance-engineer-shu3-anken
+- keyword: 未経験 エンジニア やめとけ
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: mikeiken-engineer-yametoke
 - keyword: フリーランスエンジニア 案件 獲得 方法
   intent: commercial
   category: career
