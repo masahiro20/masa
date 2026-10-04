@@ -15,8 +15,9 @@ programs:
 - school-general
 - school-kyufukin
 - learning-online-course
+- career-coaching
 published: '2026-10-01'
-updated: '2026-10-01'
+updated: '2026-10-04'
 origin: ai
 editor_score: null
 sources:
@@ -28,6 +29,10 @@ sources:
   url: https://www.webdesign.gr.jp/
 - title: 受検資格 - ウェブデザイン技能検定
   url: https://www.webdesign.gr.jp/summery/conditions/
+- title: キャリアコーチングとは？料金相場・エージェントとの違いを正直に解説 - キャリナビ
+  url: https://carinavi.com/career-coaching/
+- title: キャリナビ 公式サイト
+  url: https://carinavi.com/
 ---
 未経験からWebデザイナーを目指すのに、スクールは**必須ではありません**。Webデザイナーになるために特定の学歴や資格が法律で求められているわけではなく、独学や公的な職業訓練から仕事につなげるルートもあります。
 
@@ -179,6 +184,12 @@ sources:
 :::
 
 {{aff:school-general}}
+
+### Webデザイナー以外の選択肢も含めて相談したい場合
+
+未経験からWebデザイナーを目指すべきか、ほかの職種も含めて考えたい場合は、スクール選びの前にキャリアの方向性を整理しておくと判断がぶれにくくなります。たとえば{{aff:career-coaching|キャリナビ}}は、価値観や強みの言語化から求人提案、入社後のフォローまでを専属の担当者が伴走するサービスです。公式サイトの説明（2026年10月時点）では、費用は採用企業側が支払う紹介手数料でまかなわれるため利用者は無料、主な対象は20〜30代、初回面談はオンラインで30分とされています。仕組みとしては転職エージェントと同じ人材紹介サービスなので、最終的に求人の紹介を受けることも視野に入れつつ、方向性の相談から始めたい人に向いています。
+
+{{aff:career-coaching}}
 
 ## よくある質問
 

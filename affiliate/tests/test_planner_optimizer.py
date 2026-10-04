@@ -55,3 +55,10 @@ def test_boost_raises_score():
     base = score({"program": "p", "intent": "commercial"}, programs)
     boosted = score({"program": "p", "intent": "commercial", "boost": 1.5}, programs)
     assert boosted == base * 1.5
+
+
+def test_linked_program_is_prioritized():
+    programs = {"a": {"est_reward_jpy": 10000, "url": ""}, "b": {"est_reward_jpy": 10000, "url": "https://px.a8.net/x"}}
+    unlinked = score({"program": "a", "intent": "commercial"}, programs)
+    linked = score({"program": "b", "intent": "commercial"}, programs)
+    assert linked == unlinked * 3
