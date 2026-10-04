@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: プログラミングスクール 社会人 無料
-  intent: commercial
-  category: school
-  program: school-kyufukin
-  score: 14400.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: プログラミングスクール やめとけ
   intent: commercial
   category: school
@@ -253,6 +245,15 @@ keywords:
   score: 16000.0
   status: published
   slug: freelance-engineer-unit-price-by-skill
+- keyword: プログラミングスクール 社会人 無料
+  intent: commercial
+  category: school
+  program: school-kyufukin
+  score: 14400.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: programming-school-shakaijin-muryo
 - keyword: 40代 未経験 IT転職 可能性 戦略
   intent: commercial
   category: career
