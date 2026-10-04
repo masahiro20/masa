@@ -27,9 +27,16 @@ def normalize(keyword: str) -> str:
     return " ".join(sorted(re.sub(r"[\s　]+", " ", keyword.lower()).strip().split(" ")))
 
 
+# 提携済み（広告リンクあり）の案件につながるテーマは、今すぐ収益になりうるので優先する
+LINKED_BOOST = 3.0
+
+
 def score(item: dict, programs: dict[str, dict]) -> float:
-    reward = programs.get(item.get("program", ""), {}).get("est_reward_jpy", 0)
+    program = programs.get(item.get("program", ""), {})
+    reward = program.get("est_reward_jpy", 0)
     boost = float(item.get("boost", 1.0) or 1.0)
+    if (program.get("url") or "").strip():
+        boost *= LINKED_BOOST
     return round(reward * INTENT_WEIGHT.get(item.get("intent", ""), 0.4) * boost, 1)
 
 

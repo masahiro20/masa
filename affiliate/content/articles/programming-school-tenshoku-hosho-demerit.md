@@ -13,8 +13,9 @@ keyword: プログラミングスクール 転職保証 デメリット
 programs:
 - school-general
 - career-it-agent
+- career-coaching
 published: '2026-10-02'
-updated: '2026-10-02'
+updated: '2026-10-04'
 origin: ai
 editor_score: null
 sources:
@@ -28,6 +29,10 @@ sources:
   url: https://jinzai.hellowork.mhlw.go.jp/icb_data/StaticContents/GICB190030.html
 - title: 教育訓練給付金｜厚生労働省
   url: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/jinzaikaihatsu/kyouiku.html
+- title: キャリアコーチングとは？料金相場・エージェントとの違いを正直に解説 - キャリナビ
+  url: https://carinavi.com/career-coaching/
+- title: キャリナビ 公式サイト
+  url: https://carinavi.com/
 ---
 プログラミングスクールの「転職保証」は、条件を満たしたうえで転職できなかった場合に受講料が返金される仕組みです。未経験者にとっては心強い制度ですが、**「転職できなければ必ずお金が戻る」制度ではありません。**
 
@@ -165,6 +170,12 @@ sources:
 スクール選びの軸を整理したい人は、{{link:programming-school-choice-for-workers|社会人向けプログラミングスクールの選び方}}も参考にしてください。比較の候補が決まったら、複数のスクールの無料カウンセリングで条件を聞き比べるのが近道です。
 
 {{aff:school-general}}
+
+### 受講を決める前に、キャリアの方向性を無料で整理する
+
+転職保証を理由にスクールへ申し込む前に、そもそもエンジニア職が自分に合うのか、ほかの職種のほうが納得できるのかを整理しておくと、受講料を払ってから方向転換するリスクを減らせます。たとえば{{aff:career-coaching|キャリナビ}}は、価値観や強みの言語化から求人提案、入社後のフォローまでを専属の担当者が伴走するサービスです。公式サイトの説明（2026年10月時点）では、費用は採用企業側が支払う紹介手数料でまかなわれるため利用者は無料、主な対象は20〜30代、初回面談はオンラインで30分とされています。仕組みとしては転職エージェントと同じ人材紹介サービスなので、最終的に求人の紹介を受けることも視野に入れつつ、方向性の相談から始めたい人に向いています。
+
+{{aff:career-coaching}}
 
 ## よくある質問
 

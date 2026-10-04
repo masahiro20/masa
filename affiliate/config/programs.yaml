@@ -51,6 +51,16 @@ programs:
     keywords: ["フリーランスエンジニア", "案件", "独立", "単価"]
     cta: "公開されている案件を見てみる"
 
+  - id: career-coaching
+    name: "キャリナビ（無料のキャリアコーチング＋転職支援）"
+    category: career
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96718"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96718"
+    est_reward_jpy: 10000
+    keywords: ["キャリアコーチング", "キャリア相談", "やりたいこと", "自己分析", "転職 迷う", "向いている仕事"]
+    cta: "無料のオンライン面談で方向性を相談する"
+
   - id: tools-rental-server
     name: "レンタルサーバー"
     category: tools

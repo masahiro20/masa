@@ -13,8 +13,9 @@ keyword: 転職エージェント IT 複数登録 メリット
 programs:
 - career-it-agent
 - school-general
+- career-coaching
 published: '2026-09-26'
-updated: '2026-09-26'
+updated: '2026-10-04'
 origin: ai
 editor_score: 7
 sources:
@@ -40,6 +41,10 @@ sources:
   url: https://www.ipa.go.jp/digital/chousa/discussion-paper/dx-talent-shortage.html
 - title: 職業紹介事業｜厚生労働省
   url: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/haken-shoukai/shoukainitsuite.html
+- title: キャリアコーチングとは？料金相場・エージェントとの違いを正直に解説 - キャリナビ
+  url: https://carinavi.com/career-coaching/
+- title: キャリナビ 公式サイト
+  url: https://carinavi.com/
 ---
 IT・Web系の転職で、**転職エージェントの複数登録（併用）は問題なく行えます**。
 
@@ -251,6 +256,12 @@ JAC Recruitmentは注意点として「断る際は早めに伝える」こと�
 独学で進めるか体系的に学ぶかは状況次第ですが、判断に迷うなら{{aff:school-general|スクールの無料カウンセリング}}で必要な学習量の見積もりだけ聞いて、受講せず独学に戻るという使い方も可能です。お金をかけずに済む方法から検討して構いません。
 
 なお、スクール経由での転職支援とエージェントを同時に使う場合は注意点があります。詳しくは{{link:programming-school-kyufukin-heiyo-agent|給付金とエージェント併用の落とし穴}}を確認してください。
+
+### 考えの整理から手伝ってほしい場合
+
+「転職するか自体を決めていない」段階で、情報収集よりも考えの整理を手伝ってほしい場合は、求人紹介の前に自己理解のフェーズを置くキャリアコーチング型のサービスも選択肢になります。たとえば{{aff:career-coaching|キャリナビ}}は、価値観や強みの言語化から求人提案、入社後のフォローまでを専属の担当者が伴走するサービスです。公式サイトの説明（2026年10月時点）では、費用は採用企業側が支払う紹介手数料でまかなわれるため利用者は無料、主な対象は20〜30代、初回面談はオンラインで30分とされています。仕組みとしては転職エージェントと同じ人材紹介サービスなので、最終的に求人の紹介を受けることも視野に入れつつ、方向性の相談から始めたい人に向いています。
+
+{{aff:career-coaching}}
 
 ## よくある質問
 
