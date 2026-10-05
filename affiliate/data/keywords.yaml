@@ -2,12 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: やりたいことがわからない 転職 20代 相談先
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 24000.0
-  status: queued
 - keyword: キャリアコーチング 意味ない 後悔 選び方
   intent: commercial
   category: career
@@ -228,6 +222,13 @@ keywords:
   program: learning-books
   score: 120.0
   status: queued
+- keyword: やりたいことがわからない 転職 20代 相談先
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 24000.0
+  status: published
+  slug: yaritaikoto-wakaranai-tenshoku-20dai
 - keyword: 転職エージェント キャリアコーチング 違い 使い分け
   intent: commercial
   category: career
