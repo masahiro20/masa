@@ -106,6 +106,8 @@ export async function buildKakuninsho({ survey, manual = {}, insight = "" }) {
     if (names.some((n) => n.includes("調整"))) check(CB.adjustment);
     else if (names.some((n) => n.includes("市街化区域"))) check(CB.urbanization);
     else if (names.some((n) => n.includes("非線引") || n.includes("未線引"))) check(CB.unzoned);
+    // 区域区分の記載がなく「都市計画区域」だけの場合は非線引き（未線引）都市計画区域
+    else if (names.length && names.every((n) => n === "都市計画区域")) check(CB.unzoned);
     else if (names.length) todo.push("区域区分（線引きの有無）");
   } else todo.push("都市計画区域");
 
@@ -115,9 +117,11 @@ export async function buildKakuninsho({ survey, manual = {}, insight = "" }) {
   set("B12", zoneForForm(uniqueZones[0]?.用途地域)); // テンプレートの見本値も上書き
   set("G12", uniqueZones[1] ? `${zoneForForm(uniqueZones[1].用途地域)}地域` : "");
   if (uniqueZones.length > 1) notes.push("用途地域が敷地内で2つにまたがる可能性（面積按分を要確認）");
-  if (!uniqueZones.length) todo.push("用途地域・建蔽率・容積率");
-  const bcr = pct(uniqueZones[0]?.建蔽率);
-  const far = pct(uniqueZones[0]?.容積率);
+  if (!uniqueZones.length && manual.bcr == null) todo.push("用途地域・建蔽率・容積率");
+  if (!uniqueZones.length) set("B12", "無指定"); // 書式上「無指定地域」（白地）と読める
+  // 用途地域の指定がない区域（白地）は役所で確認した値を手入力で受け付ける
+  const bcr = pct(uniqueZones[0]?.建蔽率) ?? pct(manual.bcr);
+  const far = pct(uniqueZones[0]?.容積率) ?? pct(manual.far);
   set("B13", bcr ?? "");
   set("E13", "容積率");
   set("G13", far ?? "");
@@ -152,6 +156,8 @@ export async function buildKakuninsho({ survey, manual = {}, insight = "" }) {
     todo.push(`壁面後退（地区計画「${district[0].計画名}」）`);
   } else if (zoneKey && !LOW_RISE.includes(zoneKey)) {
     check(CB.wallSetbackNo);
+  } else if (!zoneKey && zones && area?.length) {
+    check(CB.wallSetbackNo); // 都市計画区域内の用途地域無指定（白地）には外壁後退の定めなし
   } else {
     todo.push("外壁後退（低層住居専用地域）");
   }
@@ -196,7 +202,7 @@ export async function buildKakuninsho({ survey, manual = {}, insight = "" }) {
   writeRoad(2, { type: manual.road2Type, width: manual.road2Width, dir: manual.road2Dir, admin: manual.road2Admin });
   if (!manual.roadType) todo.push("前面道路の種別・幅員");
   const sb = f("setback");
-  if (sb) notes.push(`セットバック：${sb.value}`);
+  if (sb) notes.push(`${sb.label}：${sb.value}`);
 
   // --- 上下水道・ガス ---
   if (manual.waterService === "none") check(CB.waterNo);

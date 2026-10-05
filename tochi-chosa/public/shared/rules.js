@@ -178,6 +178,10 @@ export function deriveFindings({ reinfo = [], hazards = [], manual = {}, city = 
       setback = (4 - width) / 2;
       add("setback", "セットバック", `道路中心線から2m（現況幅員${width}mなら約${setback.toFixed(2)}m後退）`, "warn",
         "向かい側が川・崖等の場合は片側で4m確保が必要。後退部分は敷地面積に算入不可");
+    } else if (roadType === "43" && width < 4) {
+      setback = (4 - width) / 2;
+      add("setback", "セットバック", `通路中心線から2m（現況幅員${width}mなら約${setback.toFixed(2)}m後退）`, "warn",
+        "43条許可の基準により、通路中心から2mの線を道路境界とみなす扱いが一般的。許可権者に確認");
     } else if (width < 4 && roadType !== "2") {
       add("setback", "幅員", `${width}m（4m未満）`, "warn", "2項道路の指定の有無、狭あい道路協議の要否を確認");
     }
