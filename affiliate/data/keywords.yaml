@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: プログラミングスクール 社会人 安い
-  intent: commercial
-  category: school
-  program: school-general
-  score: 12000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 40代 プログラミングスクール おすすめ
   intent: commercial
   category: school
@@ -287,6 +279,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-shakaijin-muryo
+- keyword: プログラミングスクール 社会人 安い
+  intent: commercial
+  category: school
+  program: school-general
+  score: 12000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: programming-school-shakaijin-yasui
 - keyword: プログラミングスクール やめとけ
   intent: commercial
   category: school
