@@ -15,7 +15,7 @@
       </p>
     </header>
     <p class="pr-notice"><span class="pr-tag">PR</span>本記事にはアフィリエイト広告が含まれています。</p>
-    <img class="cover" src="{{ cover_url(article) }}" alt="{{ article.title }}" width="1200" height="630" fetchpriority="high">
+    <img class="cover" src="{{ cover_webp(article) }}" alt="{{ article.title }}" width="1200" height="630" fetchpriority="high">
     {% if toc %}<nav class="toc" aria-label="目次"><p class="toc-title">目次</p>{{ toc | safe }}</nav>{% endif %}
     <div class="body">{{ body | safe }}</div>
 

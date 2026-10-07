@@ -150,6 +150,12 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
     def cover_url(a: Article) -> str:
         return f"{base}/{a.url_path}{COVER_NAME}"
 
+    def cover_webp(a: Article) -> str:
+        return f"{base}/{a.url_path}cover.webp"
+
+    def thumb_url(a: Article) -> str:
+        return f"{base}/{a.url_path}thumb.webp"
+
     common = {
         "site": cfg.site,
         "base_url": base,
@@ -158,6 +164,8 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         "year": date.today().year,
         "logo": logo_svg(34),
         "cover_url": cover_url,
+        "cover_webp": cover_webp,
+        "thumb_url": thumb_url,
         "og_image": f"{base}/static/og-default.png",
     }
     urls: list[tuple[str, str]] = [(f"{base}/", articles[0].updated if articles else date.today().isoformat())]

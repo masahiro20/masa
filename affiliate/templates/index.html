@@ -7,7 +7,7 @@
   {% set f = articles[0] %}{% set fc = categories.get(f.category) %}
   <section class="feature">
     <a class="feature-link" href="{{ base_url }}/{{ f.url_path }}">
-      <img class="feature-img" src="{{ cover_url(f) }}" alt="" width="1200" height="630" fetchpriority="high">
+      <img class="feature-img" src="{{ cover_webp(f) }}" srcset="{{ thumb_url(f) }} 640w, {{ cover_webp(f) }} 1200w" sizes="(max-width: 700px) 100vw, 640px" alt="" width="1200" height="630" fetchpriority="high">
       <div class="feature-text">
         {% if fc %}<span class="label" style="--cat: {{ fc.color }}">{{ fc.name }}</span>{% endif %}
         <h2 class="feature-title">{{ f.title }}</h2>

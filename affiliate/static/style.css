@@ -5,12 +5,13 @@
   --white: #ffffff;
   --ink: #1b1b1b;
   --ink-2: #4b4b4b;
-  --ink-3: #7a766f;
+  --ink-3: #66625b;
   --rule: #d8d2c6;
   --accent: #b3432b;
   --good: #2f5646;
   --bad: #8c2f2f;
-  --serif: "Noto Serif JP", "Noto Serif CJK JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  /* Webフォントは読み込まない（表示速度のため）。各OS標準の明朝体を使う */
+  --serif: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", "Noto Serif CJK JP", serif;
   --sans: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", "Noto Sans CJK JP", "Yu Gothic UI", Meiryo, sans-serif;
 }
 @media (prefers-color-scheme: dark) {

@@ -49,6 +49,11 @@ sources:
 # ショートコード
 {{aff:案件ID}} … CTAボックス（2〜4箇所）　{{aff:案件ID|文言}} … 文中リンク
 {{link:既存記事slug}} … 内部リンク（next が返した既存記事のみ、1〜3本）
+
+# テーマの重複（カニバリゼーション）を避ける
+next のテーマが既存記事と同じ検索意図（言い回しが違うだけで、読者が知りたいことが同じ）なら、
+新しく書かずに reject して（理由：既存記事◯◯と検索意図が重複）、次のテーマに進むこと。
+同じ検索意図の記事が2本あると、検索エンジンがどちらを表示すべきか迷い、両方の順位が下がる。
 """
 
 
@@ -62,11 +67,12 @@ def cmd_next(cfg: Config, args) -> int:
     queue = KeywordQueue()
     queue.rescore(cfg.programs_by_id)
     queue.save()
+    articles = load_articles()
     items = [
         {k: i.get(k) for k in ("keyword", "intent", "category", "program")}
-        for i in queue.queued[: args.n]
+        for i in queue.pick(args.n, queue.recent_programs(articles))
     ]
-    existing = [{"slug": a.slug, "title": a.title, "category": a.category} for a in load_articles()]
+    existing = [{"slug": a.slug, "title": a.title, "category": a.category} for a in articles]
     print(json.dumps({
         "today": datetime.now(timezone.utc).date().isoformat(),
         "next": items,
