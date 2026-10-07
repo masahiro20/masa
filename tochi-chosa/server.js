@@ -25,7 +25,9 @@ const server = http.createServer(async (req, res) => {
   const handler = routes[pathname];
   try {
     if (handler) return await handler(req, res);
-    const file = path.join(root, pathname === "/" ? "index.html" : pathname);
+    // SITE_MODE=public のときは一般向け「土地しらべ」をトップに出す（社内用は /index.html）
+    const page = pathname === "/" && process.env.SITE_MODE === "public" ? "/web/" : pathname;
+    const file = path.join(root, page.endsWith("/") ? `${page}index.html` : page);
     if (!file.startsWith(root)) throw Object.assign(new Error(), { code: "ENOENT" });
     const data = await readFile(file);
     res.writeHead(200, { "Content-Type": types[path.extname(file)] || "application/octet-stream" });
@@ -43,7 +45,7 @@ const server = http.createServer(async (req, res) => {
 
 const port = Number(process.env.PORT) || 3000;
 server.listen(port, () => {
-  console.log(`土地調査ツール: http://localhost:${port}`);
+  console.log(`土地調査ツール: http://localhost:${port}　一般向け「土地しらべ」: http://localhost:${port}/web/`);
   if (!process.env.REINFOLIB_API_KEY) console.log("※ REINFOLIB_API_KEY 未設定：用途地域などの都市計画情報は取得されません");
   if (!process.env.ANTHROPIC_API_KEY) console.log("※ ANTHROPIC_API_KEY 未設定：AI見解は利用できません");
 });

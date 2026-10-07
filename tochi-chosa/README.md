@@ -68,6 +68,27 @@ npm run kakuninsho -- "愛知県○○市○○町1-2" --manual 手入力.json -
 # → output/法令制限確認書_住所_日付.xlsx
 ```
 
+## 一般向けWebアプリ「土地しらべ」
+
+社内ツールとは別に、一般の方（土地の購入や家づくりを検討している方）向けの画面があります。
+Googleドライブ連携や会社の確認書（Excel）はなく、**住所 → 航空写真で位置を確認 → A4のレポート（PDF保存）** の流れです。
+
+- ローカル：`起動.bat` のあと **http://localhost:3000/web/**
+- 画面：`public/web/`（index.html・web.css・web.js）。判定ロジックは社内ツールと同じ `public/shared/rules.js`
+- レポートの構成：概要（判定サマリー・主要4項目・位置図・航空写真）→ 法令制限・道路 → ライフライン・ハザード（ハザード重ね図）・周辺 → AI見解 → 現地写真 → 確認先・用語解説・出典
+- 利用者は地目・敷地面積・道路・上下水・ガス・写真を任意で追加でき、レポートに即反映。写真は端末内だけで使い、サーバーへ送りません
+- AI見解は一般向けの言葉づかい（`audience: "general"`）で作成。履歴はその端末のブラウザにだけ保存
+
+### 公開する場合（Vercel など）
+
+1. `tochi-chosa` フォルダをデプロイ（`vercel.json` でトップ `/` が「土地しらべ」になります）
+2. 環境変数を設定
+   - `REINFOLIB_API_KEY`（必須）、`ANTHROPIC_API_KEY`（AI見解を使う場合）
+   - `RATE_LIMIT_SURVEY=30`、`RATE_LIMIT_INSIGHT=5` など（IPごと1時間あたりの上限。AIの利用料対策）
+   - 限られた人だけに使わせる場合は `APP_PASSCODE`
+3. 不動産情報ライブラリの利用規約に沿って、画面とレポートに出典表示を入れています（「このサービスは、国土交通省の不動産情報ライブラリのAPI機能を使用していますが…」）。公開前に最新の利用規約を確認してください
+4. 自前サーバーで動かす場合は `SITE_MODE=public` を付けて `node server.js`
+
 ## ウェブで公開したくなったら（任意）
 
 Vercel 等に `tochi-chosa` フォルダをデプロイし、環境変数 `REINFOLIB_API_KEY`・`ANTHROPIC_API_KEY`・`APP_PASSCODE` を設定します。
@@ -89,7 +110,7 @@ tochi-chosa/
 │   ├── survey.js   地点の法令・ハザード情報をまとめて取得
 │   └── insight.js  Claude で見解を生成（ストリーミング）
 ├── lib/            データ取得（不動産情報ライブラリ・ハザードタイル・地理院・確認先リンク）
-├── public/         画面（HTML/CSS/JS）。shared/rules.js は法規の判定ロジック
+├── public/         画面（HTML/CSS/JS）。shared/rules.js は法規の判定ロジック、web/ は一般向け「土地しらべ」
 ├── templates/      法令制限確認書のテンプレート置き場（Git 管理外）
 ├── output/         コマンドで作った確認書の出力先（Git 管理外）
 ├── scripts/        コマンドライン用（kakuninsho.js）

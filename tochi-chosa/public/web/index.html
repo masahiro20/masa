@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>土地しらべ｜住所から家づくりの土地条件レポート</title>
+  <meta name="description" content="住所を入れるだけで、用途地域・建蔽率・容積率・高さ制限・防火・ハザード・ライフラインなど、家を建てるときに関わる土地の条件をまとめたレポートを作成します。">
+  <meta name="theme-color" content="#1d3f6e">
+  <link rel="icon" href="/web/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="/web/web.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/web/" aria-label="土地しらべ トップへ">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path d="M16 3 3 13v16h26V13z" fill="#1d3f6e"/><path d="M16 9.5a5.5 5.5 0 0 0-5.5 5.5c0 4.2 5.5 9.5 5.5 9.5s5.5-5.3 5.5-9.5A5.5 5.5 0 0 0 16 9.5zm0 7.6a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2z" fill="#f2b84b"/></svg>
+      <span>土地しらべ</span>
+    </a>
+    <nav>
+      <button id="historyBtn" class="link" type="button">履歴</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 1. 住所入力 -->
+    <section id="home" class="view">
+      <div class="hero">
+        <p class="eyebrow">家づくりの土地チェック</p>
+        <h1>住所を入れるだけで、<br>家を建てるときの<em>土地のルール</em>がわかる。</h1>
+        <p class="lead">用途地域・建蔽率・容積率・高さ制限・防火・災害リスク・上下水道まで。公的データをまとめて、そのまま保存できるレポートにします。</p>
+        <form id="searchForm" class="search" autocomplete="off">
+          <label for="address" class="sr-only">住所</label>
+          <input id="address" name="address" type="search" placeholder="例：岐阜県中津川市茄子川1534" required>
+          <button type="submit" class="btn primary">調べる</button>
+        </form>
+        <div class="search-sub">
+          <button id="locateBtn" type="button" class="btn ghost small">📍 いまいる場所で調べる</button>
+          <span class="hint">番地まで入れると精度が上がります</span>
+        </div>
+        <p id="homeStatus" class="status" hidden></p>
+      </div>
+
+      <div class="features">
+        <article>
+          <div class="f-ico" aria-hidden="true">📐</div>
+          <h2>建てられる家の大きさ</h2>
+          <p>用途地域・建蔽率・容積率・高さ制限から、どのくらいの家が建てられそうかを整理します。</p>
+        </article>
+        <article>
+          <div class="f-ico" aria-hidden="true">🌊</div>
+          <h2>災害リスク</h2>
+          <p>洪水・土砂災害・津波・液状化・盛土などのハザード情報を、その地点でチェックします。</p>
+        </article>
+        <article>
+          <div class="f-ico" aria-hidden="true">📄</div>
+          <h2>PDFレポートとAI見解</h2>
+          <p>結果はA4のレポートに。AIが「注意点」と「確認すべきこと」をやさしい言葉でまとめます。</p>
+        </article>
+      </div>
+
+      <div class="howto">
+        <h2>使い方</h2>
+        <ol>
+          <li><b>住所を入力</b><span>番地まで入れて「調べる」</span></li>
+          <li><b>位置を確認</b><span>航空写真でピンを土地の上に合わせる</span></li>
+          <li><b>レポートを保存</b><span>道路や面積を足すとさらに詳しく。PDFで保存</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 2. 位置の確認 -->
+    <section id="locate" class="view" hidden>
+      <ol class="steps"><li class="done">住所</li><li class="on">位置の確認</li><li>レポート</li></ol>
+      <div class="locate-grid">
+        <div class="map-wrap">
+          <div id="map" role="application" aria-label="地図"></div>
+          <div class="map-switch" role="group" aria-label="背景地図">
+            <button type="button" data-base="photo" class="on">航空写真</button>
+            <button type="button" data-base="pale">地図</button>
+          </div>
+        </div>
+        <aside class="locate-side">
+          <h2>ピンを土地の上に合わせてください</h2>
+          <p class="hint">住所検索は街区の代表点になることがあり、実際の土地から数百m離れることもあります。地図をタップするか、ピンをドラッグして合わせてください。</p>
+          <p id="pinInfo" class="pin-info"></p>
+          <button id="confirmBtn" type="button" class="btn primary block">この位置で調べる</button>
+          <button id="backBtn" type="button" class="btn ghost block">住所を入れ直す</button>
+          <div id="candidateBox" hidden>
+            <h3>ほかの候補</h3>
+            <ul id="candidates" class="candidates"></ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 3. 取得中 -->
+    <section id="loading" class="view" hidden>
+      <div class="loading-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <h2>公的データを集めています</h2>
+        <ul id="progress" class="progress">
+          <li>都市計画（用途地域・建蔽率・容積率）</li>
+          <li>防火地域・地区計画・都市計画道路</li>
+          <li>洪水・土砂災害・津波・液状化</li>
+          <li>標高・学区・近隣の地価</li>
+        </ul>
+        <p class="hint">10〜20秒ほどかかります</p>
+      </div>
+    </section>
+
+    <!-- 4. レポート -->
+    <section id="result" class="view" hidden>
+      <div class="result-grid">
+        <aside class="panel" aria-label="レポートの操作">
+          <div class="panel-actions">
+            <button id="printBtn" type="button" class="btn primary block">PDFで保存・印刷</button>
+            <button id="aiBtn" type="button" class="btn accent block">AIの見解を作成</button>
+            <button id="newBtn" type="button" class="btn ghost block">別の土地を調べる</button>
+          </div>
+          <p id="resultStatus" class="status" hidden></p>
+
+          <details class="panel-box" open>
+            <summary>わかっている条件を追加（任意）</summary>
+            <p class="hint">入力するとレポートにすぐ反映されます。セットバックや実際に使える容積率も自動で計算します。</p>
+            <form id="manualForm" class="manual">
+              <label>地目（登記簿の土地の種類）
+                <select name="landCategory">
+                  <option value="">わからない</option>
+                  <option value="residential">宅地</option>
+                  <option value="farm">田・畑（農地）</option>
+                  <option value="forest">山林</option>
+                  <option value="other">その他（雑種地など）</option>
+                </select>
+              </label>
+              <label>敷地面積（㎡）<input name="lotArea" type="number" inputmode="decimal" step="0.01" min="0" placeholder="例：200"></label>
+              <label>前面道路の種類
+                <select name="roadType">
+                  <option value="">わからない</option>
+                  <option value="1-1">公道（市道・県道・国道など）</option>
+                  <option value="1-2">開発でできた道路</option>
+                  <option value="1-5">私道（位置指定道路）</option>
+                  <option value="2">幅4m未満の古い道（2項道路）</option>
+                  <option value="43">通路のみ（43条の許可が必要）</option>
+                  <option value="none">建築基準法の道路に接していない</option>
+                </select>
+              </label>
+              <div class="two">
+                <label>道路の幅（m）<input name="roadWidth" type="number" inputmode="decimal" step="0.1" min="0" placeholder="例：4.0"></label>
+                <label>道路に接する長さ（m）<input name="frontage" type="number" inputmode="decimal" step="0.1" min="0" placeholder="例：8"></label>
+              </div>
+              <label class="check"><input name="corner" type="checkbox"> 角地（2つの道路に接している）</label>
+              <div class="two">
+                <label>建蔽率（%）<input name="bcr" type="number" inputmode="numeric" min="0" max="100" placeholder="用途地域がない場合"></label>
+                <label>容積率（%）<input name="far" type="number" inputmode="numeric" min="0" placeholder="用途地域がない場合"></label>
+              </div>
+              <label>上水道
+                <select name="waterService">
+                  <option value="">わからない</option>
+                  <option value="yes">敷地に引込あり（口径不明）</option>
+                  <option value="20">引込あり 20mm</option>
+                  <option value="13">引込あり 13mm</option>
+                  <option value="none">引込なし</option>
+                </select>
+              </label>
+              <label>排水
+                <select name="sewer">
+                  <option value="">わからない</option>
+                  <option value="public">公共下水道</option>
+                  <option value="septic">浄化槽</option>
+                  <option value="rural">農業集落排水</option>
+                </select>
+              </label>
+              <label>ガス
+                <select name="gas">
+                  <option value="">わからない</option>
+                  <option value="city">都市ガス</option>
+                  <option value="lp">プロパンガス</option>
+                  <option value="allElectric">オール電化の予定</option>
+                </select>
+              </label>
+              <label>メモ（レポートに載ります）<textarea name="memo" rows="3" placeholder="例：南側に2mほどの高低差あり"></textarea></label>
+            </form>
+          </details>
+
+          <details class="panel-box">
+            <summary>現地の写真を追加（任意）</summary>
+            <p class="hint">写真はこの端末の中だけで使われ、サーバーには送信されません。</p>
+            <label class="btn ghost block file-btn">写真を選ぶ<input id="photoInput" type="file" accept="image/*" multiple hidden></label>
+            <ul id="photoList" class="photo-list"></ul>
+          </details>
+        </aside>
+
+        <div id="reportPages" class="report"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-foot">
+    <p>このサービスは、国土交通省の不動産情報ライブラリのAPI機能を使用していますが、提供情報の最新性、正確性、完全性等が保証されたものではありません。</p>
+    <p>地図・標高・住所検索：国土地理院（地理院タイル・標高API・住所検索API）／ハザード：ハザードマップポータルサイト</p>
+    <p>結果は公開データによる目安です。土地の購入・設計の判断は、必ず市町村・各事業者・専門家に確認してください。</p>
+  </footer>
+
+  <dialog id="historyDialog">
+    <h2>調べた土地（この端末）</h2>
+    <ul id="historyList" class="history-list"></ul>
+    <form method="dialog"><button class="btn ghost block">閉じる</button></form>
+  </dialog>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script type="module" src="/web/web.js"></script>
+</body>
+</html>

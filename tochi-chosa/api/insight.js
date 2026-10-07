@@ -1,10 +1,11 @@
 import { streamInsight } from "../lib/ai.js";
-import { authorized, readJson, sendJson } from "../lib/http.js";
+import { authorized, rateLimited, readJson, sendJson } from "../lib/http.js";
 
 // AI 所見を Server-Sent Events で逐次返す
 export default async function handler(req, res) {
   if (!authorized(req, res)) return;
   if (req.method !== "POST") return sendJson(res, 405, { error: "POST only" });
+  if (rateLimited(req, res, "insight", "RATE_LIMIT_INSIGHT")) return;
   if (!process.env.ANTHROPIC_API_KEY) {
     return sendJson(res, 503, { error: "ANTHROPIC_API_KEY が未設定のため、AI見解は利用できません" });
   }

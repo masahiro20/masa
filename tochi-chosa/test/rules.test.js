@@ -93,3 +93,15 @@ test("液状化は『しやすい』のときだけ注意", () => {
   assert.equal(get(liq("液状化しにくい", 5), "liquefaction").level, "info");
   assert.equal(get(liq("やや液状化しやすい", 3), "liquefaction").level, "warn");
 });
+
+test("区域区分が「都市計画区域」だけなら非線引きと判定し、白地は手入力の建蔽率・容積率を使う", () => {
+  const r = deriveFindings({
+    reinfo: [{ id: "areaDivision", status: "ok", hits: [{ 区域区分: "都市計画区域" }] }, { id: "useZone", status: "ok", hits: [] }],
+    manual: { bcr: "60", far: "200", roadType: "1-1", roadWidth: "6", landCategory: "farm" },
+  });
+  assert.match(get(r, "areaDivision").value, /非線引き/);
+  assert.equal(get(r, "areaDivision").level, "info");
+  assert.equal(get(r, "bcr").value, "60%");
+  assert.match(get(r, "far").value, /実効 200%/);
+  assert.equal(get(r, "landCategory").level, "warn");
+});

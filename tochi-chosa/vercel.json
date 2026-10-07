@@ -1,6 +1,31 @@
 {
   "functions": {
-    "api/insight.js": { "maxDuration": 300 },
-    "api/survey.js": { "maxDuration": 60 }
-  }
+    "api/insight.js": {
+      "maxDuration": 300
+    },
+    "api/survey.js": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/web/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
 }

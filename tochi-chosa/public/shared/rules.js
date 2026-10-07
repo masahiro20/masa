@@ -123,8 +123,9 @@ export function deriveFindings({ reinfo = [], hazards = [], manual = {}, city = 
   const zoneHit = firstHit(reinfo, "useZone");
   const zoneName = zoneHit?.用途地域 || "";
   const zone = normalizeZone(zoneName);
-  const bcr = pct(zoneHit?.建蔽率);
-  const far = pct(zoneHit?.容積率);
+  // 用途地域の指定がない区域（白地）は、役所で確認した値を手入力で使う
+  const bcr = pct(zoneHit?.建蔽率) ?? pct(manual.bcr);
+  const far = pct(zoneHit?.容積率) ?? pct(manual.far);
   const areaList = (reinfo.find((r) => r.id === "areaDivision")?.hits || []).map((h) => h.区域区分).filter(Boolean);
   const fire = firstHit(reinfo, "fireZone")?.地域 || "";
   const reinfoOk = reinfo.some((r) => r.status === "ok");
@@ -133,6 +134,10 @@ export function deriveFindings({ reinfo = [], hazards = [], manual = {}, city = 
   if (areaList.some((a) => a.includes("調整"))) {
     add("areaDivision", "区域区分", "市街化調整区域", "danger",
       "原則として住宅の新築は不可。都市計画法34条・43条の許可、既存宅地・分家住宅等の要件を必ず確認");
+  } else if (areaList.length && areaList.every((a) => a === "都市計画区域")) {
+    // 区域区分の記載がなく「都市計画区域」だけ＝線引きをしていない都市計画区域
+    add("areaDivision", "区域区分", "非線引き都市計画区域（市街化区域・市街化調整区域の区分なし）", "info",
+      "市街化調整区域のような「原則建築不可」の制限はない。開発許可は3,000㎡以上が対象");
   } else if (areaList.length) {
     add("areaDivision", "区域区分", [...new Set(areaList)].join("／"), "info");
   } else if (reinfoOk) {
@@ -279,10 +284,20 @@ export function deriveFindings({ reinfo = [], hazards = [], manual = {}, city = 
   // 強弱6段階は数値が小さいほど液状化しやすい。表記（しやすい／しにくい）で判定する
   if (liq) add("liquefaction", "液状化の傾向", `${liq.傾向 || ""}（${liq.地形 || ""}）`, /しやすい/.test(liq.傾向 || "") ? "warn" : "info");
 
+  // --- 地目（農地） ---
+  if (manual.landCategory === "farm") {
+    add("landCategory", "地目", "田・畑（農地）", "warn",
+      "家を建てるには農地転用が必要（自分の農地は農地法4条、購入・借りる場合は5条の許可。市街化区域なら届出）。農用地区域（青地）なら先に農振除外（年数回の受付・1年程度）。農業委員会で確認");
+  } else if (manual.landCategory === "forest") {
+    add("landCategory", "地目", "山林", "check", "1ha超の開発は林地開発許可。造成・擁壁・がけ条例の有無を確認");
+  } else if (manual.landCategory === "residential") {
+    add("landCategory", "地目", "宅地", "info");
+  }
+
   // --- ライフライン ---
   const lp = (reinfo.find((r) => r.id === "landPrice")?.hits || [])[0];
   const lpRef = lp ? `参考：最寄りの地価公示地点（${lp.距離}）は 水道${yesNo(lp.水道) ?? "-"}／ガス${yesNo(lp.ガス) ?? "-"}／下水道${yesNo(lp.下水道) ?? "-"}` : "";
-  const water = [manual.waterMain && `前面本管 φ${manual.waterMain}`, manual.waterService === "none" ? "既存引込なし（新設引込が必要）" : manual.waterService && `引込 φ${manual.waterService}`].filter(Boolean).join("、");
+  const water = [manual.waterMain && `前面本管 φ${manual.waterMain}`, manual.waterService === "none" ? "既存引込なし（新設引込が必要）" : manual.waterService === "yes" ? "既存引込あり（口径は未確認）" : manual.waterService && `引込 φ${manual.waterService}`].filter(Boolean).join("、");
   add("water", "上水道", water || "未確認", water ? "info" : "check",
     water ? (Number(manual.waterService) && Number(manual.waterService) < 20 ? "引込φ13の場合、2世帯・散水等で口径増径（負担金）が必要になることが多い" : "") : [`${city || "市町村"}の水道課で給水管・配水管図を照会`, lpRef].filter(Boolean).join("。"));
   const SEWER = { public: "公共下水道", septic: "個別浄化槽（下水道区域外）", central: "集中浄化槽", rural: "農業集落排水", none: "なし" };
