@@ -1,0 +1,14 @@
+# 公開サイト（土地しらべ）に含めないもの：社内用の画面・確認書・開発用ファイル
+public/index.html
+public/app.js
+public/style.css
+public/manifest.webmanifest
+public/icon.svg
+api/kakuninsho.js
+templates
+output
+scripts
+test
+*.bat
+.env
+server.log
