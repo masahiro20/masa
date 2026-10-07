@@ -390,7 +390,7 @@ input[type=range]{accent-color:var(--accent);width:100%}
       <button class="btn small" id="dlPdf" type="button">PDFで保存</button>
       <button class="btn small" id="closeModal" type="button">閉じる</button>
     </div>
-    <p class="note" style="padding:6px 14px 0">保存ボタンが動かない環境では、画像を右クリック（スマホは長押し）して保存してください。</p>
+    <p class="note" style="padding:6px 14px 0">保存ボタンが動かない環境では、画像を右クリック（スマホは長押し）して保存してください。 <b id="dlMsg" aria-live="polite"></b></p>
     <div class="modal-body"><img id="sheetImg" alt="家相盤を重ねた判定シート"></div>
   </div>
 </div>
@@ -1014,19 +1014,30 @@ function composeSheet(){
 let sheetURL=null, sheetCanvas=null;
 $('#exportBtn').onclick = async () => {
   try{ await document.fonts.ready; }catch(e){}
+  $('#dlMsg').textContent='';
   sheetCanvas=composeSheet(); sheetURL=sheetCanvas.toDataURL('image/jpeg',0.9);
   $('#sheetImg').src=sheetURL; $('#modal').hidden=false; $('#closeModal').focus();
 };
 $('#closeModal').onclick=()=>{ $('#modal').hidden=true; };
 $('#modal').addEventListener('click', e=>{ if(e.target===$('#modal')) $('#modal').hidden=true; });
 const baseName = () => (state.fileName||'家相チェック').replace(/\.[^.]+$/,'') + '_家相チェック';
-function triggerDownload(href, name){ const a=document.createElement('a'); a.href=href; a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
-$('#dlPng').onclick=()=>{ if(!sheetCanvas) return; sheetCanvas.toBlob(bl=>{ const u=URL.createObjectURL(bl); triggerDownload(u, baseName()+'.png'); setTimeout(()=>URL.revokeObjectURL(u),4000); }, 'image/png'); };
+let dlNS; const downloadsNS = () => { if(dlNS===undefined) dlNS = window.claude && window.claude.use ? window.claude.use('downloads').catch(()=>null) : Promise.resolve(null); return dlNS; };
+async function saveFile(name, blob){
+  const msg=$('#dlMsg'); msg.textContent='';
+  const ns = await downloadsNS();
+  if(ns){
+    try{ await ns.save({filename:name, data:blob}); msg.textContent='保存しました。'; }
+    catch(e){ const c=e&&e.code; msg.textContent = c==='declined' ? '保存を取りやめました。' : c==='rate_limited' ? '少し待ってからもう一度押してください。' : 'ここでは保存できません。画像を右クリック（スマホは長押し）して保存してください。'; }
+    return;
+  }
+  const u=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=u; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000);
+}
+$('#dlPng').onclick=()=>{ if(!sheetCanvas) return; sheetCanvas.toBlob(bl=>{ if(bl) saveFile(baseName()+'.png', bl); }, 'image/png'); };
 $('#dlPdf').onclick=()=>{
-  if(!sheetCanvas || !window.jspdf) return;
+  if(!sheetCanvas || !window.jspdf){ $('#dlMsg').textContent='PDFを作る部品を読み込めませんでした。PNGで保存してください。'; return; }
   const {jsPDF}=window.jspdf; const w=sheetCanvas.width, h=sheetCanvas.height; const land=w>=h;
   const pdf=new jsPDF({orientation:land?'l':'p', unit:'mm', format:'a3'}); const pw=pdf.internal.pageSize.getWidth(), ph=pdf.internal.pageSize.getHeight();
-  const k=Math.min((pw-16)/w,(ph-16)/h); pdf.addImage(sheetURL,'JPEG',(pw-w*k)/2,(ph-h*k)/2,w*k,h*k); pdf.save(baseName()+'.pdf');
+  const k=Math.min((pw-16)/w,(ph-16)/h); pdf.addImage(sheetURL,'JPEG',(pw-w*k)/2,(ph-h*k)/2,w*k,h*k); saveFile(baseName()+'.pdf', pdf.output('blob'));
 };
 $('#copyTalk').onclick=()=>copyText($('#talk').textContent, $('#copyMsg'), $('#talk'));
 $('#copyAll').onclick=()=>copyText(reportText(lastRes||evaluate()), $('#copyMsg'), null);
