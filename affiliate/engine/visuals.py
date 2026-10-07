@@ -154,9 +154,18 @@ def cover_image(title: str, category_name: str, category_slug: str, color: str, 
     return img
 
 
+THUMB_WIDTH = 640
+
+
 def save_cover(path: Path, **kwargs) -> None:
+    """OGP用のPNGに加えて、ページ表示用の軽いWebP（原寸 cover.webp と一覧用 thumb.webp）を書き出す。"""
     path.parent.mkdir(parents=True, exist_ok=True)
-    cover_image(**kwargs).convert("P", palette=Image.ADAPTIVE, colors=64).save(path, "PNG", optimize=True)
+    img = cover_image(**kwargs)
+    img.convert("P", palette=Image.ADAPTIVE, colors=64).save(path, "PNG", optimize=True)
+    rgb = img.convert("RGB")
+    rgb.save(path.with_suffix(".webp"), "WEBP", quality=80, method=6)
+    height = round(rgb.height * THUMB_WIDTH / rgb.width)
+    rgb.resize((THUMB_WIDTH, height), Image.LANCZOS).save(path.parent / "thumb.webp", "WEBP", quality=78, method=6)
 
 
 def site_cover(site_name: str, tagline: str, brand_en: str = "SKILL COMPASS") -> Image.Image:

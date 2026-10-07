@@ -61,4 +61,15 @@ def test_linked_program_is_prioritized():
     programs = {"a": {"est_reward_jpy": 10000, "url": ""}, "b": {"est_reward_jpy": 10000, "url": "https://px.a8.net/x"}}
     unlinked = score({"program": "a", "intent": "commercial"}, programs)
     linked = score({"program": "b", "intent": "commercial"}, programs)
-    assert linked == unlinked * 3
+    assert linked == unlinked * 2
+
+
+def test_pick_avoids_repeating_recent_program(tmp_path):
+    from engine.planner import KeywordQueue
+    q = KeywordQueue(tmp_path / "k.yaml")
+    q.items = [
+        {"keyword": "a", "program": "coach", "score": 100, "status": "queued"},
+        {"keyword": "b", "program": "school", "score": 80, "status": "queued"},
+    ]
+    assert q.pick(1, [])[0]["keyword"] == "a"
+    assert q.pick(1, ["coach", "coach"])[0]["keyword"] == "b"

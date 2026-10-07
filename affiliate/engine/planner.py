@@ -28,7 +28,7 @@ def normalize(keyword: str) -> str:
 
 
 # 提携済み（広告リンクあり）の案件につながるテーマは、今すぐ収益になりうるので優先する
-LINKED_BOOST = 3.0
+LINKED_BOOST = 2.0
 
 
 def score(item: dict, programs: dict[str, dict]) -> float:
@@ -61,6 +61,23 @@ class KeywordQueue:
     def next(self) -> dict | None:
         queued = self.queued
         return queued[0] if queued else None
+
+    def recent_programs(self, articles, n: int = 3) -> list[str]:
+        """直近に公開した n 本の記事が狙った案件ID（新しい順）。"""
+        by_slug = {i.get("slug"): i.get("program") for i in self.items if i.get("status") == "published"}
+        latest = sorted(articles, key=lambda a: (a.published or "", a.updated or ""), reverse=True)
+        return [by_slug.get(a.slug) or (a.programs or [""])[0] for a in latest[:n]]
+
+    def pick(self, n: int, recent: list[str]) -> list[dict]:
+        """スコア順に選ぶが、直近の記事と同じ案件が続くテーマは後回しにする。
+
+        同じ広告主の記事ばかりが続くと、サイトの主題がぶれて検索評価にも読者にも良くないため。
+        """
+        def adjusted(item: dict) -> float:
+            repeats = sum(1 for p in recent if p and p == item.get("program"))
+            return item.get("score", 0) * (0.4 ** repeats)
+
+        return sorted(self.queued, key=adjusted, reverse=True)[:n]
 
     def add(self, candidates: list[dict], cfg: Config) -> int:
         known = {normalize(i["keyword"]) for i in self.items}
