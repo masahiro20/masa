@@ -6,16 +6,8 @@ keywords:
   intent: informational
   category: career
   program: career-coaching
-  score: 12000.0
+  score: 8000.0
   status: queued
-- keyword: エンジニア 転職 未経験 志望動機
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 9000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: リスキリング 補助金 転職しない
   intent: informational
   category: school
@@ -92,14 +84,6 @@ keywords:
   program: tools-rental-server
   score: 3200.0
   status: queued
-- keyword: itパスポート おすすめ 参考書
-  intent: commercial
-  category: learning
-  program: learning-books
-  score: 360.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: web制作 副業 稼げない
   intent: informational
   category: learning
@@ -132,12 +116,14 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: プログラミング 入門書 選び方 言語別
+- keyword: itパスポート おすすめ 参考書
   intent: commercial
   category: learning
   program: learning-books
   score: 240.0
   status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: Python 独学 ロードマップ 社会人
   intent: informational
   category: learning
@@ -156,11 +142,17 @@ keywords:
   program: learning-online-course
   score: 200.0
   status: queued
+- keyword: プログラミング 入門書 選び方 言語別
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 160.0
+  status: queued
 - keyword: エンジニア 転職 未経験 資格
   intent: informational
   category: career
   program: learning-books
-  score: 180.0
+  score: 120.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -168,7 +160,7 @@ keywords:
   intent: informational
   category: learning
   program: learning-books
-  score: 180.0
+  score: 120.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -176,7 +168,7 @@ keywords:
   intent: informational
   category: learning
   program: learning-books
-  score: 180.0
+  score: 120.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -184,43 +176,8 @@ keywords:
   intent: informational
   category: learning
   program: learning-books
-  score: 120.0
+  score: 80.0
   status: queued
-- keyword: 30代 転職 迷う 相談 どこ
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 24000.0
-  status: published
-  slug: 30dai-tenshoku-mayou-soudan
-- keyword: キャリアコーチング 意味ない 後悔 選び方
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 24000.0
-  status: published
-  slug: career-coaching-imi-nai-koukai
-- keyword: やりたいことがわからない 転職 20代 相談先
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 24000.0
-  status: published
-  slug: yaritaikoto-wakaranai-tenshoku-20dai
-- keyword: 転職エージェント キャリアコーチング 違い 使い分け
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 24000.0
-  status: published
-  slug: tenshoku-agent-career-coaching-chigai
-- keyword: キャリアコーチング 無料 有料 違い
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 24000.0
-  status: published
-  slug: career-coaching-muryo-yuryo-chigai
 - keyword: フリーランスエンジニア 未経験 案件
   intent: commercial
   category: career
@@ -248,6 +205,41 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: mikeiken-engineer-yametoke
+- keyword: 30代 転職 迷う 相談 どこ
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 16000.0
+  status: published
+  slug: 30dai-tenshoku-mayou-soudan
+- keyword: キャリアコーチング 意味ない 後悔 選び方
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 16000.0
+  status: published
+  slug: career-coaching-imi-nai-koukai
+- keyword: やりたいことがわからない 転職 20代 相談先
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 16000.0
+  status: published
+  slug: yaritaikoto-wakaranai-tenshoku-20dai
+- keyword: 転職エージェント キャリアコーチング 違い 使い分け
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 16000.0
+  status: published
+  slug: tenshoku-agent-career-coaching-chigai
+- keyword: キャリアコーチング 無料 有料 違い
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 16000.0
+  status: published
+  slug: career-coaching-muryo-yuryo-chigai
 - keyword: フリーランスエンジニア 案件 獲得 方法
   intent: commercial
   category: career
@@ -354,6 +346,15 @@ keywords:
   score: 9600.0
   status: published
   slug: programming-school-kyufukin-heiyo-agent
+- keyword: エンジニア 転職 未経験 志望動機
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 9000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-tenshoku-mikeiken-shiboudouki
 - keyword: レンタルサーバー 乗り換え 移行 手順 注意点
   intent: transactional
   category: tools
