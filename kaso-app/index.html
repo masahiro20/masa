@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
 <style>
-/* Layout: 製図台のような3枚構成 — 左＝手順 / 中央＝図面 / 右＝判定。狭い画面では縦に積む */
+/* Layout: 図面を大きく、右に「今やること」カードと判定。手順は上の5段階で今どこかだけを示す */
 :root{
   --bg:#eceff0; --surface:#ffffff; --surface-2:#f5f7f8; --line:#d3d9dc; --line-strong:#aeb8bd;
   --ink:#1b2427; --ink-2:#4f5d63; --ink-3:#77868c;
@@ -22,7 +22,7 @@
   --f-display:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
   --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
   --f-num:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
-  --r:10px;
+  --r:12px;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -47,115 +47,124 @@ body{font-family:var(--f-body);font-size:14px;line-height:1.65;padding-inline:16
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 h1,h2,h3{text-wrap:balance;margin:0}
+.wrapw{max-width:1500px;margin-inline:auto}
 
-.top{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding-block:18px 14px;max-width:1680px;margin-inline:auto}
-.brand{display:flex;align-items:center;gap:12px;min-width:0}
-.brand svg{flex:none}
-.brand h1{font-family:var(--f-display);font-size:1.6rem;letter-spacing:.06em;font-weight:700}
-.brand p{margin:0;color:var(--ink-2);font-size:.86rem}
-.privacy{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:5px 12px}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding-block:14px 10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand h1{font-family:var(--f-display);font-size:1.4rem;letter-spacing:.06em}
+.brand p{margin:0;color:var(--ink-2);font-size:.82rem}
+.privacy{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:4px 12px}
 
-.app{display:grid;grid-template-columns:minmax(260px,320px) minmax(0,1fr) minmax(300px,380px);gap:14px;max-width:1680px;margin-inline:auto;align-items:start}
-@media (max-width:1180px){.app{grid-template-columns:minmax(260px,320px) minmax(0,1fr)} .report{grid-column:1 / -1}}
-@media (max-width:760px){.app{grid-template-columns:minmax(0,1fr)}}
+.stepper ol{list-style:none;margin:0 0 12px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.stepper button{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 6px;cursor:pointer;color:var(--ink-3);font-size:.9rem}
+.stepper button span{font-family:var(--f-num);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1px solid currentColor;font-size:.78rem;flex:none}
+.stepper button.done{color:var(--ok);border-color:var(--ok)}
+.stepper button.done span{background:var(--ok);color:var(--surface);border-color:var(--ok)}
+.stepper button.on{color:var(--accent-ink);background:var(--accent);border-color:var(--accent);font-weight:700}
+.stepper button.on span{border-color:var(--accent-ink)}
+.stepper button:disabled{cursor:not-allowed;opacity:.55}
+@media (max-width:560px){.stepper button{flex-direction:column;gap:2px;font-size:.72rem;padding:5px 2px;border-radius:10px}}
 
+.app{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,380px);gap:14px;align-items:start}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{display:contents}
+  .card{order:1} .stage{order:2} .res{order:3}
+}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
-.steps{display:flex;flex-direction:column}
-.step{padding:14px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
-.step:first-child{border-top:0}
-.step-h{display:flex;align-items:baseline;gap:10px}
-.step-n{font-family:var(--f-num);font-size:.78rem;color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:0 6px;line-height:1.5}
-.step-h h2{font-size:1rem;font-weight:700}
-.step-h .opt{font-size:.75rem;color:var(--ink-3)}
-.step-state{margin-left:auto;font-size:.75rem;color:var(--ink-3);white-space:nowrap}
-.step-state.done{color:var(--ok)}
+
+.card{padding:18px}
+.card .step{display:flex;flex-direction:column;gap:12px}
+.card h2{font-family:var(--f-display);font-size:1.3rem;letter-spacing:.04em}
+.lead{margin:0;font-size:.95rem}
 .note{font-size:.8rem;color:var(--ink-2);margin:0}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.btn{border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;padding:6px 12px;cursor:pointer;line-height:1.4}
+.btn{border:1px solid var(--line-strong);background:var(--surface);border-radius:8px;padding:6px 14px;cursor:pointer;line-height:1.4}
 .btn:hover{border-color:var(--accent)}
-.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.btn.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
-.btn.small{padding:3px 9px;font-size:.82rem}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.btn.big{padding:12px 18px;font-size:1rem;width:100%;text-align:center}
+.btn.small{padding:3px 10px;font-size:.82rem}
 .btn:disabled{opacity:.45;cursor:not-allowed}
-.drop{border:1.5px dashed var(--line-strong);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.link{border:0;background:none;color:var(--accent);cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;font-size:.88rem}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:4px;border-top:1px solid var(--line);margin-top:2px;padding-block:12px 0}
+.drop{border:1.5px dashed var(--line-strong);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center}
 .drop.over{border-color:var(--accent);background:var(--accent-soft)}
-.field{display:flex;align-items:center;gap:6px;font-size:.85rem}
-.field input[type=number]{width:84px;padding:4px 6px;border:1px solid var(--line-strong);border-radius:6px;background:var(--surface-2);font-family:var(--f-num)}
-.field input[type=text]{width:90px;padding:4px 6px;border:1px solid var(--line-strong);border-radius:6px;background:var(--surface-2)}
-select{padding:4px 6px;border:1px solid var(--line-strong);border-radius:6px;background:var(--surface-2);max-width:100%}
+.more{border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:6px 12px}
+.more summary{cursor:pointer;font-size:.85rem;color:var(--ink-2)}
+.more[open] summary{margin-bottom:8px}
+.more .inner{display:flex;flex-direction:column;gap:10px;padding-bottom:6px}
+.field{display:flex;align-items:center;gap:6px;font-size:.85rem;flex-wrap:wrap}
+.field input[type=number]{width:84px;padding:4px 6px;border:1px solid var(--line-strong);border-radius:6px;background:var(--surface);font-family:var(--f-num)}
+.field input[type=text]{width:90px;padding:4px 6px;border:1px solid var(--line-strong);border-radius:6px;background:var(--surface)}
+select{padding:4px 6px;border:1px solid var(--line-strong);border-radius:6px;background:var(--surface);max-width:100%}
 input[type=range]{accent-color:var(--accent);width:100%}
 .check{display:flex;gap:8px;align-items:flex-start;font-size:.85rem}
 .check input{margin-top:5px;accent-color:var(--accent)}
 .tabs{display:flex;flex-wrap:wrap;gap:6px}
-.tab{border:1px solid var(--line-strong);background:var(--surface-2);border-radius:999px;padding:2px 12px;cursor:pointer;font-size:.85rem}
+.tab{border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:2px 12px;cursor:pointer;font-size:.85rem}
 .tab.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.chips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
-.chip{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;padding:6px 2px;cursor:pointer;font-size:.72rem}
-.chip i{font-style:normal;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.8rem;font-weight:700}
-.chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
-.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-height:180px;overflow:auto}
-.items li{display:flex;align-items:center;gap:8px;font-size:.82rem;padding:3px 6px;border-radius:6px;background:var(--surface-2)}
-.items li i{font-style:normal;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.66rem;font-weight:700;flex:none}
+.compass-mini{display:flex;gap:14px;align-items:center}
+.north-val{font-family:var(--f-num);font-size:1.4rem;font-weight:700}
+.chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:.88rem;text-align:left}
+.chip i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.82rem;font-weight:700;flex:none}
+.chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-height:170px;overflow:auto}
+.items li{display:flex;align-items:center;gap:8px;font-size:.84rem;padding:4px 8px;border-radius:8px;background:var(--surface-2)}
+.items li i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:.68rem;font-weight:700;flex:none}
 .items li span{flex:1;min-width:0}
-.items li button{border:0;background:none;color:var(--ink-3);cursor:pointer;padding:0 4px}
-.compass-mini{display:flex;gap:12px;align-items:center}
+.items li button{border:0;background:none;color:var(--ink-3);cursor:pointer;padding:0 4px;font-size:.8rem}
 
-.stage{display:flex;flex-direction:column;gap:8px;min-width:0;position:sticky;top:env(safe-area-inset-top,0px)}
-@media (max-width:760px){.stage{position:static}}
-.toolbar{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;padding:8px 10px}
-.seg{display:flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden}
-.seg button{border:0;border-right:1px solid var(--line);background:var(--surface);padding:5px 10px;cursor:pointer;font-size:.85rem}
-.seg button:last-child{border-right:0}
-.seg button.on{background:var(--accent);color:var(--accent-ink)}
-.toolbar .spacer{flex:1}
-.toolbar label{font-size:.8rem;color:var(--ink-2);display:flex;align-items:center;gap:5px}
-.toolbar input[type=range]{width:90px}
-.canvas-wrap{position:relative;height:min(76vh,820px);min-height:380px;background:var(--stage);border-radius:var(--r);overflow:hidden;touch-action:none}
+.stage{min-width:0;position:sticky;top:env(safe-area-inset-top,0px)}
+@media (max-width:900px){.stage{position:static}}
+.canvas-wrap{position:relative;height:min(78vh,860px);min-height:360px;background:var(--stage);border-radius:var(--r);overflow:hidden;touch-action:none}
+@media (max-width:900px){.canvas-wrap{height:62vh}}
 .canvas-wrap canvas{display:block;width:100%;height:100%}
 .hint{position:absolute;left:10px;right:10px;bottom:10px;pointer-events:none;display:flex;justify-content:center}
-.hint span{background:rgba(20,28,31,.82);color:#fff;font-size:.8rem;padding:6px 12px;border-radius:8px;max-width:100%}
+.hint span{background:rgba(20,28,31,.85);color:#fff;font-size:.85rem;padding:7px 14px;border-radius:10px;max-width:100%}
 .sample-flag{position:absolute;top:10px;left:10px;background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn);font-size:.75rem;padding:2px 10px;border-radius:999px}
-.zoom{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:4px}
-.zoom button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface);cursor:pointer;font-size:1rem}
+.tools{position:absolute;top:10px;right:10px;display:flex;flex-direction:column;gap:4px}
+.tools button{width:36px;height:36px;border-radius:9px;border:1px solid var(--line-strong);background:var(--surface);cursor:pointer;font-size:.95rem}
+.tools button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 
-.report{display:flex;flex-direction:column}
-.report section{padding:14px 16px;border-top:1px solid var(--line)}
-.report section:first-child{border-top:0}
-.report h2{font-family:var(--f-display);font-size:1.15rem;letter-spacing:.04em}
-.report h3{font-size:.9rem;margin-bottom:6px;color:var(--ink-2)}
-.tally{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}
+.res{padding:16px}
+.res h3{font-size:.95rem;margin-bottom:8px}
+.tally{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:14px}
 .tally div{border-radius:8px;padding:6px 8px;display:flex;flex-direction:column;align-items:flex-start}
-.tally b{font-family:var(--f-num);font-size:1.25rem;line-height:1.2}
-.tally small{font-size:.72rem}
+.tally b{font-family:var(--f-num);font-size:1.3rem;line-height:1.2}
+.tally small{font-size:.72rem;white-space:nowrap}
 .t-bad{background:var(--bad-soft);color:var(--bad)} .t-warn{background:var(--warn-soft);color:var(--warn)}
 .t-ok{background:var(--ok-soft);color:var(--ok)} .t-good{background:var(--good-soft);color:var(--good)}
-.basis{font-size:.78rem;color:var(--ink-2);margin:8px 0 0;padding-left:1.1em}
 .results{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-.results li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:8px;padding:7px 8px;border-radius:8px;background:var(--surface-2);border-left:3px solid var(--line-strong)}
+.results li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;padding:7px 8px;border-radius:8px;background:var(--surface-2);border-left:3px solid var(--line-strong)}
+.results li.empty{display:block;border:0;background:none;padding:0;color:var(--ink-3);font-size:.85rem}
 .results li .m{font-weight:700;font-size:1rem;text-align:center;line-height:1.5}
-.results li p{margin:0;font-size:.84rem}
+.results li p{margin:0;font-size:.85rem}
 .results li .why{color:var(--ink-2);font-size:.78rem;margin-top:2px}
 .results li.bad{border-left-color:var(--bad)} .results li.bad .m{color:var(--bad)}
 .results li.warn{border-left-color:var(--warn)} .results li.warn .m{color:var(--warn)}
 .results li.ok{border-left-color:var(--ok)} .results li.ok .m{color:var(--ok)}
 .results li.good{border-left-color:var(--good)} .results li.good .m{color:var(--good)}
 .results li.info .m{color:var(--ink-3)}
-.empty{font-size:.84rem;color:var(--ink-3);margin:0}
-.talk{font-size:.86rem;background:var(--surface-2);border-radius:8px;padding:10px 12px;margin:0;white-space:pre-wrap}
-.prio{margin:0;padding-left:1.4em;font-size:.84rem;display:flex;flex-direction:column;gap:4px}
-.export{display:flex;flex-wrap:wrap;gap:8px}
+.res details{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.res summary{cursor:pointer;font-weight:700;font-size:.9rem}
+.res details[open] summary{margin-bottom:8px}
+.talk{font-size:.86rem;background:var(--surface-2);border-radius:8px;padding:10px 12px;margin:0 0 8px;white-space:pre-wrap}
+.basis{font-size:.8rem;color:var(--ink-2);margin:0;padding-left:1.1em}
 
-.learn{max-width:1680px;margin:16px auto 0;padding:18px 20px}
-.learn h2{font-family:var(--f-display);font-size:1.25rem;margin-bottom:10px}
+.learn{margin-top:16px;padding:14px 18px}
+.learn > summary{cursor:pointer;font-family:var(--f-display);font-size:1.1rem}
+.learn[open] > summary{margin-bottom:12px}
 .learn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
 .learn details{border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:var(--surface-2);min-width:0}
-.learn summary{cursor:pointer;font-weight:700}
+.learn details summary{cursor:pointer;font-weight:700}
 .learn p,.learn li{font-size:.85rem}
 .tbl{overflow-x:auto}
 .tbl table{border-collapse:collapse;font-size:.8rem;width:100%;min-width:420px}
 .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:4px 6px;text-align:left;vertical-align:top}
 .tbl th{color:var(--ink-2);font-weight:500}
-.disclaimer{font-size:.78rem;color:var(--ink-3);max-width:1680px;margin:12px auto 0}
+.disclaimer{font-size:.78rem;color:var(--ink-3);margin-top:12px}
 
 .modal{position:fixed;inset:0;background:rgba(10,14,16,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
 .modal-box{background:var(--surface);border-radius:12px;max-width:min(1100px,100%);max-height:100%;display:flex;flex-direction:column;overflow:hidden}
@@ -166,175 +175,129 @@ input[type=range]{accent-color:var(--accent);width:100%}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
-<header class="top">
+<header class="top wrapw">
   <div class="brand">
-    <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+    <svg width="38" height="38" viewBox="0 0 44 44" aria-hidden="true">
       <circle cx="22" cy="22" r="20" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".7"/>
       <circle cx="22" cy="22" r="14" fill="none" stroke="currentColor" stroke-width="1" opacity=".5"/>
       <path d="M22 22 L36.1 7.9 A20 20 0 0 1 42 22 Z" fill="#c62828" opacity=".25"/>
       <path d="M22 22 L7.9 36.1 A20 20 0 0 1 2 22 Z" fill="#c62828" opacity=".25"/>
-      <line x1="22" y1="2" x2="22" y2="42" stroke="currentColor" stroke-width="1" stroke-dasharray="3 2" opacity=".6"/>
       <line x1="7.9" y1="36.1" x2="36.1" y2="7.9" stroke="#c62828" stroke-width="1.2" stroke-dasharray="3 2"/>
       <circle cx="22" cy="22" r="2.6" fill="#c62828"/>
     </svg>
-    <div>
-      <h1>家相盤チェッカー</h1>
-      <p>間取り図に家相盤を重ねて、鬼門・張り欠け・火と水回りの位置を判定します</p>
-    </div>
+    <div><h1>家相盤チェッカー</h1><p>間取り図に家相盤を重ねて、鬼門・張り欠け・火と水回りを判定</p></div>
   </div>
-  <div class="privacy" title="図面ファイルはアップロードされません">
+  <div class="privacy">
     <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Zm-1 14-4-4 1.4-1.4L11 13.2l4.6-4.6L17 10l-6 6Z"/></svg>
     図面はこの端末の中だけで処理されます
   </div>
 </header>
 
-<main class="app">
-  <!-- 手順 -->
-  <aside class="panel steps" aria-label="手順">
-    <section class="step" id="step1">
-      <div class="step-h"><span class="step-n">1</span><h2>図面を読み込む</h2><span class="step-state" id="st1"></span></div>
-      <div class="drop" id="drop">
-        <div class="row">
-          <label class="btn primary" for="file">PDF・画像を選ぶ</label>
-          <input type="file" id="file" accept=".pdf,application/pdf,image/*" hidden>
-          <button class="btn" id="sampleBtn" type="button">サンプルで試す</button>
-        </div>
-        <p class="note">ここにファイルをドロップしても読み込めます。新しい図面を読み込むと、なぞった外形と設備はリセットされます。</p>
-      </div>
-      <div class="row" id="pdfRow" hidden>
-        <label class="field" for="pageSel">ページ</label>
-        <select id="pageSel"></select>
-      </div>
-      <div class="row">
-        <span class="note">図面の向き</span>
-        <button class="btn small" id="rotL" type="button" title="左に90°回す">⟲ 90°</button>
-        <button class="btn small" id="rotR" type="button" title="右に90°回す">⟳ 90°</button>
-      </div>
-    </section>
+<nav class="stepper wrapw" aria-label="手順">
+  <ol>
+    <li><button type="button" data-go="1"><span>1</span>図面</button></li>
+    <li><button type="button" data-go="2"><span>2</span>方位</button></li>
+    <li><button type="button" data-go="3"><span>3</span>外形</button></li>
+    <li><button type="button" data-go="4"><span>4</span>設備</button></li>
+    <li><button type="button" data-go="5"><span>5</span>結果</button></li>
+  </ol>
+</nav>
 
-    <section class="step" id="step2">
-      <div class="step-h"><span class="step-n">2</span><h2>縮尺を合わせる</h2><span class="opt">任意</span><span class="step-state" id="st2"></span></div>
-      <p class="note">寸法の分かる2点（通り芯や寸法線の端）をクリックし、実際の長さを入れます。設定すると、ずれの距離や張りの奥行きをmmで表示します。</p>
-      <div class="row">
-        <button class="btn" id="scaleBtn" type="button">2点をクリックする</button>
-        <label class="field" for="scaleLen">長さ <input type="number" id="scaleLen" min="1" step="1" placeholder="例 9100"> mm</label>
-        <button class="btn small" id="scaleSet" type="button" disabled>決定</button>
-      </div>
-    </section>
-
-    <section class="step" id="step3">
-      <div class="step-h"><span class="step-n">3</span><h2>真北を合わせる</h2><span class="step-state" id="st3"></span></div>
-      <p class="note">図面の方位記号を、根元 → 矢印の先 の順にクリックします。角度を直接入れても合わせられます。</p>
-      <div class="row"><button class="btn" id="northBtn" type="button">方位記号をなぞる</button></div>
-      <div class="compass-mini">
-        <svg id="miniCompass" width="64" height="64" viewBox="-32 -32 64 64" aria-hidden="true"></svg>
-        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
-          <label class="field" for="northDeg">真北 <input type="number" id="northDeg" min="0" max="359.9" step="0.1" value="0"> °</label>
-          <input type="range" id="northRange" min="0" max="359.9" step="0.1" value="0" aria-label="真北の角度">
-          <span class="note">図面の上を0°として時計回り</span>
-        </div>
-      </div>
-      <label class="check" for="magnetic"><input type="checkbox" id="magnetic"><span>磁北で判定する（偏角 <input type="number" id="decl" value="7.5" step="0.1" style="width:60px;padding:2px 4px;border:1px solid var(--line-strong);border-radius:5px;background:var(--surface-2);font-family:var(--f-num)" aria-label="偏角"> ° 西）<br><span class="note">偏角は地域で違います。国土地理院の地磁気（偏角）の値を確認してください。</span></span></label>
-      <label class="field" for="division">方位の区切り
-        <select id="division">
-          <option value="30-60">家相盤（四正30°・四隅60°）</option>
-          <option value="45">八方位（各45°）</option>
-        </select>
-      </label>
-    </section>
-
-    <section class="step" id="step4">
-      <div class="step-h"><span class="step-n">4</span><h2>建物の外形をなぞる</h2><span class="step-state" id="st4"></span></div>
-      <div class="tabs" id="floorTabs" role="tablist"></div>
-      <div class="row">
-        <label class="field" for="floorName">階の名前 <input type="text" id="floorName"></label>
-        <button class="btn small" id="addFloor" type="button">＋ 階を追加</button>
-        <button class="btn small" id="delFloor" type="button">この階を削除</button>
-      </div>
-      <div class="row">
-        <button class="btn" id="outlineBtn" type="button">外形をなぞる</button>
-        <button class="btn small" id="undoPt" type="button">一つ戻す</button>
-        <button class="btn small" id="clearOutline" type="button">消す</button>
-      </div>
-      <label class="check" for="ortho"><input type="checkbox" id="ortho" checked><span>線を縦・横にそろえる</span></label>
-      <p class="note">外壁の外周をクリックで一周し、最初の点をクリックすると閉じます。玄関ポーチ・バルコニー・ウッドデッキ・屋根のない中庭は含めません。閉じた後は点をドラッグして直せます。</p>
-      <label class="field" for="centerSel">中心の取り方
-        <select id="centerSel">
-          <option value="centroid">外形の重心（おすすめ）</option>
-          <option value="bbox">外形を囲む長方形の対角線の交点</option>
-          <option value="first">1階の重心を使う</option>
-        </select>
-      </label>
-    </section>
-
-    <section class="step" id="step5">
-      <div class="step-h"><span class="step-n">5</span><h2>設備・部屋を置く</h2><span class="step-state" id="st5"></span></div>
-      <div class="chips" id="kindChips" role="radiogroup" aria-label="置くもの"></div>
-      <p class="note">図面をクリックすると点、ドラッグすると範囲で置けます。トイレや浴室は部屋の範囲、コンロは位置を点で置くのがおすすめです。</p>
-      <div class="row"><button class="btn" id="itemBtn" type="button">置き始める</button></div>
-      <ul class="items" id="itemList"></ul>
-    </section>
-  </aside>
-
-  <!-- 図面 -->
+<main class="app wrapw">
   <section class="stage">
-    <div class="panel toolbar">
-      <div class="seg" role="group" aria-label="操作">
-        <button type="button" data-mode="pan">移動</button>
-        <button type="button" data-mode="scale">縮尺</button>
-        <button type="button" data-mode="north">真北</button>
-        <button type="button" data-mode="outline">外形</button>
-        <button type="button" data-mode="item">設備</button>
-      </div>
-      <span class="spacer"></span>
-      <label for="showKaso"><input type="checkbox" id="showKaso" checked> 家相盤</label>
-      <label for="showAll"><input type="checkbox" id="showAll" checked> 全部の階</label>
-      <label for="alpha">濃さ <input type="range" id="alpha" min="0.3" max="1" step="0.05" value="0.9"></label>
-    </div>
     <div class="canvas-wrap" id="wrap">
       <canvas id="cv"></canvas>
-      <span class="sample-flag" id="sampleFlag" hidden>サンプル図面（架空のプラン）</span>
-      <div class="zoom">
+      <span class="sample-flag" id="sampleFlag" hidden>サンプル（架空のプラン）</span>
+      <div class="tools">
+        <button type="button" id="panBtn" aria-pressed="false" title="ドラッグで図面を動かす" aria-label="図面を動かす">✋</button>
         <button type="button" id="zIn" title="拡大" aria-label="拡大">＋</button>
         <button type="button" id="zOut" title="縮小" aria-label="縮小">－</button>
         <button type="button" id="zFit" title="全体を表示" aria-label="全体を表示">⤢</button>
+        <button type="button" id="kasoBtn" aria-pressed="true" title="家相盤の表示・非表示" aria-label="家相盤を表示">盤</button>
       </div>
       <div class="hint"><span id="hint"></span></div>
     </div>
   </section>
 
-  <!-- 判定 -->
-  <aside class="panel report" id="report" aria-live="polite">
-    <section>
-      <h2>判定結果</h2>
+  <aside class="side">
+    <div class="panel card">
+      <section class="step" data-step="1">
+        <h2>図面を入れる</h2>
+        <p class="lead">間取り図のPDFか画像を選んでください。</p>
+        <div class="drop" id="drop">
+          <label class="btn primary big" for="file">ファイルを選ぶ</label>
+          <input type="file" id="file" accept=".pdf,application/pdf,image/*" hidden>
+          <span class="note">ここにドロップしても読み込めます</span>
+        </div>
+        <div class="row" id="pdfRow" hidden><label class="field" for="pageSel">ページ <select id="pageSel"></select></label></div>
+        <div class="row" style="justify-content:space-between">
+          <button class="link" id="sampleBtn" type="button">サンプルで試す</button>
+          <span class="row"><span class="note">図面の向き</span><button class="btn small" id="rotL" type="button" aria-label="左に90°回す">⟲</button><button class="btn small" id="rotR" type="button" aria-label="右に90°回す">⟳</button></span>
+        </div>
+      </section>
+
+      <section class="step" data-step="2" hidden>
+        <h2>北を合わせる</h2>
+        <p class="lead">図面の方位記号を、<b>根元 → 矢印の先</b> の順にクリックします。</p>
+        <div class="compass-mini">
+          <svg id="miniCompass" width="72" height="72" viewBox="-32 -32 64 64" aria-hidden="true"></svg>
+          <div><div class="note">真北（図面の上から時計回り）</div><div class="north-val" id="northVal">0°</div><button class="link" id="northBtn" type="button">もう一度なぞる</button></div>
+        </div>
+        <details class="more"><summary>数字で入れる・磁北で見る</summary><div class="inner">
+          <label class="field" for="northDeg">真北 <input type="number" id="northDeg" min="0" max="359.9" step="0.1" value="0"> °</label>
+          <input type="range" id="northRange" min="0" max="359.9" step="0.1" value="0" aria-label="真北の角度">
+          <label class="check" for="magnetic"><input type="checkbox" id="magnetic"><span>磁北で判定する（偏角 <input type="number" id="decl" value="7.5" step="0.1" style="width:60px;padding:2px 4px;border:1px solid var(--line-strong);border-radius:5px;background:var(--surface);font-family:var(--f-num)" aria-label="偏角"> ° 西）</span></label>
+          <label class="field" for="division">方位の区切り <select id="division"><option value="30-60">家相盤（四正30°・四隅60°）</option><option value="45">八方位（各45°）</option></select></label>
+        </div></details>
+        <div class="nav"><button class="btn" type="button" data-prev>戻る</button><button class="btn primary" type="button" data-next>次へ</button></div>
+      </section>
+
+      <section class="step" data-step="3" hidden>
+        <h2>外形をなぞる</h2>
+        <p class="lead">外壁の角を順にクリックして、<b>最初の点</b>をクリックすると閉じます。</p>
+        <p class="note">玄関ポーチ・バルコニー・ウッドデッキ・屋根のない中庭は含めません。閉じた後は点をドラッグして直せます。</p>
+        <div class="row"><button class="btn small" id="undoPt" type="button">一つ戻す</button><button class="btn small" id="clearOutline" type="button">やり直す</button></div>
+        <details class="more"><summary>2階を追加・中心の取り方・寸法</summary><div class="inner">
+          <div class="tabs" id="floorTabs" role="tablist"></div>
+          <div class="row"><label class="field" for="floorName">名前 <input type="text" id="floorName"></label><button class="btn small" id="addFloor" type="button">＋ 階を追加</button><button class="btn small" id="delFloor" type="button">この階を削除</button></div>
+          <label class="field" for="centerSel">中心 <select id="centerSel"><option value="centroid">外形の重心（おすすめ）</option><option value="bbox">外形を囲む長方形の中心</option><option value="first">1階の重心を使う</option></select></label>
+          <label class="check" for="ortho"><input type="checkbox" id="ortho" checked><span>線を縦・横にそろえる</span></label>
+          <div class="row"><button class="btn small" id="scaleBtn" type="button">寸法を合わせる（2点クリック）</button><label class="field" for="scaleLen"><input type="number" id="scaleLen" min="1" step="1" placeholder="9100"> mm</label><button class="btn small" id="scaleSet" type="button" disabled>決定</button></div>
+          <p class="note" id="scaleState">寸法を合わせると、ずれの距離や張りの奥行きをmmで表示します。</p>
+        </div></details>
+        <div class="nav"><button class="btn" type="button" data-prev>戻る</button><button class="btn primary" type="button" data-next>次へ</button></div>
+      </section>
+
+      <section class="step" data-step="4" hidden>
+        <h2>設備を置く</h2>
+        <p class="lead">置くものを選んで、図面をクリック。部屋の範囲はドラッグで囲めます。</p>
+        <div class="chips" id="kindChips" role="radiogroup" aria-label="置くもの"></div>
+        <ul class="items" id="itemList"></ul>
+        <div class="nav"><button class="btn" type="button" data-prev>戻る</button><button class="btn primary" type="button" data-next>結果を見る</button></div>
+      </section>
+
+      <section class="step" data-step="5" hidden>
+        <h2>結果</h2>
+        <p class="lead" id="verdict"></p>
+        <button class="btn primary big" id="exportBtn" type="button">判定シートを保存する</button>
+        <div class="row"><button class="btn small" id="copyAll" type="button">判定をテキストでコピー</button><span class="note" id="copyMsg"></span></div>
+        <div class="nav"><button class="btn" type="button" data-prev>設備に戻る</button><button class="link" id="restart" type="button">別の図面を入れる</button></div>
+      </section>
+    </div>
+
+    <div class="panel res" id="report" aria-live="polite">
       <div class="tally" id="tally"></div>
-      <ul class="basis" id="basis"></ul>
-    </section>
-    <section><h3>建物の中心</h3><ul class="results" id="resCenter"></ul></section>
-    <section><h3>張り・欠け</h3><ul class="results" id="resShape"></ul></section>
-    <section><h3>火と水回り</h3><ul class="results" id="resFW"></ul></section>
-    <section><h3>玄関・階段・部屋</h3><ul class="results" id="resOther"></ul></section>
-    <section>
-      <h3>直すなら、ここから</h3>
-      <ol class="prio" id="prio"></ol>
-    </section>
-    <section>
-      <div class="row" style="justify-content:space-between"><h3 style="margin:0">お客様への伝え方（例）</h3><button class="btn small" id="copyTalk" type="button">コピー</button></div>
-      <p class="talk" id="talk" style="margin-top:8px"></p>
-    </section>
-    <section>
-      <h3>書き出す</h3>
-      <div class="export">
-        <button class="btn primary" id="exportBtn" type="button">判定シートを作る</button>
-        <button class="btn" id="copyAll" type="button">判定をテキストでコピー</button>
-      </div>
-      <p class="note" id="copyMsg" style="margin-top:6px"></p>
-    </section>
+      <h3>気をつけたい点</h3>
+      <ul class="results" id="resIssues"></ul>
+      <details><summary id="goodSum">良い点・問題のない点</summary><ul class="results" id="resGood"></ul></details>
+      <details><summary>お客様への伝え方（例）</summary><p class="talk" id="talk"></p><button class="btn small" id="copyTalk" type="button">コピー</button></details>
+      <details><summary>判定の前提</summary><ul class="basis" id="basis"></ul></details>
+    </div>
   </aside>
 </main>
 
-<section class="panel learn" aria-labelledby="learnH">
-  <h2 id="learnH">家相の基礎</h2>
+<details class="panel learn wrapw">
+  <summary>家相の基礎（中心と重心・張り欠け・読み方・判定基準）</summary>
   <div class="learn-grid">
     <details open>
       <summary>建物の中心と重心</summary>
@@ -379,8 +342,8 @@ input[type=range]{accent-color:var(--accent);width:100%}
       </ul>
     </details>
   </div>
-</section>
-<p class="disclaimer">家相は流派によって方位の区切りや中心の取り方、吉凶の考え方が違います。この判定は打合せのための参考情報です。</p>
+</details>
+<p class="disclaimer wrapw">家相は流派によって方位の区切りや中心の取り方、吉凶の考え方が違います。この判定は打合せのための参考情報です。</p>
 
 <div class="modal" id="modal" hidden>
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalH">
@@ -796,7 +759,7 @@ cv.addEventListener('pointerdown', e => {
   cv.setPointerCapture(e.pointerId); const p=evPos(e); pointers.set(e.pointerId,p);
   if(pointers.size===2){ const [a,b]=[...pointers.values()]; pinch={d:Math.hypot(a.sx-b.sx,a.sy-b.sy), mx:(a.sx+b.sx)/2, my:(a.sy+b.sy)/2, s:state.view.s, ox:state.view.ox, oy:state.view.oy}; state.drag=null; return; }
   const w=toWorld(p.sx,p.sy); const f=state.floors[state.active];
-  if(state.mode==='pan' || e.button===1 || e.button===2 || state.space){ state.drag={type:'pan', sx:p.sx, sy:p.sy, ox:state.view.ox, oy:state.view.oy}; return; }
+  if(state.mode==='pan' || state.panLock || e.button===1 || e.button===2 || state.space){ state.drag={type:'pan', sx:p.sx, sy:p.sy, ox:state.view.ox, oy:state.view.oy}; return; }
   if(state.mode==='outline' && f.closed){
     const th=10/state.view.s; const vi=f.outline.findIndex(v=>Math.hypot(v.x-w.x,v.y-w.y)<th);
     if(vi>=0){ state.drag={type:'vertex', vi}; return; }
@@ -841,10 +804,8 @@ function handleClick(w){
   const f=state.floors[state.active];
   if(state.mode==='outline' && !f.closed){
     const q=snapPoint(w,f);
-    if(f.outline.length>2 && q.x===f.outline[0].x && q.y===f.outline[0].y){ f.closed=true; setMode('pan'); }
-    else f.outline.push(q);
-    if(state.isSample===false) {}
-    refresh(); return;
+    if(f.outline.length>2 && q.x===f.outline[0].x && q.y===f.outline[0].y){ f.closed=true; refresh(); goStep(4); return; }
+    f.outline.push(q); refresh(); setHint(); return;
   }
   if(state.mode==='scale'){
     if(state.scalePts.length>=2) state.scalePts=[];
@@ -854,53 +815,75 @@ function handleClick(w){
   }
   if(state.mode==='north'){
     state.northPts.push(w);
-    if(state.northPts.length===2){ const [a,b]=state.northPts; setNorth(imgBearing(b.x-a.x, b.y-a.y)); state.northPts=[]; setMode('pan'); }
+    if(state.northPts.length===2){ const [a,b]=state.northPts; state.northPts=[]; setNorth(imgBearing(b.x-a.x, b.y-a.y)); goStep(3); return; }
     draw(); setHint(); return;
   }
 }
 
 /* ---------- 画面の状態 ---------- */
+const STEP_MODE={1:'pan',2:'north',3:'outline',4:'item',5:'pan'};
 const HINTS = {
-  pan:'ドラッグで移動、ホイール・ピンチで拡大縮小できます。',
-  scale:'寸法の分かる2点をクリックし、左の欄に実際の長さ（mm）を入れてください。',
-  north:'図面の方位記号を、根元 → 矢印の先 の順にクリックしてください。',
-  outline:'外壁の角を順にクリックし、最初の点をクリックすると閉じます。右ドラッグかスペース＋ドラッグで移動できます。',
-  outlineDone:'点をドラッグすると外形を直せます。',
-  item:'クリックで点、ドラッグで範囲を置きます。置くものは左の欄で選べます。',
-  empty:'左の「PDF・画像を選ぶ」から図面を読み込むか、「サンプルで試す」を押してください。'
+  1:'左の「ファイルを選ぶ」から図面を読み込んでください。',
+  2:'方位記号の根元をクリックしてください。',
+  2.5:'次に矢印の先をクリックしてください。',
+  3:'外壁の角をクリックしていきます。最初の点をクリックすると閉じます。',
+  3.5:'点をドラッグすると外形を直せます。よければ「次へ」。',
+  4:'図面をクリックして置きます。部屋はドラッグで範囲を囲めます。',
+  5:'右の判定を確認して、判定シートを保存できます。',
+  scale:'寸法の分かる2点をクリックし、実際の長さ（mm）を入れて「決定」。',
+  pan:'ドラッグで図面を動かせます。もう一度 ✋ を押すと戻ります。'
 };
 function setHint(){
-  let t = !state.base ? HINTS.empty : state.mode==='outline' && state.floors[state.active].closed ? HINTS.outlineDone : HINTS[state.mode];
-  if(state.mode==='scale' && state.scalePts.length===2) t='左の欄に、この2点の実際の長さ（mm）を入れて「決定」を押してください。';
-  if(state.mode==='north' && state.northPts.length===1) t='次に矢印の先をクリックしてください。';
+  let t;
+  if(!state.base) t=HINTS[1];
+  else if(state.panLock) t=HINTS.pan;
+  else if(state.mode==='scale') t = state.scalePts.length===2 ? '実際の長さ（mm）を入れて「決定」を押してください。' : HINTS.scale;
+  else if(state.step===2) t = state.northPts.length===1 ? HINTS[2.5] : HINTS[2];
+  else if(state.step===3) t = state.floors[state.active].closed ? HINTS[3.5] : HINTS[3];
+  else t=HINTS[state.step];
   $('#hint').textContent=t;
 }
 function setMode(m){
   state.mode=m; if(m!=='scale'){ state.scalePts=[]; $('#scaleSet').disabled=true; } if(m!=='north') state.northPts=[];
-  document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on', b.dataset.mode===m));
-  $('#scaleBtn').classList.toggle('active', m==='scale'); $('#northBtn').classList.toggle('active', m==='north');
-  $('#outlineBtn').classList.toggle('active', m==='outline'); $('#itemBtn').classList.toggle('active', m==='item');
-  cv.style.cursor = m==='pan' ? 'grab' : 'crosshair';
+  cv.style.cursor = (m==='pan'||state.panLock) ? 'grab' : 'crosshair';
   setHint(); draw();
 }
-function setNorth(a){ state.northAngle=Math.round(mod(a)*10)/10; $('#northDeg').value=state.northAngle; $('#northRange').value=state.northAngle; drawMiniCompass(); refresh(); }
+function stepDone(n){
+  return n===1 ? !!state.base : n===2 ? !!state.northSet : n===3 ? state.floors.some(f=>f.closed) : n===4 ? state.floors.some(f=>f.items.length) : !!(lastRes && lastRes.ready);
+}
+function renderStepper(){
+  document.querySelectorAll('.stepper button').forEach(b=>{ const n=+b.dataset.go; b.classList.toggle('on', n===state.step); b.classList.toggle('done', n!==state.step && stepDone(n)); b.disabled = n>1 && !state.base; if(n===state.step) b.setAttribute('aria-current','step'); else b.removeAttribute('aria-current'); });
+}
+function goStep(n){
+  if(n>1 && !state.base) return;
+  state.step=n; state.panLock=false; $('#panBtn').setAttribute('aria-pressed','false');
+  document.querySelectorAll('.card .step').forEach(s=>s.hidden = +s.dataset.step!==n);
+  renderStepper(); setMode(STEP_MODE[n]);
+}
+function setNorth(a, fromUser){ state.northAngle=Math.round(mod(a)*10)/10; if(fromUser!==false) state.northSet=true; $('#northDeg').value=state.northAngle; $('#northRange').value=state.northAngle; $('#northVal').textContent=`${state.northAngle}°`; drawMiniCompass(); refresh(); }
 function drawMiniCompass(){
   const svg=$('#miniCompass'); const nr=northRef(); const pts=[];
-  for(const n of DIRS){ const t=(DIR_ANG[n]+nr)*Math.PI/180, r=DIR_ANG[n]%90?17:22; pts.push(`<text x="${(Math.sin(t)*r).toFixed(1)}" y="${(-Math.cos(t)*r+3).toFixed(1)}" font-size="${DIR_ANG[n]%90?6:8}" text-anchor="middle" fill="${n==='北東'||n==='南西'?'#c62828':'currentColor'}">${n}</text>`); }
+  for(const n of DIRS){ const t=(DIR_ANG[n]+nr)*Math.PI/180, r=DIR_ANG[n]%90?17:23; pts.push(`<text x="${(Math.sin(t)*r).toFixed(1)}" y="${(-Math.cos(t)*r+3).toFixed(1)}" font-size="${DIR_ANG[n]%90?6:8}" font-weight="${n==='北'?700:400}" text-anchor="middle" fill="${n==='北東'||n==='南西'?'#c62828':'currentColor'}">${n}</text>`); }
   const t=nr*Math.PI/180, x=Math.sin(t), y=-Math.cos(t);
-  svg.innerHTML=`<circle r="29" fill="none" stroke="currentColor" opacity=".35"/><line x1="${(-x*10).toFixed(1)}" y1="${(-y*10).toFixed(1)}" x2="${(x*10).toFixed(1)}" y2="${(y*10).toFixed(1)}" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/><circle cx="${(x*10).toFixed(1)}" cy="${(y*10).toFixed(1)}" r="2.6" fill="#c62828"/>`+pts.join('');
+  svg.innerHTML=`<circle r="30" fill="none" stroke="currentColor" opacity=".35"/><line x1="${(-x*10).toFixed(1)}" y1="${(-y*10).toFixed(1)}" x2="${(x*10).toFixed(1)}" y2="${(y*10).toFixed(1)}" stroke="#c62828" stroke-width="2.4" stroke-linecap="round"/><circle cx="${(x*10).toFixed(1)}" cy="${(y*10).toFixed(1)}" r="2.6" fill="#c62828"/>`+pts.join('');
 }
 function renderFloorTabs(){
   const box=$('#floorTabs'); box.innerHTML='';
-  state.floors.forEach((f,i)=>{ const b=document.createElement('button'); b.type='button'; b.className='tab'+(i===state.active?' on':''); b.textContent=f.name+(f.closed?' ✓':''); b.setAttribute('role','tab'); b.setAttribute('aria-selected', i===state.active); b.onclick=()=>{ state.active=i; renderFloorTabs(); refresh(); }; box.appendChild(b); });
-  const f=state.floors[state.active]; $('#floorName').value=f.name; $('#centerSel').value=f.center;
+  state.floors.forEach((f,i)=>{ const b=document.createElement('button'); b.type='button'; b.className='tab'+(i===state.active?' on':''); b.textContent=f.name+(f.closed?' ✓':''); b.setAttribute('role','tab'); b.setAttribute('aria-selected', i===state.active); b.onclick=()=>{ state.active=i; refresh(); setHint(); }; box.appendChild(b); });
+  const f=state.floors[state.active]; if(document.activeElement!==$('#floorName')) $('#floorName').value=f.name; $('#centerSel').value=f.center;
   $('#centerSel').querySelector('option[value="first"]').disabled = state.active===0;
   $('#delFloor').disabled = state.floors.length<2;
+  $('#scaleState').textContent = state.mmPerPx ? `寸法：1px＝${state.mmPerPx.toFixed(2)}mm` : '寸法を合わせると、ずれの距離や張りの奥行きをmmで表示します。';
 }
+const MAIN_KINDS=['stove','sink','toilet','bath','wash','entrance'];
 function renderChips(){
   const box=$('#kindChips'); box.innerHTML='';
-  for(const k of KIND_ORDER){ const K=KINDS[k]; const b=document.createElement('button'); b.type='button'; b.className='chip'+(state.kind===k?' on':''); b.setAttribute('role','radio'); b.setAttribute('aria-checked', state.kind===k);
-    b.innerHTML=`<i style="background:${K.color}">${K.glyph}</i>${K.label}`; b.onclick=()=>{ state.kind=k; renderChips(); setMode('item'); }; box.appendChild(b); }
+  const list = state.moreKinds ? KIND_ORDER : MAIN_KINDS;
+  for(const k of list){ const K=KINDS[k]; const b=document.createElement('button'); b.type='button'; b.className='chip'+(state.kind===k?' on':''); b.setAttribute('role','radio'); b.setAttribute('aria-checked', state.kind===k);
+    b.innerHTML=`<i style="background:${K.color}">${K.glyph}</i>${K.label}`; b.onclick=()=>{ state.kind=k; renderChips(); if(state.step!==4) goStep(4); }; box.appendChild(b); }
+  const more=document.createElement('button'); more.type='button'; more.className='chip'; more.style.justifyContent='center';
+  more.textContent = state.moreKinds ? '少なく表示' : '＋ 階段・吹抜・寝室'; more.onclick=()=>{ state.moreKinds=!state.moreKinds; renderChips(); };
+  more.style.gridColumn='1 / -1'; box.appendChild(more);
 }
 function renderItemList(){
   const ul=$('#itemList'); ul.innerHTML='';
@@ -908,20 +891,11 @@ function renderItemList(){
   if(!f.items.length){ ul.innerHTML='<li><span class="note">まだ何も置いていません</span></li>'; return; }
   const rows = lastRes && lastRes.floors[state.active] ? lastRes.floors[state.active].items : [];
   f.items.forEach(it=>{ const K=KINDS[it.kind]; const row=rows.find(r=>r.item===it); const li=document.createElement('li');
-    li.innerHTML=`<i style="background:${K.color}">${K.glyph}</i><span>${K.label}${row?`　<b style="color:var(--${row.g})">${GRADE[row.g].mark}</b> ${row.sector}`:''}</span>`;
+    li.innerHTML=`<i style="background:${K.color}">${K.glyph}</i><span>${K.label}${row?`　<b style="color:var(--${row.g==='info'?'ink-3':row.g})">${GRADE[row.g].mark}</b> ${row.sector}`:''}</span>`;
     const del=document.createElement('button'); del.type='button'; del.textContent='削除'; del.setAttribute('aria-label', K.label+'を削除'); del.onclick=()=>{ f.items=f.items.filter(x=>x!==it); refresh(); };
     li.appendChild(del); li.onmouseenter=()=>{ state.hover=it.id; draw(); }; li.onmouseleave=()=>{ state.hover=null; draw(); }; ul.appendChild(li); });
 }
-function renderSideState(){
-  const f=state.floors[state.active];
-  const st=(id,txt,done)=>{ const el=$(id); el.textContent=txt; el.classList.toggle('done',!!done); };
-  st('#st1', state.base ? (state.isSample?'サンプル':'読込済み') : '', !!state.base);
-  st('#st2', state.mmPerPx ? `1px＝${state.mmPerPx.toFixed(2)}mm` : '未設定', !!state.mmPerPx);
-  st('#st3', `${state.northAngle}°${state.magnetic?'（磁北）':''}`, true);
-  st('#st4', f.closed ? `${f.outline.length}点・閉じています` : f.outline.length ? `${f.outline.length}点` : '', f.closed);
-  st('#st5', `${state.floors.reduce((n,x)=>n+x.items.length,0)}個`, state.floors.some(x=>x.items.length));
-  renderFloorTabs(); renderItemList();
-}
+function renderSideState(){ renderStepper(); renderFloorTabs(); renderItemList(); }
 
 /* ---------- 判定の表示 ---------- */
 const esc = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -955,16 +929,19 @@ function renderReport(res){
   const basis=[`方位：${state.magnetic?`磁北（真北から西へ${state.decl}°）`:'真北'}・図面の上から${state.northAngle}°`, `区切り：${state.division==='45'?'八方位（各45°）':'家相盤（四正30°・四隅60°）'}`];
   res.floors.forEach(fl=>{ if(fl.cen) basis.push(`${fl.f.name}の中心：${fl.cen.method}${state.mmPerPx?`（外形 ${(fl.g.area*state.mmPerPx*state.mmPerPx/1e6).toFixed(1)}㎡）`:''}`); });
   $('#basis').innerHTML=basis.map(b=>`<li>${esc(b)}</li>`).join('');
-  const put=(id,rows,empty)=>{ $(id).innerHTML = rows.length ? liRows(sortRows(rows)) : `<li class="info" style="border:0;background:none;padding:0;display:block"><p class="empty">${empty}</p></li>`; };
-  const noOutline='外形をなぞって閉じると判定します。';
-  put('#resCenter', res.center, res.ready?'—':noOutline);
-  put('#resShape', res.shape, res.ready?'—':noOutline);
-  put('#resFW', res.fw, res.ready?'コンロ・シンク・トイレ・浴室・洗面を置くと判定します。':noOutline);
-  put('#resOther', res.other, res.ready?'玄関・階段・吹抜・寝室を置くと判定します。':noOutline);
-  const pr=buildPrio(res);
-  $('#prio').innerHTML = pr.length ? pr.slice(0,6).map(r=>`<li><b style="color:var(--${r.g})">${GRADE[r.g].mark}</b> ${esc(r.t)}</li>`).join('') : `<li style="list-style:none;margin-left:-1.4em" class="empty">${res.ready?'要検討・注意の項目はありません。':noOutline}</li>`;
+  if(!res.ready){
+    $('#resIssues').innerHTML='<li class="empty">外形をなぞって閉じると、ここに判定が出ます。</li>';
+    $('#resGood').innerHTML=''; $('#goodSum').textContent='良い点・問題のない点'; $('#talk').textContent=buildTalk(res);
+    $('#verdict').textContent=''; $('#exportBtn').disabled=true; return;
+  }
+  const issues=buildPrio(res);
+  $('#resIssues').innerHTML = issues.length ? liRows(issues) : '<li class="empty">気をつけたい点はありません。</li>';
+  const goods=sortRows(all.filter(r=>r.g==='ok'||r.g==='good'||r.g==='info'));
+  $('#resGood').innerHTML=liRows(goods); $('#goodSum').textContent=`良い点・問題のない点（${goods.filter(r=>r.g!=='info').length}）`;
   $('#talk').textContent=buildTalk(res);
-  $('#exportBtn').disabled=!res.ready;
+  const nb=n('bad'), nw=n('warn');
+  $('#verdict').textContent = nb ? `要検討が${nb}つあります。右の「気をつけたい点」の上から順に確認してください。` : nw ? `大きな問題はありません。注意点が${nw}つあります。` : '気になる点はありません。良い配置です。';
+  $('#exportBtn').disabled=false;
 }
 function reportText(res){
   const lines=['家相チェック結果', ...[...$('#basis').querySelectorAll('li')].map(li=>'・'+li.textContent), ''];
@@ -1043,8 +1020,8 @@ $('#copyTalk').onclick=()=>copyText($('#talk').textContent, $('#copyMsg'), $('#t
 $('#copyAll').onclick=()=>copyText(reportText(lastRes||evaluate()), $('#copyMsg'), null);
 
 /* ---------- 読み込み ---------- */
-function resetProject(){ state.floors=[newFloor('1階')]; state.active=0; state.mmPerPx=null; state.scalePts=[]; state.northPts=[]; state.isSample=false; $('#sampleFlag').hidden=true; state.northAngle=0; $('#northDeg').value=0; $('#northRange').value=0; drawMiniCompass(); }
-function setBase(canvas, name){ state.base=canvas; state.fileName=name; lastRes=null; fit(); refresh(); setMode('pan'); }
+function resetProject(){ state.floors=[newFloor('1階')]; state.active=0; state.mmPerPx=null; state.scalePts=[]; state.northPts=[]; state.isSample=false; $('#sampleFlag').hidden=true; state.northAngle=0; state.northSet=false; $('#northDeg').value=0; $('#northRange').value=0; $('#northVal').textContent='0°'; drawMiniCompass(); }
+function setBase(canvas, name){ state.base=canvas; state.fileName=name; lastRes=null; fit(); refresh(); if(!state.isSample) goStep(2); }
 async function loadFile(file){
   if(!file) return;
   resetProject();
@@ -1131,15 +1108,20 @@ function makeSample(){
   const pt=(kind,x,y)=>{ const a=P(x,y); f.items.push({id:uid(), kind, type:'pt', x:a.x, y:a.y}); };
   pt('stove',10465,455); pt('sink',9555,2275); r('bath',0,5460,1820,7280); r('wash',0,7280,1820,9100); r('toilet',1820,7280,2730,9100);
   r('entrance',2730,7280,4550,9100); r('stairs',2730,5460,4550,7280); r('bedroom',0,2730,2730,5460);
-  $('#northDeg').value=307; $('#northRange').value=307; drawMiniCompass();
-  setBase(c,'サンプル図面');
+  state.northSet=true; $('#northDeg').value=307; $('#northRange').value=307; $('#northVal').textContent='307°'; drawMiniCompass();
+  setBase(c,'サンプル図面'); goStep(5);
 }
 $('#sampleBtn').onclick=makeSample;
 
-/* ---------- 操作パネル ---------- */
-document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+/* ---------- 操作 ---------- */
+document.querySelectorAll('.stepper button').forEach(b=>b.onclick=()=>goStep(+b.dataset.go));
+document.querySelectorAll('[data-next]').forEach(b=>b.onclick=()=>goStep(Math.min(5,state.step+1)));
+document.querySelectorAll('[data-prev]').forEach(b=>b.onclick=()=>goStep(Math.max(1,state.step-1)));
+$('#restart').onclick=()=>goStep(1);
+$('#panBtn').onclick=()=>{ state.panLock=!state.panLock; $('#panBtn').setAttribute('aria-pressed', String(state.panLock)); setMode(state.mode); };
+$('#kasoBtn').onclick=()=>{ state.showKaso=!state.showKaso; $('#kasoBtn').setAttribute('aria-pressed', String(state.showKaso)); draw(); };
 $('#scaleBtn').onclick=()=>{ state.scalePts=[]; setMode('scale'); };
-$('#scaleSet').onclick=()=>{ const L=parseFloat($('#scaleLen').value); if(state.scalePts.length===2 && L>0){ const [a,b]=state.scalePts; const d=Math.hypot(b.x-a.x,b.y-a.y); if(d>1){ state.mmPerPx=L/d; state.scalePts=[]; $('#scaleSet').disabled=true; setMode('pan'); refresh(); } } };
+$('#scaleSet').onclick=()=>{ const L=parseFloat($('#scaleLen').value); if(state.scalePts.length===2 && L>0){ const [a,b]=state.scalePts; const d=Math.hypot(b.x-a.x,b.y-a.y); if(d>1){ state.mmPerPx=L/d; state.scalePts=[]; setMode(STEP_MODE[state.step]); refresh(); } } };
 $('#northBtn').onclick=()=>{ state.northPts=[]; setMode('north'); };
 $('#northDeg').addEventListener('input', e=>{ const v=parseFloat(e.target.value); if(!isNaN(v)) setNorth(v); });
 $('#northRange').addEventListener('input', e=>setNorth(parseFloat(e.target.value)));
@@ -1147,25 +1129,20 @@ $('#magnetic').checked=state.magnetic; $('#decl').value=state.decl; $('#division
 $('#magnetic').addEventListener('change', e=>{ state.magnetic=e.target.checked; store.set('magnetic',state.magnetic); drawMiniCompass(); refresh(); });
 $('#decl').addEventListener('input', e=>{ const v=parseFloat(e.target.value); if(!isNaN(v)){ state.decl=v; store.set('decl',v); drawMiniCompass(); refresh(); } });
 $('#division').addEventListener('change', e=>{ state.division=e.target.value; store.set('division',state.division); refresh(); });
-$('#addFloor').onclick=()=>{ state.floors.push(newFloor(`${state.floors.length+1}階`)); state.active=state.floors.length-1; refresh(); setMode('outline'); };
+$('#addFloor').onclick=()=>{ state.floors.push(newFloor(`${state.floors.length+1}階`)); state.active=state.floors.length-1; refresh(); goStep(3); };
 $('#delFloor').onclick=()=>{ if(state.floors.length<2) return; state.floors.splice(state.active,1); state.active=Math.max(0,state.active-1); refresh(); };
 $('#floorName').addEventListener('input', e=>{ state.floors[state.active].name=e.target.value||'階'; refresh(); });
-$('#outlineBtn').onclick=()=>setMode('outline');
-$('#undoPt').onclick=()=>{ const f=state.floors[state.active]; if(f.closed) f.closed=false; else f.outline.pop(); refresh(); setMode('outline'); };
-$('#clearOutline').onclick=()=>{ const f=state.floors[state.active]; f.outline=[]; f.closed=false; refresh(); setMode('outline'); };
+$('#undoPt').onclick=()=>{ const f=state.floors[state.active]; if(f.closed) f.closed=false; else f.outline.pop(); refresh(); goStep(3); };
+$('#clearOutline').onclick=()=>{ const f=state.floors[state.active]; f.outline=[]; f.closed=false; refresh(); goStep(3); };
 $('#ortho').addEventListener('change', e=>{ state.ortho=e.target.checked; });
 $('#centerSel').addEventListener('change', e=>{ state.floors[state.active].center=e.target.value; refresh(); });
-$('#itemBtn').onclick=()=>setMode('item');
-$('#showKaso').addEventListener('change', e=>{ state.showKaso=e.target.checked; draw(); });
-$('#showAll').addEventListener('change', e=>{ state.showAll=e.target.checked; draw(); });
-$('#alpha').addEventListener('input', e=>{ state.alpha=parseFloat(e.target.value); draw(); });
 $('#zIn').onclick=()=>{ const r=wrap.getBoundingClientRect(); zoomAt(r.width/2,r.height/2,1.25); };
 $('#zOut').onclick=()=>{ const r=wrap.getBoundingClientRect(); zoomAt(r.width/2,r.height/2,0.8); };
 $('#zFit').onclick=fit;
 
-new ResizeObserver(()=>{ const had=!!state.base; resize(); if(had && !state._fitted){ fit(); state._fitted=true; } }).observe(wrap);
-renderChips(); drawMiniCompass(); setMode('pan');
-(document.fonts ? document.fonts.ready : Promise.resolve()).then(()=>{ makeSample(); state._fitted=true; });
+new ResizeObserver(()=>{ resize(); }).observe(wrap);
+state.step=1; renderChips(); drawMiniCompass(); goStep(1);
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(()=>{ makeSample(); });
 })();
 </script>
 
