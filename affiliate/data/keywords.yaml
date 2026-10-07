@@ -2,12 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 未経験 職種 向いている仕事 わからない 診断
-  intent: informational
-  category: career
-  program: career-coaching
-  score: 8000.0
-  status: queued
 - keyword: リスキリング 補助金 転職しない
   intent: informational
   category: school
@@ -355,6 +349,13 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: engineer-tenshoku-mikeiken-shiboudouki
+- keyword: 未経験 職種 向いている仕事 わからない 診断
+  intent: informational
+  category: career
+  program: career-coaching
+  score: 8000.0
+  status: published
+  slug: mukiteiru-shigoto-wakaranai-shindan
 - keyword: レンタルサーバー 乗り換え 移行 手順 注意点
   intent: transactional
   category: tools
