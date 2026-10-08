@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: リスキリング 補助金 転職しない
-  intent: informational
-  category: school
-  program: school-kyufukin
-  score: 7200.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: リスキリング 補助金 いつもらえる
   intent: informational
   category: school
@@ -398,6 +390,15 @@ keywords:
   score: 8000.0
   status: published
   slug: programming-school-choice-for-workers
+- keyword: リスキリング 補助金 転職しない
+  intent: informational
+  category: school
+  program: school-kyufukin
+  score: 7200.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: reskilling-hojokin-tenshoku-shinai
 - keyword: 会社員 副業 Web制作 始め方 手順
   intent: commercial
   category: tools
