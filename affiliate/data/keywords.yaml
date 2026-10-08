@@ -36,14 +36,6 @@ keywords:
   program: career-it-agent
   score: 6000.0
   status: queued
-- keyword: webデザイナー 未経験 30代 無理
-  intent: informational
-  category: school
-  program: school-general
-  score: 6000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 教育訓練給付金 申請 流れ 必要書類
   intent: informational
   category: school
@@ -407,6 +399,15 @@ keywords:
   score: 6400.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: webデザイナー 未経験 30代 無理
+  intent: informational
+  category: school
+  program: school-general
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: webdesigner-mikeiken-30dai-muri
 - keyword: 30代 未経験 エンジニア 転職 現実
   intent: informational
   category: career
