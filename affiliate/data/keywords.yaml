@@ -18,12 +18,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: 30代 未経験 エンジニア 転職 現実
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 6000.0
-  status: queued
 - keyword: ITエンジニア 職種 種類 違い 向いている人
   intent: informational
   category: career
@@ -413,6 +407,13 @@ keywords:
   score: 6400.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: 30代 未経験 エンジニア 転職 現実
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 6000.0
+  status: published
+  slug: 30dai-mikeiken-engineer-tenshoku-genjitsu
 - keyword: オンライン講座 プログラミングスクール 違い 比較
   intent: commercial
   category: learning
