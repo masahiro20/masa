@@ -89,6 +89,23 @@ Googleドライブ連携や会社の確認書（Excel）はなく、**住所 →
 3. 不動産情報ライブラリの利用規約に沿って、画面とレポートに出典表示を入れています（「このサービスは、国土交通省の不動産情報ライブラリのAPI機能を使用していますが…」）。公開前に最新の利用規約を確認してください
 4. 自前サーバーで動かす場合は `SITE_MODE=public` を付けて `node server.js`
 
+#### Vercel の設定値（このリポジトリ用）
+
+| 項目 | 値 |
+|---|---|
+| プロジェクト名 | `tochi-shirabe` |
+| Root Directory | `tochi-chosa` |
+| Framework | Other（なし） |
+| Build Command | なし（空） |
+| Output Directory | `public` |
+| Install Command | `npm install` |
+| Functions のリージョン | `hnd1`（東京） |
+| 環境変数 | `REINFOLIB_API_KEY`、`RATE_LIMIT_SURVEY=30`、`RATE_LIMIT_INSIGHT=5`、（任意）`ANTHROPIC_API_KEY` |
+| デプロイ元 | GitHub `masahiro20/masa` の `claude/upbeat-edison-av0hg0` ブランチ（main は別サイトのため本番ブランチを要変更） |
+
+社内用の画面・確認書APIは `.vercelignore` で公開サイトから除外しています。
+利用規約・プライバシーポリシーは `public/web/terms.html`・`privacy.html`。運営者名・連絡先（`op-name`・`op-contact`）を公開前に記入してください。
+
 ## ウェブで公開したくなったら（任意）
 
 Vercel 等に `tochi-chosa` フォルダをデプロイし、環境変数 `REINFOLIB_API_KEY`・`ANTHROPIC_API_KEY`・`APP_PASSCODE` を設定します。

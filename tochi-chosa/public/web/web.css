@@ -197,6 +197,19 @@ figcaption { font-size: 11px; color: var(--muted); margin-top: 3px; }
 .small { font-size: 11px; color: var(--muted); }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 11px; color: var(--muted); margin: 4px 0 8px; }
 
+/* ---------- 利用規約・プライバシー ---------- */
+.legal { max-width: 760px; margin: 28px auto; background: var(--card); border-radius: var(--radius); padding: 32px clamp(18px, 4vw, 44px); box-shadow: var(--shadow); }
+.legal h1 { font-size: clamp(24px, 4vw, 30px); margin: 0 0 4px; }
+.legal h2 { font-size: 17px; margin: 28px 0 8px; padding-left: 10px; border-left: 4px solid var(--navy); }
+.legal p, .legal li { font-size: 14.5px; }
+.legal ol, .legal ul { padding-left: 22px; }
+.legal li { margin: 4px 0; }
+.legal-meta { color: var(--muted); font-size: 13px !important; margin-bottom: 18px; }
+.legal table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 8px 0; display: block; overflow-x: auto; }
+.legal th, .legal td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+.legal th { background: var(--soft); white-space: nowrap; }
+.site-foot a { color: var(--muted); margin-right: 12px; }
+
 /* ---------- 履歴 ---------- */
 dialog { border: 0; border-radius: var(--radius); padding: 20px; width: min(520px, calc(100vw - 32px)); box-shadow: var(--shadow); }
 dialog::backdrop { background: rgba(20, 30, 40, .35); }

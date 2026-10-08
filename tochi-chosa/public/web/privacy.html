@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>プライバシーポリシー｜土地しらべ</title>
+  <meta name="theme-color" content="#1d3f6e">
+  <link rel="icon" href="/web/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap">
+  <link rel="stylesheet" href="/web/web.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/web/" aria-label="土地しらべ トップへ">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path d="M16 3 3 13v16h26V13z" fill="#1d3f6e"/><path d="M16 9.5a5.5 5.5 0 0 0-5.5 5.5c0 4.2 5.5 9.5 5.5 9.5s5.5-5.3 5.5-9.5A5.5 5.5 0 0 0 16 9.5zm0 7.6a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2z" fill="#f2b84b"/></svg>
+      <span>土地しらべ</span>
+    </a>
+    <nav><a class="link" href="/web/">トップへ戻る</a></nav>
+  </header>
+  <main>
+    <article class="legal">
+      <h1>プライバシーポリシー</h1>
+      <p class="legal-meta">制定日：2026年10月8日</p>
+      <p><span class="op-name">土地しらべ運営者</span>（以下「運営者」）は、Webサービス「土地しらべ」（以下「本サービス」）における利用者の情報の取り扱いを、次のとおり定めます。本サービスは会員登録がなく、氏名・メールアドレスなどの入力を求めません。</p>
+
+      <h2>1. 取得する情報</h2>
+      <table>
+        <tr><th>情報</th><th>取得する場面</th></tr>
+        <tr><td>入力した住所、地図で選んだ位置（緯度・経度）</td><td>土地を調べるとき</td></tr>
+        <tr><td>任意で入力した条件（地目・敷地面積・道路・上下水道・ガス・メモなど）と調査結果</td><td>AIの見解を作成するとき</td></tr>
+        <tr><td>アクセス情報（IPアドレス、アクセス日時、ブラウザの種類など）</td><td>本サービスにアクセスしたとき</td></tr>
+      </table>
+      <p>現地の写真は、利用者の端末の中だけで縮小・表示し、サーバーへは送信しません。調べた土地の履歴は、利用者のブラウザ（ローカルストレージ）にだけ保存され、運営者は取得しません。</p>
+
+      <h2>2. 利用目的</h2>
+      <ol>
+        <li>土地の条件の調査と、レポートの作成</li>
+        <li>AIによる見解の作成</li>
+        <li>回数制限など、不正・過度な利用の防止</li>
+        <li>障害の調査と、本サービスの改善</li>
+      </ol>
+
+      <h2>3. 外部サービスへの送信</h2>
+      <p>本サービスは、調査やレポートの作成のため、次の外部サービスに必要な情報を送信します。</p>
+      <table>
+        <tr><th>送信先</th><th>送信する情報</th><th>目的</th></tr>
+        <tr><td>国土地理院（住所検索・逆ジオコーディング・標高API）</td><td>入力した住所の文字列、位置（緯度・経度）</td><td>住所から位置を求める、市町村名・標高を調べる</td></tr>
+        <tr><td>国土交通省「不動産情報ライブラリ」API</td><td>位置をもとにした地図の範囲</td><td>用途地域・防火地域・災害区域などを調べる</td></tr>
+        <tr><td>ハザードマップポータルサイト（国土地理院）</td><td>位置をもとにした地図の範囲</td><td>洪水・土砂災害・津波などの想定区域を調べる</td></tr>
+        <tr><td>Anthropic, PBC（AI）</td><td>住所、位置、調査結果、任意で入力した条件</td><td>AIの見解を作成する（利用者が作成ボタンを押したときのみ）</td></tr>
+        <tr><td>Vercel Inc.（ホスティング）</td><td>アクセス情報</td><td>本サービスの配信・運用</td></tr>
+      </table>
+      <p>また、利用者のブラウザは、地図画像（国土地理院）、文字のフォント（Google Fonts）、地図表示のプログラム（cdnjs）を各社から直接読み込みます。その際、利用者のIPアドレスなどが各社に送信されます。</p>
+      <p>Anthropic, PBC および Vercel Inc. は米国の事業者で、情報は米国などの国外で処理されることがあります。各社での取り扱いは、各社の規約・プライバシーポリシーに従います。</p>
+
+      <h2>4. 第三者への提供</h2>
+      <p>運営者は、前項の外部サービスへの送信と法令にもとづく場合を除き、取得した情報を第三者に提供しません。</p>
+
+      <h2>5. 保存期間</h2>
+      <ul>
+        <li>入力した住所・条件・調査結果は、運営者のサーバーに保存しません（処理が終わると破棄します）。</li>
+        <li>回数制限のためのIPアドレスは、サーバーのメモリ上に最大1時間だけ保持します。</li>
+        <li>アクセス記録（ログ）は、ホスティング事業者の保存期間に従って保存されます。</li>
+      </ul>
+
+      <h2>6. Cookieなど</h2>
+      <p>本サービスは、広告や行動の追跡を目的とするCookie・解析ツールを使用していません。調べた土地の履歴をブラウザのローカルストレージに保存しており、ブラウザの設定（サイトデータの削除）でいつでも消去できます。</p>
+
+      <h2>7. 安全管理</h2>
+      <p>通信はすべて暗号化（HTTPS）して行います。運営者は、取得した情報の漏えい・滅失を防ぐため、必要な安全管理措置を講じます。</p>
+
+      <h2>8. 改定</h2>
+      <p>運営者は、必要に応じて本ポリシーを改定します。改定後の内容は、本ページに掲載した時点から効力を生じます。</p>
+
+      <h2>9. お問い合わせ</h2>
+      <p><span class="op-name">土地しらべ運営者</span><br><span class="op-contact">お問い合わせ窓口（準備中）</span></p>
+    </article>
+  </main>
+  <footer class="site-foot">
+    <p><a href="/web/terms.html">利用規約</a>　<a href="/web/privacy.html">プライバシーポリシー</a></p>
+  </footer>
+</body>
+</html>
