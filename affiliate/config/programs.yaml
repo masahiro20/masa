@@ -62,13 +62,17 @@ programs:
     cta: "無料のオンライン面談で方向性を相談する"
 
   - id: tools-rental-server
-    name: "レンタルサーバー"
+    name: "ConoHa WING（レンタルサーバー）"
     category: tools
-    asp: ""
-    url: ""
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5838782&p_id=2312&pc_id=4967&pl_id=38395"
+    banner_height: 250
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/1762/000000038395.png"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5838782&p_id=2312&pc_id=4967&pl_id=38395"
     est_reward_jpy: 8000
     keywords: ["レンタルサーバー", "WordPress", "ブログ 始め方", "サーバー 比較"]
-    cta: "公式サイトで料金プランを確認する"
+    cta: "ConoHa WINGの料金プランを見る"
 
   - id: tools-domain
     name: "ドメイン取得サービス"

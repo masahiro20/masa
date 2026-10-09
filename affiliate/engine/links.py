@@ -33,9 +33,22 @@ def expand_shortcodes(body: str, programs: dict[str, dict]) -> str:
             return html.escape(label or "")
         url = (program.get("url") or "").strip()
         pixel = (program.get("pixel") or "").strip()
-        if label:  # 文中リンク
-            return _anchor(url, label, pixel) if url else html.escape(label)
+        banner = (program.get("banner") or "").strip()
+        if label:  # 文中リンク（バナー広告しかない案件は、広告コードを作り替えないよう文字だけにする）
+            return _anchor(url, label, pixel) if url and not banner else html.escape(label)
         name = html.escape(program["name"])
+        if url and banner:
+            w, h = int(program.get("banner_width") or 0), int(program.get("banner_height") or 0)
+            size = f' width="{w}" height="{h}"' if w and h else ""
+            tracker = (f'<img class="aff-pixel" src="{html.escape(pixel, quote=True)}" width="1" height="1" alt="">'
+                       if pixel else "")
+            return (
+                f'\n\n<div class="cta-box"><span class="cta-label">PR</span><p class="cta-name">{name}</p>'
+                f'<a class="cta-banner" href="{html.escape(url, quote=True)}" rel="sponsored noopener" '
+                f'referrerpolicy="no-referrer-when-downgrade" target="_blank">'
+                f'<img src="{html.escape(banner, quote=True)}"{size} alt="{name}" loading="lazy" decoding="async"></a>'
+                f'{tracker}</div>\n\n'
+            )
         cta = program.get("cta") or "公式サイトを見る"
         button = (
             _anchor(url, cta, pixel).replace("<a ", '<a class="cta-button" ', 1)
