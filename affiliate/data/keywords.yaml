@@ -24,12 +24,6 @@ keywords:
   program: tools-rental-server
   score: 6400.0
   status: queued
-- keyword: ITエンジニア 職種 種類 違い 向いている人
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 6000.0
-  status: queued
 - keyword: 在職中 転職活動 進め方 エンジニア
   intent: informational
   category: career
@@ -400,6 +394,13 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: reskilling-hojokin-tenshoku-shinai
+- keyword: ITエンジニア 職種 種類 違い 向いている人
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 6000.0
+  status: published
+  slug: it-engineer-shokushu-shurui-chigai
 - keyword: webデザイナー 未経験 30代 無理
   intent: informational
   category: school
