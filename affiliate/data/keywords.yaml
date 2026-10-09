@@ -18,6 +18,12 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
+- keyword: WordPress ポートフォリオ 作り方 未経験
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 6400.0
+  status: queued
 - keyword: ITエンジニア 職種 種類 違い 向いている人
   intent: informational
   category: career
@@ -41,20 +47,6 @@ keywords:
   category: school
   program: school-kyufukin
   score: 4800.0
-  status: queued
-- keyword: レンタルサーバー 費用 勘定科目
-  intent: informational
-  category: tools
-  program: tools-rental-server
-  score: 4800.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: WordPress ポートフォリオ 作り方 未経験
-  intent: informational
-  category: tools
-  program: tools-rental-server
-  score: 3200.0
   status: queued
 - keyword: web制作 副業 稼げない
   intent: informational
@@ -226,6 +218,20 @@ keywords:
   score: 16000.0
   status: published
   slug: freelance-engineer-unit-price-by-skill
+- keyword: レンタルサーバー 乗り換え 移行 手順 注意点
+  intent: transactional
+  category: tools
+  program: tools-rental-server
+  score: 16000.0
+  status: published
+  slug: rental-server-norikae-iko-tejun
+- keyword: ブログ 始め方 WordPress サーバー ドメイン 手順
+  intent: transactional
+  category: tools
+  program: tools-rental-server
+  score: 16000.0
+  status: published
+  slug: wordpress-blog-start-server-domain-steps
 - keyword: プログラミングスクール 社会人 無料
   intent: commercial
   category: school
@@ -235,6 +241,20 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-shakaijin-muryo
+- keyword: 会社員 副業 Web制作 始め方 手順
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 12800.0
+  status: published
+  slug: kaishain-fukugyo-web-seisaku-hajimekata
+- keyword: レンタルサーバー 選び方 初心者 WordPress
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 12800.0
+  status: published
+  slug: rental-server-erabikata-shoshinsha-wordpress
 - keyword: 40代 プログラミングスクール おすすめ
   intent: commercial
   category: school
@@ -297,6 +317,15 @@ keywords:
   score: 10000.0
   status: published
   slug: programming-school-counseling-questions
+- keyword: レンタルサーバー 費用 勘定科目
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 9600.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: rental-server-hiyou-kanjoukamoku
 - keyword: プログラミングスクール 給付金 対象 条件
   intent: commercial
   category: school
@@ -334,13 +363,6 @@ keywords:
   score: 8000.0
   status: published
   slug: mukiteiru-shigoto-wakaranai-shindan
-- keyword: レンタルサーバー 乗り換え 移行 手順 注意点
-  intent: transactional
-  category: tools
-  program: tools-rental-server
-  score: 8000.0
-  status: published
-  slug: rental-server-norikae-iko-tejun
 - keyword: プログラミングスクール 料金 相場 分割払い
   intent: commercial
   category: school
@@ -362,13 +384,6 @@ keywords:
   score: 8000.0
   status: published
   slug: web-designer-mikeiken-school-hitsuyou
-- keyword: ブログ 始め方 WordPress サーバー ドメイン 手順
-  intent: transactional
-  category: tools
-  program: tools-rental-server
-  score: 8000.0
-  status: published
-  slug: wordpress-blog-start-server-domain-steps
 - keyword: プログラミングスクール 選び方 社会人
   intent: commercial
   category: school
@@ -385,20 +400,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: reskilling-hojokin-tenshoku-shinai
-- keyword: 会社員 副業 Web制作 始め方 手順
-  intent: commercial
-  category: tools
-  program: tools-rental-server
-  score: 6400.0
-  status: published
-  slug: kaishain-fukugyo-web-seisaku-hajimekata
-- keyword: レンタルサーバー 選び方 初心者 WordPress
-  intent: commercial
-  category: tools
-  program: tools-rental-server
-  score: 6400.0
-  status: published
-  slug: rental-server-erabikata-shoshinsha-wordpress
 - keyword: webデザイナー 未経験 30代 無理
   intent: informational
   category: school
