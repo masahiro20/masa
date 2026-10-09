@@ -1,4 +1,4 @@
-from engine.ads import guess_asp, parse_ad_code, update_program
+from engine.ads import guess_asp, parse_ad_code, parse_banner, update_program
 from engine.links import expand_shortcodes
 
 A8_CODE = """<a href="https://px.a8.net/svt/ejp?a8mat=ABC123+DEF" rel="nofollow">テキスト</a>
@@ -61,3 +61,25 @@ def test_pixel_is_rendered_next_to_link():
     box = expand_shortcodes("{{aff:p}}", programs)
     assert 'class="cta-button"' in box and 'class="aff-pixel" src="https://www13.a8.net/0.gif?a8mat=x"' in box
     assert 'rel="sponsored noopener"' in expand_shortcodes("{{aff:p|詳細}}", programs)
+
+
+BANNER_CODE = (
+    '<a href="//af.moshimo.com/af/c/click?a_id=1&p_id=2312&pc_id=4967&pl_id=38395" rel="nofollow" '
+    'referrerpolicy="no-referrer-when-downgrade" attributionsrc><img src="//image.moshimo.com/af-img/1762/000000038395.png" '
+    'width="300" height="250" style="border:none;"></a><img src="//i.moshimo.com/af/i/impression?a_id=1&p_id=2312&pc_id=4967'
+    '&pl_id=38395" width="1" height="1" style="border:none;" loading="lazy">'
+)
+
+
+def test_banner_code_is_parsed_and_rendered_as_image():
+    url, pixel = parse_ad_code(BANNER_CODE)
+    banner = parse_banner(BANNER_CODE)
+    assert url.startswith("https://af.moshimo.com/af/c/click?") and "/impression" in pixel
+    assert banner == {"src": "https://image.moshimo.com/af-img/1762/000000038395.png", "width": 300, "height": 250}
+    assert parse_banner(A8_CODE) == {}
+    programs = {"s": {"id": "s", "name": "サーバー", "url": url, "pixel": pixel, "banner": banner["src"],
+                      "banner_width": 300, "banner_height": 250, "cta": "公式"}}
+    box = expand_shortcodes("{{aff:s}}", programs)
+    assert 'class="cta-banner"' in box and 'width="300" height="250"' in box and "aff-pixel" in box
+    assert "cta-button" not in box
+    assert expand_shortcodes("{{aff:s|公式サイト}}", programs) == "公式サイト"

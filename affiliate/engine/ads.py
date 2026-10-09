@@ -49,6 +49,20 @@ def parse_ad_code(code: str) -> tuple[str, str]:
     return url, pixel
 
 
+def parse_banner(code: str) -> dict:
+    """リンクの中にあるバナー画像（計測用の 1×1 画像以外）を {src, width, height} で返す。なければ空。"""
+    m = re.search(r"<a\b[^>]*>(.*?)</a>", code, re.I | re.S)
+    if not m:
+        return {}
+    for tag in IMG_RE.findall(m.group(1)):
+        src = SRC_RE.search(tag)
+        if not src or _is_pixel(tag, src.group(1)):
+            continue
+        size = {k: int(v) for k, v in re.findall(r"""\b(width|height)\s*=\s*["']?(\d+)""", tag)}
+        return {"src": _normalize(src.group(1)), "width": size.get("width", 0), "height": size.get("height", 0)}
+    return {}
+
+
 def guess_asp(url: str) -> str:
     for marker, name in (("a8.net", "a8"), ("moshimo.com", "moshimo"), ("afi-b.com", "afb"),
                          ("valuecommerce", "valuecommerce"), ("accesstrade", "accesstrade")):
@@ -88,13 +102,18 @@ def cmd_set_ad(cfg, args) -> int:
         print(f"programs.yaml にない案件IDです: {args.id}（候補: {', '.join(cfg.programs_by_id)}）")
         return 1
     path = CONFIG_DIR / "programs.yaml"
-    fields = {"asp": args.asp or guess_asp(url), "url": url, "pixel": pixel}
+    banner = parse_banner(code)
+    fields = {"asp": args.asp or guess_asp(url), "url": url, "pixel": pixel,
+              # バナー広告はコードどおり画像で表示する（テキストリンクに作り替えない）
+              "banner": banner.get("src", ""), "banner_width": banner.get("width", 0),
+              "banner_height": banner.get("height", 0)}
     if args.name:
         fields["name"] = args.name
     if args.cta:
         fields["cta"] = args.cta
     path.write_text(update_program(path.read_text(encoding="utf-8"), args.id, fields), encoding="utf-8")
-    print(f"{args.id} に広告リンクを設定しました（{fields['asp'] or 'ASP不明'}、計測用画像{'あり' if pixel else 'なし'}）")
+    kind = "バナー" if banner else "テキスト"
+    print(f"{args.id} に広告リンクを設定しました（{fields['asp'] or 'ASP不明'}、{kind}、計測用画像{'あり' if pixel else 'なし'}）")
     return 0
 
 
