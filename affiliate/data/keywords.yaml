@@ -10,12 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: WordPress ポートフォリオ 作り方 未経験
-  intent: informational
-  category: tools
-  program: tools-rental-server
-  score: 6400.0
-  status: queued
 - keyword: 未経験 ポートフォリオ 評価されない 理由
   intent: informational
   category: career
@@ -389,6 +383,13 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: reskilling-hojokin-tenshoku-shinai
+- keyword: WordPress ポートフォリオ 作り方 未経験
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 6400.0
+  status: published
+  slug: wordpress-portfolio-tsukurikata-mikeiken
 - keyword: 在職中 転職活動 進め方 エンジニア
   intent: informational
   category: career
