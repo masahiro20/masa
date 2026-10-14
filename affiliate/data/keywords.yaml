@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: web制作 副業 稼げない
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 300.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: web制作 副業 ロードマップ
   intent: informational
   category: learning
@@ -430,6 +422,15 @@ keywords:
   score: 400.0
   status: published
   slug: online-course-vs-programming-school
+- keyword: web制作 副業 稼げない
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 300.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: web-seisaku-fukugyo-kasegenai
 - keyword: 独自ドメイン 取り方 初心者 おすすめ
   intent: transactional
   category: tools
