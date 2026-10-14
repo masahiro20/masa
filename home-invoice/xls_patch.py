@@ -5,9 +5,10 @@ xlutils/xlwt で読み書きし直すと、図形(会社名の枠・押印枠)�
   1. 文字セルの文字(共有文字列表の該当エントリ)
   2. 数値セルの値(RK形式の整数)
   3. 数式セルの「計算済みの値」(数式そのものは触らない)
-  + 指定した文字を含むテキストボックスの文字を空にする(お客様固有の注記を消す用)
+  4. 使わない明細行のセルを空にする(clear)
+  5. テキストボックスの文字の一部を消す(textbox_delete)／文字を全部空にする(blank_textboxes)
 それ以外のレコード(書式・罫線・列幅・印刷設定・図形)は1バイトも変えない。
-ズレる絶対位置(シート位置・INDEX・ExtSST)だけ計算し直す。
+ズレる絶対位置(シート位置・INDEX・DBCELL・ExtSST)だけ計算し直す。
 
 使い方: python3 -I xls_patch.py <設定JSON>   (設定JSONの形は README.md)
 個人情報(住所・氏名)はこのリポジトリに置かない。設定JSONは作業用の場所に作る。
@@ -21,6 +22,7 @@ import olefile
 
 SST, EXTSST, CONTINUE, BOUNDSHEET, INDEX, DBCELL = 0xFC, 0xFF, 0x3C, 0x85, 0x20B, 0xD7
 LABELSST, RK, NUMBER, FORMULA, TXO, BOF = 0xFD, 0x27E, 0x203, 0x06, 0x1B6, 0x809
+BLANK, ROW = 0x201, 0x208
 
 
 # ---------- BIFF レコード ----------
@@ -170,6 +172,87 @@ def write_cfb(path, streams, root_clsid):
         f.write(fat_bytes)
 
 
+
+def recompute_dbcell(recs, sheet_index=1):
+    """シート1の DBCELL(行ごとの先頭セル位置の表)を、いまのレコード配置から作り直す"""
+    data, pos = serialize(recs)
+    bofs = [i for i, r in enumerate(recs) if r[0] == BOF]
+    end = bofs[sheet_index + 1] if sheet_index + 1 < len(bofs) else len(recs)
+    block_start = None
+    i = bofs[sheet_index]
+    cellkinds = (LABELSST, RK, NUMBER, FORMULA, BLANK, 0xBE, 0x204)
+    while i < end:
+        if recs[i][0] == ROW and (i == 0 or recs[i - 1][0] != ROW):
+            block_start = i
+        if recs[i][0] == DBCELL:
+            j = block_start
+            rows = []
+            while recs[j][0] == ROW:
+                rows.append(j); j += 1
+            first_cell = {}
+            for k in range(j, i):
+                if recs[k][0] in cellkinds:
+                    r = struct.unpack_from('<H', recs[k][1], 0)[0]
+                    first_cell.setdefault(r, pos[k])
+            cell_rows = sorted(first_cell)
+            old = recs[i][1]
+            n = (len(old) - 4) // 2
+            old_rg = list(struct.unpack_from('<%dH' % n, old, 4))
+            nz = [k for k, v in enumerate(old_rg) if v]
+            new_rg = list(old_rg)
+            dbr = pos[i] - pos[rows[0]]
+            if len(nz) == len(cell_rows):
+                prev = pos[rows[0]] + 4 + len(recs[rows[0]][1])
+                for k, r in zip(nz, cell_rows):
+                    new_rg[k] = first_cell[r] - prev
+                    prev = first_cell[r]
+            else:
+                # 表の形が想定と違うブロックは、中身のサイズが変わっていない場合だけ許す
+                assert dbr == struct.unpack_from('<I', old, 0)[0], 'DBCELLの形が想定と違い、サイズも変わっている'
+            recs[i][1] = bytearray(struct.pack('<I', dbr) + struct.pack('<%dH' % n, *new_rg))
+        i += 1
+
+
+def edit_textbox(recs, delete, blank):
+    """テキストボックスの文字を直す。delete=消す文字列のリスト、blank=含まれていたら全部空にする文字列のリスト"""
+    drop = set()
+    for i, (t, d, _) in enumerate(recs):
+        if t != TXO:
+            continue
+        text = txo_text(recs, i)
+        if not text:
+            continue
+        new = None
+        if any(k in text for k in blank):
+            new = ''
+        for k in delete:
+            if k in text:
+                new = (text if new is None else new).replace(k, '', 1)
+        if new is None:
+            continue
+        runs_d = recs[i + 2][1]
+        runs = [struct.unpack_from('<HH', runs_d, o) for o in range(0, len(runs_d), 8)]
+        if not new:
+            struct.pack_into('<HH', d, 10, 0, 0)
+            drop |= {i + 1, i + 2}
+            continue
+        # 消した文字数ぶん、書式の切り替え位置を前へずらす
+        cut = text.index(next(k for k in delete if k in text))
+        n_del = len(text) - len(new)
+        def shift(ich):
+            return ich if ich <= cut else max(cut, ich - n_del)
+        newruns = {}
+        for ich, fnt in runs:
+            newruns[shift(ich)] = fnt
+        newruns[len(new)] = runs[-1][1]
+        ordered = sorted(newruns.items())
+        wide = any(ord(ch) > 0xFF for ch in new)
+        recs[i + 1][1] = bytearray(bytes([1 if wide else 0]) + (new.encode('utf-16-le') if wide else new.encode('latin1')))
+        recs[i + 2][1] = bytearray(b''.join(struct.pack('<HHI', a, b, 0) for a, b in ordered))
+        struct.pack_into('<HH', d, 10, len(new), 8 * len(ordered))
+    return [r for i, r in enumerate(recs) if i not in drop]
+
+
 # ---------- 本体 ----------
 def cell_index(recs, kinds):
     """シート1のセル記録 {(行,列)(1始まり): レコード番号}"""
@@ -196,7 +279,7 @@ def txo_text(recs, i):
     return bytes(d[1:]).decode('utf-16-le' if d[0] & 1 else 'latin1')
 
 
-def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid):
+def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid, clear=(), textbox_delete=()):
     o = olefile.OleFileIO(src)
     wb = o.openstream('Workbook').read()
     other = [(n, o.openstream(n).read()) for n in o.listdir() if n != ['Workbook']]
@@ -205,15 +288,15 @@ def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid):
     o.close()
     recs = parse_records(wb)
     sst_i = next(i for i, r in enumerate(recs) if r[0] == SST)
-    ext_i = next(i for i, r in enumerate(recs) if r[0] == EXTSST)
     total, unique, entries = parse_sst(recs[sst_i][1])
-    cells = cell_index(recs, (LABELSST, RK, NUMBER, FORMULA))
+    cells = cell_index(recs, (LABELSST, RK, NUMBER, FORMULA, BLANK))
 
     # 1. 文字
     refs = {}
     for k, i in cells.items():
         if recs[i][0] == LABELSST:
             refs.setdefault(struct.unpack_from('<I', recs[i][1], 6)[0], []).append(k)
+    orphaned = set()
     for (r, c), text in strings.items():
         i = cells[(r, c)]
         assert recs[i][0] == LABELSST, '文字セルではない: %s' % ((r, c),)
@@ -238,24 +321,41 @@ def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid):
         i = cells[(r, c)]
         assert recs[i][0] == FORMULA, '数式セルではない: %s' % ((r, c),)
         recs[i][1][6:14] = struct.pack('<d', float(v))
-    # 4. お客様固有のテキストボックスを空に
-    drop = set()
-    for i, (t, d, _) in enumerate(recs):
-        if t == TXO and any(k in txo_text(recs, i) for k in blank_textboxes):
-            assert recs[i + 1][0] == CONTINUE and recs[i + 2][0] == CONTINUE
-            struct.pack_into('<HH', d, 10, 0, 0)
-            drop |= {i + 1, i + 2}
-    recs = [r for i, r in enumerate(recs) if i not in drop]
+    # 4. 使わない明細行のセルを空にする(書式はそのまま)
+    for (r, c) in clear:
+        i = cells[(r, c)]
+        assert recs[i][0] in (LABELSST, RK, NUMBER), '空にできるのは文字・数値セルだけ: %s' % ((r, c),)
+        if recs[i][0] == LABELSST:
+            isst = struct.unpack_from('<I', recs[i][1], 6)[0]
+            refs[isst].remove((r, c))
+            if not refs[isst]:
+                orphaned.add(isst)
+        recs[i][0] = BLANK
+        recs[i][1] = bytearray(recs[i][1][:6])
+    # 前のお客様の文字だけが入っていた共有文字列は取り除き、番号を詰める
+    if orphaned:
+        keep = [k for k in range(len(entries)) if k not in orphaned]
+        remap = {old: new for new, old in enumerate(keep)}
+        for r in recs:
+            if r[0] == LABELSST:
+                old = struct.unpack_from('<I', r[1], 6)[0]
+                struct.pack_into('<I', r[1], 6, remap[old])
+        entries = [entries[k] for k in keep]
+        unique = len(entries)
+        total -= len(orphaned)
+    # 5. テキストボックス
+    recs = edit_textbox(recs, textbox_delete, blank_textboxes)
     sst_i = next(i for i, r in enumerate(recs) if r[0] == SST)
     ext_i = next(i for i, r in enumerate(recs) if r[0] == EXTSST)
 
-    # 5. SST/ExtSST を作り直し、位置ズレを直す
+    # 6. SST/ExtSST を作り直し、位置ズレを直す
     old_pos = [r[2] for r in recs]
     payload, offsets = build_sst(total, unique, entries)
     recs[sst_i][1] = payload
     old_ext = bytes(recs[ext_i][1])
     new_pos_probe = serialize(recs)[1]
     recs[ext_i][1] = build_extsst(old_ext, new_pos_probe[sst_i], offsets)
+    recompute_dbcell(recs)
     data, new_pos = serialize(recs)
     pos_map = dict(zip(old_pos, new_pos))
     for t, d, _ in recs:
@@ -286,7 +386,8 @@ def main():
           {key(k): v for k, v in cfg['strings'].items()},
           {key(k): v for k, v in cfg['numbers'].items()},
           {key(k): v for k, v in cfg['formulas'].items()},
-          cfg.get('blank_textboxes', []), cfg.get('forbid', []))
+          cfg.get('blank_textboxes', []), cfg.get('forbid', []),
+          [key(k) for k in cfg.get('clear', [])], cfg.get('textbox_delete', []))
     print('OK', cfg['dst'])
 
 
