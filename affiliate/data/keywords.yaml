@@ -2,6 +2,38 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: プログラミングスクール 通い放題
+  intent: commercial
+  category: school
+  program: school-general
+  score: 32000.0
+  status: queued
+  boost: 4.0
+  source: search-console
+- keyword: プログラミングスクール 対面 オンライン 違い
+  intent: commercial
+  category: school
+  program: school-general
+  score: 32000.0
+  status: queued
+  boost: 4.0
+  source: search-console
+- keyword: プログラミングスクール ローン 分割 審査
+  intent: commercial
+  category: school
+  program: school-general
+  score: 32000.0
+  status: queued
+  boost: 4.0
+  source: search-console
+- keyword: プログラミングスクール オンライン 注意点 デメリット
+  intent: commercial
+  category: school
+  program: school-general
+  score: 32000.0
+  status: queued
+  boost: 4.0
+  source: search-console
 - keyword: web制作 副業 ロードマップ
   intent: informational
   category: learning

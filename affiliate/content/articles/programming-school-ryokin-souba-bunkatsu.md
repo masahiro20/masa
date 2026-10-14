@@ -1,7 +1,7 @@
 ---
-title: プログラミングスクールの料金相場と分割払い｜総額で比べるコツ
+title: プログラミングスクールの費用相場｜料金の目安と分割払いの注意点
 slug: programming-school-ryokin-souba-bunkatsu
-description: プログラミングスクールの料金は定価・キャンペーン価格・給付金適用後の実質額など表示がさまざまで、分割払いでは手数料や支払方法の制限もあります。公式サイトの表示例をもとに、料金を総額で比べる方法と分割払いの注意点、負担を下げる制度を整理します。
+description: プログラミングスクールの費用相場と料金の見方を整理。料金は定価・キャンペーン価格・給付金適用後の実質額など表示がさまざまで、分割払いでは手数料や支払方法の制限もあります。公式サイトの表示例をもとに、料金を総額で比べる方法と分割払いの注意点、負担を下げる制度を整理します。
 category: school
 tags:
 - プログラミングスクール
@@ -15,7 +15,7 @@ programs:
 - school-kyufukin
 - learning-online-course
 published: '2026-10-02'
-updated: '2026-10-02'
+updated: '2026-10-15'
 origin: ai
 editor_score: null
 sources:
