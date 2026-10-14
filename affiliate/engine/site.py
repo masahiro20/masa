@@ -62,6 +62,51 @@ def related_articles(article: Article, articles: list[Article], n: int = 4) -> l
     return others[:n]
 
 
+def _tokens(a: Article) -> set[str]:
+    text = f"{a.title} {a.keyword or ''} {' '.join(a.tags)}"
+    return {text[i:i + 2] for i in range(len(text) - 1) if text[i].strip() and text[i + 1].strip()}
+
+
+def related_map(articles: list[Article], n: int = 5) -> dict[str, list[Article]]:
+    """全記事の関連記事を一度に決める。似ている順に選びつつ、まだリンクを受けていない記事を優先する。
+
+    似ている記事ばかりを選ぶと、特定の記事に被リンクが偏り、新しい記事が「どこからもリンクされない」
+    状態になる（検索エンジンの巡回が届きにくい）。そのため、すでに多く選ばれた記事には減点をかける。
+    """
+    toks = {a.slug: _tokens(a) for a in articles}
+
+    def sim(a: Article, b: Article) -> float:
+        ta, tb = toks[a.slug], toks[b.slug]
+        jac = len(ta & tb) / max(1, len(ta | tb))
+        return jac * 10 + len(set(a.tags) & set(b.tags)) * 2 + (1.5 if a.category == b.category else 0)
+
+    inbound = {a.slug: 0 for a in articles}
+    result: dict[str, list[Article]] = {}
+    # リンクが集まりにくい新しい記事から順に割り当てる
+    for a in sorted(articles, key=lambda x: (x.published or "", x.slug), reverse=True):
+        scored = sorted(
+            (b for b in articles if b.slug != a.slug),
+            key=lambda b: sim(a, b) - 1.2 * inbound[b.slug] + (3 if inbound[b.slug] == 0 else 0),
+            reverse=True,
+        )
+        picked = scored[:n]
+        for b in picked:
+            inbound[b.slug] += 1
+        result[a.slug] = picked
+    return result
+
+
+def pillar_articles(articles: list[Article], n: int = 6) -> list[Article]:
+    """本文からリンクされている数が多い記事（サイトの軸になる記事）。フッターから全ページにリンクする。"""
+    counts = {a.slug: 0 for a in articles}
+    for a in articles:
+        for target in re.findall(r"\{\{link:([a-z0-9-]+)", a.body):
+            if target in counts and target != a.slug:
+                counts[target] += 1
+    ranked = sorted(articles, key=lambda a: (counts[a.slug], a.published or ""), reverse=True)
+    return [a for a in ranked if counts[a.slug] > 0][:n]
+
+
 def reading_minutes(body: str) -> int:
     chars = len(re.sub(r"\s|[#>*_`|:\-]|\{\{[^}]+\}\}", "", body))
     return max(1, round(chars / 600))
@@ -165,11 +210,13 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         "logo": logo_svg(34),
         "cover_url": cover_url,
         "cover_webp": cover_webp,
+        "pillars": pillar_articles(articles),
         "thumb_url": thumb_url,
         "og_image": f"{base}/static/og-default.png",
     }
     urls: list[tuple[str, str]] = [(f"{base}/", articles[0].updated if articles else date.today().isoformat())]
 
+    related_by_slug = related_map(articles)
     for a in articles:
         cat = cats.get(a.category, {"name": a.category, "color": "#162238", "slug": a.category})
         save_cover(out_dir / a.url_path / COVER_NAME, title=a.title, category_name=cat["name"],
@@ -178,7 +225,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         url = f"{base}/{a.url_path}"
         write(f"{a.url_path}index.html", env.get_template("article.html").render(
             **{**common, "og_image": cover_url(a)}, article=a, body=body_html, toc=toc, url=url, category=cat,
-            related=related_articles(a, articles), minutes=reading_minutes(a.body),
+            related=related_by_slug[a.slug], minutes=reading_minutes(a.body),
             json_ld=_article_ld(a, cfg, url, cat["name"], cover_url(a), base),
             page_title=a.title, page_description=a.description, og_type="article",
         ))
@@ -194,6 +241,14 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         **common, articles=articles, url=f"{base}/", page_title=None,
         page_description=cfg.site["tagline"], json_ld=home_ld,
     ))
+
+    if articles:
+        archive_url = f"{base}/articles/"
+        write("articles/index.html", env.get_template("archive.html").render(
+            **common, articles=articles, url=archive_url, page_title="記事一覧",
+            page_description=f"{cfg.site['name']}の全{len(articles)}記事を、カテゴリ別にまとめた一覧です。",
+        ))
+        urls.append((archive_url, articles[0].updated or articles[0].published))
 
     for slug, cat in cats.items():
         items = [a for a in articles if a.category == slug]

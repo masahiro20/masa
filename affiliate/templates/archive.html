@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="wrap wide">
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>/</span>記事一覧</nav>
+  <header class="cat-header">
+    <h1>記事一覧</h1>
+    <p>全{{ articles|length }}記事を、カテゴリ別に新しい順で掲載しています。</p>
+  </header>
+  {% for slug, c in categories.items() %}{% set items = articles | selectattr("category", "equalto", slug) | list %}{% if items %}
+  <section class="archive-group">
+    <h2 class="section-title"><span><a href="{{ base_url }}/category/{{ slug }}/">{{ c.name }}</a>（{{ items|length }}）</span></h2>
+    <ul class="archive-list">
+      {% for a in items %}<li>
+        <a href="{{ base_url }}/{{ a.url_path }}"><span class="archive-title">{{ a.title }}</span><span class="archive-desc">{{ a.description }}</span></a>
+        <time class="date" datetime="{{ a.updated }}">{{ a.updated | replace('-', '.') }}</time>
+      </li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}{% endfor %}
+</div>
+{% endblock %}

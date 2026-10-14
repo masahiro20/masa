@@ -20,6 +20,7 @@
   <section class="section">
     <h2 class="section-title"><span>新着記事</span></h2>
     <ul class="grid">{% for a in articles[1:10] %}{% include "_card.html" %}{% endfor %}</ul>
+    <p class="more"><a href="{{ base_url }}/articles/">全{{ articles|length }}記事の一覧を見る →</a></p>
   </section>
   {% else %}
   <p class="empty">記事を準備中です。</p>
