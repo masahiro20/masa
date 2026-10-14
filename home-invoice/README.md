@@ -8,6 +8,7 @@
 | --- | --- |
 | `xls_patch.py` | ひな形(.xls)の文字・数値・数式の計算済み値だけを書き換える。図形・罫線・印刷設定は触らない |
 | `verify_base.py` | ひな形と出来上がりをレコード単位で突き合わせ、変わったのが意図したセルだけか確認する |
+| `make_pdf.py` | LibreOfficeで本物に近い1ページPDFを作る(提出・印刷チェック用)。必要: `libreoffice-calc` `fonts-ipafont-gothic` |
 | `render_preview.py` | 印刷範囲・A4・倍率・余白・図形を反映した確認用プレビュー(PDF/PNG)。ひな形と並べて見比べる |
 
 実行は `python3 -I <script> ...`（`olefile` `xlrd` `reportlab` `pymupdf` が必要）。
