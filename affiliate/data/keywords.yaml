@@ -2,12 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 教育訓練給付金 申請 流れ 必要書類
-  intent: informational
-  category: school
-  program: school-kyufukin
-  score: 4800.0
-  status: queued
 - keyword: web制作 副業 稼げない
   intent: informational
   category: learning
@@ -422,6 +416,13 @@ keywords:
   score: 6000.0
   status: published
   slug: 30dai-mikeiken-engineer-tenshoku-genjitsu
+- keyword: 教育訓練給付金 申請 流れ 必要書類
+  intent: informational
+  category: school
+  program: school-kyufukin
+  score: 4800.0
+  status: published
+  slug: kyoiku-kunren-kyufukin-shinsei-nagare
 - keyword: オンライン講座 プログラミングスクール 違い 比較
   intent: commercial
   category: learning
