@@ -40,6 +40,7 @@ document.addEventListener('click',function(e){var a=e.target.closest('a[rel~="sp
     </a>
     <nav class="nav" aria-label="カテゴリ">
       {% for slug, c in categories.items() %}<a href="{{ base_url }}/category/{{ slug }}/">{{ c.name }}</a>{% endfor %}
+      <a href="{{ base_url }}/articles/">記事一覧</a>
     </nav>
   </div>
 </header>
@@ -59,7 +60,12 @@ document.addEventListener('click',function(e){var a=e.target.closest('a[rel~="sp
       <nav aria-label="カテゴリ">
         <p class="footer-head">カテゴリ</p>
         {% for slug, c in categories.items() %}<a href="{{ base_url }}/category/{{ slug }}/">{{ c.name }}</a>{% endfor %}
+        <a href="{{ base_url }}/articles/">記事一覧</a>
       </nav>
+      {% if pillars %}<nav aria-label="おすすめ記事">
+        <p class="footer-head">おすすめの記事</p>
+        {% for a in pillars %}<a href="{{ base_url }}/{{ a.url_path }}">{{ a.title }}</a>{% endfor %}
+      </nav>{% endif %}
       <nav aria-label="サイト情報">
         <p class="footer-head">サイトについて</p>
         <a href="{{ base_url }}/about/">運営者情報・編集方針</a>
