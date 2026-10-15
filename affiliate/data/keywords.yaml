@@ -18,14 +18,6 @@ keywords:
   status: queued
   boost: 4.0
   source: search-console
-- keyword: Claude Code 研修 個人 おすすめ
-  intent: commercial
-  category: learning
-  program: learning-ai-coding
-  score: 12000.0
-  status: queued
-  boost: 1.5
-  source: manual
 - keyword: AI駆動開発 学び方 エンジニア
   intent: informational
   category: learning
@@ -259,6 +251,15 @@ keywords:
   score: 12800.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: Claude Code 研修 個人 おすすめ
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
+  score: 12000.0
+  status: published
+  boost: 1.5
+  source: manual
+  slug: claude-code-kenshu-kojin-osusume
 - keyword: 40代 プログラミングスクール おすすめ
   intent: commercial
   category: school
