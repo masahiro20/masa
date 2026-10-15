@@ -34,6 +34,30 @@ keywords:
   status: queued
   boost: 4.0
   source: search-console
+- keyword: Claude Code 研修 個人 おすすめ
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
+  score: 12000.0
+  status: queued
+  boost: 1.5
+  source: manual
+- keyword: AI駆動開発 学び方 エンジニア
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 6000.0
+  status: queued
+  boost: 1.5
+  source: manual
+- keyword: AIコーディング 初心者 学習 ロードマップ
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 6000.0
+  status: queued
+  boost: 1.5
+  source: manual
 - keyword: web制作 副業 ロードマップ
   intent: informational
   category: learning
