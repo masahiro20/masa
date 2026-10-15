@@ -92,6 +92,19 @@ programs:
     keywords: ["独学", "動画講座", "オンライン講座", "Python 学習"]
     cta: "講座の内容とレビューを見てみる"
 
+  - id: learning-ai-coding
+    name: "Claude Code研修（AI駆動開発協会）"
+    category: learning
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849853&p_id=7640&pc_id=22095&pl_id=95452"
+    banner_height: 280
+    banner_width: 336
+    banner: "https://image.moshimo.com/af-img/7398/000000095452.png"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849853&p_id=7640&pc_id=22095&pl_id=95452"
+    est_reward_jpy: 5000
+    keywords: ["Claude Code", "AI駆動開発", "AIコーディング", "生成AI 開発", "エンジニア 研修", "リスキリング AI"]
+    cta: "Claude Code研修の内容を確認する"
+
   - id: learning-books
     name: "技術書・学習書（楽天市場）"
     category: learning
