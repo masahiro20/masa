@@ -2,22 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: web制作 副業 ロードマップ
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 300.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: プログラミング 独学 何から
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 300.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: python 独学 何時間
   intent: informational
   category: learning
@@ -476,6 +460,15 @@ keywords:
   score: 400.0
   status: published
   slug: online-course-vs-programming-school
+- keyword: プログラミング 独学 何から
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 300.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: programming-dokugaku-nanikara
 - keyword: web制作 副業 稼げない
   intent: informational
   category: learning
@@ -514,3 +507,13 @@ keywords:
   - 図解ブロックが過多。ルールは合計3〜6個だが、point×4・warning×3・merit/demerit・check・steps で10個超。セクションごとにブロックが並び、地の文が痩せて『装飾で埋めた』印象になっている。効果の高い4〜6個（給付金のwarning、契約前check、stepsなど）に絞り、残りは本文の文章に戻す。
   - フロントマターの programs に career-it-agent が含まれていないのに本文で {{aff:career-it-agent}} を使用しており、メタ情報と本文が不整合。programs を実際の使用IDに合わせるか、CTAを差し替える。
   - 出典表記が『データサイエンスコラム』『教育訓練給付金.JP』『ライフィ保険ニュース解説』など媒体名の略記にとどまり、読者が一次情報にたどり着けない。特に給付率・上限額（80%・年間64万円）や2024年10月改正は、厚生労働省／政府広報オンラインという公的出所と『◯年◯月時点』の時点表記を本文に明記すべき。民間スクール公式ページ由来の数値（最大80%・64万円・192万円）は『民間スクールの公式説明による』と出所の性質を明示すること。
+- keyword: web制作 副業 ロードマップ
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 300.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事kaishain-fukugyo-web-seisaku-hajimekataと検索意図が重複
