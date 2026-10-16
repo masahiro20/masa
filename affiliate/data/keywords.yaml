@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 4.0
   source: search-console
-- keyword: AI駆動開発 学び方 エンジニア
-  intent: informational
-  category: learning
-  program: learning-ai-coding
-  score: 6000.0
-  status: queued
-  boost: 1.5
-  source: manual
 - keyword: AIコーディング 初心者 学習 ロードマップ
   intent: informational
   category: learning
@@ -431,6 +423,15 @@ keywords:
   score: 6400.0
   status: published
   slug: wordpress-portfolio-tsukurikata-mikeiken
+- keyword: AI駆動開発 学び方 エンジニア
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: manual
+  slug: ai-kudou-kaihatsu-manabikata-engineer
 - keyword: 未経験 ポートフォリオ 評価されない 理由
   intent: informational
   category: career
