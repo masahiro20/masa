@@ -51,3 +51,5 @@
 {"ts": "2026-10-16T03:49:47+00:00", "source": "routine", "published": ["ai-kudou-kaihatsu-manabikata-engineer"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-16T09:48:20+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["プログラミングスクール オンライン 注意点 デメリット"], "errors": ["既存記事programming-school-taimen-online-chigaiと検索意図が重複"]}
 {"ts": "2026-10-16T09:49:31+00:00", "source": "routine", "published": ["ai-coding-shoshinsha-roadmap"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-10-16T21:48:15+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["web制作 副業 ロードマップ"], "errors": ["既存記事kaishain-fukugyo-web-seisaku-hajimekataと検索意図が重複"]}
+{"ts": "2026-10-16T21:49:54+00:00", "source": "routine", "published": ["programming-dokugaku-nanikara"], "refreshed": [], "rejected": [], "errors": []}
