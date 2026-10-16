@@ -173,44 +173,86 @@ def write_cfb(path, streams, root_clsid):
 
 
 
-def recompute_dbcell(recs, sheet_index=1):
-    """シート1の DBCELL(行ごとの先頭セル位置の表)を、いまのレコード配置から作り直す"""
+def block_models(recs, sheet_index=1):
+    """シート1の行ブロックごとに、(DBCELLの番号, 行ブロック先頭ROWの番号, セルのある行, その先頭セルの位置)を調べる"""
     data, pos = serialize(recs)
     bofs = [i for i, r in enumerate(recs) if r[0] == BOF]
     end = bofs[sheet_index + 1] if sheet_index + 1 < len(bofs) else len(recs)
-    block_start = None
-    i = bofs[sheet_index]
     cellkinds = (LABELSST, RK, NUMBER, FORMULA, BLANK, 0xBE, 0x204)
-    while i < end:
-        if recs[i][0] == ROW and (i == 0 or recs[i - 1][0] != ROW):
+    out, block_start = [], None
+    for i in range(bofs[sheet_index], end):
+        if recs[i][0] == ROW and recs[i - 1][0] != ROW:
             block_start = i
         if recs[i][0] == DBCELL:
             j = block_start
-            rows = []
             while recs[j][0] == ROW:
-                rows.append(j); j += 1
-            first_cell = {}
+                j += 1
+            first = {}
             for k in range(j, i):
                 if recs[k][0] in cellkinds:
-                    r = struct.unpack_from('<H', recs[k][1], 0)[0]
-                    first_cell.setdefault(r, pos[k])
-            cell_rows = sorted(first_cell)
-            old = recs[i][1]
-            n = (len(old) - 4) // 2
-            old_rg = list(struct.unpack_from('<%dH' % n, old, 4))
-            nz = [k for k, v in enumerate(old_rg) if v]
-            new_rg = list(old_rg)
-            dbr = pos[i] - pos[rows[0]]
-            if len(nz) == len(cell_rows):
-                prev = pos[rows[0]] + 4 + len(recs[rows[0]][1])
-                for k, r in zip(nz, cell_rows):
-                    new_rg[k] = first_cell[r] - prev
-                    prev = first_cell[r]
-            else:
-                # 表の形が想定と違うブロックは、中身のサイズが変わっていない場合だけ許す
-                assert dbr == struct.unpack_from('<I', old, 0)[0], 'DBCELLの形が想定と違い、サイズも変わっている'
-            recs[i][1] = bytearray(struct.pack('<I', dbr) + struct.pack('<%dH' % n, *new_rg))
-        i += 1
+                    first.setdefault(struct.unpack_from('<H', recs[k][1], 0)[0], pos[k])
+            rows = sorted(first)
+            prev = pos[block_start] + 4 + len(recs[block_start][1])
+            diffs = []
+            for r in rows:
+                diffs.append(first[r] - prev)
+                prev = first[r]
+            out.append({'db': i, 'first_row': block_start, 'rows': rows, 'diffs': diffs, 'dbr': pos[i] - pos[block_start]})
+    return out
+
+
+def recompute_dbcell(recs, before):
+    """行ごとの先頭セル位置の表(DBCELL)を、セルの大きさが変わった分だけ直す"""
+    after = block_models(recs)
+    assert len(before) == len(after)
+    for m0, m1 in zip(before, after):
+        assert m0['rows'] == m1['rows'], 'セルのある行が変わった(未対応)'
+        old = recs[m1['db']][1]
+        n = (len(old) - 4) // 2
+        rg = list(struct.unpack_from('<%dH' % n, old, 4))
+        if m0['diffs'] != m1['diffs']:
+            nz = [k for k, v in enumerate(rg) if v]
+            k0 = len(m0['diffs'])
+            assert [rg[k] for k in nz[:k0]] == m0['diffs'], 'DBCELLの形が想定と違う'
+            for k, v in zip(nz[:k0], m1['diffs']):
+                rg[k] = v
+        recs[m1['db']][1] = bytearray(struct.pack('<I', m1['dbr']) + struct.pack('<%dH' % n, *rg))
+
+
+def find_blank(recs, r, c):
+    """空白のセル(BLANK または MULBLANK の一部)を探す。見つけたら (レコード番号, xf)"""
+    bofs = [i for i, x in enumerate(recs) if x[0] == BOF]
+    for i in range(bofs[1], bofs[2]):
+        t, d, _ = recs[i]
+        if t == BLANK and struct.unpack_from('<HH', d, 0) == (r - 1, c - 1):
+            return i, struct.unpack_from('<H', d, 4)[0]
+        if t == 0xBE:
+            row, c1 = struct.unpack_from('<HH', d, 0)
+            c2 = struct.unpack_from('<H', d, len(d) - 2)[0]
+            if row == r - 1 and c1 <= c - 1 <= c2:
+                return i, struct.unpack_from('<H', d, 4 + 2 * (c - 1 - c1))[0]
+    return None, None
+
+
+def fill_blank_with_label(recs, r, c, isst):
+    """空白セルに文字(共有文字列の番号 isst)を入れる。MULBLANKなら前後に分ける。書式は元の空白セルのまま"""
+    i, xf = find_blank(recs, r, c)
+    assert i is not None, '空白セルが見つからない: %s' % ((r, c),)
+    t, d, _ = recs[i]
+    new = [[LABELSST, bytearray(struct.pack('<HHHI', r - 1, c - 1, xf, isst)), 0]]
+    if t == 0xBE:
+        row, c1 = struct.unpack_from('<HH', d, 0)
+        c2 = struct.unpack_from('<H', d, len(d) - 2)[0]
+        xfs = [struct.unpack_from('<H', d, 4 + 2 * k)[0] for k in range(c2 - c1 + 1)]
+        def blanks(first, last):
+            if first > last:
+                return []
+            if first == last:
+                return [[BLANK, bytearray(struct.pack('<HHH', row, first, xfs[first - c1])), 0]]
+            body = b''.join(struct.pack('<H', xfs[k - c1]) for k in range(first, last + 1))
+            return [[0xBE, bytearray(struct.pack('<HH', row, first) + body + struct.pack('<H', last)), 0]]
+        new = blanks(c1, c - 2) + new + blanks(c, c2)
+    recs[i:i + 1] = new
 
 
 def edit_textbox(recs, delete, blank):
@@ -279,7 +321,7 @@ def txo_text(recs, i):
     return bytes(d[1:]).decode('utf-16-le' if d[0] & 1 else 'latin1')
 
 
-def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid, clear=(), textbox_delete=()):
+def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid, clear=(), textbox_delete=(), xf=None, fill=None):
     o = olefile.OleFileIO(src)
     wb = o.openstream('Workbook').read()
     other = [(n, o.openstream(n).read()) for n in o.listdir() if n != ['Workbook']]
@@ -287,6 +329,7 @@ def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid, clear=(
     clsid = uuid.UUID(o.root.clsid).bytes_le if o.root.clsid else b'\0' * 16
     o.close()
     recs = parse_records(wb)
+    model0 = block_models(recs)
     sst_i = next(i for i, r in enumerate(recs) if r[0] == SST)
     total, unique, entries = parse_sst(recs[sst_i][1])
     cells = cell_index(recs, (LABELSST, RK, NUMBER, FORMULA, BLANK))
@@ -332,6 +375,11 @@ def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid, clear=(
                 orphaned.add(isst)
         recs[i][0] = BLANK
         recs[i][1] = bytearray(recs[i][1][:6])
+    # 4b. セルの書式(xf番号)だけを、ひな形の中にある別の書式に付け替える(例: 文字の大きさを揃える)
+    for (r, c), x in (xf or {}).items():
+        i = cells[(r, c)]
+        assert recs[i][0] in (LABELSST, RK, NUMBER, FORMULA, BLANK), '書式を替えられないセル: %s' % ((r, c),)
+        struct.pack_into('<H', recs[i][1], 4, x)
     # 前のお客様の文字だけが入っていた共有文字列は取り除き、番号を詰める
     if orphaned:
         keep = [k for k in range(len(entries)) if k not in orphaned]
@@ -343,6 +391,12 @@ def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid, clear=(
         entries = [entries[k] for k in keep]
         unique = len(entries)
         total -= len(orphaned)
+    # 4c. 空白だったセルに文字を入れる(書式は元の空白セルのまま)
+    for (r, c), text in (fill or {}).items():
+        entries.append({'raw': encode_string(text), 'text': text})
+        unique += 1
+        total += 1
+        fill_blank_with_label(recs, r, c, len(entries) - 1)
     # 5. テキストボックス
     recs = edit_textbox(recs, textbox_delete, blank_textboxes)
     sst_i = next(i for i, r in enumerate(recs) if r[0] == SST)
@@ -355,7 +409,7 @@ def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid, clear=(
     old_ext = bytes(recs[ext_i][1])
     new_pos_probe = serialize(recs)[1]
     recs[ext_i][1] = build_extsst(old_ext, new_pos_probe[sst_i], offsets)
-    recompute_dbcell(recs)
+    recompute_dbcell(recs, model0)
     data, new_pos = serialize(recs)
     pos_map = dict(zip(old_pos, new_pos))
     for t, d, _ in recs:
@@ -387,7 +441,9 @@ def main():
           {key(k): v for k, v in cfg['numbers'].items()},
           {key(k): v for k, v in cfg['formulas'].items()},
           cfg.get('blank_textboxes', []), cfg.get('forbid', []),
-          [key(k) for k in cfg.get('clear', [])], cfg.get('textbox_delete', []))
+          [key(k) for k in cfg.get('clear', [])], cfg.get('textbox_delete', []),
+          {key(k): v for k, v in cfg.get('xf', {}).items()},
+          {key(k): v for k, v in cfg.get('fill', {}).items()})
     print('OK', cfg['dst'])
 
 

@@ -12,25 +12,22 @@ wa, ra = recs(a); wb_, rb = recs(b)
 print('レコード数', len(ra), '->', len(rb), ' 長さ', len(wa), '->', len(wb_))
 # 位置に依存する3種(シート位置・INDEX・ExtSST)と SST は別に検証する
 SKIP = {0x85, 0x20b, 0xff, 0xfc}
+import difflib
+norm = lambda r: [(t, b'' if t in SKIP else bytes(d)) for t, d, _ in r]   # 位置依存のレコードは中身を無視
 diffs = []
-if len(ra) == len(rb):   # 件数が同じなら先頭から1件ずつ突き合わせる(セルを空にしただけ、などはここ)
-    for (ta, da, pa), (tb, db, pb) in zip(ra, rb):
-        if (ta != tb or da != db) and not (ta == tb and ta in SKIP):
-            diffs.append((ta, pa, 'changed', da, db))
-else:
-    ia = ib = 0
-    while ia < len(ra) and ib < len(rb):
-        ta, da, pa = ra[ia]; tb, db, pb = rb[ib]
-        if ta == tb and (da == db or ta in SKIP):
-            ia += 1; ib += 1; continue
-        if ta == tb:
-            diffs.append((ta, pa, 'changed', da, db)); ia += 1; ib += 1
-        else:
-            diffs.append((ta, pa, 'removed', da, b'')); ia += 1
+sm = difflib.SequenceMatcher(None, norm(ra), norm(rb), autojunk=False)
+for tag, i1, i2, j1, j2 in sm.get_opcodes():
+    if tag == 'equal':
+        continue
+    for k in range(i1, i2):
+        diffs.append((ra[k][0], ra[k][2], 'changed' if tag == 'replace' else 'removed', ra[k][1], b''))
+    for k in range(j1, j2):
+        diffs.append((rb[k][0], rb[k][2], 'added', b'', rb[k][1]))
 print('ひな形と違うレコード:')
 for t, p, k, da, db in diffs:
     desc = ''
-    if t in (0x27e, 0x203, 0x06, 0xfd, 0x201): desc = 'セル 行%d 列%d' % (struct.unpack_from('<H', da, 0)[0]+1, struct.unpack_from('<H', da, 2)[0]+1)
+    src = da or db
+    if t in (0x27e, 0x203, 0x06, 0xfd, 0x201, 0xbe): desc = 'セル 行%d 列%d' % (struct.unpack_from('<H', src, 0)[0]+1, struct.unpack_from('<H', src, 2)[0]+1)
     print(' ', hex(t), k, desc)
 # 位置参照の検証
 def check(path):
