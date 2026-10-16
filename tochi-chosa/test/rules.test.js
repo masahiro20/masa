@@ -105,3 +105,15 @@ test("区域区分が「都市計画区域」だけなら非線引きと判定�
   assert.match(get(r, "far").value, /実効 200%/);
   assert.equal(get(r, "landCategory").level, "warn");
 });
+
+test("土砂災害：20m超は「地点外」、指定前（コード3・4）も区域名で表示する", () => {
+  const near = deriveFindings({
+    reinfo: [{ id: "sediment", status: "ok", hits: [{ 現象: "急傾斜地の崩壊", 区域: "土砂災害特別警戒区域（指定前・基礎調査）", 距離: "約65m" }] }],
+  });
+  assert.equal(get(near, "rf_sediment").level, "check");
+  assert.match(get(near, "rf_sediment").value, /約65m先/);
+  const inside = deriveFindings({
+    reinfo: [{ id: "sediment", status: "ok", hits: [{ 現象: "急傾斜地の崩壊", 区域: "土砂災害特別警戒区域", 距離: "地点を含む" }] }],
+  });
+  assert.equal(get(inside, "rf_sediment").level, "danger");
+});

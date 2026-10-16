@@ -6,7 +6,13 @@ import { lonLatToTile, geometryContains, distanceToGeometryM } from "./geo.js";
 const BASE = "https://www.reinfolib.mlit.go.jp/ex-api/external";
 
 const SEDIMENT_TYPES = { 1: "急傾斜地の崩壊", 2: "土石流", 3: "地すべり" };
-const SEDIMENT_ZONES = { 1: "土砂災害警戒区域", 2: "土砂災害特別警戒区域" };
+// 国土数値情報 A33 の区域コード：3・4 は基礎調査が終わり指定前の区域
+const SEDIMENT_ZONES = {
+  1: "土砂災害警戒区域",
+  2: "土砂災害特別警戒区域",
+  3: "土砂災害警戒区域（指定前・基礎調査）",
+  4: "土砂災害特別警戒区域（指定前・基礎調査）",
+};
 const FLOOD_RANKS = {
   1: "0.5m未満",
   2: "0.5〜3.0m",
@@ -57,7 +63,7 @@ export const LAYERS = [
     pick: (p) => ({ 区域名: p.A48_005_ja, 指定理由: p.A48_007_name_ja, 詳細: p.A48_008_ja, 根拠条例: p.A48_011, その他: p.A48_014 }),
   },
   {
-    id: "sediment", code: "XKT029", name: "土砂災害警戒区域", mode: "near", nearM: 20,
+    id: "sediment", code: "XKT029", name: "土砂災害警戒区域", mode: "near", nearM: 150, // 150m以内を拾い、20m超は「周辺にあり」として扱う（rules.js）
     pick: (p) => ({
       現象: SEDIMENT_TYPES[p.A33_001] || p.A33_001,
       区域: SEDIMENT_ZONES[p.A33_002] || p.A33_002,
@@ -121,8 +127,17 @@ async function queryLayer(apiKey, layer, lon, lat) {
   const base = { id: layer.id, code: layer.code, name: layer.name, source: "不動産情報ライブラリ（国土交通省）" };
   const t = lonLatToTile(lon, lat, 15);
   try {
-    const fc = await fetchTile(apiKey, layer.code, 15, t.x, t.y);
-    const features = fc.features || [];
+    // 「近く」を探すレイヤーは、地点がタイルの端に近いとき隣のタイルも読む（区域が隣のタイルにあると拾えないため）
+    const tiles = [[t.x, t.y]];
+    if (layer.mode === "near") {
+      const margin = Math.ceil(layer.nearM / 3.9) + 2; // z15 のタイルは約3.9m/ピクセル（緯度35度付近）
+      const dxs = [0, ...(t.px < margin ? [-1] : []), ...(t.px > 256 - margin ? [1] : [])];
+      const dys = [0, ...(t.py < margin ? [-1] : []), ...(t.py > 256 - margin ? [1] : [])];
+      tiles.length = 0;
+      for (const dx of dxs) for (const dy of dys) tiles.push([t.x + dx, t.y + dy]);
+    }
+    const fcs = await Promise.all(tiles.map(([x, y]) => fetchTile(apiKey, layer.code, 15, x, y)));
+    const features = fcs.flatMap((fc) => fc.features || []);
     let hits;
     if (layer.mode === "contains") {
       hits = features.filter((f) => geometryContains(f.geometry, lon, lat)).map((f) => layer.pick(f.properties || {}));

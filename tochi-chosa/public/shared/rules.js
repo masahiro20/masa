@@ -276,6 +276,15 @@ export function deriveFindings({ reinfo = [], hazards = [], manual = {}, city = 
     const hit = r?.hits?.[0];
     if (!hit) continue;
     const v = Object.entries(hit).filter(([, val]) => val != null && val !== "").map(([k, val]) => `${k}:${val}`).join(" ");
+    // 土砂災害は150m以内まで拾っている。地点から20mを超えるものは「周辺にあり」として敷地位置の確認を促す
+    const meters = hit.距離 === "地点を含む" ? 0 : Number(String(hit.距離 ?? "").match(/\d+/)?.[0] ?? 0);
+    if (id === "sediment" && meters > 20) {
+      const special = String(hit.区域 || "").includes("特別");
+      add(`rf_${id}`, r.name, `地点外（約${meters}m先に${hit.区域 || "区域"}）`, "check",
+        `${special ? "特別警戒区域（レッドゾーン）" : "警戒区域"}が近くにあります。敷地そのものが区域内か、地番で確認してください` +
+          (String(hit.区域 || "").includes("指定前") ? "。指定前は基礎調査の結果公表段階の区域です" : ""));
+      continue;
+    }
     const danger = id === "disasterZone" || id === "steepSlopeArea" || String(hit.区域 || "").includes("特別");
     add(`rf_${id}`, r.name, v, danger ? "danger" : "warn",
       id === "disasterZone" ? "条例による建築制限（床高・構造等）あり" : id === "embankment" ? "地盤調査・擁壁の状況を確認" : "");

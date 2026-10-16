@@ -180,7 +180,7 @@ export async function buildKakuninsho({ survey, manual = {}, insight = "" }) {
     const h = hitsOf(reinfo, id) || [];
     if (h.length) other.push(reinfo.find((x) => x.id === id).name);
   }
-  const sed = hitsOf(reinfo, "sediment") || [];
+  const sed = (hitsOf(reinfo, "sediment") || []).filter((h) => h.距離 === "地点を含む" || Number(String(h.距離 ?? "").match(/\d+/)?.[0] ?? 0) <= 20);
   if (sed.length) other.push(`土砂災害${String(sed[0].区域).includes("特別") ? "特別" : ""}警戒区域`);
 
   // --- 接道 ---
