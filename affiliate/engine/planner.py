@@ -27,8 +27,8 @@ def normalize(keyword: str) -> str:
     return " ".join(sorted(re.sub(r"[\s　]+", " ", keyword.lower()).strip().split(" ")))
 
 
-# 提携済み（広告リンクあり）の案件につながるテーマは、今すぐ収益になりうるので優先する
-LINKED_BOOST = 2.0
+# 提携済み（広告リンクあり）の案件につながるテーマを強く優先する。リンクのない案件の記事は、報酬の目安が高くても今は1円にもならない
+LINKED_BOOST = 5.0
 
 
 def score(item: dict, programs: dict[str, dict]) -> float:
