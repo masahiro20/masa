@@ -2,6 +2,70 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: キャリアコーチング 怪しい
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 転職 相談 無料 チャット
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ブログ レンタルサーバー 必要
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 48000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ブログ レンタルサーバー 無料
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 48000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: conoha wing 評判
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 48000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: aiコーディング おすすめ 無料
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ブログ レンタルサーバー 複数
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 24000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: wordpress 始め方 超 初心者
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 24000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: it転職 未経験 20代
   intent: commercial
   category: career
@@ -15,6 +79,30 @@ keywords:
   category: career
   program: career-it-agent
   score: 18000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: claude code 料金
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ai駆動開発 バイブコーディング 違い
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ai駆動開発 仕様駆動開発 違い
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -74,10 +162,40 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
+- keyword: プログラミング 入門書 選び方 言語別
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 400.0
+  status: queued
 - keyword: python 独学 何時間
   intent: informational
   category: learning
   program: learning-online-course
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: エンジニア 転職 未経験 資格
+  intent: informational
+  category: career
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: itパスポート 勉強時間 社会人
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 基本情報技術者 未経験 独学
+  intent: informational
+  category: learning
+  program: learning-books
   score: 300.0
   status: queued
   boost: 1.5
@@ -100,42 +218,70 @@ keywords:
   program: learning-online-course
   score: 200.0
   status: queued
-- keyword: プログラミング 入門書 選び方 言語別
-  intent: commercial
-  category: learning
-  program: learning-books
-  score: 160.0
-  status: queued
-- keyword: エンジニア 転職 未経験 資格
-  intent: informational
-  category: career
-  program: learning-books
-  score: 120.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: itパスポート 勉強時間 社会人
-  intent: informational
-  category: learning
-  program: learning-books
-  score: 120.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: 基本情報技術者 未経験 独学
-  intent: informational
-  category: learning
-  program: learning-books
-  score: 120.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: セキュリティエンジニア 未経験 勉強 何から
   intent: informational
   category: learning
   program: learning-books
-  score: 80.0
+  score: 200.0
   status: queued
+- keyword: レンタルサーバー 安い
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 48000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: rental-server-yasui-erabikata
+- keyword: 30代 転職 迷う 相談 どこ
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 40000.0
+  status: published
+  slug: 30dai-tenshoku-mayou-soudan
+- keyword: キャリアコーチング 意味ない 後悔 選び方
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 40000.0
+  status: published
+  slug: career-coaching-imi-nai-koukai
+- keyword: やりたいことがわからない 転職 20代 相談先
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 40000.0
+  status: published
+  slug: yaritaikoto-wakaranai-tenshoku-20dai
+- keyword: 転職エージェント キャリアコーチング 違い 使い分け
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 40000.0
+  status: published
+  slug: tenshoku-agent-career-coaching-chigai
+- keyword: キャリアコーチング 無料 有料 違い
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 40000.0
+  status: published
+  slug: career-coaching-muryo-yuryo-chigai
+- keyword: レンタルサーバー 乗り換え 移行 手順 注意点
+  intent: transactional
+  category: tools
+  program: tools-rental-server
+  score: 40000.0
+  status: published
+  slug: rental-server-norikae-iko-tejun
+- keyword: ブログ 始め方 WordPress サーバー ドメイン 手順
+  intent: transactional
+  category: tools
+  program: tools-rental-server
+  score: 40000.0
+  status: published
+  slug: wordpress-blog-start-server-domain-steps
 - keyword: プログラミングスクール ローン 分割 審査
   intent: commercial
   category: school
@@ -163,6 +309,29 @@ keywords:
   boost: 4.0
   source: search-console
   slug: programming-school-kayoi-houdai
+- keyword: 会社員 副業 Web制作 始め方 手順
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 32000.0
+  status: published
+  slug: kaishain-fukugyo-web-seisaku-hajimekata
+- keyword: レンタルサーバー 選び方 初心者 WordPress
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 32000.0
+  status: published
+  slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: Claude Code 研修 個人 おすすめ
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: manual
+  slug: claude-code-kenshu-kojin-osusume
 - keyword: フリーランスエンジニア 未経験 案件
   intent: commercial
   category: career
@@ -181,15 +350,22 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: freelance-engineer-shu3-anken
-- keyword: レンタルサーバー 安い
-  intent: commercial
+- keyword: レンタルサーバー 費用 勘定科目
+  intent: informational
   category: tools
   program: tools-rental-server
-  score: 19200.0
+  score: 24000.0
   status: published
   boost: 1.5
   source: google-suggest
-  slug: rental-server-yasui-erabikata
+  slug: rental-server-hiyou-kanjoukamoku
+- keyword: 未経験 職種 向いている仕事 わからない 診断
+  intent: informational
+  category: career
+  program: career-coaching
+  score: 20000.0
+  status: published
+  slug: mukiteiru-shigoto-wakaranai-shindan
 - keyword: 未経験 エンジニア やめとけ
   intent: commercial
   category: career
@@ -199,41 +375,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: mikeiken-engineer-yametoke
-- keyword: 30代 転職 迷う 相談 どこ
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 16000.0
-  status: published
-  slug: 30dai-tenshoku-mayou-soudan
-- keyword: キャリアコーチング 意味ない 後悔 選び方
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 16000.0
-  status: published
-  slug: career-coaching-imi-nai-koukai
-- keyword: やりたいことがわからない 転職 20代 相談先
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 16000.0
-  status: published
-  slug: yaritaikoto-wakaranai-tenshoku-20dai
-- keyword: 転職エージェント キャリアコーチング 違い 使い分け
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 16000.0
-  status: published
-  slug: tenshoku-agent-career-coaching-chigai
-- keyword: キャリアコーチング 無料 有料 違い
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 16000.0
-  status: published
-  slug: career-coaching-muryo-yuryo-chigai
 - keyword: フリーランスエンジニア 案件 獲得 方法
   intent: commercial
   category: career
@@ -248,20 +389,31 @@ keywords:
   score: 16000.0
   status: published
   slug: freelance-engineer-unit-price-by-skill
-- keyword: レンタルサーバー 乗り換え 移行 手順 注意点
-  intent: transactional
+- keyword: WordPress ポートフォリオ 作り方 未経験
+  intent: informational
   category: tools
   program: tools-rental-server
   score: 16000.0
   status: published
-  slug: rental-server-norikae-iko-tejun
-- keyword: ブログ 始め方 WordPress サーバー ドメイン 手順
-  intent: transactional
-  category: tools
-  program: tools-rental-server
-  score: 16000.0
+  slug: wordpress-portfolio-tsukurikata-mikeiken
+- keyword: AIコーディング 初心者 学習 ロードマップ
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
   status: published
-  slug: wordpress-blog-start-server-domain-steps
+  boost: 1.5
+  source: manual
+  slug: ai-coding-shoshinsha-roadmap
+- keyword: AI駆動開発 学び方 エンジニア
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: published
+  boost: 1.5
+  source: manual
+  slug: ai-kudou-kaihatsu-manabikata-engineer
 - keyword: プログラミングスクール 社会人 無料
   intent: commercial
   category: school
@@ -271,29 +423,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-shakaijin-muryo
-- keyword: 会社員 副業 Web制作 始め方 手順
-  intent: commercial
-  category: tools
-  program: tools-rental-server
-  score: 12800.0
-  status: published
-  slug: kaishain-fukugyo-web-seisaku-hajimekata
-- keyword: レンタルサーバー 選び方 初心者 WordPress
-  intent: commercial
-  category: tools
-  program: tools-rental-server
-  score: 12800.0
-  status: published
-  slug: rental-server-erabikata-shoshinsha-wordpress
-- keyword: Claude Code 研修 個人 おすすめ
-  intent: commercial
-  category: learning
-  program: learning-ai-coding
-  score: 12000.0
-  status: published
-  boost: 1.5
-  source: manual
-  slug: claude-code-kenshu-kojin-osusume
 - keyword: 40代 プログラミングスクール おすすめ
   intent: commercial
   category: school
@@ -356,15 +485,6 @@ keywords:
   score: 10000.0
   status: published
   slug: programming-school-counseling-questions
-- keyword: レンタルサーバー 費用 勘定科目
-  intent: informational
-  category: tools
-  program: tools-rental-server
-  score: 9600.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: rental-server-hiyou-kanjoukamoku
 - keyword: プログラミングスクール 給付金 対象 条件
   intent: commercial
   category: school
@@ -395,13 +515,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: engineer-tenshoku-mikeiken-shiboudouki
-- keyword: 未経験 職種 向いている仕事 わからない 診断
-  intent: informational
-  category: career
-  program: career-coaching
-  score: 8000.0
-  status: published
-  slug: mukiteiru-shigoto-wakaranai-shindan
 - keyword: プログラミングスクール 料金 相場 分割払い
   intent: commercial
   category: school
@@ -457,31 +570,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: reskilling-hojokin-tenshoku-shinai
-- keyword: WordPress ポートフォリオ 作り方 未経験
-  intent: informational
-  category: tools
-  program: tools-rental-server
-  score: 6400.0
-  status: published
-  slug: wordpress-portfolio-tsukurikata-mikeiken
-- keyword: AIコーディング 初心者 学習 ロードマップ
-  intent: informational
-  category: learning
-  program: learning-ai-coding
-  score: 6000.0
-  status: published
-  boost: 1.5
-  source: manual
-  slug: ai-coding-shoshinsha-roadmap
-- keyword: AI駆動開発 学び方 エンジニア
-  intent: informational
-  category: learning
-  program: learning-ai-coding
-  score: 6000.0
-  status: published
-  boost: 1.5
-  source: manual
-  slug: ai-kudou-kaihatsu-manabikata-engineer
 - keyword: 未経験 ポートフォリオ 評価されない 理由
   intent: informational
   category: career
@@ -526,6 +614,15 @@ keywords:
   score: 4800.0
   status: published
   slug: kyoiku-kunren-kyufukin-shinsei-nagare
+- keyword: itパスポート おすすめ 参考書
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: it-passport-sankousho-osusume
 - keyword: オンライン講座 プログラミングスクール 違い 比較
   intent: commercial
   category: learning
@@ -558,15 +655,6 @@ keywords:
   score: 300.0
   status: published
   slug: dokuji-domain-torikata-shoshinsha
-- keyword: itパスポート おすすめ 参考書
-  intent: commercial
-  category: learning
-  program: learning-books
-  score: 240.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: it-passport-sankousho-osusume
 - keyword: プログラミングスクール オンライン 注意点 デメリット
   intent: commercial
   category: school
