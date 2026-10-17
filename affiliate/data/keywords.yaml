@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: itパスポート おすすめ 参考書
-  intent: commercial
-  category: learning
-  program: learning-books
-  score: 240.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: Python 独学 ロードマップ 社会人
   intent: informational
   category: learning
@@ -485,6 +477,15 @@ keywords:
   score: 300.0
   status: published
   slug: dokuji-domain-torikata-shoshinsha
+- keyword: itパスポート おすすめ 参考書
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 240.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: it-passport-sankousho-osusume
 - keyword: プログラミングスクール オンライン 注意点 デメリット
   intent: commercial
   category: school
