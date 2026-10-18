@@ -105,6 +105,33 @@ programs:
     keywords: ["Claude Code", "AI駆動開発", "AIコーディング", "生成AI 開発", "エンジニア 研修", "リスキリング AI"]
     cta: "Claude Code研修の内容を確認する"
 
+  - id: career-maker-agent
+    name: "メーカーズジョブ（製造業・メーカー専門の転職エージェント）"
+    category: career
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849848&p_id=7759&pc_id=22488&pl_id=97191"
+    banner_height: 301
+    banner_width: 301
+    banner: "https://image.moshimo.com/af-img/5666/000000097191.png"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849848&p_id=7759&pc_id=22488&pl_id=97191"
+    est_reward_jpy: 6000
+    keywords: ["機械設計 転職", "回路設計 転職", "組み込み エンジニア 転職", "半導体 転職", "製造業 転職", "メーカー 転職"]
+    cta: "製造業・メーカー専門の転職相談を見てみる"
+
+  - id: edu-sougaku
+    name: "ソウガク（発達障害・グレーゾーン専門のオンライン家庭教師）"
+    category: learning
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5833898&p_id=7766&pc_id=22507&pl_id=96791"
+    banner_height: 1080
+    banner_width: 1080
+    banner: "https://image.moshimo.com/af-img/6249/000000096791.jpg"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5833898&p_id=7766&pc_id=22507&pl_id=96791"
+    est_reward_jpy: 0
+    keywords: []
+    cta: "体験授業の内容を確認する"
+    # スキルコンパスの読者（社会人のITスキル・転職）とは別の層。広告コードの保管用で、記事の自動選定には使わない
+
   - id: learning-books
     name: "技術書・学習書（楽天市場）"
     category: learning

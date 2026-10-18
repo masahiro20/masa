@@ -34,6 +34,20 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
+- keyword: 機械設計 転職 エージェント
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 24000.0
+  status: queued
+  source: google-suggest
+- keyword: 組み込み エンジニア 転職 エージェント
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 24000.0
+  status: queued
+  source: google-suggest
 - keyword: it転職 未経験 20代
   intent: commercial
   category: career
@@ -81,6 +95,20 @@ keywords:
   score: 12000.0
   status: queued
   boost: 1.5
+  source: google-suggest
+- keyword: 機械設計 転職 難しい
+  intent: informational
+  category: career
+  program: career-maker-agent
+  score: 12000.0
+  status: queued
+  source: google-suggest
+- keyword: 半導体 エンジニア 未経験 転職
+  intent: informational
+  category: career
+  program: career-maker-agent
+  score: 12000.0
+  status: queued
   source: google-suggest
 - keyword: 社内se 未経験 やめとけ
   intent: informational
