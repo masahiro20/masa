@@ -29,6 +29,7 @@ export function renderHall() {
 
   let h = `<div class="view-head"><h1>ホール</h1>
     <span class="chip chip-accent">ご利用中 ${active}組${guests ? ` / ${guests}名` : ''}</span>
+    ${seatChip(guests, d.settings.seatCount)}
     <span class="spacer"></span>
     <button class="btn" data-act="counter-order">🧾 カウンター注文（札なし）</button></div>`;
 
@@ -50,6 +51,14 @@ export function renderHall() {
   for (const c of counter) h += tagCard(c);
   h += '</div>';
   return h;
+}
+
+// 席の埋まり具合（総席数が設定されている時だけ）
+function seatChip(guests, seats) {
+  if (!seats) return '';
+  const left = seats - guests;
+  const cls = left <= 0 ? 'chip-danger' : left <= Math.ceil(seats * 0.2) ? 'chip-warn' : '';
+  return `<span class="chip ${cls}">席 ${guests}/${seats}${left <= 0 ? ' 満席' : left <= Math.ceil(seats * 0.2) ? ' まもなく満席' : ` 残り${left}席`}</span>`;
 }
 
 function tagCard(c) {

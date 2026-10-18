@@ -271,7 +271,8 @@ function renderSheet() {
 function itemSheet(sh) {
   const it = sh.item;
   const unit = previewPrice(it, sh.sel);
-  const missing = it.optionGroups.filter((g) => g.required && !(sh.sel[g.id] || []).length);
+  const picked = (g) => (sh.sel[g.id] || []).length;
+  const missing = it.optionGroups.filter((g) => (g.required && !picked(g)) || (g.min && picked(g) && picked(g) < g.min));
   let h = `<div class="hero">${it.image ? `<img src="${esc(it.image)}" alt="">` : esc(it.emoji || '☕')}</div>
     <div class="row"><h3 class="grow">${esc(it.name)}</h3><b class="num" style="font-size:18px;color:var(--accent)">${yen(it.price)}</b></div>
     ${it.description ? `<p class="muted small" style="margin:6px 0 0">${esc(it.description)}</p>` : ''}
@@ -281,7 +282,7 @@ function itemSheet(sh) {
     const picked = sh.sel[g.id] || [];
     h += `<div class="group"><div class="group-h"><b>${esc(g.name)}</b>
       ${g.required ? '<span class="chip chip-danger">必須</span>' : '<span class="chip">任意</span>'}
-      ${g.type === 'multi' ? `<span class="small muted">${g.max ? `${g.max}つまで` : '複数可'}</span>` : ''}</div>
+      ${g.type === 'multi' ? `<span class="small muted">${g.min && g.min === g.max ? `${g.min}つ選んでください` : g.max ? `${g.max}つまで` : '複数可'}</span>` : ''}</div>
       ${g.hint ? `<div class="hint">📝 ${esc(g.hint)}</div>` : ''}<div class="choices">`;
     for (const c of g.choices) {
       const on = picked.includes(c.id);
@@ -303,7 +304,7 @@ function itemSheet(sh) {
   h += `<div class="sheet-foot">
     <div class="stepper"><button data-act="qty" data-d="-1" aria-label="減らす">−</button><span>${sh.qty}</span><button data-act="qty" data-d="1" aria-label="増やす">＋</button></div>
     <button class="btn btn-primary btn-lg grow" data-act="add" ${!it.orderable || missing.length ? 'disabled' : ''}>
-      ${!it.orderable ? esc(it.reason) : missing.length ? `${esc(missing[0].name)}を選んでください` : `${sh.editIndex != null ? '変更する' : 'カートに入れる'}　${yen(unit * sh.qty)}`}
+      ${!it.orderable ? esc(it.reason) : missing.length ? (missing[0].min && picked(missing[0]) ? `あと${missing[0].min - picked(missing[0])}つ選んでください` : `「${esc(missing[0].name)}」を選んでください`) : `${sh.editIndex != null ? '変更する' : 'カートに入れる'}　${yen(unit * sh.qty)}`}
     </button></div>`;
   return h;
 }

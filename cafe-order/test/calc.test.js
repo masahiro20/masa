@@ -97,3 +97,12 @@ test('個別会計：割引を按分しても合計が一致する', () => {
   assert.equal(r.people.A + r.people.B + r.unassigned, t.total);
   assert.equal(r.unassigned, 0);
 });
+
+test('「2種類を選ぶ」は2つ選ぶまで注文できない', () => {
+  const item = { price: 850, optionGroups: [{ id: 'f', name: '2種類を選ぶ', type: 'multi', required: true, min: 2, max: 2, choices: [
+    { id: 'a', label: 'プレーン', price: 0 }, { id: 'b', label: 'ラム', price: 0 }, { id: 'c', label: '期間限定①', price: 0 },
+  ] }] };
+  assert.equal(priceLine(item, { f: ['a'] }).ok, false);
+  assert.equal(priceLine(item, { f: ['a', 'b', 'c'] }).ok, false);
+  assert.equal(priceLine(item, { f: ['a', 'b'] }).unitPrice, 850);
+});

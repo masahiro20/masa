@@ -33,6 +33,7 @@ export function renderSettings() {
     </section>
 
     <section class="card pad"><h3>番号札とQRコード</h3>
+      ${field('席数（合計）', 'seatCount', { type: 'number', help: 'カウンター＋テーブルの合計。ホール画面に「席 5/12 残り7席」のように表示します（0で非表示）' })}
       ${field('番号札の枚数', 'tagCount', { type: 'number' })}
       ${field('お客様がアクセスするURL', 'publicBaseUrl', { ph: S.publicBase, help: `QRコードに埋め込むアドレス。空欄なら今開いているアドレス（${esc(S.publicBase)}）を使います。` })}
       <div class="row wrap" style="margin-top:8px"><button class="btn btn-primary" data-act="st-print-tags">🖨 番号札（QR）を印刷</button>

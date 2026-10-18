@@ -21,6 +21,7 @@ export function renderMenu() {
     const cat = d.categories.find((c) => c.id === i.categoryId);
     const a = i.availability || {};
     const tags = [];
+    if (i.memo) tags.push(`<span class="chip ${i.memo.includes('要確認') ? 'chip-danger' : ''}" title="${esc(i.memo)}">${i.memo.includes('要確認') ? '⚠ 要確認' : '📝 メモ'}</span>`);
     if (i.customerVisible === false) tags.push('<span class="chip">店内専用</span>');
     if (i.daily) tags.push('<span class="chip chip-warn">日替わり</span>');
     if (i.ticketEligible) tags.push('<span class="chip">🎫 チケット可</span>');
@@ -123,7 +124,7 @@ function editorHtml(d, isNew) {
     h += `<div class="og card">
       <div class="grid4"><label>項目名<input data-path="${p}.name" value="${esc(g.name)}" placeholder="例：フレーバー"></label>
         <label>選び方<select data-path="${p}.type"><option value="single" ${g.type === 'single' ? 'selected' : ''}>1つ選ぶ</option><option value="multi" ${g.type === 'multi' ? 'selected' : ''}>複数選べる</option></select></label>
-        ${g.type === 'multi' ? `<label>最大数（0=制限なし）<input type="number" data-path="${p}.max" data-type="num" value="${g.max || 0}"></label>` : '<span></span>'}
+        ${g.type === 'multi' ? `<div class="grid2"><label>最小数<input type="number" data-path="${p}.min" data-type="num" value="${g.min || 0}"></label><label>最大数（0=制限なし）<input type="number" data-path="${p}.max" data-type="num" value="${g.max || 0}"></label></div>` : '<span></span>'}
         <div class="row" style="align-items:flex-end;gap:6px">${chk(`${p}.required`, g.required, '必須')}
           <button class="btn btn-sm" data-act="ed-g-move" data-g="${gi}" data-d="-1">↑</button><button class="btn btn-sm btn-danger" data-act="ed-g-del" data-g="${gi}">削除</button></div></div>
       <label class="small">お客様への案内（任意）<input data-path="${p}.hint" value="${esc(g.hint || '')}" placeholder="例：期間限定は店内の黒板をご覧ください"></label>
@@ -141,6 +142,9 @@ function editorHtml(d, isNew) {
   });
   if (!d.optionGroups.length) h += '<div class="small muted" style="margin:8px 0">オプションなし（タップするとすぐカートに入ります）</div>';
   h += `<div class="small muted">「黒板枠」にチェックした選択肢は、毎日「本日の準備」で中身（例：栗・かぼちゃ）を入れられます。空欄の時はお客様に「黒板をご覧ください」と表示されます。<br>「連動キー」に同じ言葉（例：日替わりスコーン）を入れた枠どうしは、1か所の入力・売り切れでまとめて更新されます。</div>
+
+    <h3 class="ed-h">スタッフ用メモ</h3>
+    <textarea data-path="memo" rows="2" placeholder="お客様には表示されません（仕込み量・仕入れ先など）">${esc(d.memo || '')}</textarea>
 
     <h3 class="ed-h">アレルギー表示</h3>
     <div class="row wrap">${ALLERGENS.map((x) => `<button class="pill ${d.allergens.includes(x) ? 'on' : ''}" data-act="ed-allergen" data-v="${x}">${x}</button>`).join('')}</div>

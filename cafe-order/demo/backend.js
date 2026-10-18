@@ -4,7 +4,7 @@
 import { createApp } from '../lib/app.js';
 import { LocalStore } from './local-store.js';
 
-const PREFIX = 'cafe-demo:';
+const PREFIX = 'nua-demo:';
 const DEMO_PIN = '1234';
 
 const lsGet = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
@@ -69,41 +69,41 @@ async function seed() {
   await call('POST', '/api/admin/login', { pin: DEMO_PIN });
   await call('PUT', '/api/admin/settings', { notice: 'デモ版です。自由に注文・会計してみてください。' });
   const patch = (id, groupId, choiceId, detail) => call('PATCH', `/api/admin/items/${id}`, { choice: { groupId, choiceId, detail } });
+  // 黒板の中身（連動キーで、食べ比べ・モーニング側の同じ枠にも入る）
   await patch('basque', 'flavor', 'l1', '和栗');
   await patch('basque', 'flavor', 'l2', 'ほうじ茶');
   await patch('scone', 'kind', 'daily', 'かぼちゃ');
-  await patch('single', 'bean', 'b1', 'エチオピア');
-  await patch('single', 'bean', 'b2', 'グアテマラ');
-  await call('PATCH', '/api/admin/items/pudding', { stock: 3 });
+  await patch('scone-soup', 'soup', 'today', 'ミネストローネ');
+  await call('PATCH', '/api/admin/items/scone', { stock: 8 });
 
   const state = await call('GET', '/api/admin/state');
   const key = (no) => state.tags.find((t) => t.no === no).key;
   const order = (no, name, people, lines) => call('POST', '/api/c/order', { tag: no, k: key(no), device: `seed-${no}`, name, people, knownCheckId: null, lines });
 
-  // 2番：常連さんが注文済み（ケーキは提供済み）
+  // 2番：注文済み（スコーンは提供済み）
   const a = await order(2, 'みか', 2, [
-    { itemId: 'blend', qty: 1, sel: { temp: ['hot'] }, timing: 'after' },
-    { itemId: 'basque', qty: 1, sel: { flavor: ['l1'] } },
-    { itemId: 'latte', qty: 1, sel: { temp: ['ice'], milk: ['oat'] } },
+    { itemId: 'coffee', qty: 1, sel: { temp: ['hot'] }, timing: 'after' },
+    { itemId: 'basque', qty: 1, sel: { flavor: ['l1'], withdrink: ['yes'] } },
+    { itemId: 'scone', qty: 1, sel: { kind: ['walnut'], withdrink: ['yes'] } },
   ]);
-  const cake = a.check?.orders[0].lines.find((l) => l.name === 'バスクチーズケーキ');
-  if (cake) await call('POST', `/api/admin/checks/${a.check.id}/lines/${cake.id}`, { status: 'served' });
-  // 5番：注文が入ったばかり＋お会計の呼び出し
+  const scone = a.check?.orders[0].lines.find((l) => l.itemId === 'scone');
+  if (scone) await call('POST', `/api/admin/checks/${a.check.id}/lines/${scone.id}`, { status: 'served' });
+  // 5番：食べ比べの注文が入ったばかり＋お会計の呼び出し
   await order(5, 'たろう', 1, [
-    { itemId: 'napolitan', qty: 1, sel: { size: ['large'], set: ['blend-h'] } },
-    { itemId: 'soda', qty: 1, sel: { color: ['melon'] } },
+    { itemId: 'basque-pair', qty: 1, sel: { flavors: ['plain', 'rum'], withdrink: ['yes'] } },
+    { itemId: 'lemon', qty: 1, sel: {} },
   ]);
   await call('POST', '/api/c/call', { tag: 5, k: key(5), type: 'お会計をお願いします' });
 
   // 売上画面が空にならないよう、会計済みを2件
-  for (const [lines, method] of [
-    [[{ itemId: 'eggsand', qty: 1, sel: { set: ['blend-h'] } }], '現金'],
-    [[{ itemId: 'pudding', qty: 2, sel: {} }, { itemId: 'tea', qty: 2, sel: { leaf: ['earl'] } }], 'クレジットカード'],
+  for (const lines of [
+    [{ itemId: 'scone-soup', qty: 1, sel: { kind: ['plain'], soup: ['today'] } }, { itemId: 'coffee', qty: 1, sel: { temp: ['ice'] } }],
+    [{ itemId: 'basque', qty: 2, sel: { flavor: ['plain'], finish: ['aburi'] } }, { itemId: 'coffee', qty: 2, sel: { temp: ['hot'] } }],
   ]) {
     const c = (await call('POST', '/api/admin/checks', { tagNo: null, people: 2 })).check;
     const r = await call('POST', `/api/admin/checks/${c.id}/orders`, { lines });
     const total = r.check.orders.flatMap((o) => o.lines).reduce((s, l) => s + l.unitPrice * l.qty, 0);
-    await call('POST', `/api/admin/checks/${c.id}/payments`, { method, amount: total });
+    await call('POST', `/api/admin/checks/${c.id}/payments`, { method: '現金', amount: total, received: Math.ceil(total / 1000) * 1000 });
     await call('POST', `/api/admin/checks/${c.id}/serve`, {});
   }
   lsSet(`${PREFIX}seeded`, '1');

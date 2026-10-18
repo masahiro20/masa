@@ -98,6 +98,7 @@ export function priceLine(item, sel = {}, bizDate = '') {
     const valid = (g.choices || []).filter((c) => !c.hidden);
     if (g.type === 'single' && picked.length > 1) return { ok: false, error: `「${g.name}」は1つだけ選べます` };
     if (g.required && picked.length === 0) return { ok: false, error: `「${g.name}」を選んでください` };
+    if (g.type === 'multi' && g.min && picked.length > 0 && picked.length < g.min) return { ok: false, error: `「${g.name}」は${g.min}つ選んでください` };
     if (g.type === 'multi' && g.max && picked.length > g.max) return { ok: false, error: `「${g.name}」は${g.max}つまでです` };
     for (const cid of picked) {
       const c = valid.find((x) => x.id === cid);

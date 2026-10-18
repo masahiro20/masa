@@ -6,6 +6,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { createApp } from '../lib/app.js';
 import { Store } from '../lib/store.js';
+import { defaultSettings } from '../lib/seed.js';
+import { sampleMenu } from './fixtures/sample-menu.js';
 
 let server; let base; let cookie = ''; let app; let dir;
 // 平日の 12:00 (JST) に固定
@@ -13,6 +15,9 @@ const fixedNow = () => new Date('2026-10-19T03:00:00Z');
 
 before(async () => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cafe-test-'));
+  // お店の実メニューではなく、テスト用の固定メニューで始める
+  const settings = { ...defaultSettings(), tagCount: 20, paymentMethods: ['現金', 'クレジットカード', 'QR決済'] };
+  fs.writeFileSync(path.join(dir, 'state.json'), JSON.stringify({ settings, ...sampleMenu(), tags: [], openChecks: [] }));
   app = createApp({ store: new Store(dir), now: fixedNow });
   server = http.createServer((req, res) => app.handle(req, res));
   await new Promise((r) => server.listen(0, r));

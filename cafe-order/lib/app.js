@@ -195,7 +195,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
         recommended: !!item.recommended, daily: !!item.daily, station: item.station, ticketEligible: !!item.ticketEligible,
         orderable: st.orderable, reason: st.reason, stockLeft: left,
         optionGroups: (item.optionGroups || []).map((g) => ({
-          id: g.id, name: g.name, type: g.type, required: !!g.required, max: g.max || 0, hint: g.hint || '',
+          id: g.id, name: g.name, type: g.type, required: !!g.required, min: g.min || 0, max: g.max || 0, hint: g.hint || '',
           choices: (g.choices || []).filter((ch) => !ch.hidden).map((ch) => ({
             id: ch.id, label: ch.label, detail: ch.detail || '', slot: !!ch.slot, price: Number(ch.price) || 0,
             soldOut: isSoldOutToday(ch, c.bizDate),
@@ -324,7 +324,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
   function sanitizeItem(b, prev = {}) {
     const groups = (Array.isArray(b.optionGroups) ? b.optionGroups : []).slice(0, 12).map((g) => ({
       id: str(g.id, 40) || newId('g_'), name: str(g.name, 40) || 'オプション', type: g.type === 'multi' ? 'multi' : 'single',
-      required: !!g.required, max: clampInt(g.max, 0, 20), hint: str(g.hint, 120),
+      required: !!g.required, min: g.type === 'multi' ? clampInt(g.min, 0, 20) : 0, max: clampInt(g.max, 0, 20), hint: str(g.hint, 120),
       choices: (Array.isArray(g.choices) ? g.choices : []).slice(0, 30).map((ch) => {
         const old = (prev.optionGroups || []).find((x) => x.id === g.id)?.choices?.find((x) => x.id === ch.id) || {};
         return {
@@ -355,6 +355,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
       },
       optionGroups: groups,
       archived: !!b.archived,
+      memo: str(b.memo, 300),
     };
   }
 
@@ -484,6 +485,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     if ('publicBaseUrl' in b) s.publicBaseUrl = str(b.publicBaseUrl, 200).replace(/\/+$/, '');
     if ('lastOrder' in b) s.lastOrder = hhmmOk(str(b.lastOrder, 5));
     if ('businessDayStartHour' in b) s.businessDayStartHour = clampInt(b.businessDayStartHour, 0, 12, 4);
+    if ('seatCount' in b) s.seatCount = clampInt(b.seatCount, 0, 999, 0);
     if ('tagCount' in b) { s.tagCount = clampInt(b.tagCount, 1, 200, 20); store.syncTags(); }
     for (const k of ['orderingPaused', 'requireStaffOpen', 'askPeople', 'newOrderSound']) if (k in b) s[k] = !!b[k];
     if ('taxRate' in b) s.taxRate = clampInt(b.taxRate, 0, 30, 10);

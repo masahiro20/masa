@@ -1,154 +1,109 @@
-// 初回起動時のサンプルデータ。管理画面の「メニュー」からすべて編集できます。
+// 喫茶ヌア（愛知県一宮市千秋町）の初期メニュー。管理画面の「メニュー」からすべて編集できます。
+// ネット上（口コミ・ブログ）で確認できたのは次の値段だけです：
+//   本日の珈琲 500円 / レモンスカッシュ 630円 / バスクチーズケーキ食べ比べ 850円 / ドリンク注文で50円引き
+// それ以外の値段は仮の値で、商品の「スタッフ用メモ」に【要確認】と書いてあります。
 
-const hotIce = (id = 'temp') => ({
-  id, name: 'ホット / アイス', type: 'single', required: true, hint: '',
+const UNCONFIRMED = '【要確認】ネットで値段を確認できなかったため仮の値段です。実際の値段に直してください。';
+
+// スコーンの種類（プレーン・胡桃は口コミで確認。日替わりは毎朝「本日の準備」で中身を入れる）
+const sconeKinds = (id = 'kind') => ({
+  id, name: 'スコーンの種類', type: 'single', required: true, hint: '日替わりの味は店内の黒板をご覧ください',
   choices: [
-    { id: 'hot', label: 'ホット', price: 0 },
-    { id: 'ice', label: 'アイス', price: 0 },
+    { id: 'plain', label: 'プレーン', price: 0 },
+    { id: 'walnut', label: '胡桃', price: 0 },
+    { id: 'daily', label: '日替わり', slot: true, slotKey: '日替わりスコーン', detail: '', price: 0 },
   ],
 });
 
-const drinkSet = (prices = { blend: 300, latte: 400, tea: 300 }) => ({
-  id: 'set', name: 'ドリンクセット', type: 'single', required: false, hint: 'セットにするとお得です',
+// バスクチーズケーキの味（プレーン・ラムは口コミで確認。期間限定①②は黒板の枠）
+const basqueFlavors = () => [
+  { id: 'plain', label: 'プレーン', price: 0 },
+  { id: 'rum', label: 'ラム', price: 0 },
+  { id: 'l1', label: '期間限定①', slot: true, slotKey: 'バスク期間限定①', detail: '', price: 0 },
+  { id: 'l2', label: '期間限定②', slot: true, slotKey: 'バスク期間限定②', detail: '', price: 0 },
+];
+
+// ドリンクと一緒に注文すると50円引き（口コミより）
+const drinkDiscount = () => ({
+  id: 'withdrink', name: 'ドリンクと一緒に', type: 'single', required: false, hint: 'ドリンクもご注文の方は50円引きです',
+  choices: [{ id: 'yes', label: 'ドリンクも注文する（50円引き）', price: -50 }],
+});
+
+const hotIce = () => ({
+  id: 'temp', name: 'ホット / アイス', type: 'single', required: true, hint: '',
+  choices: [{ id: 'hot', label: 'ホット', price: 0 }, { id: 'ice', label: 'アイス', price: 0 }],
+});
+
+const morningDrink = () => ({
+  id: 'drink', name: 'お飲み物', type: 'single', required: true, hint: '',
   choices: [
-    { id: 'blend-h', label: 'ブレンド（ホット）', price: prices.blend },
-    { id: 'blend-i', label: 'ブレンド（アイス）', price: prices.blend },
-    { id: 'latte', label: 'カフェラテ', price: prices.latte },
-    { id: 'tea', label: '紅茶', price: prices.tea },
+    { id: 'coffee-h', label: '本日の珈琲（ホット）', price: 0 },
+    { id: 'coffee-i', label: '本日の珈琲（アイス）', price: 0 },
+    { id: 'lemon', label: 'レモンスカッシュ', price: 130 },
   ],
 });
 
 export function seedData() {
   const categories = [
-    { id: 'coffee', name: 'コーヒー' },
-    { id: 'drink', name: 'ティー・ドリンク' },
-    { id: 'morning', name: 'モーニング' },
-    { id: 'food', name: 'ブランチ・フード' },
-    { id: 'sweets', name: 'スイーツ' },
-    { id: 'goods', name: '物販・チケット' },
+    { id: 'morning', name: 'モーニング・ブランチ' },
+    { id: 'scone', name: 'スコーン' },
+    { id: 'basque', name: 'バスクチーズケーキ' },
+    { id: 'drink', name: 'ドリンク' },
+    { id: 'goods', name: '焼き菓子' },
   ];
 
   const items = [
     {
-      id: 'blend', categoryId: 'coffee', name: 'ブレンドコーヒー', emoji: '☕', price: 500,
-      description: '当店定番。深めの焙煎でしっかりしたコク。', station: 'drink', ticketEligible: true,
-      recommended: true, optionGroups: [hotIce()],
+      id: 'morning', categoryId: 'morning', name: 'スコーンモーニング', emoji: '🥐', price: 750, station: 'food',
+      description: '平日 9:00〜12:00。スコーンとお飲み物のセット。', recommended: true, memo: UNCONFIRMED,
+      availability: { days: [1, 2, 3, 4, 5], from: '09:00', to: '12:00' },
+      optionGroups: [sconeKinds(), morningDrink()],
     },
     {
-      id: 'dark', categoryId: 'coffee', name: '深煎りブレンド', emoji: '☕', price: 550,
-      description: 'ビターで濃厚。ミルクとの相性も◎', station: 'drink', ticketEligible: true,
-      optionGroups: [hotIce()],
+      id: 'brunch', categoryId: 'morning', name: '週末ブランチ', emoji: '🍽️', price: 1200, station: 'food',
+      description: '土日祝 9:00〜12:00。', recommended: true,
+      memo: `${UNCONFIRMED} 内容も未確認です。祝日は「本日の準備」でスコーンモーニングを「本日休み」にしてください。`,
+      availability: { days: [0, 6], from: '09:00', to: '12:00' },
+      optionGroups: [sconeKinds(), morningDrink()],
     },
     {
-      id: 'single', categoryId: 'coffee', name: '本日のシングルオリジン', emoji: '🫘', price: 650,
-      description: '産地ごとの個性を楽しめるハンドドリップ。', station: 'drink', ticketEligible: true, daily: true,
-      optionGroups: [{
-        id: 'bean', name: '豆を選ぶ', type: 'single', required: true, hint: '本日の豆は店内の黒板をご覧ください',
-        choices: [
-          { id: 'b1', label: '①', slot: true, detail: '', price: 0 },
-          { id: 'b2', label: '②', slot: true, detail: '', price: 0 },
-        ],
+      id: 'scone', categoryId: 'scone', name: 'スコーン', emoji: '🥐', price: 380, station: 'food', daily: true, recommended: true,
+      description: '看板のスコーン。プレーン・胡桃・日替わりから。', memo: UNCONFIRMED,
+      optionGroups: [sconeKinds(), drinkDiscount()],
+    },
+    {
+      id: 'scone-soup', categoryId: 'scone', name: 'スコーンとスープのセット', emoji: '🥣', price: 900, station: 'food', daily: true,
+      description: 'スコーンとその日のスープ。', memo: UNCONFIRMED,
+      optionGroups: [sconeKinds(), {
+        id: 'soup', name: '本日のスープ', type: 'single', required: true, hint: 'スープの内容は黒板をご覧ください',
+        choices: [{ id: 'today', label: '本日のスープ', slot: true, slotKey: '本日のスープ', detail: '', price: 0 }],
       }],
     },
     {
-      id: 'latte', categoryId: 'coffee', name: 'カフェラテ', emoji: '🥛', price: 600,
-      description: 'コーヒーチケットご利用時は差額でお楽しみいただけます。', station: 'drink', ticketEligible: true,
-      optionGroups: [hotIce(), {
-        id: 'milk', name: 'ミルク変更', type: 'single', required: false, hint: '',
-        choices: [{ id: 'oat', label: 'オーツミルク', price: 50 }, { id: 'soy', label: '豆乳', price: 50 }],
-      }],
-    },
-    {
-      id: 'tea', categoryId: 'drink', name: '紅茶', emoji: '🫖', price: 550, station: 'drink',
-      description: 'ポットでご提供します。',
+      id: 'basque', categoryId: 'basque', name: 'バスクチーズケーキ', emoji: '🍰', price: 500, station: 'food', daily: true, recommended: true,
+      description: '定番のプレーン・ラムと、期間限定のフレーバー。', allergens: ['乳', '卵', '小麦'], memo: UNCONFIRMED,
       optionGroups: [
-        { id: 'leaf', name: '茶葉', type: 'single', required: true, hint: '', choices: [
-          { id: 'darj', label: 'ダージリン', price: 0 }, { id: 'earl', label: 'アールグレイ', price: 0 }, { id: 'assam', label: 'アッサム（ミルクティー向き）', price: 0 },
-        ] },
-        { id: 'style', name: '飲み方', type: 'single', required: false, hint: '', choices: [
-          { id: 'straight', label: 'ストレート', price: 0 }, { id: 'milk', label: 'ミルク', price: 0 }, { id: 'lemon', label: 'レモン', price: 0 },
-        ] },
+        { id: 'flavor', name: 'フレーバー', type: 'single', required: true, hint: '期間限定①②は店内の黒板をご覧ください', choices: basqueFlavors() },
+        { id: 'finish', name: '仕上げ', type: 'single', required: false, hint: '', choices: [{ id: 'aburi', label: '炙り', price: 50 }] },
+        drinkDiscount(),
       ],
     },
     {
-      id: 'soda', categoryId: 'drink', name: 'クリームソーダ', emoji: '🍈', price: 700, station: 'drink',
-      description: '昔ながらの喫茶店の味。', recommended: true,
-      optionGroups: [{ id: 'color', name: '色', type: 'single', required: true, hint: '', choices: [
-        { id: 'melon', label: 'メロン', price: 0 }, { id: 'blue', label: 'ブルーハワイ', price: 0 }, { id: 'straw', label: 'いちご', price: 0 },
-      ] }],
-    },
-    { id: 'orange', categoryId: 'drink', name: 'オレンジジュース', emoji: '🍊', price: 500, station: 'drink' },
-    {
-      id: 'morning', categoryId: 'morning', name: 'モーニングセット', emoji: '🍞', price: 750, station: 'food',
-      description: 'トースト・ゆで卵・ドリンク付き（11:00まで）',
-      availability: { days: [], from: '07:00', to: '11:00' },
+      id: 'basque-pair', categoryId: 'basque', name: 'バスクチーズケーキ食べ比べ', emoji: '🍰', price: 850, station: 'food', daily: true,
+      description: '好きな味を2種類選べます。', allergens: ['乳', '卵', '小麦'],
       optionGroups: [
-        { id: 'toast', name: 'トースト', type: 'single', required: true, hint: '', choices: [
-          { id: 'butter', label: 'バタートースト', price: 0 }, { id: 'ogura', label: '小倉トースト', price: 50 },
-        ] },
-        { id: 'drink', name: 'お飲み物', type: 'single', required: true, hint: '', choices: [
-          { id: 'blend-h', label: 'ブレンド（ホット）', price: 0 }, { id: 'blend-i', label: 'ブレンド（アイス）', price: 0 },
-          { id: 'tea', label: '紅茶', price: 0 }, { id: 'latte', label: 'カフェラテ', price: 100 },
-        ] },
+        { id: 'flavors', name: '2種類を選ぶ', type: 'multi', required: true, min: 2, max: 2, hint: '期間限定①②は店内の黒板をご覧ください', choices: basqueFlavors() },
+        drinkDiscount(),
       ],
     },
     {
-      id: 'brunch', categoryId: 'food', name: '本日のブランチプレート', emoji: '🥗', price: 1300, station: 'food',
-      description: 'サラダ・スープ・スコーン付き。スコーンはプレーンか日替わりから。', daily: true, recommended: true,
-      availability: { days: [], from: '11:00', to: '15:00' },
-      optionGroups: [
-        { id: 'scone', name: 'スコーン', type: 'single', required: true, hint: '日替わりの味は黒板をご覧ください', choices: [
-          { id: 'plain', label: 'プレーン', price: 0 }, { id: 'daily', label: '日替わり', slot: true, slotKey: '日替わりスコーン', detail: '', price: 0 },
-        ] },
-        drinkSet(),
-      ],
+      id: 'coffee', categoryId: 'drink', name: '本日の珈琲', emoji: '☕', price: 500, station: 'drink', ticketEligible: true,
+      description: 'その日の豆で淹れる一杯。', optionGroups: [hotIce()],
     },
+    { id: 'lemon', categoryId: 'drink', name: 'レモンスカッシュ', emoji: '🍋', price: 630, station: 'drink' },
     {
-      id: 'scone', categoryId: 'food', name: 'スコーン', emoji: '🥐', price: 380, station: 'food', daily: true,
-      description: 'クロテッドクリーム・ジャム添え。',
-      optionGroups: [
-        { id: 'kind', name: '種類', type: 'single', required: true, hint: '', choices: [
-          { id: 'plain', label: 'プレーン', price: 0 }, { id: 'daily', label: '日替わり', slot: true, slotKey: '日替わりスコーン', detail: '', price: 0 },
-        ] },
-      ],
-    },
-    {
-      id: 'napolitan', categoryId: 'food', name: 'ナポリタン', emoji: '🍝', price: 950, station: 'food',
-      description: '鉄板で焼き上げる昔ながらの味。',
-      allergens: ['小麦', '乳', '卵'],
-      optionGroups: [{ id: 'size', name: 'サイズ', type: 'single', required: false, hint: '', choices: [{ id: 'large', label: '大盛り', price: 150 }] }, drinkSet({ blend: 250, latte: 350, tea: 250 })],
-    },
-    {
-      id: 'eggsand', categoryId: 'food', name: 'たまごサンド', emoji: '🥪', price: 800, station: 'food',
-      allergens: ['小麦', '卵', '乳'], optionGroups: [drinkSet({ blend: 250, latte: 350, tea: 250 })],
-    },
-    {
-      id: 'basque', categoryId: 'sweets', name: 'バスクチーズケーキ', emoji: '🍰', price: 550, station: 'food', daily: true,
-      recommended: true, description: '定番のプレーンと、期間限定のフレーバー。',
-      allergens: ['乳', '卵', '小麦'],
-      optionGroups: [
-        { id: 'flavor', name: 'フレーバー', type: 'single', required: true, hint: '期間限定①〜③は店内の黒板をご覧ください', choices: [
-          { id: 'plain', label: 'プレーン', price: 0 },
-          { id: 'l1', label: '期間限定①', slot: true, detail: '', price: 50 },
-          { id: 'l2', label: '期間限定②', slot: true, detail: '', price: 50 },
-          { id: 'l3', label: '期間限定③', slot: true, detail: '', price: 50, hidden: true },
-        ] },
-        drinkSet(),
-      ],
-    },
-    {
-      id: 'pudding', categoryId: 'sweets', name: '自家製かためプリン', emoji: '🍮', price: 480, station: 'food',
-      allergens: ['乳', '卵'], stock: null, optionGroups: [drinkSet()],
-    },
-    {
-      id: 'ticket11', categoryId: 'goods', name: 'コーヒーチケット（11枚綴り）', emoji: '🎫', price: 5000, station: 'other',
-      customerVisible: false, description: 'レジでのみ販売',
-    },
-    {
-      id: 'beans', categoryId: 'goods', name: 'コーヒー豆 200g', emoji: '🫘', price: 1500, station: 'other', customerVisible: false,
-      optionGroups: [{ id: 'grind', name: '挽き方', type: 'single', required: true, hint: '', choices: [
-        { id: 'bean', label: '豆のまま', price: 0 }, { id: 'paper', label: 'ペーパー用', price: 0 }, { id: 'press', label: 'フレンチプレス用', price: 0 },
-      ] }],
+      id: 'yakigashi', categoryId: 'goods', name: '焼き菓子', emoji: '🍪', price: 300, station: 'other', customerVisible: false,
+      description: 'レジ前で販売', memo: `${UNCONFIRMED} 種類ごとに分けて登録するのがおすすめです。`,
     },
   ];
 
@@ -157,17 +112,18 @@ export function seedData() {
 
 export function defaultSettings() {
   return {
-    shopName: '喫茶 ことり',
+    shopName: '喫茶ヌア',
     adminPin: '1234',
     timeZone: 'Asia/Tokyo',
     businessDayStartHour: 4,
     publicBaseUrl: '',
-    tagCount: 20,
+    tagCount: 10,
+    seatCount: 12,
     orderingPaused: false,
     pauseMessage: 'ただいま注文を一時停止しています。少々お待ちください。',
     lastOrder: '',
     notice: '',
-    welcome: 'ご来店ありがとうございます。ごゆっくりお過ごしください。',
+    welcome: 'ご来店ありがとうございます。スコーンとバスクチーズケーキのお店です。\n店内の撮影は、他のお客様が写らないようにお願いします（動画・長時間の撮影はご遠慮ください）。',
     requireStaffOpen: false,
     askPeople: true,
     callOptions: ['お冷やをください', '店員を呼ぶ', 'お会計をお願いします'],
@@ -179,9 +135,9 @@ export function defaultSettings() {
       { id: 'd-10', name: '10%OFF', type: 'percent', value: 10 },
       { id: 'd-100', name: '100円引き', type: 'amount', value: 100 },
     ],
-    paymentMethods: ['現金', 'クレジットカード', 'QR決済', '交通系IC'],
+    paymentMethods: ['現金'],
     receipt: {
-      address: '',
+      address: '愛知県一宮市千秋町佐野下川田2931',
       phone: '',
       invoiceNumber: '',
       footer: 'またのご来店をお待ちしております',
