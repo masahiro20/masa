@@ -34,13 +34,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: 機械設計 転職 エージェント
-  intent: commercial
-  category: career
-  program: career-maker-agent
-  score: 24000.0
-  status: queued
-  source: google-suggest
 - keyword: 組み込み エンジニア 転職 エージェント
   intent: commercial
   category: career
@@ -355,6 +348,14 @@ keywords:
   boost: 1.5
   source: manual
   slug: claude-code-kenshu-kojin-osusume
+- keyword: 機械設計 転職 エージェント
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 24000.0
+  status: published
+  source: google-suggest
+  slug: kikai-sekkei-tenshoku-agent
 - keyword: フリーランスエンジニア 未経験 案件
   intent: commercial
   category: career
