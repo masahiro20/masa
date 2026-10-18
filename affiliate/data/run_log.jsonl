@@ -57,3 +57,4 @@
 {"ts": "2026-10-17T09:50:32+00:00", "source": "routine", "published": ["rental-server-yasui-erabikata"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-17T21:48:06+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["キャリアコーチング 怪しい"], "errors": ["既存記事career-coaching-imi-nai-koukaiと検索意図が重複"]}
 {"ts": "2026-10-17T21:49:52+00:00", "source": "routine", "published": ["tenshoku-soudan-muryo-chat"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-10-18T03:50:09+00:00", "source": "routine", "published": ["ai-coding-muryo-osusume"], "refreshed": [], "rejected": [], "errors": []}

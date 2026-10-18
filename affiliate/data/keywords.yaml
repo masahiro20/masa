@@ -26,14 +26,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: aiコーディング おすすめ 無料
-  intent: commercial
-  category: learning
-  program: learning-ai-coding
-  score: 30000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: ブログ レンタルサーバー 複数
   intent: informational
   category: tools
@@ -316,6 +308,15 @@ keywords:
   score: 32000.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: aiコーディング おすすめ 無料
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: ai-coding-muryo-osusume
 - keyword: Claude Code 研修 個人 おすすめ
   intent: commercial
   category: learning
