@@ -283,6 +283,16 @@ label.check.big input { margin-top: 2px; }
   .brand { display: none; }
 }
 @media (max-width: 640px) {
+  .hdr { flex-wrap: wrap; row-gap: 6px; }
+  .nav { order: 3; width: 100%; }
+  .nav-btn { padding: 8px 10px; font-size: 14px; }
+  .main { padding: 12px 12px calc(20px + env(safe-area-inset-bottom)); }
+  .tag-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+  .tag { min-height: 100px; padding: 8px 10px; min-width: 0; overflow: hidden; }
+  .tag .no { font-size: 24px; }
+  .tag-total { font-size: 17px; }
+  .tickets, .co-list { grid-template-columns: 1fr; }
+  .kpis { grid-template-columns: 1fr 1fr; }
   .grid4 { grid-template-columns: 1fr 1fr; }
   .editor .ed-grid { grid-template-columns: 1fr; }
   .cash { grid-template-columns: 1fr; }

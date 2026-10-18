@@ -1,8 +1,9 @@
 // お客様のスマホ注文画面（番号札のQRから開く）
-import { yen, choiceLabel } from '/shared/calc.js';
+import { yen, choiceLabel } from './shared/calc.js';
 
-const tagNo = Number(location.pathname.split('/')[2]);
-const key = new URLSearchParams(location.search).get('k') || '';
+const params = new URLSearchParams(location.search);
+const tagNo = Number(location.pathname.match(/^\/t\/(\d+)/)?.[1] || params.get('tag'));
+const key = params.get('k') || '';
 const $app = document.getElementById('app');
 const $sheet = document.getElementById('sheet');
 
@@ -362,7 +363,7 @@ async function submit() {
       if (e.code !== 'check_changed') throw e;
       await load();
       // 会計済みの後にもう一度注文する／同じテーブルで新しい伝票が始まっていた場合は確認してから送る
-      if (!confirm(`${e.message}\n\nこのまま注文を送信しますか？`)) throw Object.assign(new Error('送信を取りやめました'), { quiet: true });
+      if (!(await askConfirm(`${e.message}\nこのまま注文を送信しますか？`, '送信する'))) throw Object.assign(new Error('送信を取りやめました'), { quiet: true });
       res = await send(S.ses.check?.id || null);
     }
     S.cart = []; saveCart();
@@ -379,6 +380,25 @@ async function submit() {
   } finally {
     S.sending = false; renderSheet();
   }
+}
+
+// 画面内の確認ダイアログ（ブラウザ標準の confirm はアプリ内ブラウザで使えないことがある）
+function askConfirm(message, ok = 'OK') {
+  return new Promise((resolve) => {
+    const el = document.createElement('div');
+    el.className = 'sheet-backdrop enter';
+    el.style.zIndex = '95';
+    el.innerHTML = `<div class="sheet" role="alertdialog" aria-modal="true"><p style="white-space:pre-line;font-size:17px;margin:12px 0 18px">${esc(message)}</p>
+      <div class="row"><button class="btn btn-lg grow" data-v="0">やめる</button><button class="btn btn-primary btn-lg grow" data-v="1">${esc(ok)}</button></div></div>`;
+    el.addEventListener('click', (ev) => {
+      const b = ev.target.closest('button[data-v]');
+      if (!b && ev.target !== el) return;
+      ev.stopPropagation();
+      el.remove();
+      resolve(b?.dataset.v === '1');
+    });
+    document.body.append(el);
+  });
 }
 
 function showDone() {

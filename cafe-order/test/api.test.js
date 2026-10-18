@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { createApp } from '../lib/app.js';
+import { Store } from '../lib/store.js';
 
 let server; let base; let cookie = ''; let app; let dir;
 // 平日の 12:00 (JST) に固定
@@ -12,7 +13,7 @@ const fixedNow = () => new Date('2026-10-19T03:00:00Z');
 
 before(async () => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cafe-test-'));
-  app = createApp({ dataDir: dir, now: fixedNow });
+  app = createApp({ store: new Store(dir), now: fixedNow });
   server = http.createServer((req, res) => app.handle(req, res));
   await new Promise((r) => server.listen(0, r));
   base = `http://127.0.0.1:${server.address().port}`;

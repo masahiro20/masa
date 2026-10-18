@@ -1,5 +1,5 @@
 // 売上：日別の集計・会計履歴・再印刷・会計の取り消し・CSV
-import { computeTotals, activeLines, lineGross } from '/shared/calc.js';
+import { computeTotals, activeLines, lineGross } from '../shared/calc.js';
 import { S, esc, yen, api, run, refresh, openModal, closeModal, timeStr, tagLabel, printHtml, confirmDialog, toast, hooks } from './core.js';
 import { receiptHtml, printRyoshu } from './checkout.js';
 
@@ -79,7 +79,9 @@ export const salesActions = {
     const d = R.date || S.data.ctx.bizDate;
     const from = `${d.slice(0, 8)}01`;
     const last = new Date(Number(d.slice(0, 4)), Number(d.slice(5, 7)), 0).getDate();
-    location.href = `/api/admin/export.csv?from=${from}&to=${d.slice(0, 8)}${String(last).padStart(2, '0')}&type=checks`;
+    const a = document.createElement('a');
+    a.href = `/api/admin/export.csv?from=${from}&to=${d.slice(0, 8)}${String(last).padStart(2, '0')}&type=checks`;
+    document.body.append(a); a.click(); a.remove();
   },
   's-reopen': async () => {
     const m = S.modals.findLast((x) => x.hist);

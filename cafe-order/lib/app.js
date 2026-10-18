@@ -1,10 +1,9 @@
 // HTTPサーバー本体（APIと画面配信）。外部フレームワークに依存しない。
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import QRCode from 'qrcode';
-import { Store, newId, newTagKey } from './store.js';
+import { newId, newTagKey, randomToken } from './base-store.js';
 import {
   businessContext, itemStatus, priceLine, computeTotals, activeLines, isSoldOutToday, stockLeft, unservedCount, yen,
 } from '../public/shared/calc.js';
@@ -29,8 +28,10 @@ const clampInt = (v, min, max, def = min) => Math.max(min, Math.min(max, int(v, 
 const hhmmOk = (v) => (v === '' || /^\d{2}:\d{2}$/.test(v) ? v : '');
 const dateOk = (v) => (v === '' || /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : '');
 
-export function createApp({ dataDir, now = () => new Date() } = {}) {
-  const store = new Store(dataDir || path.join(ROOT, 'data'));
+// store: 保存先（lib/store.js のファイル保存など）
+// onEvent: リアルタイム通知を外へ流すフック（ブラウザ版デモで使用）
+export function createApp({ store, now = () => new Date(), onEvent = null } = {}) {
+  if (!store) throw new Error('store is required');
   const S = () => store.state;
   const ctx = () => businessContext(now(), S().settings.timeZone, S().settings.businessDayStartHour);
 
@@ -43,18 +44,22 @@ export function createApp({ dataDir, now = () => new Date() } = {}) {
   }
   function notifyAdmin(event, data = {}) {
     for (const res of adminClients) sse(res, event, data);
+    onEvent?.({ target: 'admin', event, data });
   }
   function notifyTag(tagNo, data = {}) {
     if (tagNo == null) return;
     for (const res of customerClients.get(tagNo) || []) sse(res, 'changed', data);
+    onEvent?.({ target: 'tag', tagNo, event: 'changed', data });
   }
   function notifyAllCustomers(data = {}) {
     for (const set of customerClients.values()) for (const res of set) sse(res, 'changed', data);
+    onEvent?.({ target: 'customers', event: 'changed', data });
   }
-  setInterval(() => {
+  const ping = setInterval(() => {
     for (const res of adminClients) res.write(': ping\n\n');
     for (const set of customerClients.values()) for (const res of set) res.write(': ping\n\n');
-  }, 25000).unref();
+  }, 25000);
+  ping.unref?.();
 
   function changed(check, event = 'changed', extra = {}) {
     store.save();
@@ -452,7 +457,7 @@ export function createApp({ dataDir, now = () => new Date() } = {}) {
       fail(401, 'PINが違います');
     }
     loginFails.delete(ip);
-    const tok = crypto.randomBytes(24).toString('base64url');
+    const tok = randomToken(32);
     const sessions = S().sessions;
     for (const [k, exp] of Object.entries(sessions)) if (exp < Date.now()) delete sessions[k];
     sessions[tok] = Date.now() + 90 * 24 * 3600 * 1000;
@@ -821,6 +826,7 @@ export function createApp({ dataDir, now = () => new Date() } = {}) {
 
   // ---- リクエスト処理 ----
   async function readBody(req) {
+    if (req.body !== undefined) return req.body; // 解析済みの本文（デモ用）
     const chunks = [];
     let size = 0;
     for await (const ch of req) {

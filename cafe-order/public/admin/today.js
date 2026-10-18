@@ -1,5 +1,5 @@
 // 本日の準備：朝の数分で終わるように、日替わり・期間限定の中身／売り切れ／残数／受付状態をこの1画面に集約
-import { itemStatus, stockLeft, isSoldOutToday } from '/shared/calc.js';
+import { itemStatus, stockLeft, isSoldOutToday } from '../shared/calc.js';
 import { S, esc, yen, api, run, refresh, toast, localStorageGet, localStorageSet } from './core.js';
 
 let filter = localStorageGet('cafe_today_filter', 'daily');

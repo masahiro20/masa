@@ -3,10 +3,11 @@ import http from 'node:http';
 import path from 'node:path';
 import os from 'node:os';
 import { createApp } from './lib/app.js';
+import { Store } from './lib/store.js';
 
 const port = Number(process.env.PORT) || 3000;
 const dataDir = process.env.DATA_DIR || path.resolve('data');
-const app = createApp({ dataDir });
+const app = createApp({ store: new Store(dataDir) });
 
 const server = http.createServer((req, res) => app.handle(req, res));
 server.listen(port, () => {

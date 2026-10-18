@@ -1,5 +1,5 @@
 // スタッフによる注文入力（スマホを使わないお客様・カウンター販売・追加注文の代行）
-import { priceLine, itemStatus, choiceLabel, isSoldOutToday, stockLeft } from '/shared/calc.js';
+import { priceLine, itemStatus, choiceLabel, isSoldOutToday, stockLeft } from '../shared/calc.js';
 import { S, esc, yen, api, run, toast, openModal, closeModal, updateModal, itemById, uid, refresh, hooks } from './core.js';
 
 const TIMING = [['', 'おまかせ'], ['first', '先に'], ['with', '一緒に'], ['after', '食後']];

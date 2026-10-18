@@ -1,5 +1,5 @@
 // メニュー編集：カテゴリ・商品・オプション（ホット/アイス、①②③の限定枠、ドリンクセット等）
-import { DOW_LABELS } from '/shared/calc.js';
+import { DOW_LABELS } from '../shared/calc.js';
 import {
   S, esc, yen, api, run, refresh, toast, openModal, closeModal, updateModal, confirmDialog, promptDialog, uid,
 } from './core.js';

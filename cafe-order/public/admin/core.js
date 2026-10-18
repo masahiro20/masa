@@ -1,5 +1,5 @@
 // オーナー画面の共通部品（状態・通信・モーダル・通知音）
-import { yen } from '/shared/calc.js';
+import { yen } from '../shared/calc.js';
 
 export { yen };
 export const S = {

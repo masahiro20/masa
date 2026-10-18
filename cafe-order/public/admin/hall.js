@@ -1,5 +1,5 @@
 // ホール：番号札ごとの利用状況と伝票の詳細
-import { computeTotals, unservedCount, activeLines } from '/shared/calc.js';
+import { computeTotals, unservedCount, activeLines } from '../shared/calc.js';
 import {
   S, esc, yen, api, run, toast, openModal, closeModal, updateModal, elapsed, minutesSince, timeStr, tagLabel, checkById,
   refresh, confirmDialog, promptDialog, hooks, localStorageGet, localStorageSet,

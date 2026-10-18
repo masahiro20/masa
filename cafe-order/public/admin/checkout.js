@@ -1,7 +1,7 @@
 // 会計：番号札の番号を入れて会計開始 → チケット・割引 → 一括/均等割り/個別/金額指定 → 支払い → レシート
 import {
   computeTotals, activeLines, splitEqual, splitByItems, paidByLabel, lineGross,
-} from '/shared/calc.js';
+} from '../shared/calc.js';
 import {
   S, esc, yen, api, run, toast, refresh, keypad, applyKey, tagLabel, checkById, elapsed, timeStr, promptDialog, confirmDialog,
   printHtml, openModal, closeModal, updateModal, settings, hooks,
