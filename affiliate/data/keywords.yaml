@@ -33,14 +33,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: claude code 料金
-  intent: informational
-  category: learning
-  program: learning-ai-coding
-  score: 15000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: ai駆動開発 バイブコーディング 違い
   intent: informational
   category: learning
@@ -414,6 +406,15 @@ keywords:
   score: 16000.0
   status: published
   slug: wordpress-portfolio-tsukurikata-mikeiken
+- keyword: claude code 料金
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: claude-code-ryokin
 - keyword: AIコーディング 初心者 学習 ロードマップ
   intent: informational
   category: learning

@@ -63,3 +63,4 @@
 {"ts": "2026-10-19T03:48:25+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["ブログ レンタルサーバー 無料"], "errors": ["既存記事blog-rental-server-hitsuyouと検索意図が重複"]}
 {"ts": "2026-10-19T03:50:27+00:00", "source": "routine", "published": ["conoha-wing-hyouban"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-19T09:50:26+00:00", "source": "routine", "published": ["it-tenshoku-mikeiken-20dai"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-10-19T21:49:32+00:00", "source": "routine", "published": ["claude-code-ryokin"], "refreshed": [], "rejected": [], "errors": []}
