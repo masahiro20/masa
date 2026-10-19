@@ -17,7 +17,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from .articles import Article, load_articles
 from .blocks import expand_links, extract_faq, render_blocks
 from .config import PAGES_DIR, PUBLIC_DIR, STATIC_DIR, TEMPLATES_DIR, Config
-from .links import expand_shortcodes
+from .links import expand_shortcodes, with_early_cta
 from .visuals import logo_png, logo_svg, save_cover, site_cover
 
 COVER_NAME = "cover.png"
@@ -221,7 +221,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         cat = cats.get(a.category, {"name": a.category, "color": "#162238", "slug": a.category})
         save_cover(out_dir / a.url_path / COVER_NAME, title=a.title, category_name=cat["name"],
                    category_slug=a.category, color=cat["color"], site_name=cfg.site["name"], brand_en=brand_en)
-        body_html, toc = render_markdown(a.body, cfg.programs_by_id, link_targets)
+        body_html, toc = render_markdown(with_early_cta(a.body, cfg.programs_by_id), cfg.programs_by_id, link_targets)
         url = f"{base}/{a.url_path}"
         write(f"{a.url_path}index.html", env.get_template("article.html").render(
             **{**common, "og_image": cover_url(a)}, article=a, body=body_html, toc=toc, url=url, category=cat,
