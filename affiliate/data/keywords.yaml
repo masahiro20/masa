@@ -2,22 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: ブログ レンタルサーバー 無料
-  intent: commercial
-  category: tools
-  program: tools-rental-server
-  score: 48000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: conoha wing 評判
-  intent: commercial
-  category: tools
-  program: tools-rental-server
-  score: 48000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: ブログ レンタルサーバー 複数
   intent: informational
   category: tools
@@ -222,6 +206,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: tenshoku-soudan-muryo-chat
+- keyword: conoha wing 評判
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 48000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: conoha-wing-hyouban
 - keyword: ブログ レンタルサーバー 必要
   intent: commercial
   category: tools
@@ -689,6 +682,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事career-coaching-imi-nai-koukaiと検索意図が重複
+- keyword: ブログ レンタルサーバー 無料
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 48000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事blog-rental-server-hitsuyouと検索意図が重複
 - keyword: プログラミングスクール オンライン 注意点 デメリット
   intent: commercial
   category: school
