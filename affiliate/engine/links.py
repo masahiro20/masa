@@ -7,6 +7,22 @@ import re
 SHORTCODE_RE = re.compile(r"\{\{aff:([a-z0-9-]+)(?:\|([^}]+))?\}\}")
 
 
+def with_early_cta(body: str, programs: dict[str, dict], threshold: float = 0.4) -> str:
+    """広告が入っている案件の CTA が記事の後半にしかない場合、最初の節の直後にも同じ案件の CTA を足す。
+
+    読者の多くは記事の後半まで読まないため、最初の広告が 40% より後ろにあると押される機会を逃す。
+    本文のファイルは変えず、サイトを生成するときだけ挿入する（広告が未設定の案件は対象外）。
+    """
+    live = {pid for pid, p in programs.items() if (p.get("url") or "").strip()}
+    first = next((m for m in SHORTCODE_RE.finditer(body) if m.group(1) in live), None)
+    if first is None or first.start() < threshold * len(body):
+        return body
+    heads = [m.start() for m in re.finditer(r"(?m)^## ", body)]
+    if len(heads) < 2 or heads[1] > threshold * len(body):
+        return body
+    return body[: heads[1]] + "{{aff:%s}}\n\n" % first.group(1) + body[heads[1]:]
+
+
 def find_shortcodes(body: str) -> list[str]:
     return [m.group(1) for m in SHORTCODE_RE.finditer(body)]
 
