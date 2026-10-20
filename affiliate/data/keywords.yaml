@@ -17,14 +17,6 @@ keywords:
   score: 24000.0
   status: queued
   source: google-suggest
-- keyword: エンジニア 転職 フルリモート
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: ai駆動開発 バイブコーディング 違い
   intent: informational
   category: learning
@@ -368,6 +360,15 @@ keywords:
   score: 20000.0
   status: published
   slug: mukiteiru-shigoto-wakaranai-shindan
+- keyword: エンジニア 転職 フルリモート
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-tenshoku-full-remote
 - keyword: it転職 未経験 20代
   intent: commercial
   category: career
