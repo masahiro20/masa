@@ -69,3 +69,5 @@
 {"ts": "2026-10-20T21:49:32+00:00", "source": "routine", "published": ["kumikomi-engineer-tenshoku-agent"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-21T03:49:31+00:00", "source": "routine", "published": ["ai-kudou-kaihatsu-vibe-coding-chigai"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-21T09:49:44+00:00", "source": "routine", "published": ["freelance-engineer-yametoke"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-10-21T21:48:46+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["wordpress 始め方 超 初心者"], "errors": ["既存記事wordpress-blog-start-server-domain-stepsと検索意図が重複"]}
+{"ts": "2026-10-21T21:50:22+00:00", "source": "routine", "published": ["shanai-se-mikeiken-yametoke"], "refreshed": [], "rejected": [], "errors": []}

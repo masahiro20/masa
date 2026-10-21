@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: wordpress 始め方 超 初心者
-  intent: informational
-  category: tools
-  program: tools-rental-server
-  score: 24000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: ai駆動開発 仕様駆動開発 違い
   intent: informational
   category: learning
@@ -31,14 +23,6 @@ keywords:
   program: career-maker-agent
   score: 12000.0
   status: queued
-  source: google-suggest
-- keyword: 社内se 未経験 やめとけ
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 9000.0
-  status: queued
-  boost: 1.5
   source: google-suggest
 - keyword: エンジニア 転職 面接
   intent: informational
@@ -530,6 +514,15 @@ keywords:
   score: 9600.0
   status: published
   slug: programming-school-kyufukin-heiyo-agent
+- keyword: 社内se 未経験 やめとけ
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 9000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: shanai-se-mikeiken-yametoke
 - keyword: エンジニア 転職 未経験 志望動機
   intent: informational
   category: career
@@ -709,6 +702,16 @@ keywords:
   source: search-console
   issues:
   - 既存記事programming-school-taimen-online-chigaiと検索意図が重複
+- keyword: wordpress 始め方 超 初心者
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 24000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事wordpress-blog-start-server-domain-stepsと検索意図が重複
 - keyword: プログラミングスクール 後悔 理由 対策
   intent: commercial
   category: school
