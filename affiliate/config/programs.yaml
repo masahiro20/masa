@@ -56,6 +56,11 @@ programs:
     category: career
     asp: "moshimo"
     url: "https://af.moshimo.com/af/c/click?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96718"
+    banner_height: 500
+    banner_width: 600
+    banner: "https://image.moshimo.com/af-img/6249/000000096720.jpg"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96720"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96720"
     pixel: "https://i.moshimo.com/af/i/impression?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96718"
     est_reward_jpy: 10000
     keywords: ["キャリアコーチング", "キャリア相談", "やりたいこと", "自己分析", "転職 迷う", "向いている仕事"]
@@ -86,8 +91,12 @@ programs:
   - id: learning-online-course
     name: "オンライン動画講座"
     category: learning
-    asp: ""
-    url: ""
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849852&p_id=7682&pc_id=22239&pl_id=95906"
+    banner_height: 180
+    banner_width: 294
+    banner: "https://image.moshimo.com/af-img/7457/000000095906.png"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849852&p_id=7682&pc_id=22239&pl_id=95906"
     est_reward_jpy: 500
     keywords: ["独学", "動画講座", "オンライン講座", "Python 学習"]
     cta: "講座の内容とレビューを見てみる"

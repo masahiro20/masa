@@ -40,7 +40,22 @@ def _anchor(url: str, text: str, pixel: str = "") -> str:
 
 
 def expand_shortcodes(body: str, programs: dict[str, dict]) -> str:
-    """Markdown 変換前に呼ぶ。未知のIDや未提携（url空）の案件はリンクなしで表示する。"""
+    """Markdown 変換前に呼ぶ。未知のIDや未提携（url空）の案件はリンクなしで表示する。
+
+    案件の広告は2通りある。
+    - テキスト広告（url / pixel）… 文中リンクとCTAボタンに使う。
+    - バナー広告（banner / banner_width / banner_height）… CTAボックスに画像のまま表示する（コードは作り替えない）。
+      バナーに専用のリンク（banner_url / banner_pixel）がある案件は、バナーを記事内の最初のCTAだけに出し、
+      2回目以降はテキスト広告のボタンにする（広告だらけに見せない）。
+      バナーしかない案件は、文中リンクを文字だけにし、CTAはバナーで表示する（同じ記事で3回以上あるときは最初と最後だけ）。
+    """
+
+    shown_banner: set[str] = set()
+    cta_total: dict[str, int] = {}
+    for mm in SHORTCODE_RE.finditer(body):
+        if not mm.group(2):
+            cta_total[mm.group(1)] = cta_total.get(mm.group(1), 0) + 1
+    cta_seen: dict[str, int] = {}
 
     def replace(m: re.Match) -> str:
         pid, label = m.group(1), m.group(2)
@@ -50,17 +65,26 @@ def expand_shortcodes(body: str, programs: dict[str, dict]) -> str:
         url = (program.get("url") or "").strip()
         pixel = (program.get("pixel") or "").strip()
         banner = (program.get("banner") or "").strip()
-        if label:  # 文中リンク（バナー広告しかない案件は、広告コードを作り替えないよう文字だけにする）
-            return _anchor(url, label, pixel) if url and not banner else html.escape(label)
+        banner_url = (program.get("banner_url") or "").strip()
+        has_text_ad = bool(url) and (not banner or bool(banner_url))
+        if label:  # 文中リンク
+            return _anchor(url, label, pixel) if has_text_ad else html.escape(label)
         name = html.escape(program["name"])
-        if url and banner:
+        cta_seen[pid] = cta_seen.get(pid, 0) + 1
+        if banner and not banner_url and cta_total.get(pid, 0) > 2 and 1 < cta_seen[pid] < cta_total[pid]:
+            return ""  # バナーしかない案件は、同じ画像を何度も並べない（最初と最後だけ）
+        use_banner = bool(banner) and (banner_url or url) and not (banner_url and pid in shown_banner)
+        if use_banner:
+            shown_banner.add(pid)
+            b_url = banner_url or url
+            b_pixel = (program.get("banner_pixel") or "").strip() if banner_url else pixel
             w, h = int(program.get("banner_width") or 0), int(program.get("banner_height") or 0)
             size = f' width="{w}" height="{h}"' if w and h else ""
-            tracker = (f'<img class="aff-pixel" src="{html.escape(pixel, quote=True)}" width="1" height="1" alt="">'
-                       if pixel else "")
+            tracker = (f'<img class="aff-pixel" src="{html.escape(b_pixel, quote=True)}" width="1" height="1" alt="">'
+                       if b_pixel else "")
             return (
                 f'\n\n<div class="cta-box"><span class="cta-label">PR</span><p class="cta-name">{name}</p>'
-                f'<a class="cta-banner" href="{html.escape(url, quote=True)}" rel="sponsored noopener" '
+                f'<a class="cta-banner" href="{html.escape(b_url, quote=True)}" rel="sponsored noopener" '
                 f'referrerpolicy="no-referrer-when-downgrade" target="_blank">'
                 f'<img src="{html.escape(banner, quote=True)}"{size} alt="{name}" loading="lazy" decoding="async"></a>'
                 f'{tracker}</div>\n\n'
