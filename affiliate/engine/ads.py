@@ -103,17 +103,25 @@ def cmd_set_ad(cfg, args) -> int:
         return 1
     path = CONFIG_DIR / "programs.yaml"
     banner = parse_banner(code)
-    fields = {"asp": args.asp or guess_asp(url), "url": url, "pixel": pixel,
-              # バナー広告はコードどおり画像で表示する（テキストリンクに作り替えない）
-              "banner": banner.get("src", ""), "banner_width": banner.get("width", 0),
-              "banner_height": banner.get("height", 0)}
+    if args.keep_text:
+        if not banner:
+            print("--keep-text はバナー広告のコードにだけ使えます")
+            return 1
+        # すでにあるテキスト広告（url / pixel）はそのままにして、バナーを「最初のCTA用」として追加する
+        fields = {"banner_url": url, "banner_pixel": pixel, "banner": banner["src"],
+                  "banner_width": banner.get("width", 0), "banner_height": banner.get("height", 0)}
+    else:
+        fields = {"asp": args.asp or guess_asp(url), "url": url, "pixel": pixel,
+                  # バナー広告はコードどおり画像で表示する（テキストリンクに作り替えない）
+                  "banner": banner.get("src", ""), "banner_width": banner.get("width", 0),
+                  "banner_height": banner.get("height", 0)}
     if args.name:
         fields["name"] = args.name
     if args.cta:
         fields["cta"] = args.cta
     path.write_text(update_program(path.read_text(encoding="utf-8"), args.id, fields), encoding="utf-8")
     kind = "バナー" if banner else "テキスト"
-    print(f"{args.id} に広告リンクを設定しました（{fields['asp'] or 'ASP不明'}、{kind}、計測用画像{'あり' if pixel else 'なし'}）")
+    print(f"{args.id} に広告リンクを設定しました（{fields.get('asp') or 'ASP不明'}、{kind}、計測用画像{'あり' if pixel else 'なし'}）")
     return 0
 
 
@@ -122,6 +130,8 @@ def register(sub) -> dict:
     p.add_argument("id")
     p.add_argument("code", help="広告コードを保存したファイル、または広告コード／URLそのもの")
     p.add_argument("--asp", default="")
+    p.add_argument("--keep-text", action="store_true",
+                   help="バナーのコードを、既存のテキスト広告を残したまま「最初のCTA用バナー」として追加する")
     p.add_argument("--name", default="", help="提携したサービス名（CTAボックスに表示される）")
     p.add_argument("--cta", default="", help="ボタンの文言")
     return {"set-ad": cmd_set_ad}

@@ -83,3 +83,25 @@ def test_banner_code_is_parsed_and_rendered_as_image():
     assert 'class="cta-banner"' in box and 'width="300" height="250"' in box and "aff-pixel" in box
     assert "cta-button" not in box
     assert expand_shortcodes("{{aff:s|公式サイト}}", programs) == "公式サイト"
+
+
+def test_banner_shown_only_for_first_cta_when_text_ad_exists():
+    programs = {"c": {"id": "c", "name": "相談", "url": "https://t.example/text", "pixel": "https://t.example/px",
+                      "banner_url": "https://t.example/banner", "banner_pixel": "https://t.example/bpx",
+                      "banner": "https://img.example/b.jpg", "banner_width": 600, "banner_height": 500,
+                      "cta": "無料で相談する"}}
+    out = expand_shortcodes("{{aff:c}}\n本文\n{{aff:c}}", programs)
+    first, second = out.split("本文")
+    assert 'class="cta-banner"' in first and "https://t.example/banner" in first and "bpx" in first
+    assert 'class="cta-button"' in second and "https://t.example/text" in second and "cta-banner" not in second
+    # テキスト広告があるので文中リンクはテキスト広告のURLになる
+    assert 'href="https://t.example/text"' in expand_shortcodes("{{aff:c|相談する}}", programs)
+
+
+def test_banner_only_program_is_not_repeated_in_the_middle():
+    programs = {"s": {"id": "s", "name": "サーバー", "url": "https://t.example/b", "pixel": "",
+                      "banner": "https://img.example/s.png", "banner_width": 300, "banner_height": 250, "cta": "見る"}}
+    out = expand_shortcodes("{{aff:s}}A{{aff:s}}B{{aff:s}}C{{aff:s}}", programs)
+    assert out.count('class="cta-banner"') == 2
+    assert out.index("A") < out.index("B") < out.index("C")
+    assert expand_shortcodes("{{aff:s}}A{{aff:s}}", programs).count('class="cta-banner"') == 2
