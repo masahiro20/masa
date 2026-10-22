@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: ai駆動開発 仕様駆動開発 違い
-  intent: informational
-  category: learning
-  program: learning-ai-coding
-  score: 15000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 機械設計 転職 難しい
   intent: informational
   category: career
@@ -377,6 +369,15 @@ keywords:
   score: 16000.0
   status: published
   slug: wordpress-portfolio-tsukurikata-mikeiken
+- keyword: ai駆動開発 仕様駆動開発 違い
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: ai-kudou-kaihatsu-shiyou-kudou-chigai
 - keyword: ai駆動開発 バイブコーディング 違い
   intent: informational
   category: learning
