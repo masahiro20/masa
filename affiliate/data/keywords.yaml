@@ -2,20 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 機械設計 転職 難しい
-  intent: informational
-  category: career
-  program: career-maker-agent
-  score: 12000.0
-  status: queued
-  source: google-suggest
-- keyword: 半導体 エンジニア 未経験 転職
-  intent: informational
-  category: career
-  program: career-maker-agent
-  score: 12000.0
-  status: queued
-  source: google-suggest
 - keyword: エンジニア 転職 面接
   intent: informational
   category: career
@@ -40,20 +26,38 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
+- keyword: python 独学 何時間
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: Python 独学 ロードマップ 社会人
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1000.0
+  status: queued
+- keyword: 働きながら プログラミング 学習時間 確保 方法
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1000.0
+  status: queued
+- keyword: 社会人 独学 プログラミング 挫折 対策
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1000.0
+  status: queued
 - keyword: プログラミング 入門書 選び方 言語別
   intent: commercial
   category: learning
   program: learning-books
   score: 400.0
   status: queued
-- keyword: python 独学 何時間
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 300.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: エンジニア 転職 未経験 資格
   intent: informational
   category: career
@@ -78,24 +82,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: Python 独学 ロードマップ 社会人
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 200.0
-  status: queued
-- keyword: 働きながら プログラミング 学習時間 確保 方法
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 200.0
-  status: queued
-- keyword: 社会人 独学 プログラミング 挫折 対策
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 200.0
-  status: queued
 - keyword: セキュリティエンジニア 未経験 勉強 何から
   intent: informational
   category: learning
@@ -407,6 +393,14 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-shakaijin-muryo
+- keyword: 半導体 エンジニア 未経験 転職
+  intent: informational
+  category: career
+  program: career-maker-agent
+  score: 12000.0
+  status: published
+  source: google-suggest
+  slug: handoutai-engineer-mikeiken-tenshoku
 - keyword: フリーランスエンジニア やめとけ
   intent: informational
   category: career
@@ -625,6 +619,31 @@ keywords:
   score: 4800.0
   status: published
   slug: kyoiku-kunren-kyufukin-shinsei-nagare
+- keyword: オンライン講座 プログラミングスクール 違い 比較
+  intent: commercial
+  category: learning
+  program: learning-online-course
+  score: 2000.0
+  status: published
+  slug: online-course-vs-programming-school
+- keyword: プログラミング 独学 何から
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: programming-dokugaku-nanikara
+- keyword: web制作 副業 稼げない
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: web-seisaku-fukugyo-kasegenai
 - keyword: itパスポート おすすめ 参考書
   intent: commercial
   category: learning
@@ -634,31 +653,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: it-passport-sankousho-osusume
-- keyword: オンライン講座 プログラミングスクール 違い 比較
-  intent: commercial
-  category: learning
-  program: learning-online-course
-  score: 400.0
-  status: published
-  slug: online-course-vs-programming-school
-- keyword: プログラミング 独学 何から
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 300.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: programming-dokugaku-nanikara
-- keyword: web制作 副業 稼げない
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 300.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: web-seisaku-fukugyo-kasegenai
 - keyword: 独自ドメイン 取り方 初心者 おすすめ
   intent: transactional
   category: tools
@@ -706,6 +700,15 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事wordpress-blog-start-server-domain-stepsと検索意図が重複
+- keyword: 機械設計 転職 難しい
+  intent: informational
+  category: career
+  program: career-maker-agent
+  score: 12000.0
+  status: rejected
+  source: google-suggest
+  issues:
+  - 既存記事kikai-sekkei-tenshoku-agentと検索意図が重複
 - keyword: プログラミングスクール 後悔 理由 対策
   intent: commercial
   category: school
@@ -732,7 +735,7 @@ keywords:
   intent: informational
   category: learning
   program: learning-online-course
-  score: 300.0
+  score: 1500.0
   status: rejected
   boost: 1.5
   source: google-suggest
