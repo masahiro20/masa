@@ -76,3 +76,4 @@
 {"ts": "2026-10-22T09:50:23+00:00", "source": "routine", "published": ["reskilling-recurrent-chigai"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-22T21:48:57+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["機械設計 転職 難しい"], "errors": ["既存記事kikai-sekkei-tenshoku-agentと検索意図が重複"]}
 {"ts": "2026-10-22T21:51:23+00:00", "source": "routine", "published": ["handoutai-engineer-mikeiken-tenshoku"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-10-23T03:49:56+00:00", "source": "routine", "published": ["webdesigner-mikeiken-yametoke"], "refreshed": [], "rejected": [], "errors": []}

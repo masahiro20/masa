@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: webデザイナー 未経験 やめとけ
-  intent: informational
-  category: school
-  program: school-general
-  score: 6000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: webデザイナー 未経験 在宅
   intent: informational
   category: school
@@ -575,6 +567,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: reskilling-hojokin-tenshoku-shinai
+- keyword: webデザイナー 未経験 やめとけ
+  intent: informational
+  category: school
+  program: school-general
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: webdesigner-mikeiken-yametoke
 - keyword: 未経験 ポートフォリオ 評価されない 理由
   intent: informational
   category: career
