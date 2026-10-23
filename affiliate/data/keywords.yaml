@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: エンジニア 転職 面接
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 9000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: webデザイナー 未経験 在宅
   intent: informational
   category: school
@@ -485,6 +477,15 @@ keywords:
   score: 9600.0
   status: published
   slug: programming-school-kyufukin-heiyo-agent
+- keyword: エンジニア 転職 面接
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 9000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-tenshoku-mensetsu
 - keyword: 社内se 未経験 やめとけ
   intent: informational
   category: career
