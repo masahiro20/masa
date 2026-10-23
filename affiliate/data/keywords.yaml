@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: webデザイナー 未経験 在宅
-  intent: informational
-  category: school
-  program: school-general
-  score: 6000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: python 独学 何時間
   intent: informational
   category: learning
@@ -568,6 +560,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: reskilling-hojokin-tenshoku-shinai
+- keyword: webデザイナー 未経験 在宅
+  intent: informational
+  category: school
+  program: school-general
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: webdesigner-mikeiken-zaitaku
 - keyword: webデザイナー 未経験 やめとけ
   intent: informational
   category: school
