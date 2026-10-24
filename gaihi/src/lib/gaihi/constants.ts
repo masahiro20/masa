@@ -170,8 +170,14 @@ export const MATERIALS: { category: LayerCategory; name: string; lambda: number 
   { category: "fill", name: "高性能グラスウール 20K", lambda: 0.035 },
   { category: "fill", name: "高性能グラスウール 24K", lambda: 0.036 },
   { category: "fill", name: "吹込み用グラスウール 18K", lambda: 0.052 },
-  { category: "fill", name: "吹込み用セルローズファイバー 25K", lambda: 0.04 },
+  { category: "fill", name: "セルロースファイバー 55K（壁充填）", lambda: 0.04 },
+  { category: "fill", name: "セルロースファイバー 45K（床・屋根充填）", lambda: 0.04 },
+  { category: "fill", name: "セルロースファイバー 25K（天井吹込み）", lambda: 0.04 },
   { category: "fill", name: "ロックウール", lambda: 0.038 },
+  { category: "fill", name: "吹込み用ロックウール", lambda: 0.047 },
+  { category: "fill", name: "木質繊維断熱材（ウッドファイバー）", lambda: 0.038 },
+  { category: "fill", name: "羊毛断熱材", lambda: 0.04 },
+  { category: "fill", name: "ポリエステル繊維断熱材", lambda: 0.039 },
   { category: "fill", name: "吹付け硬質ウレタンフォーム A種1H", lambda: 0.026 },
   { category: "fill", name: "吹付け硬質ウレタンフォーム A種3", lambda: 0.04 },
   { category: "fill", name: "押出法ポリスチレンフォーム 3種b", lambda: 0.028 },
@@ -186,6 +192,7 @@ export const MATERIALS: { category: LayerCategory; name: string; lambda: number 
   { category: "external", name: "フェノールフォーム 保温板1種2号", lambda: 0.02 },
   { category: "external", name: "高性能グラスウール 24K", lambda: 0.036 },
   { category: "external", name: "ビーズ法ポリスチレンフォーム 特号", lambda: 0.034 },
+  { category: "external", name: "木質繊維断熱材（ウッドファイバー）", lambda: 0.038 },
   { category: "air", name: "密閉空気層", lambda: 0.09 },
 ];
 

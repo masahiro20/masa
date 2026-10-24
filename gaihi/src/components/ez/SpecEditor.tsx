@@ -5,6 +5,7 @@ import { NumInput } from "../NumInput";
 import { layersU, specValue } from "@/lib/gaihi/calc";
 import { LAYER_CATEGORY_LABEL, MATERIALS, SPEC_KIND_LABEL } from "@/lib/gaihi/constants";
 import { blankSpec, layer, newId } from "@/lib/gaihi/defaults";
+import { specTemplates } from "@/lib/gaihi/specText";
 import type { LayerCategory, Project, Spec, SpecKind } from "@/lib/gaihi/types";
 import { fmt } from "@/lib/format";
 import { DeleteX, EzButton, Modal, Seg } from "./ui";
@@ -231,6 +232,7 @@ export function SpecListModal({
   onClose: () => void;
 }) {
   const list = project.specs.filter((s) => kinds.includes(s.kind));
+  const templates = specTemplates().filter((t) => kinds.includes(t.kind));
   const [sel, setSel] = useState(currentId || list[0]?.id || "");
   const spec = project.specs.find((s) => s.id === sel);
   const used = (id: string) =>
@@ -304,6 +306,29 @@ export function SpecListModal({
             }}
           />
         ))}
+        {templates.length > 0 && (
+          <select
+            className="ez-select small"
+            style={{ minWidth: 260 }}
+            value=""
+            aria-label="テンプレートから追加"
+            onChange={(e) => {
+              const t = templates.find((x) => x.name === e.target.value);
+              if (!t) return;
+              const c = { ...structuredClone(t), id: newId("spec") };
+              c.layers = c.layers.map((l) => ({ ...l, id: newId("ly") }));
+              update((p) => void p.specs.push(c));
+              setSel(c.id);
+            }}
+          >
+            <option value="">テンプレートから追加…</option>
+            {templates.map((t) => (
+              <option key={t.name} value={t.name}>
+                {t.name}（U {fmt(specValue(t), 3)}）
+              </option>
+            ))}
+          </select>
+        )}
         {spec && (
           <EzButton
             small
@@ -359,6 +384,7 @@ export function MainSpec({
       if (i > 0) p.specs.unshift(...p.specs.splice(i, 1));
     });
   const specs = project.specs.filter((s) => s.kind === kind);
+  const templates = specTemplates().filter((t) => t.kind === kind && !specs.some((s) => s.name === t.name));
   const current = specs[0];
 
   return (
@@ -369,14 +395,35 @@ export function MainSpec({
           className="ez-select"
           style={{ minWidth: 260 }}
           value={current?.id ?? ""}
-          onChange={(e) => choose(e.target.value)}
+          onChange={(e) => {
+            const v = e.target.value;
+            const t = v.startsWith("tpl:") ? templates.find((x) => x.name === v.slice(4)) : undefined;
+            if (!t) return choose(v);
+            // テンプレートを選んだら仕様リストに登録してから当てはめる
+            const c = { ...structuredClone(t), id: newId("spec"), layers: t.layers.map((l) => ({ ...l, id: newId("ly") })) };
+            update((p) => {
+              p.specs.unshift(c);
+              apply(p, c.id);
+            });
+          }}
         >
           {specs.length === 0 && <option value="">（未登録）</option>}
-          {specs.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
+          <optgroup label="登録済みの仕様">
+            {specs.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </optgroup>
+          {templates.length > 0 && (
+            <optgroup label="テンプレートから追加">
+              {templates.map((t) => (
+                <option key={t.name} value={`tpl:${t.name}`}>
+                  {t.name}（U {fmt(specValue(t), 3)}）
+                </option>
+              ))}
+            </optgroup>
+          )}
         </select>
         <EzButton small icon="check" label="仕様リストから選択" onClick={() => setModal(true)} />
         {current && <span className="small">{kind === "perimeter" ? `ψ = ${fmt(current.psi, 3)}` : kind === "doma" ? "" : `U = ${fmt(specValue(current), 3)}`}</span>}

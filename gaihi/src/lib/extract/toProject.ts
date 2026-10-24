@@ -1,5 +1,6 @@
 import { ORIENTATION_LABEL } from "../gaihi/constants";
 import { newId, pickSpec } from "../gaihi/defaults";
+import { specFromText } from "../gaihi/specText";
 import type { Opening, Perimeter, Project, Region, Surface } from "../gaihi/types";
 import type { Extraction } from "./schema";
 
@@ -115,6 +116,27 @@ export function applyExtraction(base: Project, ex: Extraction): Project {
   p.openings = openings;
   p.perimeters = perimeters;
 
+  // 図面の仕様書きに断熱材が書いてあれば、その材料で仕様を作って主たる仕様にする（例：セルロースファイバー）
+  const specNotes: string[] = [];
+  const topKind = ex.ceilings.length > 0 && ex.ceilings.every((c) => c.kind === "roof") ? "roof" : "ceiling";
+  const fromDrawing: [("wall" | "ceiling" | "roof" | "floor"), string][] = [
+    ["wall", ex.specs_found.wall],
+    [topKind, ex.specs_found.ceiling_or_roof],
+    ["floor", ex.specs_found.floor],
+  ];
+  for (const [kind, text] of fromDrawing) {
+    const hit = specFromText(kind, text);
+    if (!hit) continue;
+    // 読み直したときに同じ仕様が増えないよう、同名の仕様があればそれを使う
+    const existing = p.specs.find((s) => s.kind === kind && s.name === hit.spec.name);
+    const spec = existing ?? hit.spec;
+    p.specs = [spec, ...p.specs.filter((s) => s !== spec)];
+    for (const s of surfaces) if (s.kind === kind) s.specId = spec.id;
+    specNotes.push(
+      `仕様：図面の「${text}」から${hit.spec.name}を作って当てはめました${hit.assumedThickness ? "（厚さの記載がないため標準の厚さを仮定・要確認）" : ""}`,
+    );
+  }
+
   // 基本情報の選択肢も読み取り結果に合わせる
   const diagonal = ex.walls.filter((w) => w.orientation.length === 2).length;
   p.rotation = diagonal > ex.walls.length / 2 ? 45 : 0;
@@ -136,6 +158,7 @@ export function applyExtraction(base: Project, ex: Extraction): Project {
     ...(ex.project.region_reason ? [`地域区分：${ex.project.region_reason}`] : []),
     ...(ex.orientation_note ? [`方位：${ex.orientation_note}`] : []),
     ...specLines,
+    ...specNotes,
     ...ex.warnings.map((w) => `要確認：${w}`),
   ];
   p.updatedAt = new Date().toISOString();
