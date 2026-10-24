@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { calculate, layersU, roundDown, roundUp, specValue } from "@/lib/gaihi/calc";
 import { nu, tempDiffFactor } from "@/lib/gaihi/constants";
-import { blankSpec, defaultSpecs, newProject, pickSpec, sampleProject } from "@/lib/gaihi/defaults";
+import { blankSpec, defaultSpecs, layer, newProject, normalizeProject, pickSpec, sampleProject } from "@/lib/gaihi/defaults";
 import type { Project } from "@/lib/gaihi/types";
 
 describe("端数処理", () => {
@@ -18,13 +18,19 @@ describe("材料構成からの U 値", () => {
   it("高性能GW16K 105mm の外壁は社内シートの U0.41 と一致する", () => {
     const wall = pickSpec(defaultSpecs(), "wall")!;
     const r = layersU(wall);
-    // 一般部: 0.11 + 0.0125/0.221 + 0.105/0.038 + 0.009/0.16 + 0.11
+    // 一般部（軸材を除く）: 0.11 + 0.0125/0.221 + 0.105/0.038 + 0.009/0.16 + 0.11
     expect(r.rGeneral).toBeCloseTo(0.11 + 0.0125 / 0.221 + 0.105 / 0.038 + 0.009 / 0.16 + 0.11, 6);
-    // 熱橋部は断熱層が木材 λ0.12 に置き換わる
+    // 熱橋部は充填断熱材の代わりに軸材（天然木材 λ0.12）
     expect(r.rBridge).toBeCloseTo(0.11 + 0.0125 / 0.221 + 0.105 / 0.12 + 0.009 / 0.16 + 0.11, 6);
+    expect(r.hasBridge).toBe(true);
     expect(r.u).toBeCloseTo(0.83 / r.rGeneral + 0.17 / r.rBridge, 9);
     expect(r.u).toBeGreaterThan(0.405);
     expect(r.u).toBeLessThan(0.415);
+  });
+
+  it("軸材がない構成は面積比率を使わず一般部だけで計算する", () => {
+    const s = { ...blankSpec("ceiling", "天井"), method: "layers" as const, ratio: 0.5, ri: 0.09, ro: 0.09, layers: [layer("fill", "吹込みGW", 200, 0.052)] };
+    expect(layersU(s).u).toBeCloseTo(1 / (0.09 + 0.2 / 0.052 + 0.09), 9);
   });
 
   it("direct 指定の仕様は入力した U をそのまま使う", () => {
@@ -120,6 +126,31 @@ describe("UA・ηAC・ηAH", () => {
     const r = calculate(p);
     expect(r.totalArea).toBe(32);
     expect(r.warnings.some((w) => w.includes("取り付く外壁"))).toBe(true);
+  });
+
+  it("Q値は換気・漏気の熱損失を足して延床面積で割る", () => {
+    const p = tinyProject();
+    p.totalFloorArea = 10;
+    p.ventilation = { volume: 24, rate: 0.5, heatRecovery: 0, cValue: 1 };
+    const r = calculate(p);
+    const vent = 0.35 * (0.5 + 1 * 0.1) * 24;
+    expect(r.ventLoss).toBeCloseTo(vent, 9);
+    expect(r.qValue).toBe(roundUp((r.q + vent) / 10, 2));
+    expect(r.mu).toBe(roundUp(r.mC / 10, 3));
+    p.ventilation.heatRecovery = 0.8;
+    expect(calculate(p).ventLoss).toBeCloseTo(0.35 * (0.5 * 0.2 + 0.1) * 24, 9);
+    p.totalFloorArea = 0;
+    expect(calculate(p).qValue).toBeNull();
+  });
+
+  it("古い形式のデータを読み込んでも項目が補われる", () => {
+    const old = { ...tinyProject() } as Partial<ReturnType<typeof tinyProject>>;
+    delete old.ventilation;
+    delete old.rotation;
+    const p = normalizeProject(old as ReturnType<typeof tinyProject>);
+    expect(p.ventilation.rate).toBe(0.5);
+    expect(p.rotation).toBe(0);
+    expect(calculate(p).ua).toBe(calculate(tinyProject()).ua);
   });
 
   it("サンプル物件は Superior 仕様で省エネ基準に適合する", () => {

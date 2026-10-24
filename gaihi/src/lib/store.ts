@@ -1,5 +1,6 @@
 "use client";
 
+import { normalizeProject } from "./gaihi/defaults";
 import type { Project } from "./gaihi/types";
 
 // 物件データはブラウザの localStorage に保存する（サーバーには保存しない）。
@@ -10,7 +11,7 @@ const KEY = "gaihi.projects.v1";
 function readAll(): Project[] {
   try {
     const raw = localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as Project[]) : [];
+    return raw ? (JSON.parse(raw) as Project[]).map(normalizeProject) : [];
   } catch {
     return [];
   }

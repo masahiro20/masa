@@ -23,6 +23,11 @@ const RequestSchema = z.object({
 
 const MODEL = process.env.GAIHI_MODEL || "claude-opus-5-5";
 
+/** 画面側で「AI 読み取り（ワンクリック）」を出すかどうかの判定用 */
+export async function GET() {
+  return NextResponse.json({ enabled: Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN) });
+}
+
 export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY && !process.env.ANTHROPIC_AUTH_TOKEN) {
     return NextResponse.json(

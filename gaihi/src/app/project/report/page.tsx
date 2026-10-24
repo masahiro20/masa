@@ -3,14 +3,17 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Formula, ResultTable } from "@/components/ResultTable";
-import { areaByOrientation, calculate, layersU, openingArea, specValue } from "@/lib/gaihi/calc";
-import { ADJACENCY_LABEL, ORIENTATION_LABEL, SPEC_KIND_LABEL } from "@/lib/gaihi/constants";
+import { areaByOrientation, calculate, layersU, openingArea, specValue, usedSpecs } from "@/lib/gaihi/calc";
+import { ADJACENCY_LABEL, LAYER_CATEGORY_LABEL, ORIENTATION_LABEL, SPEC_KIND_LABEL } from "@/lib/gaihi/constants";
 import type { Project } from "@/lib/gaihi/types";
 import { fmt } from "@/lib/format";
 import { getProject } from "@/lib/store";
 
 function Report() {
-  const id = useSearchParams().get("id") ?? "";
+  const params = useSearchParams();
+  const id = params.get("id") ?? "";
+  // 申請用印刷：社内メモ・参考値（Q値・μ値）を載せない
+  const forApplication = params.get("mode") === "app";
   const [project, setProject] = useState<Project | null | undefined>(undefined);
   useEffect(() => setProject(getProject(id) ?? null), [id]);
   useEffect(() => {
@@ -23,24 +26,38 @@ function Report() {
   const r = calculate(project);
   const byDir = [...areaByOrientation(project)];
   const today = new Date();
+  const dateLabel = (iso: string) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    return y ? `${y}年${m}月${d}日` : `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+  };
   const ok = (v: boolean | null) => (v === null ? "―" : v ? "適合" : "不適合");
 
   return (
     <>
       <div className="no-print" style={{ textAlign: "center", padding: 12 }}>
-        <button className="btn primary" onClick={() => window.print()}>
-          印刷 / PDF に保存
+        <button className="ez-btn" onClick={() => window.print()}>
+          <span className="label">印刷 / PDF に保存</span>
         </button>
       </div>
       <article className="report">
+        <div className="rep-head">
+          <span>省エネ基準（平成28年基準）</span>
+          <span>{forApplication ? "申請用" : ""}</span>
+        </div>
         <h1>外皮性能計算書</h1>
-        <p style={{ textAlign: "center" }}>（建築物省エネ法 住宅部分の外皮性能の評価方法による標準計算）</p>
+        <div className="rep-sub">【木造戸建住宅版】</div>
 
-        <h2>物件概要</h2>
+        <h2>基本事項</h2>
         <table>
           <tbody>
             <tr>
-              <th style={{ width: "18%" }}>物件名</th>
+              <th style={{ width: "18%" }}>計算日</th>
+              <td>{dateLabel(project.date)}</td>
+              <th style={{ width: "18%" }}>作成者</th>
+              <td>{project.author}</td>
+            </tr>
+            <tr>
+              <th>住宅名称</th>
               <td colSpan={3}>{project.name}</td>
             </tr>
             <tr>
@@ -48,22 +65,21 @@ function Report() {
               <td colSpan={3}>{project.address}</td>
             </tr>
             <tr>
-              <th>地域の区分</th>
-              <td>{project.region}地域</td>
-              <th style={{ width: "18%" }}>構造</th>
-              <td>{project.structure}</td>
+              <th>地域区分</th>
+              <td>{project.region}</td>
+              <th>構法</th>
+              <td>
+                {project.structure}（{project.framing === "jikugumi" ? "軸組" : "枠組"}）
+              </td>
             </tr>
             <tr>
               <th>断熱構造</th>
-              <td>{project.insulationType === "floor" ? "床断熱住戸" : "基礎断熱住戸"}</td>
+              <td>
+                {project.insulationType === "floor" ? "床断熱" : "基礎断熱"}・
+                {project.topInsulation === "roof" ? "屋根断熱" : project.topInsulation === "ceiling" ? "天井断熱" : "屋根・天井断熱"}
+              </td>
               <th>延床面積</th>
               <td>{project.totalFloorArea ? `${fmt(project.totalFloorArea)} ㎡` : ""}</td>
-            </tr>
-            <tr>
-              <th>作成日</th>
-              <td>{`${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`}</td>
-              <th>作成者</th>
-              <td>{project.author}</td>
             </tr>
           </tbody>
         </table>
@@ -110,6 +126,12 @@ function Report() {
           </tbody>
         </table>
         <Formula result={r} />
+        {!forApplication && r.qValue !== null && (
+          <p className="small">
+            参考：熱損失係数 Q値 {fmt(r.qValue)} W/(㎡・K)（換気回数 {project.ventilation.rate} 回/h・熱交換効率 {project.ventilation.heatRecovery}・C値{" "}
+            {project.ventilation.cValue}）／夏期日射取得係数 μ値 {fmt(r.mu, 3)}
+          </p>
+        )}
 
         <h2>1. 部位の仕様</h2>
         <table>
@@ -123,7 +145,7 @@ function Report() {
             </tr>
           </thead>
           <tbody>
-            {project.specs.map((s) => {
+            {usedSpecs(project).map((s) => {
               const lu = s.method === "layers" && s.layers.length > 0 ? layersU(s) : null;
               return (
                 <tr key={s.id}>
@@ -132,9 +154,10 @@ function Report() {
                   <td>
                     {lu && (
                       <>
-                        {s.layers.map((l) => `${l.name} ${l.thickness}mm(λ${l.lambda}${l.bridgeLambda ? `／熱橋λ${l.bridgeLambda}` : ""})`).join("＋")}
+                        {s.layers.map((l) => `${LAYER_CATEGORY_LABEL[l.category]}：${l.name} ${l.thickness}mm(λ${l.lambda})`).join("／")}
                         <br />
-                        Ri{s.ri}・Ro{s.ro}　一般部R={fmt(lu.rGeneral, 3)}・熱橋部R={fmt(lu.rBridge, 3)}　面積比率 {s.ratio}
+                        Ri{s.ri}・Ro{s.ro}　一般部R={fmt(lu.rGeneral, 3)}
+                        {lu.hasBridge && `・熱橋部R=${fmt(lu.rBridge, 3)}　一般部の面積比率 ${s.ratio}`}
                         <br />
                       </>
                     )}
@@ -257,7 +280,7 @@ function Report() {
         <h2>6. 計算明細</h2>
         <ResultTable result={r} className="" />
 
-        {project.notes.length > 0 && (
+        {!forApplication && project.notes.length > 0 && (
           <>
             <h2>図面読み取りメモ</h2>
             <ul>

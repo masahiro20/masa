@@ -1,4 +1,4 @@
-import type { Adjacency, Orientation, Region, SpecKind } from "./types";
+import type { Adjacency, LayerCategory, Orientation, Region, SpecKind } from "./types";
 
 // 数値の出典：建築物省エネ法 住宅部分の外皮性能の評価方法（平成28年基準・解説書）。
 // 申請に使う前に、最新の告示・解説書の表と突き合わせて確認すること。
@@ -145,27 +145,64 @@ export const DEFAULT_FH = 0.51;
 /** 不透明部位の日射熱取得率 η = 0.034 × U */
 export const OPAQUE_ETA_FACTOR = 0.034;
 
-/** よく使う材料の熱伝導率 λ [W/(m・K)] */
-export const MATERIALS: { name: string; lambda: number }[] = [
-  { name: "高性能グラスウール 16K", lambda: 0.038 },
-  { name: "高性能グラスウール 24K", lambda: 0.036 },
-  { name: "グラスウール 10K", lambda: 0.05 },
-  { name: "吹込み用グラスウール 18K", lambda: 0.052 },
-  { name: "吹込み用セルローズファイバー 25K", lambda: 0.04 },
-  { name: "ロックウール", lambda: 0.038 },
-  { name: "押出法ポリスチレンフォーム 3種b", lambda: 0.028 },
-  { name: "押出法ポリスチレンフォーム 1種", lambda: 0.04 },
-  { name: "ビーズ法ポリスチレンフォーム 特号", lambda: 0.034 },
-  { name: "硬質ウレタンフォーム 保温板2種", lambda: 0.024 },
-  { name: "吹付け硬質ウレタンフォーム A種3", lambda: 0.04 },
-  { name: "吹付け硬質ウレタンフォーム A種1H", lambda: 0.026 },
-  { name: "フェノールフォーム 保温板1種2号", lambda: 0.02 },
-  { name: "せっこうボード", lambda: 0.221 },
-  { name: "構造用合板", lambda: 0.16 },
-  { name: "OSB", lambda: 0.13 },
-  { name: "木材（天然木材）", lambda: 0.12 },
-  { name: "インシュレーションファイバー板", lambda: 0.052 },
-  { name: "コンクリート", lambda: 1.6 },
-  { name: "モルタル", lambda: 1.5 },
-  { name: "窯業系サイディング", lambda: 0.24 },
+export const LAYER_CATEGORY_LABEL: Record<LayerCategory, string> = {
+  board: "大壁面材",
+  fill: "充填断熱材",
+  frame: "軸材",
+  external: "外張断熱材",
+  air: "空気層・その他",
+};
+
+/** よく使う材料の熱伝導率 λ [W/(m・K)]（カテゴリ別） */
+export const MATERIALS: { category: LayerCategory; name: string; lambda: number }[] = [
+  { category: "board", name: "せっこうボード", lambda: 0.221 },
+  { category: "board", name: "構造用合板", lambda: 0.16 },
+  { category: "board", name: "OSB", lambda: 0.13 },
+  { category: "board", name: "インシュレーションファイバー板", lambda: 0.052 },
+  { category: "board", name: "パーティクルボード", lambda: 0.167 },
+  { category: "board", name: "窯業系サイディング", lambda: 0.24 },
+  { category: "board", name: "コンクリート", lambda: 1.6 },
+  { category: "board", name: "モルタル", lambda: 1.5 },
+  { category: "board", name: "フローリング（天然木材）", lambda: 0.12 },
+  { category: "fill", name: "グラスウール 10K", lambda: 0.05 },
+  { category: "fill", name: "グラスウール 16K相当", lambda: 0.045 },
+  { category: "fill", name: "高性能グラスウール 16K", lambda: 0.038 },
+  { category: "fill", name: "高性能グラスウール 20K", lambda: 0.035 },
+  { category: "fill", name: "高性能グラスウール 24K", lambda: 0.036 },
+  { category: "fill", name: "吹込み用グラスウール 18K", lambda: 0.052 },
+  { category: "fill", name: "吹込み用セルローズファイバー 25K", lambda: 0.04 },
+  { category: "fill", name: "ロックウール", lambda: 0.038 },
+  { category: "fill", name: "吹付け硬質ウレタンフォーム A種1H", lambda: 0.026 },
+  { category: "fill", name: "吹付け硬質ウレタンフォーム A種3", lambda: 0.04 },
+  { category: "fill", name: "押出法ポリスチレンフォーム 3種b", lambda: 0.028 },
+  { category: "fill", name: "押出法ポリスチレンフォーム 1種", lambda: 0.04 },
+  { category: "fill", name: "ビーズ法ポリスチレンフォーム 特号", lambda: 0.034 },
+  { category: "fill", name: "硬質ウレタンフォーム 保温板2種", lambda: 0.024 },
+  { category: "fill", name: "フェノールフォーム 保温板1種2号", lambda: 0.02 },
+  { category: "frame", name: "天然木材", lambda: 0.12 },
+  { category: "frame", name: "集成材", lambda: 0.12 },
+  { category: "external", name: "押出法ポリスチレンフォーム 3種b", lambda: 0.028 },
+  { category: "external", name: "硬質ウレタンフォーム 保温板2種", lambda: 0.024 },
+  { category: "external", name: "フェノールフォーム 保温板1種2号", lambda: 0.02 },
+  { category: "external", name: "高性能グラスウール 24K", lambda: 0.036 },
+  { category: "external", name: "ビーズ法ポリスチレンフォーム 特号", lambda: 0.034 },
+  { category: "air", name: "密閉空気層", lambda: 0.09 },
 ];
+
+/** 地域区分の色（基準表のバッジ） */
+export const REGION_COLOR: Record<Region, string> = {
+  1: "#2f6db5",
+  2: "#3f8fd6",
+  3: "#52b788",
+  4: "#c9b800",
+  5: "#e9a23b",
+  6: "#e27a01",
+  7: "#e05a83",
+  8: "#c8102e",
+};
+
+/** 建物の振りごとの外壁の4方位 */
+export const ROTATION_DIRS: Record<0 | 45, Orientation[]> = {
+  0: ["S", "W", "N", "E"],
+  45: ["SE", "SW", "NW", "NE"],
+};

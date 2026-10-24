@@ -25,15 +25,24 @@ export type SpecKind =
   | "door" // ドア
   | "perimeter"; // 土間床等の外周部（線熱貫流率 ψ）
 
+/**
+ * 層のカテゴリ
+ * - board: 面材（せっこうボード・合板など）。一般部・熱橋部の両方に入る
+ * - fill: 充填断熱材。一般部だけに入る
+ * - frame: 軸材（柱・間柱・垂木・大引など）。熱橋部で充填断熱材の代わりに入る
+ * - external: 外張断熱材・付加断熱材。一般部・熱橋部の両方に入る
+ * - air: 空気層など。一般部・熱橋部の両方に入る（熱抵抗を直接入れたいときは厚さ・λで調整）
+ */
+export type LayerCategory = "board" | "fill" | "frame" | "external" | "air";
+
 export interface Layer {
   id: string;
+  category: LayerCategory;
   name: string;
   /** 厚さ [mm] */
   thickness: number;
   /** 熱伝導率 λ [W/(m・K)] */
   lambda: number;
-  /** 熱橋部（柱・間柱・大引など）でこの層が置き換わる材料の λ。null なら一般部と同じ */
-  bridgeLambda: number | null;
 }
 
 export interface Spec {
@@ -99,14 +108,36 @@ export interface Perimeter {
   basis: string;
 }
 
+export interface Ventilation {
+  /** 気積 [㎥]（0 なら延床面積 × 2.4m で概算） */
+  volume: number;
+  /** 機械換気回数 [回/h] */
+  rate: number;
+  /** 熱交換換気の温度交換効率 0〜1（熱交換なしは 0） */
+  heatRecovery: number;
+  /** 相当隙間面積 C値 [c㎡/㎡] */
+  cValue: number;
+}
+
 export interface Project {
   id: string;
   name: string;
   address: string;
   author: string;
+  /** 記入年月日 YYYY-MM-DD */
+  date: string;
   region: Region;
   structure: string;
+  /** 構法 */
+  framing: "jikugumi" | "wakugumi";
+  /** 建物の振り：0° は東西南北、45° は北東・南東・南西・北西に面する */
+  rotation: 0 | 45;
+  /** 屋根断熱か天井断熱か */
+  topInsulation: "roof" | "ceiling" | "both";
   insulationType: "floor" | "foundation";
+  /** オーバーハング床（外気に接する床）の有無 */
+  overhang: boolean;
+  ventilation: Ventilation;
   totalFloorArea: number;
   specs: Spec[];
   surfaces: Surface[];

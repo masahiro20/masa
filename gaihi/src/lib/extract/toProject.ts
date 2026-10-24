@@ -115,6 +115,13 @@ export function applyExtraction(base: Project, ex: Extraction): Project {
   p.openings = openings;
   p.perimeters = perimeters;
 
+  // 基本情報の選択肢も読み取り結果に合わせる
+  const diagonal = ex.walls.filter((w) => w.orientation.length === 2).length;
+  p.rotation = diagonal > ex.walls.length / 2 ? 45 : 0;
+  const tops = new Set(ex.ceilings.map((c) => c.kind));
+  if (tops.size > 0) p.topInsulation = tops.size === 2 ? "both" : tops.has("roof") ? "roof" : "ceiling";
+  p.overhang = ex.floors.some((f) => f.adjacency === "outside");
+
   const specLines = Object.entries({
     "天井/屋根": ex.specs_found.ceiling_or_roof,
     外壁: ex.specs_found.wall,

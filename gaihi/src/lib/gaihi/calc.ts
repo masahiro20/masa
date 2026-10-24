@@ -24,23 +24,36 @@ export interface LayerPathResult {
   /** 一般部・熱橋部の熱抵抗の合計 [㎡K/W] */
   rGeneral: number;
   rBridge: number;
+  /** 軸材の層があるか（ないときは一般部だけで U を求める） */
+  hasBridge: boolean;
   u: number;
 }
 
-/** 材料構成から熱貫流率を求める（面積比率法：一般部と熱橋部を並列に扱う） */
+/**
+ * 材料構成から熱貫流率を求める（面積比率法）。
+ * 一般部は軸材以外の層、熱橋部は充填断熱材の代わりに軸材が入った層で熱抵抗を合計し、
+ * U = 一般部の面積比率 / R一般部 + (1 − 面積比率) / R熱橋部 とする。
+ */
 export function layersU(spec: Pick<Spec, "layers" | "ri" | "ro" | "ratio">): LayerPathResult {
   let rGeneral = spec.ri + spec.ro;
   let rBridge = spec.ri + spec.ro;
+  let hasBridge = false;
   for (const l of spec.layers) {
     if (!(l.lambda > 0) || !(l.thickness > 0)) continue;
-    const d = l.thickness / 1000;
-    rGeneral += d / l.lambda;
-    const lb = l.bridgeLambda && l.bridgeLambda > 0 ? l.bridgeLambda : l.lambda;
-    rBridge += d / lb;
+    const r = l.thickness / 1000 / l.lambda;
+    if (l.category === "frame") {
+      hasBridge = true;
+      rBridge += r;
+    } else if (l.category === "fill") {
+      rGeneral += r;
+    } else {
+      rGeneral += r;
+      rBridge += r;
+    }
   }
-  const ratio = Math.min(1, Math.max(0, spec.ratio));
-  const u = rGeneral > 0 ? ratio / rGeneral + (rBridge > 0 ? (1 - ratio) / rBridge : 0) : 0;
-  return { rGeneral, rBridge, u };
+  const ratio = hasBridge ? Math.min(1, Math.max(0, spec.ratio)) : 1;
+  const u = rGeneral > 0 ? ratio / rGeneral + (hasBridge && rBridge > 0 ? (1 - ratio) / rBridge : 0) : 0;
+  return { rGeneral, rBridge, hasBridge, u };
 }
 
 /** 仕様の熱貫流率 U（外周部は ψ） */
@@ -112,8 +125,19 @@ export interface CalcResult {
   etaACRaw: number;
   etaAHRaw: number | null;
   judgments: Judgment[];
+  /** 熱損失係数 Q 値 [W/(㎡・K)]（換気・漏気を含む参考値）。延床面積がなければ null */
+  qValue: number | null;
+  /** 夏期日射取得係数 μ 値（参考値）。延床面積がなければ null */
+  mu: number | null;
+  /** 換気・漏気による熱損失 [W/K] */
+  ventLoss: number;
   warnings: string[];
 }
+
+/** 漏気回数の目安：C値 1 c㎡/㎡ あたり 0.1 回/h とする */
+export const INFILTRATION_PER_C = 0.1;
+/** 空気の容積比熱 [Wh/(㎥・K)] */
+export const AIR_HEAT_CAPACITY = 0.35;
 
 export function calculate(project: Project): CalcResult {
   const region = project.region;
@@ -226,7 +250,15 @@ export function calculate(project: Project): CalcResult {
     };
   });
 
-  return { rows, totalArea, q, mC, mH, ua, etaAC, etaAH, uaRaw, etaACRaw, etaAHRaw, judgments, warnings };
+  const floor = project.totalFloorArea;
+  const v = project.ventilation;
+  const volume = v.volume > 0 ? v.volume : floor * 2.4;
+  const airChanges = v.rate * (1 - Math.min(1, Math.max(0, v.heatRecovery))) + v.cValue * INFILTRATION_PER_C;
+  const ventLoss = AIR_HEAT_CAPACITY * airChanges * volume;
+  const qValue = floor > 0 ? roundUp((q + ventLoss) / floor, 2) : null;
+  const mu = floor > 0 ? roundUp(mC / floor, 3) : null;
+
+  return { rows, totalArea, q, mC, mH, ua, etaAC, etaAH, uaRaw, etaACRaw, etaAHRaw, judgments, qValue, mu, ventLoss, warnings };
 }
 
 /** 方位別の面積集計（計算書の「方位別外皮面積表」用） */
@@ -247,4 +279,10 @@ export function areaByOrientation(project: Project) {
   }
   for (const v of result.values()) v.wallNet = v.wallGross - v.opening;
   return result;
+}
+
+/** 物件で実際に使っている仕様（計算書・Excel に載せる分） */
+export function usedSpecs(project: Project): Spec[] {
+  const ids = new Set([...project.surfaces.map((s) => s.specId), ...project.openings.map((o) => o.specId), ...project.perimeters.map((x) => x.specId)]);
+  return project.specs.filter((s) => ids.has(s.id));
 }

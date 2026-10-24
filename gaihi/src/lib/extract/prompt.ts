@@ -43,3 +43,21 @@ export function extractionInstruction(fileNames: string[]): string {
 
 すべての basis には計算の根拠を書いてください（例：「X0-X6 5,460mm × 外壁高さ 5.80m + 妻壁 5.46m×1.50m÷2」）。`;
 }
+
+/**
+ * API キーを使わずに、Claude（チャットや Claude Code）に図面を読ませるときの指示文。
+ * 返ってきた JSON を画面の「読み取り結果を貼り付け」に入れると自動入力される。
+ */
+export function chatPrompt(jsonSchema: Record<string, unknown>): string {
+  return `${EXTRACTION_SYSTEM}
+
+${extractionInstruction(["この会話に添付した図面（またはGoogleドライブの指定フォルダの設計図書）"])}
+
+## 出力
+次の JSON Schema に厳密に従う JSON だけを、\`\`\`json のコードブロック1つで出力してください。説明文は不要です。
+方位は N, NE, E, SE, S, SW, W, NW、長さ・面積の単位は m・㎡です。
+
+\`\`\`json
+${JSON.stringify(jsonSchema, null, 2)}
+\`\`\``;
+}

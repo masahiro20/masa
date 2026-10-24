@@ -1,7 +1,7 @@
 "use client";
 
-import { areaByOrientation, calculate, specValue } from "./gaihi/calc";
-import { ADJACENCY_LABEL, ORIENTATION_LABEL, SPEC_KIND_LABEL } from "./gaihi/constants";
+import { areaByOrientation, calculate, specValue, usedSpecs } from "./gaihi/calc";
+import { ADJACENCY_LABEL, LAYER_CATEGORY_LABEL, ORIENTATION_LABEL, SPEC_KIND_LABEL } from "./gaihi/constants";
 import type { Project } from "./gaihi/types";
 
 /** 計算書を Excel（.xlsx）で作る。シート：結果 / 部位仕様 / 外皮面積 / 開口部 / 計算明細 */
@@ -37,12 +37,14 @@ export async function buildWorkbook(project: Project): Promise<Blob> {
     ["外皮平均熱貫流率 UA [W/(㎡・K)]", r.ua],
     ["冷房期の平均日射熱取得率 ηAC", r.etaAC],
     ["暖房期の平均日射熱取得率 ηAH", r.etaAH ?? "―"],
+    ["熱損失係数 Q値（参考）", r.qValue ?? "―"],
+    ["夏期日射取得係数 μ値（参考）", r.mu ?? "―"],
     [],
     ["基準", "UA 基準値", "ηAC 基準値", "判定"],
     ...r.judgments.map((j) => [j.label, j.uaStandard ?? "―", j.etaACStandard ?? "―", j.ok === null ? "―" : j.ok ? "適合" : "不適合"]),
   ]);
   sum.getCell("A1").font = { bold: true, size: 14 };
-  sum.getRow(19).font = { bold: true };
+  sum.getRow(21).font = { bold: true };
 
   const specs = wb.addWorksheet("部位仕様");
   header(specs, [
@@ -53,14 +55,14 @@ export async function buildWorkbook(project: Project): Promise<Blob> {
     { header: "算出方法", key: "method", width: 14 },
     { header: "材料構成・備考", key: "note", width: 60 },
   ]);
-  for (const s of project.specs) {
+  for (const s of usedSpecs(project)) {
     specs.addRow({
       kind: SPEC_KIND_LABEL[s.kind],
       name: s.name,
       u: Number(specValue(s).toFixed(3)),
       etaD: s.kind === "window" ? s.etaD : "",
       method: s.method === "layers" ? "材料構成から計算" : "直接入力",
-      note: [s.method === "layers" ? s.layers.map((l) => `${l.name} ${l.thickness}mm(λ${l.lambda})`).join(" / ") : "", s.note]
+      note: [s.method === "layers" ? s.layers.map((l) => `${LAYER_CATEGORY_LABEL[l.category]}:${l.name} ${l.thickness}mm(λ${l.lambda})`).join(" / ") : "", s.note]
         .filter(Boolean)
         .join("　"),
     });

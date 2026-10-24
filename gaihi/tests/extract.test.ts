@@ -4,6 +4,8 @@ import { newProject } from "@/lib/gaihi/defaults";
 import { ExtractionSchema, extractionJsonSchema, type Extraction } from "@/lib/extract/schema";
 import { applyExtraction } from "@/lib/extract/toProject";
 import { classifyPage } from "@/lib/drawings";
+import { parseExtractionText } from "@/lib/extract/parse";
+import { chatPrompt } from "@/lib/extract/prompt";
 
 const ex: Extraction = {
   project: { name: "テスト邸", address: "愛知県小牧市", region: 6, region_reason: "小牧市", total_floor_area_m2: 100, structure: "木造" },
@@ -85,5 +87,23 @@ describe("図面ページの種類推定", () => {
     expect(classifyPage("矩計図")).toBe("section");
     expect(classifyPage("照明器具 1階")).toBe("other");
     expect(classifyPage("表紙 1階平面詳細図 立面図 配置図 建具仕様書 電気図面")).toBe("cover");
+  });
+});
+
+describe("Claude の返答の貼り付け", () => {
+  it("```json ブロックや前後の文章があっても取り込める", () => {
+    const text = `読み取りました。\n\n\`\`\`json\n${JSON.stringify(ex)}\n\`\`\`\n以上です。`;
+    expect(parseExtractionText(text)).toEqual(ex);
+  });
+  it("JSON だけでも取り込める", () => {
+    expect(parseExtractionText(`  ${JSON.stringify(ex)}  `)).toEqual(ex);
+  });
+  it("形が違えばエラーにする", () => {
+    expect(() => parseExtractionText('{"walls": []}')).toThrow();
+  });
+  it("指示文にスキーマが入っている", () => {
+    const p = chatPrompt(extractionJsonSchema());
+    expect(p).toContain("gross_area_m2");
+    expect(p).toContain("真北");
   });
 });

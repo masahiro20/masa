@@ -25,8 +25,8 @@ export function blankSpec(kind: SpecKind, name: string): Spec {
   };
 }
 
-function layer(name: string, thickness: number, lambda: number, bridgeLambda: number | null = null): Layer {
-  return { id: newId("ly"), name, thickness, lambda, bridgeLambda };
+export function layer(category: Layer["category"], name: string, thickness: number, lambda: number): Layer {
+  return { id: newId("ly"), category, name, thickness, lambda };
 }
 
 /**
@@ -40,11 +40,23 @@ export function defaultSpecs(): Spec[] {
     method: "layers",
     u: 0.41,
     layers: [
-      layer("せっこうボード", 12.5, 0.221),
-      layer("高性能グラスウール 16K", 105, 0.038, 0.12),
-      layer("構造用合板", 9, 0.16),
+      layer("board", "せっこうボード", 12.5, 0.221),
+      layer("fill", "高性能グラスウール 16K", 105, 0.038),
+      layer("frame", "天然木材", 105, 0.12),
+      layer("board", "構造用合板", 9, 0.16),
     ],
     note: "柱・間柱間に充填断熱（熱橋部は木材 λ0.12）。外気側は通気層",
+  };
+  const roof: Spec = {
+    ...blankSpec("roof", "屋根（垂木間 高性能GW16K 155mm）"),
+    method: "layers",
+    layers: [
+      layer("board", "せっこうボード", 9.5, 0.221),
+      layer("fill", "高性能グラスウール 16K", 155, 0.038),
+      layer("frame", "天然木材", 155, 0.12),
+      layer("board", "構造用合板", 12, 0.16),
+    ],
+    note: "屋根断熱にするときの例。仕様に合わせて直してください",
   };
   const floor = { ...blankSpec("floor", "床（Superior）"), u: 0.35, note: "床断熱（大引間）" };
   const baseWall = { ...blankSpec("baseWall", "基礎壁（玄関・浴室）"), u: 0.5 };
@@ -58,7 +70,7 @@ export function defaultSpecs(): Spec[] {
   const door = { ...blankSpec("door", "玄関ドア（Superior）"), u: 1.79 };
   const perimEntrance = { ...blankSpec("perimeter", "土間外周（玄関）"), psi: 0.65 };
   const perimBath = { ...blankSpec("perimeter", "土間外周（浴室）"), psi: 0.65 };
-  return [ceiling, wall, floor, baseWall, doma, window, door, perimEntrance, perimBath];
+  return [ceiling, roof, wall, floor, baseWall, doma, window, door, perimEntrance, perimBath];
 }
 
 export function newProject(name = "新規物件"): Project {
@@ -68,9 +80,15 @@ export function newProject(name = "新規物件"): Project {
     name,
     address: "",
     author: "",
+    date: now.slice(0, 10),
     region: 6,
     structure: "木造",
+    framing: "jikugumi",
+    rotation: 0,
+    topInsulation: "ceiling",
     insulationType: "floor",
+    overhang: false,
+    ventilation: { volume: 0, rate: 0.5, heatRecovery: 0, cValue: 1.0 },
     totalFloorArea: 0,
     specs: defaultSpecs(),
     surfaces: [],
@@ -130,7 +148,7 @@ export function sampleProject(): Project {
     height: h,
     count,
     surfaceId: wallId(o),
-    basis: `W${w * 1000} × H${h * 1000}`,
+    basis: `W${Math.round(w * 1000)} × H${Math.round(h * 1000)}`,
   });
   p.openings = [
     win("LD 掃出し窓", "S", 2.56, 2.03, 2),
@@ -157,5 +175,18 @@ export function sampleProject(): Project {
     { id: newId("pm"), name: "浴室 外周 北", specId: sp("perimeter", "浴室"), orientation: "N", length: 1.82, adjacency: "outside", basis: "浴室 外気に接する辺" },
     { id: newId("pm"), name: "浴室 外周 床下側", specId: sp("perimeter", "浴室"), orientation: "BOTTOM", length: 3.185, adjacency: "underfloor", basis: "浴室 床下に接する辺" },
   ];
+  return p;
+}
+
+/** 古い形式・項目が欠けたデータを現在の形にそろえる（JSON 読み込みや保存データの互換用） */
+export function normalizeProject(raw: Project): Project {
+  const base = newProject(raw.name);
+  const p: Project = { ...base, ...raw, ventilation: { ...base.ventilation, ...(raw.ventilation ?? {}) } };
+  p.specs = (raw.specs ?? []).map((s) => ({
+    ...blankSpec(s.kind, s.name),
+    ...s,
+    layers: (s.layers ?? []).map((l) => ({ ...l, category: l.category ?? "board" })),
+  }));
+  p.notes = raw.notes ?? [];
   return p;
 }
