@@ -2,7 +2,55 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: python 独学 何時間
+- keyword: レンタルサーバー wordpress 比較
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 48000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: エンジニア 転職 30代 未経験
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ポートフォリオ エンジニア 作り方
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 9000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: python 独学 無料
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: web制作 独学 期間
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: javascript 独学 難しい
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: html css javascript 独学
   intent: informational
   category: learning
   program: learning-online-course
@@ -28,6 +76,14 @@ keywords:
   program: learning-online-course
   score: 1000.0
   status: queued
+- keyword: python 独学 おすすめ本
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: プログラミング 入門書 選び方 言語別
   intent: commercial
   category: learning
@@ -51,6 +107,22 @@ keywords:
   boost: 1.5
   source: google-suggest
 - keyword: 基本情報技術者 未経験 独学
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 基本情報技術者 勉強時間 初心者
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 基本情報技術者 勉強時間 itパスポート合格者
   intent: informational
   category: learning
   program: learning-books
@@ -629,6 +701,15 @@ keywords:
   score: 2000.0
   status: published
   slug: online-course-vs-programming-school
+- keyword: python 独学 何時間
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: python-dokugaku-nanjikan
 - keyword: プログラミング 独学 何から
   intent: informational
   category: learning
