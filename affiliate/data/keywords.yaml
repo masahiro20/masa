@@ -2,30 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: レンタルサーバー wordpress 比較
-  intent: commercial
-  category: tools
-  program: tools-rental-server
-  score: 48000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: エンジニア 転職 30代 未経験
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: ポートフォリオ エンジニア 作り方
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 9000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: python 独学 無料
   intent: informational
   category: learning
@@ -541,6 +517,15 @@ keywords:
   score: 9600.0
   status: published
   slug: programming-school-kyufukin-heiyo-agent
+- keyword: ポートフォリオ エンジニア 作り方
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 9000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-portfolio-tsukurikata
 - keyword: エンジニア 転職 面接
   intent: informational
   category: career
@@ -754,6 +739,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事career-coaching-imi-nai-koukaiと検索意図が重複
+- keyword: レンタルサーバー wordpress 比較
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 48000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事rental-server-erabikata-shoshinsha-wordpressと検索意図が重複
 - keyword: ブログ レンタルサーバー 無料
   intent: commercial
   category: tools
@@ -784,6 +779,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事wordpress-blog-start-server-domain-stepsと検索意図が重複
+- keyword: エンジニア 転職 30代 未経験
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複
 - keyword: 機械設計 転職 難しい
   intent: informational
   category: career
