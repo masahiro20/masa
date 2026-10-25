@@ -80,6 +80,9 @@ export function newProject(name = "新規物件"): Project {
     name,
     address: "",
     author: "",
+    client: "",
+    designer: "",
+    floors: 2,
     date: now.slice(0, 10),
     region: 6,
     structure: "木造",
@@ -90,6 +93,8 @@ export function newProject(name = "新規物件"): Project {
     overhang: false,
     ventilation: { volume: 0, rate: 0.5, heatRecovery: 0, cValue: 1.0 },
     totalFloorArea: 0,
+    mainRoomArea: 0,
+    otherRoomArea: 0,
     specs: defaultSpecs(),
     surfaces: [],
     openings: [],
@@ -115,6 +120,9 @@ export function sampleProject(): Project {
   const p = newProject("サンプル邸（架空）");
   p.address = "愛知県小牧市（サンプル）";
   p.totalFloorArea = 132.48;
+  p.client = "サンプル 太郎";
+  p.mainRoomArea = 49.69;
+  p.otherRoomArea = 49.69;
   const sp = (kind: SpecKind, kw?: string) => pickSpec(p.specs, kind, kw)!.id;
   const wallH = 5.8; // 基礎天端〜軒桁
   const mk = (

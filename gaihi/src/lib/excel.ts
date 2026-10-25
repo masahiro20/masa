@@ -19,15 +19,20 @@ export async function buildWorkbook(project: Project): Promise<Blob> {
 
   const sum = wb.addWorksheet("結果");
   sum.columns = [{ width: 30 }, { width: 18 }, { width: 18 }, { width: 18 }];
-  sum.addRows([
+  const sumRows: (string | number)[][] = [
     ["外皮性能計算書"],
     [],
     ["物件名", project.name],
+    ["建築主", project.client],
     ["建設地", project.address],
     ["地域の区分", `${project.region}地域`],
     ["構造", project.structure],
     ["断熱構造", project.insulationType === "floor" ? "床断熱住戸" : "基礎断熱住戸"],
+    ["階数", project.floors],
     ["延床面積 [㎡]", project.totalFloorArea],
+    ["主たる居室の床面積 [㎡]", project.mainRoomArea],
+    ["その他の居室の床面積 [㎡]", project.otherRoomArea],
+    ["設計者", project.designer],
     ["作成者", project.author],
     [],
     ["外皮面積の合計 ΣA [㎡]", r.totalArea],
@@ -41,10 +46,12 @@ export async function buildWorkbook(project: Project): Promise<Blob> {
     ["夏期日射取得係数 μ値（参考）", r.mu ?? "―"],
     [],
     ["基準", "UA 基準値", "ηAC 基準値", "判定"],
-    ...r.judgments.map((j) => [j.label, j.uaStandard ?? "―", j.etaACStandard ?? "―", j.ok === null ? "―" : j.ok ? "適合" : "不適合"]),
-  ]);
+  ];
+  const headRow = sumRows.length;
+  sumRows.push(...r.judgments.map((j) => [j.label, j.uaStandard ?? "―", j.etaACStandard ?? "―", j.ok === null ? "―" : j.ok ? "適合" : "不適合"]));
+  sum.addRows(sumRows);
   sum.getCell("A1").font = { bold: true, size: 14 };
-  sum.getRow(21).font = { bold: true };
+  sum.getRow(headRow).font = { bold: true };
 
   const specs = wb.addWorksheet("部位仕様");
   header(specs, [

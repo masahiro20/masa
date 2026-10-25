@@ -349,7 +349,11 @@ export function SpecListModal({
           <div style={{ marginTop: 8 }}>
             <input
               style={{ width: "100%" }}
-              placeholder="備考（メーカー・品番など）"
+              placeholder={
+                spec.kind === "window" || spec.kind === "door"
+                  ? "根拠・備考（例：〇〇社 △△ 樹脂サッシ Low-E複層 JIS A 4710 試験値）※申請用印刷に載ります"
+                  : "根拠・備考（メーカー・品番、U値の出典など）※申請用印刷に載ります"
+              }
               value={spec.note}
               onChange={(e) => update((p) => void (p.specs.find((x) => x.id === spec.id)!.note = e.target.value))}
             />

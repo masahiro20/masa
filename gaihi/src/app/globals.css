@@ -338,3 +338,13 @@ input.w-num { width: 90px; }
 /* 共有リンク */
 .share-url { width: 100%; font-family: ui-monospace, monospace; font-size: 11px; word-break: break-all; resize: none; padding: 6px; border: 1px solid #bbb; border-radius: 3px; background: #fafafa; }
 .ez-list td:last-child { white-space: nowrap; }
+
+/* 申請前チェック（計算書の上に出す。印刷しない） */
+.report-checks { width: 210mm; max-width: 100%; margin: 0 auto 12px; background: #fff; border-left: 5px solid #e27a01; padding: 8px 12px; font-size: 12px; }
+.report-checks .cap { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.report-checks .ok { color: #1a7f37; }
+.report-checks .bad { color: #c62828; }
+.report-checks .warn { color: #b26a00; }
+.report-checks ul { margin: 6px 0 0; padding-left: 18px; }
+.report-checks li.error { color: #c62828; }
+.report-checks li.warn { color: #6b4a00; }

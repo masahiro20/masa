@@ -15,11 +15,17 @@ export function StepBasic({ project, update }: { project: Project; update: Updat
         <Row label="記入年月日">
           <input type="date" value={project.date} onChange={(e) => set("date", e.target.value)} />
         </Row>
-        <Row label="作成者">
+        <Row label="作成者（計算者）">
           <input style={{ width: "100%" }} value={project.author} onChange={(e) => set("author", e.target.value)} />
         </Row>
         <Row label="住宅名称">
           <input style={{ width: "100%" }} value={project.name} onChange={(e) => set("name", e.target.value)} />
+        </Row>
+        <Row label="建築主">
+          <input style={{ width: "100%" }} value={project.client} onChange={(e) => set("client", e.target.value)} />
+        </Row>
+        <Row label="設計者">
+          <input style={{ width: "100%" }} placeholder="建築士事務所名・建築士名" value={project.designer} onChange={(e) => set("designer", e.target.value)} />
         </Row>
         <Row label="住宅建設地">
           <input style={{ width: "100%" }} value={project.address} onChange={(e) => set("address", e.target.value)} />
@@ -101,9 +107,28 @@ export function StepBasic({ project, update }: { project: Project; update: Updat
             onChange={(v) => set("overhang", v === "y")}
           />
         </Row>
+        <Row label="階数">
+          <span className="flex">
+            地上 <NumInput value={project.floors} onChange={(v) => set("floors", Math.max(1, Math.round(v)))} /> 階
+          </span>
+        </Row>
         <Row label="延床面積">
           <span className="flex">
             <NumInput value={project.totalFloorArea} onChange={(v) => set("totalFloorArea", v)} />㎡
+          </span>
+        </Row>
+        <Row
+          label={
+            <>
+              居室の床面積
+              <br />
+              <span className="ez-note">（一次エネ計算用）</span>
+            </>
+          }
+        >
+          <span className="flex">
+            主たる居室 <NumInput value={project.mainRoomArea} onChange={(v) => set("mainRoomArea", v)} />㎡　その他の居室{" "}
+            <NumInput value={project.otherRoomArea} onChange={(v) => set("otherRoomArea", v)} />㎡
           </span>
         </Row>
         <Row label={<>日射熱取得率と<br />熱貫流率の計算方法</>}>
