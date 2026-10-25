@@ -16,9 +16,10 @@ programs:
 - learning-online-course
 - career-coaching
 published: '2026-10-10'
-updated: '2026-10-22'
+updated: '2026-10-25'
 origin: ai
 editor_score: null
+voice: 2
 sources:
 - title: 転職をご検討の方 | リスキリングを通じたキャリアアップ支援事業
   url: https://careerup.reskilling.go.jp/worker/

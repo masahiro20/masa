@@ -15,9 +15,10 @@ programs:
 - school-general
 - school-kyufukin
 published: '2026-10-15'
-updated: '2026-10-15'
+updated: '2026-10-25'
 origin: ai
 editor_score: null
+voice: 2
 sources:
 - title: 【公式】パソコン教室・ITスクールなら仕事と資格に強いWinスクール
   url: https://www.winschool.jp/

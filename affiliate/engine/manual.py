@@ -13,12 +13,13 @@ API キーを使わず、セッション内の Claude 自身が調査・執筆�
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+import re
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from . import prompts
 from .articles import load_articles, parse_article
-from .config import RUN_LOG_FILE, Config
+from .config import ARTICLES_DIR, RUN_LOG_FILE, Config
 from .planner import KeywordQueue, normalize
 from .quality import check_article
 
@@ -61,6 +62,73 @@ next のテーマが既存記事と同じ検索意図（言い回しが違うだ
 新しく書かずに reject して（理由：既存記事◯◯と検索意図が重複）、次のテーマに進むこと。
 同じ検索意図の記事が2本あると、検索エンジンがどちらを表示すべきか迷い、両方の順位が下がる。
 """
+
+
+# この日付以降に公開された記事は、人に寄り添う書き方（guide の17〜22）で書かれているので書き直さない
+VOICE_V2_DATE = "2026-10-26"
+
+REWRITE_GUIDE = """既存記事の書き直し（読む人に寄り添う文章へ）
+- 変えないもの: 事実・数字・料金・日付・出典・{{aff:…}} / {{link:…}} / :::ブロック。title・slug・keyword・description も原則そのまま（検索順位への影響を避けるため）。
+- 直す箇所:
+  (1) 冒頭（最初の ## より前、:::summary の前）を、読者がこの記事にたどり着いた場面を『想定』として1〜2文描く導入にする。結論は残す。
+  (2) 表・箇条書きだけで終わる節に、2〜4文のやわらかい地の文（「結局どう考えればいいか」）を足す。
+  (3) CTA（{{aff:…}}）の前後に、「編集部としては〜をおすすめします」と言い切る1文を入れ、よくある質問の前に、選ばない自由にも触れた結びの一言を入れる。
+  (4) 「〜が挙げられます」「〜と言えるでしょう」「〜することが重要です」などの硬い言い回しを言い換える。文末と段落の長さに変化をつける。
+  (5) 全体の長さは元の +10〜20% まで。
+- 禁止: 体験談・読者の声・新しい数字や条件の追加。『お悩みではありませんか』『いかがでしたか』。広告ショートコードの数と位置を大きく変えること（合計2〜4個のまま）。
+- 手順: rewrite-next で対象を受け取る → 各記事を Read して上の方針で Edit → `python -m engine validate content/articles/<slug>.md` が OK になるまで直す →
+  `python -m engine rewrite-done <slug> …` で記録 → ブランチ claude/articles-<日本時間YYYYMMDD>-rewrite を push（PR は作らない）。
+"""
+
+
+def _live_programs(cfg: Config) -> set[str]:
+    return {pid for pid, p in cfg.programs_by_id.items() if (p.get("url") or "").strip()}
+
+
+def cmd_rewrite_next(cfg: Config, args) -> int:
+    live = _live_programs(cfg)
+    articles = load_articles()
+    todo = [a for a in articles if a.voice < 2 and (a.published or "") < VOICE_V2_DATE]
+
+    def has_live_ad(a) -> bool:
+        return any(pid in live for pid in re.findall(r"\{\{aff:([a-z0-9-]+)", a.body))
+
+    # 広告が実際に入っている記事を先に、その中では古いものから
+    todo.sort(key=lambda a: (not has_live_ad(a), a.published or "", a.slug))
+    targets = [
+        {"slug": a.slug, "title": a.title, "path": f"content/articles/{a.slug}.md", "category": a.category,
+         "chars": len(a.body), "live_ad": has_live_ad(a)}
+        for a in todo[: args.n]
+    ]
+    print(json.dumps({"targets": targets, "remaining": len(todo), "guide": REWRITE_GUIDE},
+                     ensure_ascii=False, indent=1))
+    return 0
+
+
+def cmd_rewrite_done(cfg: Config, args) -> int:
+    today = datetime.now(timezone(timedelta(hours=9))).date().isoformat()
+    status = 0
+    for slug in args.slugs:
+        path = ARTICLES_DIR / f"{slug}.md"
+        if not path.exists():
+            print(f"記事がありません: {slug}")
+            status = 1
+            continue
+        _, report = _report(cfg, path)
+        if not report.passed:
+            print(f"品質ゲート不合格のため記録しません: {slug}")
+            for issue in report.issues:
+                print(f"- {issue}")
+            status = 1
+            continue
+        text = path.read_text(encoding="utf-8")
+        head, sep, body = text.partition("\n---\n")
+        if "\nvoice:" not in head:
+            head = re.sub(r"(\neditor_score:[^\n]*)", r"\1\nvoice: 2", head, count=1) if "\neditor_score:" in head else head + "\nvoice: 2"
+        head = re.sub(r"(\nupdated: )[^\n]*", lambda m: f"{m.group(1)}'{today}'", head, count=1)
+        path.write_text(head + sep + body, encoding="utf-8")
+        print(f"書き直し済みとして記録しました: {slug}")
+    return status
 
 
 def cmd_guide(cfg: Config, args) -> int:
@@ -197,6 +265,10 @@ def register(sub) -> dict:
     p.add_argument("--reason", required=True)
     p = sub.add_parser("add-keywords")
     p.add_argument("file")
+    p = sub.add_parser("rewrite-next")
+    p.add_argument("--n", type=int, default=2)
+    p = sub.add_parser("rewrite-done")
+    p.add_argument("slugs", nargs="+")
     return {
         "guide": cmd_guide,
         "next": cmd_next,
@@ -204,4 +276,6 @@ def register(sub) -> dict:
         "publish": cmd_publish,
         "reject": cmd_reject,
         "add-keywords": cmd_add_keywords,
+        "rewrite-next": cmd_rewrite_next,
+        "rewrite-done": cmd_rewrite_done,
     }
