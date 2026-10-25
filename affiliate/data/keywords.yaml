@@ -44,14 +44,6 @@ keywords:
   program: learning-online-course
   score: 1000.0
   status: queued
-- keyword: python 独学 おすすめ本
-  intent: commercial
-  category: learning
-  program: learning-books
-  score: 600.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: プログラミング 入門書 選び方 言語別
   intent: commercial
   category: learning
@@ -714,6 +706,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: web-seisaku-fukugyo-kasegenai
+- keyword: python 独学 おすすめ本
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: python-dokugaku-osusume-hon
 - keyword: itパスポート おすすめ 参考書
   intent: commercial
   category: learning
