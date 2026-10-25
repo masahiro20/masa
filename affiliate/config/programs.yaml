@@ -127,6 +127,19 @@ programs:
     keywords: ["機械設計 転職", "回路設計 転職", "組み込み エンジニア 転職", "半導体 転職", "製造業 転職", "メーカー 転職"]
     cta: "製造業・メーカー専門の転職相談を見てみる"
 
+  - id: learning-family-ai
+    name: "家族でスタートAI（親子で学べる生成AI講座）"
+    category: learning
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849858&p_id=7471&pc_id=21589&pl_id=94670"
+    banner_height: 144
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/4198/000000094670.png"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849858&p_id=7471&pc_id=21589&pl_id=94670"
+    est_reward_jpy: 2000
+    keywords: ["生成AI 親子", "子ども 生成AI", "生成AI 学び方 初心者", "ChatGPT 子ども 使わせ方", "生成AI 家庭", "AI 習い事"]
+    cta: "14日間の無料体験の内容を確認する"
+
   - id: edu-sougaku
     name: "ソウガク（発達障害・グレーゾーン専門のオンライン家庭教師）"
     category: learning

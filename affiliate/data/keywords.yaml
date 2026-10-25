@@ -2,6 +2,24 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: 生成AI 親子 学ぶ 方法
+  intent: commercial
+  category: learning
+  program: learning-family-ai
+  score: 8000.0
+  status: queued
+- keyword: 生成AI 学び方 初心者 社会人
+  intent: commercial
+  category: learning
+  program: learning-family-ai
+  score: 8000.0
+  status: queued
+- keyword: 子ども 生成AI 使わせ方 注意点
+  intent: informational
+  category: learning
+  program: learning-family-ai
+  score: 4000.0
+  status: queued
 - keyword: html css javascript 独学
   intent: informational
   category: learning
