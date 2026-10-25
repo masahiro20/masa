@@ -7,6 +7,7 @@
   check      全記事に品質ゲートをかける（CI用）
   ping       直近の autopilot で追加・更新したURLを IndexNow に通知（デプロイ後に実行）
   status     運用状況のレポート（data/STATUS.md）を更新
+  gsc-import Search Console のエクスポート（ZIP / CSV）を取り込み、書き直しの優先度に使う
 """
 from __future__ import annotations
 
@@ -287,6 +288,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("ping")
     p.add_argument("--slugs", nargs="*", default=None, help="通知する記事の slug（省略時は直近の autopilot の変更分）")
     from .ads import register as register_ads
+    from .gsc import register as register_gsc
     from .manual import register
 
     commands = {
@@ -297,6 +299,7 @@ def main(argv: list[str] | None = None) -> int:
         "status": cmd_status,
         **register(sub),
         **register_ads(sub),
+        **register_gsc(sub),
     }
     args = parser.parse_args(argv)
     cfg = load_config()

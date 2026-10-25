@@ -302,3 +302,22 @@ video.slide-media.ready { opacity: 1; }
 .audience { margin: 10px 0 0; font-size: 14px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
 .audience::before { content: ""; display: inline-block; width: 22px; height: 1px; background: currentColor; vertical-align: middle; margin-right: 10px; }
 .card-audience { font-size: 12.5px; line-height: 1.7; color: var(--accent); letter-spacing: .04em; }
+
+/* 未提携の広告枠の代わりに出す「あわせて読みたい」 */
+.next-step { margin: 44px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); padding: 16px 0 18px; }
+.next-step-label { margin: 0 0 12px !important; font-size: 12px; letter-spacing: .16em; color: var(--ink-3); }
+.next-step-link { display: grid; grid-template-columns: 168px 1fr; gap: 16px; align-items: center; text-decoration: none; color: var(--ink); }
+.next-step-link img { width: 100%; height: auto; aspect-ratio: 1200 / 630; transition: transform .45s ease; }
+.next-step-link:hover img { transform: translateY(-3px); }
+.next-step-text { display: flex; flex-direction: column; gap: 6px; }
+.next-step-title { font-family: var(--serif); font-weight: 700; font-size: 16.5px; line-height: 1.65; }
+.next-step-link:hover .next-step-title { text-decoration: underline; text-underline-offset: 5px; }
+.next-step-aud { font-size: 12.5px; color: var(--accent); letter-spacing: .04em; }
+@media (max-width: 560px) { .next-step-link { grid-template-columns: 112px 1fr; gap: 12px; } .next-step-title { font-size: 15px; } }
+
+/* シェアボタン */
+.share { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 48px 0 8px; }
+.share-label { font-size: 12px; letter-spacing: .14em; color: var(--ink-3); margin-right: 4px; }
+.share a { display: inline-block; min-width: 72px; text-align: center; padding: 8px 14px; border: 1px solid var(--ink); color: var(--ink); text-decoration: none; font-size: 13px; letter-spacing: .06em; transition: background .15s, color .15s; }
+.share a:hover { background: var(--ink); color: var(--white); }
+@media (max-width: 560px) { .share-label { flex-basis: 100%; } .share a { flex: 1; min-width: 0; } }

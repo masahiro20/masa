@@ -15,7 +15,8 @@ def test_build_site(cfg, good_article, tmp_path):
     assert "本記事にはアフィリエイト広告" in page          # ステマ規制対応のPR表記
     assert "application/ld+json" in page
     assert 'rel="canonical"' in page
-    assert "<table" in page or "cta-box" in page
+    # 未提携の案件は押せない広告枠を出さない（関連記事がなければ何も出さない）
+    assert "is-disabled" not in page and "{{aff:" not in page
     assert (out / "sitemap.xml").read_text().count("<url>") >= 3
     assert (out / "robots.txt").exists() and (out / "feed.xml").exists()
     assert (out / "about" / "index.html").exists() and (out / "privacy" / "index.html").exists()

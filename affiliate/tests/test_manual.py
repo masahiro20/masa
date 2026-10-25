@@ -96,3 +96,35 @@ def test_rewrite_next_prioritises_live_ads_and_skips_done(tmp_path, monkeypatch,
     out = json.loads(buf.getvalue())
     assert [t["slug"] for t in out["targets"]] == ["new-ad", "old-noad"]
     assert out["remaining"] == 2
+
+
+def test_gsc_import_and_rewrite_priority(tmp_path, monkeypatch, cfg):
+    import contextlib
+    import io
+    from engine import gsc
+    monkeypatch.setattr(gsc, "PAGES_FILE", tmp_path / "gsc_pages.json")
+    monkeypatch.setattr(gsc, "QUERIES_FILE", tmp_path / "gsc_queries.json")
+    base = cfg.site["base_url"]
+    csv_text = ("﻿上位のページ,クリック数,表示回数,CTR,掲載順位\n"
+                f"{base}/articles/rank-me/,3,400,0.75%,12.3\n"
+                f"{base}/articles/ctr-me/,1,300,0.33%,5.1\n"
+                f"{base}/articles/fine/,90,300,30%,2.0\n")
+    f = tmp_path / "ページ.csv"
+    f.write_text(csv_text, encoding="utf-8")
+    assert gsc.import_export(f) == {"pages": 3}
+    arts = [Article(title=s, slug=s, description="", category="school", body="本文", published="2026-09-01",
+                    updated="2026-09-01", voice=2 if s != "old" else 1)
+            for s in ["rank-me", "ctr-me", "fine", "old"]]
+    ops = gsc.opportunities(arts, base, gsc.load_pages())
+    assert [(o["slug"], o["kind"]) for o in ops] == [("rank-me", "rank"), ("ctr-me", "ctr")]
+    monkeypatch.setattr(manual, "load_articles", lambda: arts)
+
+    class A:
+        n = 3
+
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        manual.cmd_rewrite_next(cfg, A())
+    out = json.loads(buf.getvalue())
+    assert [t["slug"] for t in out["targets"]] == ["rank-me", "ctr-me", "old"]
+    assert out["targets"][1]["focus"] == "ctr"
