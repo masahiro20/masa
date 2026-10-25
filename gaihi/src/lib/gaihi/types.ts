@@ -123,7 +123,14 @@ export interface Project {
   id: string;
   name: string;
   address: string;
+  /** 作成者（計算者） */
   author: string;
+  /** 建築主 */
+  client: string;
+  /** 設計者（建築士事務所・建築士名など） */
+  designer: string;
+  /** 地上階数 */
+  floors: number;
   /** 記入年月日 YYYY-MM-DD */
   date: string;
   region: Region;
@@ -139,6 +146,9 @@ export interface Project {
   overhang: boolean;
   ventilation: Ventilation;
   totalFloorArea: number;
+  /** 主たる居室・その他の居室の床面積 [㎡]（一次エネルギー消費量の計算＝WEBプログラムに入れる値） */
+  mainRoomArea: number;
+  otherRoomArea: number;
   specs: Spec[];
   surfaces: Surface[];
   openings: Opening[];

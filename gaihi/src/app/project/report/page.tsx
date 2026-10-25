@@ -3,9 +3,10 @@
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState, type ReactNode } from "react";
 import { MascotFace } from "@/components/ez/Mascot";
-import { areaByOrientation, calculate, layersU, specValue, usedSpecs, type CalcResult, type ResultRow } from "@/lib/gaihi/calc";
-import { ADJACENCY_LABEL, LAYER_CATEGORY_LABEL, ORIENTATION_LABEL, SPEC_KIND_LABEL } from "@/lib/gaihi/constants";
-import type { Project, SpecKind } from "@/lib/gaihi/types";
+import { areaByOrientation, calculate, layersU, openingArea, specValue, usedSpecs, type CalcResult, type ResultRow } from "@/lib/gaihi/calc";
+import { applicationChecks } from "@/lib/gaihi/application";
+import { ADJACENCY_LABEL, DEFAULT_FC, DEFAULT_FH, LAYER_CATEGORY_LABEL, nu, ORIENTATION_LABEL, ORIENTATIONS, SPEC_KIND_LABEL, tempDiffFactor } from "@/lib/gaihi/constants";
+import type { Adjacency, Project, SpecKind } from "@/lib/gaihi/types";
 import { fmt } from "@/lib/format";
 import { getProject } from "@/lib/store";
 
@@ -19,6 +20,22 @@ interface Sheet {
   toc?: { label: string; level: 1 | 2 };
   heading?: ReactNode;
   body: ReactNode;
+}
+
+/** 重さ（おおよその行数）が cap を超えないように順番のまま分ける */
+function chunkByWeight<T>(items: T[], weight: (x: T) => number, cap: number): T[][] {
+  const out: T[][] = [[]];
+  let used = 0;
+  for (const x of items) {
+    const w = weight(x);
+    if (used + w > cap && out[out.length - 1].length > 0) {
+      out.push([]);
+      used = 0;
+    }
+    out[out.length - 1].push(x);
+    used += w;
+  }
+  return out;
 }
 
 function chunk<T>(rows: T[], n = ROWS_PER_PAGE): T[][] {
@@ -252,6 +269,35 @@ function buildSheets(project: Project, r: CalcResult, forApplication: boolean): 
             )}
           </tbody>
         </table>
+        <h3>一次エネルギー消費量の計算（WEBプログラム）に入力する値</h3>
+        <table className="rt">
+          <tbody>
+            <tr>
+              <th>地域の区分</th>
+              <td>{project.region} 地域</td>
+              <th>外皮面積の合計</th>
+              <td className="n">{n2(r.totalArea)} ㎡</td>
+            </tr>
+            <tr>
+              <th>主たる居室の床面積</th>
+              <td className="n">{project.mainRoomArea > 0 ? `${n2(project.mainRoomArea)} ㎡` : "―"}</td>
+              <th>外皮平均熱貫流率 UA</th>
+              <td className="n">{n2(r.ua)} W/(㎡・K)</td>
+            </tr>
+            <tr>
+              <th>その他の居室の床面積</th>
+              <td className="n">{project.otherRoomArea > 0 ? `${n2(project.otherRoomArea)} ㎡` : "―"}</td>
+              <th>冷房期の平均日射熱取得率 ηAC</th>
+              <td className="n">{fmt(r.etaAC, 1)}</td>
+            </tr>
+            <tr>
+              <th>床面積の合計</th>
+              <td className="n">{n2(project.totalFloorArea)} ㎡</td>
+              <th>暖房期の平均日射熱取得率 ηAH</th>
+              <td className="n">{r.etaAH === null ? "―" : fmt(r.etaAH, 1)}</td>
+            </tr>
+          </tbody>
+        </table>
         {!forApplication && r.qValue !== null && (
           <p className="note">
             参考：熱損失係数 Q値 {n2(r.qValue)} W/(㎡・K)（換気回数 {project.ventilation.rate} 回/h・熱交換効率 {project.ventilation.heatRecovery}・C値{" "}
@@ -410,7 +456,9 @@ function buildSheets(project: Project, r: CalcResult, forApplication: boolean): 
 
   // 4. 部位の仕様（熱貫流率の計算）
   const specs = usedSpecs(project);
-  chunk(specs, 6).forEach((part, i) =>
+  const opaque = specs.filter((s) => s.kind !== "window" && s.kind !== "door");
+  // 材料構成の表があるものは表の行数ぶん、U値の直接入力は2行ぶんとして詰める
+  chunkByWeight(opaque, (s) => (s.method === "layers" && s.layers.length > 0 ? s.layers.length + 6 : 2), 40).forEach((part, i) =>
     sheets.push({
       toc: i === 0 ? { label: "4. 部位の仕様（熱貫流率の計算）", level: 1 } : undefined,
       heading: i === 0 ? "4. 部位の仕様（熱貫流率の計算）" : "4. 部位の仕様（続き）",
@@ -424,7 +472,6 @@ function buildSheets(project: Project, r: CalcResult, forApplication: boolean): 
                   【{SPEC_KIND_LABEL[s.kind]}】{s.name}
                   <span>
                     {s.kind === "perimeter" ? `ψ = ${n3(s.psi)} W/(m・K)` : s.kind === "doma" ? "（外周部 ψ で計上）" : `U = ${n3(specValue(s))} W/(㎡・K)`}
-                    {s.kind === "window" ? `　ηd = ${n3(s.etaD)}` : ""}
                   </span>
                 </div>
                 {lu && (
@@ -475,12 +522,94 @@ function buildSheets(project: Project, r: CalcResult, forApplication: boolean): 
     }),
   );
 
-  // 5. 外皮面積の拾い（根拠）
-  const allSurfaces = project.surfaces;
-  chunk(allSurfaces).forEach((part, i) =>
+  // 5. 開口部の仕様
+  const openingSpecs = specs.filter((s) => s.kind === "window" || s.kind === "door");
+  const useOf = (id: string) => {
+    const os = project.openings.filter((o) => o.specId === id);
+    return { count: os.reduce((a, o) => a + o.count, 0), area: os.reduce((a, o) => a + openingArea(o), 0) };
+  };
+  sheets.push({
+    toc: { label: "5. 開口部の仕様（熱貫流率・日射熱取得率）", level: 1 },
+    heading: "5. 開口部の仕様（熱貫流率・日射熱取得率）",
+    body: (
+      <>
+        <table className="rt">
+          <thead>
+            <tr>
+              <th>種類</th>
+              <th>仕様（建具・ガラス）</th>
+              <th>U[W/㎡K]</th>
+              <th>ηd</th>
+              <th>fC</th>
+              <th>fH</th>
+              <th>箇所数</th>
+              <th>面積[㎡]</th>
+            </tr>
+          </thead>
+          <tbody>
+            {openingSpecs.map((s) => {
+              const u = useOf(s.id);
+              return (
+                <tr key={s.id}>
+                  <td className="c">{SPEC_KIND_LABEL[s.kind]}</td>
+                  <td>
+                    {s.name}
+                    <div className="sub">根拠：{s.note || "（未記入）"}</div>
+                  </td>
+                  <td className="n">{n3(specValue(s))}</td>
+                  <td className="n">{s.kind === "window" ? n3(s.etaD) : "―"}</td>
+                  <td className="n">{s.kind === "window" ? n3(s.fC) : "―"}</td>
+                  <td className="n">{s.kind === "window" ? n3(s.fH) : "―"}</td>
+                  <td className="n">{u.count}</td>
+                  <td className="n">{n2(u.area)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <p className="note">
+          ηd：垂直面日射熱取得率。fC・fH：取得日射熱補正係数（冷房期・暖房期）。
+          {openingSpecs.every((s) => s.kind !== "window" || (s.fC === DEFAULT_FC && s.fH === DEFAULT_FH))
+            ? `庇等による補正は行わず、既定値（冷房期 ${DEFAULT_FC}・暖房期 ${DEFAULT_FH}）を用いる。`
+            : "既定値以外の補正係数は、庇等の計算による。"}
+          ドアの日射熱取得率は 0.034 × U とする。
+        </p>
+      </>
+    ),
+  });
+
+  // 6. 外皮面積の拾い（根拠）：部位・開口部・外周部の寸法の根拠
+  type BasisRow = { key: string; kind: string; name: string; orientation: string; value: string; basis: string };
+  const basisRows: BasisRow[] = [
+    ...project.surfaces.map((s) => ({
+      key: s.id,
+      kind: SPEC_KIND_LABEL[s.kind],
+      name: s.name,
+      orientation: ORIENTATION_LABEL[s.orientation],
+      value: `${n2(s.area)} ㎡`,
+      basis: s.basis,
+    })),
+    ...project.openings.map((o) => ({
+      key: o.id,
+      kind: SPEC_KIND_LABEL[o.kind],
+      name: o.name,
+      orientation: ORIENTATION_LABEL[o.orientation],
+      value: `${n2(openingArea(o))} ㎡`,
+      basis: `${fmt(o.width, 3)} × ${fmt(o.height, 3)} m${o.count > 1 ? ` × ${o.count}` : ""}${o.basis ? `（${o.basis}）` : ""}`,
+    })),
+    ...project.perimeters.map((x) => ({
+      key: x.id,
+      kind: "外周部",
+      name: x.name,
+      orientation: ORIENTATION_LABEL[x.orientation],
+      value: `${n2(x.length)} m`,
+      basis: x.basis,
+    })),
+  ];
+  chunk(basisRows).forEach((part, i) =>
     sheets.push({
-      toc: i === 0 ? { label: "5. 外皮面積の拾い（根拠）", level: 1 } : undefined,
-      heading: i === 0 ? "5. 外皮面積の拾い（根拠）" : "5. 外皮面積の拾い（続き）",
+      toc: i === 0 ? { label: "6. 外皮面積等の算定根拠", level: 1 } : undefined,
+      heading: i === 0 ? "6. 外皮面積等の算定根拠" : "6. 外皮面積等の算定根拠（続き）",
       body: (
         <table className="rt">
           <thead>
@@ -488,18 +617,18 @@ function buildSheets(project: Project, r: CalcResult, forApplication: boolean): 
               <th>部位</th>
               <th>名称</th>
               <th>方位</th>
-              <th>面積[㎡]</th>
-              <th>根拠</th>
+              <th>面積・長さ</th>
+              <th>根拠（寸法・求積）</th>
             </tr>
           </thead>
           <tbody>
-            {part.map((s) => (
-              <tr key={s.id}>
-                <td className="c">{SPEC_KIND_LABEL[s.kind]}</td>
-                <td>{s.name}</td>
-                <td className="c">{ORIENTATION_LABEL[s.orientation]}</td>
-                <td className="n">{n2(s.area)}</td>
-                <td className="sub">{s.basis}</td>
+            {part.map((x) => (
+              <tr key={x.key}>
+                <td className="c">{x.kind}</td>
+                <td>{x.name}</td>
+                <td className="c">{x.orientation}</td>
+                <td className="n">{x.value}</td>
+                <td className="sub">{x.basis}</td>
               </tr>
             ))}
           </tbody>
@@ -508,11 +637,18 @@ function buildSheets(project: Project, r: CalcResult, forApplication: boolean): 
     }),
   );
 
+  // 7. 計算条件
+  sheets.push({
+    toc: { label: "7. 計算条件", level: 1 },
+    heading: "7. 計算条件",
+    body: <Conditions project={project} />,
+  });
+
   // 6. 参考（申請用には載せない）
   if (!forApplication && project.notes.length > 0) {
     sheets.push({
-      toc: { label: "6. 図面読み取りメモ（参考）", level: 1 },
-      heading: "6. 図面読み取りメモ（参考）",
+      toc: { label: "8. 図面読み取りメモ（参考）", level: 1 },
+      heading: "8. 図面読み取りメモ（参考）",
       body: (
         <ul className="memo">
           {project.notes.map((n, i) => (
@@ -523,6 +659,92 @@ function buildSheets(project: Project, r: CalcResult, forApplication: boolean): 
     });
   }
   return sheets;
+}
+
+const ADJ_ORDER: Adjacency[] = ["outside", "underfloor", "unheated", "neighbor"];
+
+function Conditions({ project }: { project: Project }) {
+  const region = project.region;
+  return (
+    <>
+      <table className="rt">
+        <tbody>
+          <tr>
+            <th>準拠する基準</th>
+            <td>建築物エネルギー消費性能基準等を定める省令（平成28年経済産業省・国土交通省令第1号）及び関連告示</td>
+          </tr>
+          <tr>
+            <th>計算方法</th>
+            <td>
+              外皮性能の標準計算（部位ごとに面積・熱貫流率・温度差係数を求めて合計する方法）。
+              <br />
+              UA = ｛Σ(A×U×H) + Σ(L×ψ×H)｝ ÷ 外皮面積の合計、ηA = Σ(A×η×ν) ÷ 外皮面積の合計 × 100
+            </td>
+          </tr>
+          <tr>
+            <th>熱貫流率の算定</th>
+            <td>
+              材料構成からの計算は面積比率法による（一般部と熱橋部の熱抵抗を面積比率で平均）。熱伝導率は JIS 等の規格値・カタログ値による。
+              <br />
+              構法：{project.framing === "jikugumi" ? "木造軸組構法" : "枠組壁工法"}　断熱：{project.topInsulation === "roof" ? "屋根断熱" : project.topInsulation === "ceiling" ? "天井断熱" : "屋根断熱・天井断熱"}・
+              {project.insulationType === "floor" ? "床断熱" : "基礎断熱"}
+            </td>
+          </tr>
+          <tr>
+            <th>土間床等の外周部</th>
+            <td>線熱貫流率 ψ × 外周長さで熱損失を計上し、土間床の面積は外皮面積に含める。</td>
+          </tr>
+          <tr>
+            <th>端数の処理</th>
+            <td>UA・ηAC は小数点以下第3位・第2位を切り上げ、ηAH は小数点以下第2位を切り捨てる。</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>温度差係数 H（{region}地域）</h3>
+      <table className="rt">
+        <thead>
+          <tr>
+            <th>隣接空間</th>
+            <th>H</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ADJ_ORDER.map((a) => (
+            <tr key={a}>
+              <td>{ADJACENCY_LABEL[a]}</td>
+              <td className="n">{tempDiffFactor(a, region).toFixed(2)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <h3>方位係数 ν（{region}地域）</h3>
+      <table className="rt">
+        <thead>
+          <tr>
+            <th>方位</th>
+            {ORIENTATIONS.map((o) => (
+              <th key={o.key}>{o.label}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {(["cooling", "heating"] as const).map((season) => (
+            <tr key={season}>
+              <th>{season === "cooling" ? "冷房期" : "暖房期"}</th>
+              {ORIENTATIONS.map((o) => {
+                const v = nu(season, region, o.key);
+                return (
+                  <td key={o.key} className="n">
+                    {v === null ? "―" : v.toFixed(3)}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  );
 }
 
 function GainSummary({ r }: { r: CalcResult }) {
@@ -584,6 +806,8 @@ function Report() {
 
   const r = calculate(project);
   const sheets = buildSheets(project, r, forApplication);
+  const checks = applicationChecks(project, r);
+  const errors = checks.filter((c) => c.level === "error").length;
   // 表紙が1ページ目、本文は2ページ目から
   const toc = sheets.flatMap((s, i) => (s.toc ? [{ ...s.toc, page: i + 2 }] : []));
   const total = sheets.length + 1;
@@ -595,6 +819,31 @@ function Report() {
           <span className="label">{forApplication ? "申請用 印刷 / PDF に保存" : "印刷 / PDF に保存"}</span>
         </button>
         <span className="small">全 {total} ページ（A4 縦）</span>
+      </div>
+      <div className="no-print report-checks">
+        <div className="cap">
+          申請前チェック：
+          {checks.length === 0 ? (
+            <b className="ok">問題は見つかりませんでした</b>
+          ) : (
+            <b className={errors ? "bad" : "warn"}>
+              {errors ? `要修正 ${errors} 件` : ""}
+              {errors && checks.length > errors ? "・" : ""}
+              {checks.length > errors ? `要確認 ${checks.length - errors} 件` : ""}
+            </b>
+          )}
+          <span className="small">（この枠は印刷されません）</span>
+        </div>
+        {checks.length > 0 && (
+          <ul>
+            {checks.map((c, i) => (
+              <li key={i} className={c.level}>
+                {c.level === "error" ? "【要修正】" : "【要確認】"}
+                {c.message}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* 表紙 */}
@@ -619,9 +868,12 @@ function Report() {
               {[
                 ["計算日", dateLabel(project.date)],
                 ["住宅名称", project.name],
+                ["建築主", project.client],
                 ["建設地", project.address],
-                ["地域区分", String(project.region)],
-                ["構法", project.framing === "jikugumi" ? "軸組" : "枠組"],
+                ["地域区分", `${project.region} 地域`],
+                ["構造・構法", `${project.structure || "木造"}　${project.framing === "jikugumi" ? "軸組構法" : "枠組壁工法"}`],
+                ["階数・延床面積", `地上 ${project.floors} 階　${n2(project.totalFloorArea)} ㎡`],
+                ["設計者", project.designer],
                 ["作成者", project.author],
               ].map(([k, v]) => (
                 <tr key={k}>
