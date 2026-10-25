@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
+import { Mascot } from "@/components/ez/Mascot";
 import { AppFrame, EzButton } from "@/components/ez/ui";
 import { calculate } from "@/lib/gaihi/calc";
 import { newId, newProject, normalizeProject, sampleProject } from "@/lib/gaihi/defaults";
@@ -63,6 +64,7 @@ function ProjectList() {
     <AppFrame title="物件一覧" icon="list">
       <main className="ez-list-wrap">
         <div className="hero-card">
+          <Mascot mood="ok" size={90} />
           <div style={{ flex: 1, minWidth: 280 }}>
             <h2>設計図書から、外皮計算を一発で。</h2>
             <div className="small muted">

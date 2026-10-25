@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { icons, type IconName } from "./icons";
+import { MascotFace } from "./Mascot";
 
 export function EzButton({
   icon,
@@ -193,7 +194,7 @@ export function AppFrame({
           </span>
         </div>
         <div className="ez-program">
-          <span className="ez-program-icon">{icons[icon]}</span>
+          <span className="ez-program-icon"><MascotFace size={46} mood={icon === "list" ? "ok" : "idle"} /></span>
           <h1>{title}</h1>
           <span className="spacer" />
           {headerRight}
