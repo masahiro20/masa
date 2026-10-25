@@ -1,7 +1,8 @@
 ---
 title: エンジニアのポートフォリオの作り方｜未経験者向けの7ステップと公開方法
 slug: engineer-portfolio-tsukurikata
-description: エンジニアのポートフォリオの作り方を、未経験者向けに7つのステップで解説。作品のテーマの決め方、技術の選び方、GitHubでのコード公開とREADMEの書き方、GitHub Pagesを使ったポートフォリオサイトの公開手順、Webエンジニア志望で意識したい点、転職活動での見せ方までまとめます。
+description: エンジニア転職に向けて、ポートフォリオを作る未経験の方へ。作品テーマと技術の選び方、GitHubでのコード公開とREADME、GitHub Pagesでの公開手順、転職活動での見せ方を7ステップで解説します。
+audience: エンジニア転職に向けて、ポートフォリオを作る未経験の方へ
 category: career
 tags:
 - ポートフォリオ

@@ -1,7 +1,8 @@
 ---
 title: WordPressブログの始め方｜サーバー・ドメインから公開まで
 slug: wordpress-blog-start-server-domain-steps
-description: WordPressでブログを始める手順を、サーバー契約・独自ドメイン取得・WordPressのインストール・SSL化・初期設定の順に整理。公式の推奨動作環境やドメインの種類、Whois公開代行、公開前のセキュリティ対策と失敗しやすい点も解説します。
+description: WordPressでブログを初めて始める方へ。WordPressでブログを始める手順を、サーバー契約・独自ドメイン取得・WordPressのインストール・SSL化・初期設定の順に整理。公式の推奨動作環境やドメインの種類、Whois公開代行、公開前のセキュリティ対策と失敗しやすい点も解説します。
+audience: WordPressでブログを初めて始める方へ
 category: tools
 tags:
 - WordPress
@@ -9,11 +10,11 @@ tags:
 - レンタルサーバー
 - 独自ドメイン
 - SSL
+keyword: ブログ 始め方 WordPress サーバー ドメイン 手順
 programs:
 - tools-rental-server
 - tools-domain
 - learning-books
-keyword: ブログ 始め方 WordPress サーバー ドメイン 手順
 published: '2026-09-30'
 updated: '2026-09-30'
 origin: ai

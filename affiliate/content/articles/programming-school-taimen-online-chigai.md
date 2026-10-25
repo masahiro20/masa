@@ -1,7 +1,8 @@
 ---
 title: プログラミングスクールの対面とオンラインの違い｜通学が向く人・選び方
 slug: programming-school-taimen-online-chigai
-description: プログラミングスクールの対面（通学）とオンラインの違いを、質問のしやすさ・時間の自由度・費用・続けやすさ・給付金の扱いで比較。社会人が通学を選ぶべきケース、ハイブリッド型の考え方、無料カウンセリングで確認したい点を2026年10月時点の公的情報と公式サイトをもとに整理します。
+description: スクールは通学かオンラインか迷っている方へ。プログラミングスクールの対面（通学）とオンラインの違いを、質問のしやすさ・時間の自由度・費用・続けやすさ・給付金の扱いで比較。社会人が通学を選ぶべきケース、ハイブリッド型の考え方、無料カウンセリングで確認したい点を2026年10月時点の公的情報と公式サイトをもとに整理します。
+audience: スクールは通学かオンラインか迷っている方へ
 category: school
 tags:
 - プログラミングスクール
@@ -18,7 +19,6 @@ published: '2026-10-15'
 updated: '2026-10-25'
 origin: ai
 editor_score: null
-voice: 2
 sources:
 - title: 【公式】パソコン教室・ITスクールなら仕事と資格に強いWinスクール
   url: https://www.winschool.jp/
@@ -28,6 +28,7 @@ sources:
   url: https://www.mhlw.go.jp/content/001211710.pdf
 - title: 特定継続的役務提供｜特定商取引法ガイド（消費者庁）
   url: https://www.no-trouble.caa.go.jp/what/continuousservices/
+voice: 2
 ---
 通って学ぶか、家で受けるか。申込ボタンの前で、このどちらかで手が止まっている場面を想定して、この記事を書きました。
 

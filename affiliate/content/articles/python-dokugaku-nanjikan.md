@@ -1,7 +1,8 @@
 ---
 title: Python独学は何時間かかる？目的別の考え方と学習時間の見積もり方
 slug: python-dokugaku-nanjikan
-description: Pythonの独学に何時間かかるかを、「文法の基礎」「業務の自動化」「データ分析」「Web開発」などの目的別に整理。決まった時間の目安がない理由、自分の学習時間を見積もる方法、Python 3 エンジニア認定基礎試験の出題範囲を使った進め方、何ヶ月で続けるかの考え方、おすすめの教材の選び方を解説します。
+description: Python独学にかかる時間を知りたい社会人の方へ。文法・業務自動化・データ分析・Web開発といった目的別に、時間の見積もり方と、Python 3 エンジニア認定基礎試験を使った進め方を解説します。
+audience: Python独学にかかる時間を知りたい社会人の方へ
 category: learning
 tags:
 - Python

@@ -4,6 +4,7 @@
     <img class="card-img" src="{{ thumb_url(a) }}" alt="" width="640" height="336" loading="lazy" decoding="async">
     {% if c %}<span class="label" style="--cat: {{ c.color }}">{{ c.name }}</span>{% endif %}
     <span class="card-title">{{ a.title }}</span>
+    {% if a.audience %}<span class="card-audience">{{ a.audience }}</span>{% endif %}
     <time class="date" datetime="{{ a.updated }}">{{ a.updated | replace('-', '.') }}</time>
   </a>
 </li>

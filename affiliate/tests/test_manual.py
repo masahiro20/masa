@@ -28,7 +28,8 @@ def sandbox(tmp_path, monkeypatch, cfg):
 
 def _write(tmp_path, body=None, slug="school-guide"):
     a = Article(title="社会人向けプログラミングスクールの選び方と比較のポイント", slug=slug,
-                description="社会人がプログラミングスクールを選ぶときに確認したい、目的・料金・サポート体制などの比較ポイントを、公開情報をもとにわかりやすく整理しました。",
+                audience="社会人でプログラミングスクールを選びたい方へ",
+                description="社会人でプログラミングスクールを選びたい方へ。目的・料金・サポート体制などの比較ポイントを、公開情報をもとにわかりやすく整理しました。",
                 category="school", body=body or make_body(), tags=["スクール"], keyword="スクール 選び方",
                 programs=["school-general"],
                 sources=[{"title": "A", "url": "https://example.com/a"}, {"title": "B", "url": "https://example.org/b"}],

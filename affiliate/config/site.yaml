@@ -68,4 +68,5 @@ quality:
   min_h2: 4
   min_sources: 2
   max_similarity: 0.45           # 既存記事との類似度上限（文字3-gram Jaccard）
+  require_audience: true         # 誰のための記事か（audience）を必須にする
   min_blocks: 2                  # 図解ボックス（:::point など）の最低数

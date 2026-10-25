@@ -26,7 +26,7 @@ from .quality import check_article
 VOICE_REMINDER = (
     "人に寄り添う文章で書く（guide の17〜22）: 冒頭で読者の場面を『想定』として1〜2文描く／不安を1つ受け止める／"
     "編集部の考えを言い切る一文を入れる／表のあとに話し言葉で『結局どう考えるか』を添える／文末と長さに変化をつける／"
-    "最後に選ばない自由にも触れた一言を添える。体験談・読者の声は作らない。『お悩みではありませんか』『いかがでしたか』は禁止。"
+    "最後に選ばない自由にも触れた一言を添える。audience（誰のための記事か）を書き、descriptionをその一文で始める。体験談・読者の声は作らない。『お悩みではありませんか』『いかがでしたか』は禁止。"
 )
 
 BLOCK_GUIDE = """
@@ -34,7 +34,8 @@ BLOCK_GUIDE = """
 ---
 title: 28〜36字のタイトル
 slug: short-english-words
-description: 80〜120字の説明
+audience: 誰のための記事か（8〜36字。例：40代で、未経験からIT転職を考えている方へ）
+description: audience と同じ一文で始め、続けて記事の中身を書く（全体で80〜140字）
 category: school | career | tools | learning
 tags: [タグ, タグ]
 keyword: 狙う検索キーワード（next で受け取ったもの）

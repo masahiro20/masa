@@ -33,10 +33,17 @@ def _filter_sources(urls: list[str], allowed: list[dict]) -> list[dict]:
 
 def _to_article(data: dict, *, keyword: str, sources: list[dict], slug: str, published: str,
                 updated: str) -> Article:
+    description = data["description"].strip()
+    audience = (data.get("audience") or "").strip()
+    if not audience:
+        audience = f"{keyword.strip()}を調べている方へ"[:36]
+    if not description.startswith(audience):
+        description = f"{audience}。{description}"[:160]
     return Article(
         title=data["title"].strip(),
         slug=slug,
-        description=data["description"].strip(),
+        audience=audience,
+        description=description,
         category=data["category"].strip(),
         body=data["body_markdown"].strip(),
         tags=[t.strip() for t in data.get("tags", []) if t.strip()][:6],
@@ -53,6 +60,7 @@ def _article_json(article: Article) -> dict:
     return {
         "title": article.title,
         "slug": article.slug,
+        "audience": article.audience,
         "description": article.description,
         "category": article.category,
         "tags": article.tags,

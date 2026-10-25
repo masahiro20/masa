@@ -1,7 +1,8 @@
 ---
 title: Claude Codeの料金は？個人・法人のプランとAPI従量課金の違い
 slug: claude-code-ryokin
-description: Claude Codeの料金を、公式の料金ページとドキュメントをもとに整理。無料プランで使えるか、Pro・Max・Team・Enterpriseの料金と違い、API従量課金の考え方、使用量の上限と確認方法、個人と法人それぞれの選び方を2026年10月時点の情報で解説します。
+description: Claude Codeの料金プランを比べたい個人・法人の方へ。公式の料金ページをもとに、無料プランの可否、Pro・Max・Team・Enterpriseの違い、API従量課金、使用量の上限を2026年10月時点で解説します。
+audience: Claude Codeの料金プランを比べたい個人・法人の方へ
 category: learning
 tags:
 - Claude Code

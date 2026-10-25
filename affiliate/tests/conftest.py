@@ -33,7 +33,8 @@ def good_article():
     return Article(
         title="社会人向けプログラミングスクールの選び方と比較のポイント",
         slug="programming-school-how-to-choose",
-        description="社会人がプログラミングスクールを選ぶときに確認したい、目的・料金・サポート体制などの比較ポイントを、公開情報をもとにわかりやすく整理しました。",
+        audience="社会人でプログラミングスクールを選びたい方へ",
+        description="社会人でプログラミングスクールを選びたい方へ。目的・料金・サポート体制などの比較ポイントを、公開情報をもとにわかりやすく整理しました。",
         category="school",
         body=make_body(),
         tags=["プログラミングスクール", "社会人"],

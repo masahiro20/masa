@@ -6,6 +6,7 @@
     <header class="article-header">
       <a class="label" href="{{ base_url }}/category/{{ article.category }}/" style="--cat: {{ category.color }}">{{ category.name }}</a>
       <h1>{{ article.title }}</h1>
+      {% if article.audience %}<p class="audience">{{ article.audience }}</p>{% endif %}
       <p class="lead">{{ article.description }}</p>
       <p class="byline">
         <span>文・編集　<a href="{{ base_url }}/about/">{{ site.operator_name }}</a></span>
