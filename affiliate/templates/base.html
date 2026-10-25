@@ -9,6 +9,8 @@
 {% if noindex %}<meta name="robots" content="noindex, follow">{% else %}<meta name="robots" content="index, follow, max-image-preview:large">{% endif %}
 {% if site.gsc_verification %}<meta name="google-site-verification" content="{{ site.gsc_verification }}">{% endif %}
 <meta name="theme-color" content="#f6f4ef">
+<meta name="color-scheme" content="light">
+<script>document.documentElement.className+=" js"</script>
 <meta property="og:type" content="{{ og_type or 'website' }}">
 <meta property="og:title" content="{{ page_title or site.name }}">
 <meta property="og:description" content="{{ page_description }}">
@@ -75,9 +77,18 @@ document.addEventListener('click',function(e){var a=e.target.closest('a[rel~="sp
       </nav>
     </div>
     <p class="footer-note">当サイトはアフィリエイトプログラムを利用して商品・サービスを紹介しています。記事内のリンクから申込があった場合、広告主から報酬を受け取ることがありますが、評価や掲載順位は報酬の有無で変えていません。</p>
-    <p class="footer-note photo-credit">サイト内の人物写真はイメージです（写真素材：<a href="https://unsplash.com/ja">Unsplash</a>、Vitaly Gariev）。記事中の事例や運営者とは関係ありません。</p>
+    <p class="footer-note photo-credit">サイト内の人物写真はイメージです（写真素材：<a href="https://www.pexels.com/ja-jp/">Pexels</a>（Kindel Media、Sasha Kim、Vlada Karpovich））。記事中の事例や運営者とは関係ありません。</p>
     <p class="copy">&copy; {{ year }} {{ site.name }}</p>
   </div>
 </footer>
+<script>
+(function(){
+  if(!('IntersectionObserver' in window)||window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.className=document.documentElement.className.replace(' js','');return;}
+  var els=document.querySelectorAll('.js .section:not(.feature),.js .grid .card,.js .cat-photo,.js .archive-group,.js .related,.js .story');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:0.05});
+  els.forEach(function(el,i){el.style.setProperty('--d',((i%3)*70)+'ms');io.observe(el);});
+  setTimeout(function(){els.forEach(function(el){el.classList.add('in');});},3000);
+})();
+</script>
 </body>
 </html>

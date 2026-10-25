@@ -24,22 +24,26 @@ niche:
   audience: "未経験〜初級からITスキルを身につけて転職・副業・キャリアアップを目指す20〜40代の社会人"
   categories:
     - slug: school
-      photo: desk-talk
+      photo: home-desk
+      photo_pos: "50% 40%"
       name: プログラミングスクール
       color: "#2d4a6b"
       description: 料金・サポート・給付金制度など、スクール選びで失敗しないための判断材料をまとめています。
     - slug: career
-      photo: smiling-pair
+      photo: meeting-pair
+      photo_pos: "50% 10%"
       name: IT転職・エージェント
       color: "#2f5646"
       description: 未経験からのIT転職、エージェントの使い方、フリーランスの案件獲得まで、キャリアの選択肢を整理します。
     - slug: tools
-      photo: data-talk
+      photo: home-desk
+      photo_pos: "50% 40%"
       name: サーバー・Webツール
       color: "#4b3f63"
       description: レンタルサーバーやドメインなど、ブログ・Web制作を始めるための道具選びを解説します。
     - slug: learning
-      photo: data-talk
+      photo: book-laptop
+      photo_pos: "50% 55%"
       name: 独学・学習法
       color: "#7a4b2a"
       description: 働きながら学ぶための学習計画、教材の選び方、挫折しないコツを紹介します。
