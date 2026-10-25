@@ -29,6 +29,7 @@ class Article:
     updated: str = ""
     origin: str = "ai"
     editor_score: int | None = None
+    voice: int = 1  # 2 = 人に寄り添う書き方に直した記事（rewrite-done で記録）
 
     @property
     def path(self) -> Path:
@@ -53,6 +54,8 @@ class Article:
             "editor_score": self.editor_score,
             "sources": self.sources,
         }
+        if self.voice > 1:
+            data["voice"] = self.voice
         return data
 
     def to_text(self) -> str:
@@ -88,6 +91,7 @@ def parse_article(text: str) -> Article:
         updated=fm.get("updated", "") or fm.get("published", ""),
         origin=fm.get("origin", "ai"),
         editor_score=fm.get("editor_score"),
+        voice=int(fm.get("voice") or 1),
     )
 
 

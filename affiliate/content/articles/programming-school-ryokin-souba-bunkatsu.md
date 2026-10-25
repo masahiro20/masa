@@ -15,9 +15,10 @@ programs:
 - school-kyufukin
 - learning-online-course
 published: '2026-10-02'
-updated: '2026-10-15'
+updated: '2026-10-25'
 origin: ai
 editor_score: null
+voice: 2
 sources:
 - title: 料金・コース比較｜テラキャン プログラミング エンジニア転職｜転職保証付きプログラミングスクール
   url: https://web-camp.io/commit/price/

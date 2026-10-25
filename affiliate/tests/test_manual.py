@@ -68,3 +68,30 @@ def test_add_keywords_and_reject(sandbox, cfg):
     assert len(KeywordQueue().queued) == 2
     assert cli.main(["reject", "--keyword", "IT転職 エージェント 比較", "--reason", "情報不足"]) == 0
     assert len(KeywordQueue().queued) == 1
+
+
+def test_rewrite_next_prioritises_live_ads_and_skips_done(tmp_path, monkeypatch, cfg):
+    import json
+    from engine import manual
+    from engine.articles import Article
+    live = {"school-general": {"id": "school-general", "url": "https://x.example/a"}}
+    monkeypatch.setattr(type(cfg), "programs_by_id", property(lambda self: live))
+    arts = [
+        Article(title="古い広告なし", slug="old-noad", description="", category="school", body="本文", published="2026-09-20"),
+        Article(title="新しい広告あり", slug="new-ad", description="", category="school",
+                body="本文 {{aff:school-general}}", published="2026-10-05"),
+        Article(title="済み", slug="done", description="", category="school", body="本文", published="2026-09-01", voice=2),
+        Article(title="新しい書き方の時代", slug="v2-era", description="", category="school", body="本文", published="2026-10-27"),
+    ]
+    monkeypatch.setattr(manual, "load_articles", lambda: arts)
+
+    class A:
+        n = 5
+
+    import io, contextlib
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        manual.cmd_rewrite_next(cfg, A())
+    out = json.loads(buf.getvalue())
+    assert [t["slug"] for t in out["targets"]] == ["new-ad", "old-noad"]
+    assert out["remaining"] == 2
