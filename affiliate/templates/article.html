@@ -20,6 +20,13 @@
     {% if toc %}<nav class="toc" aria-label="目次"><p class="toc-title">目次</p>{{ toc | safe }}</nav>{% endif %}
     <div class="body">{{ body | safe }}</div>
 
+    <div class="share" aria-label="この記事をシェア">
+      <span class="share-label">この記事をシェア</span>
+      <a href="https://twitter.com/intent/tweet?text={{ article.title | urlencode }}&amp;url={{ url | urlencode }}" target="_blank" rel="noopener">X</a>
+      <a href="https://b.hatena.ne.jp/add?mode=confirm&amp;url={{ url | urlencode }}" target="_blank" rel="noopener">はてブ</a>
+      <a href="https://social-plugins.line.me/lineit/share?url={{ url | urlencode }}" target="_blank" rel="noopener">LINE</a>
+    </div>
+
     {% if article.sources %}
     <section class="sources">
       <h2>参考情報・出典</h2>

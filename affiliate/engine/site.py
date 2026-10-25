@@ -17,7 +17,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from .articles import Article, load_articles
 from .blocks import expand_links, extract_faq, render_blocks
 from .config import PAGES_DIR, PUBLIC_DIR, STATIC_DIR, TEMPLATES_DIR, Config
-from .links import expand_shortcodes, with_early_cta
+from .links import expand_shortcodes, route_unlinked_ctas, with_early_cta
 from .visuals import logo_png, logo_svg, save_cover, site_cover
 
 COVER_NAME = "cover.png"
@@ -93,6 +93,35 @@ def related_map(articles: list[Article], n: int = 5) -> dict[str, list[Article]]
         for b in picked:
             inbound[b.slug] += 1
         result[a.slug] = picked
+    return result
+
+
+def live_ad_articles(articles: list[Article], programs: dict[str, dict]) -> set[str]:
+    """広告が実際に入っている（提携済みの案件のショートコードがある）記事の slug。"""
+    live = {pid for pid, p in programs.items() if (p.get("url") or "").strip()}
+    return {a.slug for a in articles if live & set(re.findall(r"\{\{aff:([a-z0-9-]+)", a.body))}
+
+
+def money_targets(articles: list[Article], monetized: set[str]) -> dict[str, Article]:
+    """各記事から案内する「広告が入っている関連記事」を1本ずつ決める（同じ記事に集中しないよう減点する）。"""
+    toks = {a.slug: _tokens(a) for a in articles}
+    pool = [a for a in articles if a.slug in monetized]
+    used = {a.slug: 0 for a in pool}
+    result: dict[str, Article] = {}
+    for a in articles:
+        cands = [b for b in pool if b.slug != a.slug]
+        if not cands:
+            continue
+
+        def score(b: Article) -> float:
+            ta, tb = toks[a.slug], toks[b.slug]
+            jac = len(ta & tb) / max(1, len(ta | tb))
+            return (jac * 10 + len(set(a.tags) & set(b.tags)) * 2 + (1.5 if a.category == b.category else 0)
+                    - 0.4 * used[b.slug])
+
+        best = max(cands, key=score)
+        used[best.slug] += 1
+        result[a.slug] = best
     return result
 
 
@@ -217,12 +246,17 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
     urls: list[tuple[str, str]] = [(f"{base}/", articles[0].updated if articles else date.today().isoformat())]
 
     related_by_slug = related_map(articles)
+    targets = money_targets(articles, live_ad_articles(articles, cfg.programs_by_id))
     for a in articles:
         cat = cats.get(a.category, {"name": a.category, "color": "#162238", "slug": a.category})
         save_cover(out_dir / a.url_path / COVER_NAME, title=a.title, category_name=cat["name"],
                    category_slug=a.category, color=cat["color"], site_name=cfg.site["name"], brand_en=brand_en,
                    subtitle=a.audience)
-        body_html, toc = render_markdown(with_early_cta(a.body, cfg.programs_by_id), cfg.programs_by_id, link_targets)
+        t = targets.get(a.slug)
+        target = ({"title": t.title, "url": f"{base}/{t.url_path}", "audience": t.audience, "thumb": thumb_url(t)}
+                  if t else None)
+        body = route_unlinked_ctas(with_early_cta(a.body, cfg.programs_by_id), cfg.programs_by_id, target)
+        body_html, toc = render_markdown(body, cfg.programs_by_id, link_targets)
         url = f"{base}/{a.url_path}"
         write(f"{a.url_path}index.html", env.get_template("article.html").render(
             **{**common, "og_image": cover_url(a)}, article=a, body=body_html, toc=toc, url=url, category=cat,

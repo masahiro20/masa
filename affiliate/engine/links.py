@@ -15,12 +15,46 @@ def with_early_cta(body: str, programs: dict[str, dict], threshold: float = 0.4)
     """
     live = {pid for pid, p in programs.items() if (p.get("url") or "").strip()}
     first = next((m for m in SHORTCODE_RE.finditer(body) if m.group(1) in live), None)
-    if first is None or first.start() < threshold * len(body):
+    # 文中リンクより目に入りやすい CTA ボックスの位置で判断する
+    first_box = next((m for m in SHORTCODE_RE.finditer(body) if m.group(1) in live and not m.group(2)), None)
+    if first is None or (first_box is not None and first_box.start() < threshold * len(body)):
         return body
+    first = first_box or first
     heads = [m.start() for m in re.finditer(r"(?m)^## ", body)]
     if len(heads) < 2 or heads[1] > threshold * len(body):
         return body
     return body[: heads[1]] + "{{aff:%s}}\n\n" % first.group(1) + body[heads[1]:]
+
+
+def route_unlinked_ctas(body: str, programs: dict[str, dict], target: dict | None) -> str:
+    """まだ提携していない案件の CTA ボックスを、広告が入っている関連記事への案内に置き換える。
+
+    未提携の案件は押せない灰色のボタンになり、「PR」と書かれた空の枠が読者の目線を止めてしまう。
+    最初の1つだけを「あわせて読みたい」の記事カードにし、2つ目以降は出さない。
+    target は {"title", "url", "audience", "thumb"}。None なら何も出さない。文中リンク（{{aff:ID|文言}}）はそのまま。
+    """
+    live = {pid for pid, p in programs.items() if (p.get("url") or "").strip()}
+    shown = False
+
+    def replace(m: re.Match) -> str:
+        nonlocal shown
+        pid, label = m.group(1), m.group(2)
+        if label or pid in live or pid not in programs:
+            return m.group(0)
+        if shown or not target:
+            return ""
+        shown = True
+        aud = (f'<span class="next-step-aud">{html.escape(target["audience"])}</span>'
+               if target.get("audience") else "")
+        return (
+            f'\n\n<aside class="next-step"><p class="next-step-label">あわせて読みたい</p>'
+            f'<a class="next-step-link" href="{html.escape(target["url"], quote=True)}">'
+            f'<img src="{html.escape(target["thumb"], quote=True)}" alt="" width="640" height="336" loading="lazy" decoding="async">'
+            f'<span class="next-step-text"><span class="next-step-title">{html.escape(target["title"])}</span>{aud}</span>'
+            f'</a></aside>\n\n'
+        )
+
+    return SHORTCODE_RE.sub(replace, body)
 
 
 def find_shortcodes(body: str) -> list[str]:

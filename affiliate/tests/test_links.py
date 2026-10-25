@@ -39,3 +39,21 @@ def test_early_cta_added_when_first_live_ad_is_late():
     assert with_early_cta("導入\n\n{{aff:live}}\n\n## 一\n" + "あ" * 500, progs).count("{{aff:live}}") == 1
     assert with_early_cta(body.replace("{{aff:live}}", "{{aff:dead}}"), progs) == body.replace("{{aff:live}}", "{{aff:dead}}")
     assert with_early_cta("導入\n\n## 一\n" + "あ" * 2000 + "\n\n{{aff:live}}", progs).count("{{aff:live}}") == 1
+
+
+def test_early_cta_judged_by_box_not_inline_link():
+    progs = {"live": {"id": "live", "name": "案件", "url": "https://x.example/a", "cta": "見る"}}
+    body = "導入 {{aff:live|公式}}\n\n## 一\n" + "あ" * 200 + "\n\n## 二\n" + "い" * 2000 + "\n\n{{aff:live}}\n\n## 三\nおわり"
+    out = with_early_cta(body, progs)
+    assert out.index("{{aff:live}}\n") < out.index("## 二")
+
+
+def test_unlinked_cta_routes_to_related_article():
+    from engine.links import route_unlinked_ctas
+    target = {"title": "関連記事", "url": "https://s.example/articles/x/", "audience": "迷っている方へ",
+              "thumb": "https://s.example/articles/x/thumb.webp"}
+    body = "A {{aff:b|詳細}}\n\n{{aff:b}}\n\nB\n\n{{aff:a}}\n\n{{aff:b}}"
+    out = route_unlinked_ctas(body, PROGRAMS, target)
+    assert out.count("next-step") >= 1 and out.count('class="next-step"') == 1
+    assert "{{aff:a}}" in out and "{{aff:b|詳細}}" in out and "{{aff:b}}" not in out
+    assert "{{aff:b}}" not in route_unlinked_ctas(body, PROGRAMS, None)

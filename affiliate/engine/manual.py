@@ -17,7 +17,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from . import prompts
+from . import gsc, prompts
 from .articles import load_articles, parse_article
 from .config import ARTICLES_DIR, RUN_LOG_FILE, Config
 from .planner import KeywordQueue, normalize
@@ -77,6 +77,10 @@ REWRITE_GUIDE = """既存記事の書き直し（読む人に寄り添う文章�
   (4) 「〜が挙げられます」「〜と言えるでしょう」「〜することが重要です」などの硬い言い回しを言い換える。文末と段落の長さに変化をつける。
   (5) 全体の長さは元の +10〜20% まで。
 - 禁止: 体験談・読者の声・新しい数字や条件の追加。『お悩みではありませんか』『いかがでしたか』。広告ショートコードの数と位置を大きく変えること（合計2〜4個のまま）。
+- focus があるとき（Search Console の数字で選ばれた記事。reason に理由）:
+  ctr  … 上の「直す箇所」に加えて、title と description を書き直してよい。主キーワードは title の前半に残し、
+          読者が得るもの（結論・数字・比較の軸）を具体的に示す。description は audience の一文で始めたまま。
+  rank … title は変えない。冒頭で検索の答えを2〜3文で示し、足りない論点・比較表・よくある質問を補う（+30% まで可）。
 - 手順: rewrite-next で対象を受け取る → 各記事を Read して上の方針で Edit → `python -m engine validate content/articles/<slug>.md` が OK になるまで直す →
   `python -m engine rewrite-done <slug> …` で記録 → ブランチ claude/articles-<日本時間YYYYMMDD>-rewrite を push（PR は作らない）。
 """
@@ -96,13 +100,23 @@ def cmd_rewrite_next(cfg: Config, args) -> int:
 
     # 広告が実際に入っている記事を先に、その中では古いものから
     todo.sort(key=lambda a: (not has_live_ad(a), a.published or "", a.slug))
-    targets = [
-        {"slug": a.slug, "title": a.title, "path": f"content/articles/{a.slug}.md", "category": a.category,
-         "chars": len(a.body), "live_ad": has_live_ad(a)}
-        for a in todo[: args.n]
-    ]
-    print(json.dumps({"targets": targets, "remaining": len(todo), "guide": REWRITE_GUIDE},
-                     ensure_ascii=False, indent=1))
+
+    def target(a, op=None) -> dict:
+        t = {"slug": a.slug, "title": a.title, "path": f"content/articles/{a.slug}.md", "category": a.category,
+             "chars": len(a.body), "live_ad": has_live_ad(a)}
+        if op:
+            t.update({"focus": op["kind"], "reason": op["reason"]})
+        return t
+
+    # Search Console の数字があれば、伸ばしどころの記事（広告ありを優先）を先に回す
+    by_slug = {a.slug: a for a in articles}
+    ops = gsc.opportunities(articles, cfg.site["base_url"], gsc.load_pages())
+    ops.sort(key=lambda o: not has_live_ad(by_slug[o["slug"]]))
+    targets = [target(by_slug[o["slug"]], o) for o in ops[: args.n]]
+    picked = {t["slug"] for t in targets}
+    targets += [target(a) for a in todo if a.slug not in picked][: args.n - len(targets)]
+    print(json.dumps({"targets": targets, "remaining": len(todo), "search_console_targets": len(ops),
+                      "guide": REWRITE_GUIDE}, ensure_ascii=False, indent=1))
     return 0
 
 

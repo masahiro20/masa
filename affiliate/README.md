@@ -60,6 +60,7 @@
 | ④ | [Google Search Console](https://search.google.com/search-console) にサイトを登録し、`sitemap.xml` を送信 | 10分 | 推奨 |
 | ⑤ | 独自ドメインを取得し、`config/site.yaml` の `base_url` を変更して Pages のカスタムドメインに設定 | 15分 | 推奨 |
 | ⑥ | Search Console の API 用サービスアカウントを作り、JSON キーを `GSC_SERVICE_ACCOUNT_JSON`（Secret）、プロパティURLを `GSC_SITE_URL`（Variable）に登録 | 20分 | 任意 |
+| ⑥' | （⑥の代わりに簡単な方法）Search Console の「検索パフォーマンス」→「エクスポート」→「CSV をダウンロード」した ZIP を Claude Code のセッションに渡す（`python -m engine gsc-import`）。2週間に1回程度 | 3分 | 推奨 |
 
 ①②が終われば毎朝自動で動きます。
 
