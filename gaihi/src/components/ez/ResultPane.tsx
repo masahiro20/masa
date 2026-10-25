@@ -4,6 +4,7 @@ import { ETA_AC_STANDARD, GRADES, REGIONS, REGION_COLOR, UA_STANDARD } from "@/l
 import type { CalcResult } from "@/lib/gaihi/calc";
 import type { Project } from "@/lib/gaihi/types";
 import { fmt, fmtDate } from "@/lib/format";
+import { Mascot } from "./Mascot";
 import { EzButton } from "./ui";
 
 /** 左側：物件名・操作ボタン・計算結果・適合判定・基準表 */
@@ -82,6 +83,9 @@ export function ResultPane({
           ) : (
             <div className="ez-bubble ng">不適合</div>
           )}
+          <div className="ez-mascot">
+            <Mascot mood={empty || kijun.ok === null ? "idle" : kijun.ok ? "ok" : "ng"} size={150} />
+          </div>
           <div className="ez-bubble-sub">{empty ? "外皮を入力してください" : best ? `${best.label.replace(/（.*）/, "")}レベル` : "省エネ基準"}</div>
         </div>
       </div>
