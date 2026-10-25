@@ -1,7 +1,8 @@
 ---
 title: プログラミングスクールの費用相場｜料金の目安と分割払いの注意点
 slug: programming-school-ryokin-souba-bunkatsu
-description: プログラミングスクールの費用相場と料金の見方を整理。料金は定価・キャンペーン価格・給付金適用後の実質額など表示がさまざまで、分割払いでは手数料や支払方法の制限もあります。公式サイトの表示例をもとに、料金を総額で比べる方法と分割払いの注意点、負担を下げる制度を整理します。
+description: プログラミングスクールの費用が気になる方へ。プログラミングスクールの費用相場と料金の見方を整理。料金は定価・キャンペーン価格・給付金適用後の実質額など表示がさまざまで、分割払いでは手数料や支払方法の制限もあります。公式サイトの表示例をもとに、料金を総額で比べる方法と分割払いの注意点、負担を下げる制度を整理します。
+audience: プログラミングスクールの費用が気になる方へ
 category: school
 tags:
 - プログラミングスクール
@@ -18,7 +19,6 @@ published: '2026-10-02'
 updated: '2026-10-25'
 origin: ai
 editor_score: null
-voice: 2
 sources:
 - title: 料金・コース比較｜テラキャン プログラミング エンジニア転職｜転職保証付きプログラミングスクール
   url: https://web-camp.io/commit/price/
@@ -28,6 +28,7 @@ sources:
   url: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/jinzaikaihatsu/kyouiku.html
 - title: 特定継続的役務提供｜特定商取引法ガイド（消費者庁）
   url: https://www.no-trouble.caa.go.jp/what/continuousservices/
+voice: 2
 ---
 スクールの料金ページを3校ぶん開いたら、金額の出し方がバラバラで、結局いくらかかるのかわからなくなった。そんな場面を想定して、この記事を書きました。
 

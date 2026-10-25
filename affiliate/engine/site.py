@@ -220,7 +220,8 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
     for a in articles:
         cat = cats.get(a.category, {"name": a.category, "color": "#162238", "slug": a.category})
         save_cover(out_dir / a.url_path / COVER_NAME, title=a.title, category_name=cat["name"],
-                   category_slug=a.category, color=cat["color"], site_name=cfg.site["name"], brand_en=brand_en)
+                   category_slug=a.category, color=cat["color"], site_name=cfg.site["name"], brand_en=brand_en,
+                   subtitle=a.audience)
         body_html, toc = render_markdown(with_early_cta(a.body, cfg.programs_by_id), cfg.programs_by_id, link_targets)
         url = f"{base}/{a.url_path}"
         write(f"{a.url_path}index.html", env.get_template("article.html").render(

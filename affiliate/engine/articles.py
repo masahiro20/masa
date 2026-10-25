@@ -29,6 +29,7 @@ class Article:
     updated: str = ""
     origin: str = "ai"
     editor_score: int | None = None
+    audience: str = ""  # 誰のための記事か（「〇〇な方へ」。サムネイル・一覧・検索結果の説明文の冒頭に使う）
     voice: int = 1  # 2 = 人に寄り添う書き方に直した記事（rewrite-done で記録）
 
     @property
@@ -44,6 +45,7 @@ class Article:
             "title": self.title,
             "slug": self.slug,
             "description": self.description,
+            "audience": self.audience,
             "category": self.category,
             "tags": self.tags,
             "keyword": self.keyword,
@@ -91,6 +93,7 @@ def parse_article(text: str) -> Article:
         updated=fm.get("updated", "") or fm.get("published", ""),
         origin=fm.get("origin", "ai"),
         editor_score=fm.get("editor_score"),
+        audience=str(fm.get("audience") or "").strip(),
         voice=int(fm.get("voice") or 1),
     )
 

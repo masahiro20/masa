@@ -1,7 +1,8 @@
 ---
 title: Pythonは独学で無料で学べる？無料サイト・環境の選び方と注意点
 slug: python-dokugaku-muryo
-description: Pythonは独学で無料で学べるかを、公式ドキュメントのチュートリアル、ブラウザで使えるGoogle Colaboratory、無料の学習サイトや動画などの選択肢から整理。無料で学ぶメリット・デメリット、初心者がつまずきやすい点、無料の範囲で進める手順と、有料教材を検討するタイミングを解説します。
+description: Pythonを無料で独学したい初心者の方へ。公式チュートリアルやGoogle Colaboratoryなど無料の選択肢、メリットとデメリット、つまずきやすい点、有料教材を考えるタイミングを解説します。
+audience: Pythonを無料で独学したい初心者の方へ
 category: learning
 tags:
 - Python

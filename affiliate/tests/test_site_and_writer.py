@@ -52,7 +52,8 @@ class FakeLLM:
         return {
             "title": "社会人向けプログラミングスクールの選び方と比較のポイント",
             "slug": "Programming School Guide!",
-            "description": "社会人がプログラミングスクールを選ぶときに確認したい、目的・料金・サポート体制などの比較ポイントを公開情報をもとに整理しました。",
+            "audience": "社会人でプログラミングスクールを選びたい方へ",
+            "description": "社会人でプログラミングスクールを選びたい方へ。目的・料金・サポート体制などの比較ポイントを、公開情報をもとにわかりやすく整理しました。",
             "category": "school",
             "tags": ["スクール"],
             "programs": ["school-general"],

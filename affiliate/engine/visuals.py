@@ -113,7 +113,7 @@ def _compass_lines(d: ImageDraw.ImageDraw, cx: int, cy: int, color: tuple[int, i
 
 
 def cover_image(title: str, category_name: str, category_slug: str, color: str, site_name: str,
-                brand_en: str = "SKILL COMPASS") -> Image.Image:
+                brand_en: str = "SKILL COMPASS", subtitle: str = "") -> Image.Image:
     base = hex_rgb(color)
     img = Image.new("RGB", (W, H), base)
     d = ImageDraw.Draw(img)
@@ -132,6 +132,8 @@ def cover_image(title: str, category_name: str, category_slug: str, color: str, 
     d.line([(84, 128), (160, 128)], fill=mix(base, white, 0.5), width=2)
 
     main, _, sub = title.partition("｜")
+    if subtitle:  # 「誰のための記事か」を小見出しにする（タイトルの｜以降は使わない）
+        sub = subtitle
     lines = wrap(main.strip(), f_title, 780, 3)
     sub_lines = wrap(sub.strip(), f_sub, 820, 2) if sub.strip() else []
     block_h = len(lines) * 92 + (len(sub_lines) * 46 + 22 if sub_lines else 0)

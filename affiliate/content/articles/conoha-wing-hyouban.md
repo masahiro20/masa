@@ -1,7 +1,8 @@
 ---
 title: ConoHa WINGの評判は？契約前に公式情報で確かめたい5つのポイント
 slug: conoha-wing-hyouban
-description: ConoHa WINGの評判が気になる人向けに、口コミで話題になりやすい料金・自動更新・バックアップ・独自ドメイン・解約の5点を、公式サポートページの情報で確認。WINGパックと通常料金の違い、「やめとけ」と言われる理由になりやすい注意点、向いている人・向いていない人も整理します。
+description: ConoHa WINGの契約前に評判を調べている方へ。料金・自動更新・バックアップ・独自ドメイン・解約の5点を公式サポートの情報で確認し、向いている人・向いていない人も整理します。
+audience: ConoHa WINGの契約前に評判を調べている方へ
 category: tools
 tags:
 - ConoHa WING

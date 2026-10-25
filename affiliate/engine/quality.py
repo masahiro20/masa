@@ -95,6 +95,13 @@ def check_article(
 
     if not 20 <= len(article.title) <= 60:
         issues.append(f"タイトルは20〜60字にしてください（現在{len(article.title)}字）")
+    if quality.get("require_audience") and not article.audience:
+        issues.append("audience（誰のための記事か。例：「40代で、未経験からIT転職を考えている方へ」）を front matter に書いてください")
+    if article.audience:
+        if not 8 <= len(article.audience) <= 36:
+            issues.append(f"audience は8〜36字にしてください（現在{len(article.audience)}字）")
+        elif not article.description.startswith(article.audience):
+            issues.append("description は audience と同じ一文で始めてください（検索結果で『自分のことだ』と伝わる冒頭にするため）")
     if not 50 <= len(article.description) <= 160:
         issues.append(f"ディスクリプションは50〜160字にしてください（現在{len(article.description)}字）")
     if not SLUG_RE.match(article.slug):

@@ -1,7 +1,8 @@
 ---
 title: Python独学のおすすめ本の選び方｜初心者が失敗しない基準と公式が勧める入門書
 slug: python-dokugaku-osusume-hon
-description: Pythonを独学するときのおすすめ本の選び方を、初心者が確認したい6つの基準で整理。Pythonエンジニア育成推進協会が未経験者向けに挙げている参考図書、主教材「Pythonチュートリアル」の位置づけ、データ分析や業務自動化など目的別の選び方、本で独学を進める手順と注意点を解説します。
+description: Pythonの独学用に本を選びたい初心者の方へ。初心者が確認したい6つの基準、Pythonエンジニア育成推進協会が挙げる参考図書、目的別の選び方、本で独学を進める手順を解説します。
+audience: Pythonの独学用に本を選びたい初心者の方へ
 category: learning
 tags:
 - Python

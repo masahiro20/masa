@@ -71,6 +71,9 @@ def editorial_system(cfg) -> str:
     「〜することが重要です」「〜が挙げられます」「〜と言えるでしょう」のような硬い言い回しは、「〜しておくと安心です」「〜が目安です」と言い換える。
 22. 記事の最後（よくある質問の前）に、迷ったときに次の一歩を決めるための一言を、読者に向けて書く。
     押し売りにならないよう、「合わなければ見送って構いません」など、選ばない自由にも触れる。
+23. 「誰のための記事か」を具体的に書く。front matter の audience に、読者の立場・年代・迷いがわかる一文（8〜36字、例：「40代で、未経験からIT転職を考えている方へ」）を入れる。
+    年代は、記事の内容が本当にその年代向けのときだけ使う。想定読者として書き、実在の読者を装わない。サムネイルの小見出し・一覧・記事タイトルの下に表示される。
+24. description の冒頭は、audience と同じ一文で始める。そのあとに記事の中身を書き、全体で50〜160字（検索結果では最初の100字前後が表示される）。
 
 # カテゴリ一覧
 {json.dumps(categories, ensure_ascii=False)}
@@ -222,6 +225,7 @@ ARTICLE_SCHEMA = {
     "properties": {
         "title": {"type": "string"},
         "slug": {"type": "string"},
+        "audience": {"type": "string"},
         "description": {"type": "string"},
         "category": {"type": "string"},
         "tags": {"type": "array", "items": {"type": "string"}},
@@ -229,7 +233,7 @@ ARTICLE_SCHEMA = {
         "source_urls": {"type": "array", "items": {"type": "string"}},
         "body_markdown": {"type": "string"},
     },
-    "required": ["title", "slug", "description", "category", "tags", "programs", "source_urls", "body_markdown"],
+    "required": ["title", "slug", "audience", "description", "category", "tags", "programs", "source_urls", "body_markdown"],
     "additionalProperties": False,
 }
 

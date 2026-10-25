@@ -1,7 +1,8 @@
 ---
 title: WordPressでポートフォリオの作り方｜未経験者向けの手順と載せる作品の考え方
 slug: wordpress-portfolio-tsukurikata-mikeiken
-description: 未経験からWebデザイナーやエンジニアを目指す人向けに、WordPressでポートフォリオサイトを作る手順を解説。サーバーとドメインの準備、テーマの選び方（無料・有料）、必要なページ構成、未経験者が載せる作品の考え方、作るときの注意点までまとめます。
+description: WordPressでポートフォリオを作る未経験の方へ。未経験からWebデザイナーやエンジニアを目指す人向けに、WordPressでポートフォリオサイトを作る手順を解説。サーバーとドメインの準備、テーマの選び方（無料・有料）、必要なページ構成、未経験者が載せる作品の考え方、作るときの注意点までまとめます。
+audience: WordPressでポートフォリオを作る未経験の方へ
 category: tools
 tags:
 - WordPress

@@ -1,7 +1,8 @@
 ---
 title: AI駆動開発と仕様駆動開発の違いは？関係と進め方をやさしく整理
 slug: ai-kudou-kaihatsu-shiyou-kudou-chigai
-description: AI駆動開発と仕様駆動開発の違いと関係を整理。GitHubが公開したSpec Kitで示されている仕様駆動開発の4つの工程（Specify・Plan・Tasks・Implement）、バイブコーディングとの違い、メリットと注意点、どんな場面で取り入れるべきかを公式情報をもとに解説します。
+description: AI駆動開発と仕様駆動開発の違いを知りたい方へ。GitHubのSpec Kitで示された4つの工程、バイブコーディングとの違い、メリットと注意点、取り入れる場面を公式情報をもとに解説します。
+audience: AI駆動開発と仕様駆動開発の違いを知りたい方へ
 category: learning
 tags:
 - AI駆動開発

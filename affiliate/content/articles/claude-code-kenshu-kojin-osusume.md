@@ -1,7 +1,8 @@
 ---
 title: Claude Code研修は個人でも受けられる？おすすめの選び方と無料講座
 slug: claude-code-kenshu-kojin-osusume
-description: Claude Codeの研修を個人で受けたい人向けに、公式の無料講座・個人向けセミナー・有料研修の違いとおすすめの選び方を整理。受講前に必要な準備、目的別の選び方、法人向け研修との違い、申込前に確認したいポイントを2026年10月時点の公式情報をもとに解説します。
+description: Claude Codeを個人で学べる研修を探す方へ。Claude Codeの研修を個人で受けたい人向けに、公式の無料講座・個人向けセミナー・有料研修の違いとおすすめの選び方を整理。受講前に必要な準備、目的別の選び方、法人向け研修との違い、申込前に確認したいポイントを2026年10月時点の公式情報をもとに解説します。
+audience: Claude Codeを個人で学べる研修を探す方へ
 category: learning
 tags:
 - Claude Code

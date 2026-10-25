@@ -236,7 +236,7 @@ a.internal-link { font-weight: 700; }
 .story-photo img { aspect-ratio: 16 / 9; object-fit: cover; object-position: 50% 40%; }
 
 /* ヒーロー（動くコンパス） */
-.hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 32px; align-items: center; margin: 28px 0 36px; padding: 44px 48px; border-radius: 4px;
+.hero { position: relative; display: flex; align-items: center; min-height: 470px; margin: 28px 0 36px; border-radius: 4px; background: #efe8dc; overflow: hidden; }
   background: radial-gradient(900px 380px at 88% 30%, #f4e4d0 0%, rgba(244,228,208,0) 62%), linear-gradient(135deg, #f3efe6 0%, #efe8dc 100%); overflow: hidden; }
 .hero-kicker { margin: 0 0 14px; font-size: 11px; letter-spacing: .42em; color: var(--accent); font-weight: 700; animation: rise .8s ease both; }
 .hero-copy { margin: 0 0 18px; font-family: var(--serif); font-weight: 700; font-size: clamp(30px, 4.4vw, 52px); line-height: 1.4; letter-spacing: .08em; animation: rise .9s .1s ease both; }
@@ -275,3 +275,30 @@ a.internal-link { font-weight: 700; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .js .section, .js .grid .card, .js .cat-photo, .js .archive-group, .js .related, .js .story { opacity: 1; transform: none; }
 }
+
+/* ヒーローの背景スライドショー（映像・写真がゆっくり引いていく） */
+.hero-bg { position: absolute; inset: 0; }
+.slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s ease; }
+.slide.on { opacity: 1; }
+.slide-media { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; transform-origin: 50% 60%; }
+video.slide-media { opacity: 0; transition: opacity 1s ease; }
+video.slide-media.ready { opacity: 1; }
+.slide.on .slide-media { animation: pullback 10s ease-out forwards; }
+@keyframes pullback { from { transform: scale(1.16); } to { transform: scale(1); } }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(246,244,239,.95) 0%, rgba(246,244,239,.88) 32%, rgba(246,244,239,.28) 62%, rgba(246,244,239,0) 100%); }
+.hero-text { position: relative; z-index: 2; padding: 56px 48px; max-width: 640px; }
+.hero-dots { position: absolute; z-index: 2; right: 22px; bottom: 18px; margin: 0; display: flex; gap: 8px; }
+.hero-dots i { width: 22px; height: 3px; background: rgba(255,255,255,.65); border-radius: 2px; transition: background .4s, width .4s; }
+.hero-dots i.on { background: #fff; width: 34px; }
+@media (max-width: 800px) {
+  .hero { min-height: 520px; align-items: flex-end; }
+  .hero::before { background: linear-gradient(180deg, rgba(246,244,239,0) 0%, rgba(246,244,239,.55) 30%, rgba(246,244,239,.93) 62%); }
+  .hero-text { padding: 150px 24px 40px; }
+  .hero-dots { right: 16px; top: 16px; bottom: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .slide.on .slide-media { animation: none; } }
+
+/* 誰のための記事か */
+.audience { margin: 10px 0 0; font-size: 14px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
+.audience::before { content: ""; display: inline-block; width: 22px; height: 1px; background: currentColor; vertical-align: middle; margin-right: 10px; }
+.card-audience { font-size: 12.5px; line-height: 1.7; color: var(--accent); letter-spacing: .04em; }
