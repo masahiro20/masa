@@ -9,16 +9,21 @@ import { calculate } from "@/lib/gaihi/calc";
 import { newId, newProject, normalizeProject, sampleProject } from "@/lib/gaihi/defaults";
 import type { Project } from "@/lib/gaihi/types";
 import { fmt, fmtDate } from "@/lib/format";
-import { shareUrl } from "@/lib/share";
+import { createShareLink } from "@/lib/share";
 import { deleteProject, listProjects, saveProject } from "@/lib/store";
 
 /** 共有リンクのダイアログ。リンクは相手のブラウザに「複製」を作るだけで、元の物件とはつながらない */
 function ShareModal({ project, onClose }: { project: Project; onClose: () => void }) {
-  const [url, setUrl] = useState("");
+  const [link, setLink] = useState<{ url: string; short: boolean } | null>(null);
   const [copied, setCopied] = useState(false);
+  // 開発時の二重実行で2回預けないようにする
+  const started = useRef(false);
   useEffect(() => {
-    shareUrl(window.location.origin, project).then(setUrl);
+    if (started.current) return;
+    started.current = true;
+    createShareLink(window.location.origin, project).then(setLink);
   }, [project]);
+  const url = link?.url ?? "";
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(url);
@@ -46,10 +51,14 @@ function ShareModal({ project, onClose }: { project: Project; onClose: () => voi
       <p className="small" style={{ marginTop: 0 }}>
         このリンクを開いた人のブラウザに、<b>この物件の複製</b>が取り込まれ、入力内容・計算結果・計算書をそのまま見られます。
       </p>
-      <textarea id="share-url" className="share-url" readOnly value={url || "リンクを作っています…"} onFocus={(e) => e.target.select()} rows={4} />
+      <textarea id="share-url" className="share-url" readOnly value={url || "リンクを作っています…"} onFocus={(e) => e.target.select()} rows={link?.short === false ? 4 : 1} />
       <ul className="small muted" style={{ paddingLeft: 18, marginBottom: 0 }}>
         <li>渡すのは今の時点のコピーです。このあと物件を直しても、相手の側には反映されません（相手が直してもこちらは変わりません）。</li>
-        <li>データはリンクの中に入っていて、サーバーには保存されません。リンクを知っている人なら誰でも取り込めるので、送る相手に注意してください。</li>
+        {link?.short === false ? (
+          <li>いまは短いリンクを作れなかったため、データをまるごと入れた長いリンクにしています（サーバーには保存されません）。</li>
+        ) : (
+          <li>物件データはこのツールの非公開の保存場所に預け、リンクを開いた人だけが取り出せます。リンクを知っている人なら誰でも取り込めるので、送る相手に注意してください。</li>
+        )}
       </ul>
     </Modal>
   );
