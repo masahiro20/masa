@@ -22,6 +22,12 @@ from .config import RUN_LOG_FILE, Config
 from .planner import KeywordQueue, normalize
 from .quality import check_article
 
+VOICE_REMINDER = (
+    "人に寄り添う文章で書く（guide の17〜22）: 冒頭で読者の場面を『想定』として1〜2文描く／不安を1つ受け止める／"
+    "編集部の考えを言い切る一文を入れる／表のあとに話し言葉で『結局どう考えるか』を添える／文末と長さに変化をつける／"
+    "最後に選ばない自由にも触れた一言を添える。体験談・読者の声は作らない。『お悩みではありませんか』『いかがでしたか』は禁止。"
+)
+
 BLOCK_GUIDE = """
 # 記事ファイルの形式（content/articles/<slug>.md）
 ---
@@ -79,6 +85,7 @@ def cmd_next(cfg: Config, args) -> int:
         "queued_remaining": len(queue.queued),
         "existing_articles": existing,
         "program_ids": list(cfg.programs_by_id),
+        "voice_reminder": VOICE_REMINDER,
         "categories": list(cfg.category_names),
     }, ensure_ascii=False, indent=1))
     return 0

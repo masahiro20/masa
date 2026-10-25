@@ -4,6 +4,16 @@
   <article class="article page">
     <h1>{{ page.title }}</h1>
     <div class="body">{{ body | safe }}</div>
+    {% if page.slug == "about" and site.operator_message %}
+    <section class="operator">
+      {% if site.operator_photo %}<img class="operator-photo" src="{{ base_url }}/static/img/{{ site.operator_photo }}" width="160" height="160" alt="{{ site.operator_person or site.operator_name }}">{% endif %}
+      <div>
+        <h2>運営者からのひとこと</h2>
+        <p>{{ site.operator_message }}</p>
+        {% if site.operator_person %}<p class="operator-name">{{ site.operator_person }}</p>{% endif %}
+      </div>
+    </section>
+    {% endif %}
   </article>
 </div>
 {% endblock %}
