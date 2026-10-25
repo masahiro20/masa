@@ -5,16 +5,10 @@ import { useEffect, useState } from "react";
 import { AppFrame } from "@/components/ez/ui";
 import { newId, normalizeProject } from "@/lib/gaihi/defaults";
 import type { Project } from "@/lib/gaihi/types";
+import { unpackProject } from "@/lib/share";
 import { saveProject } from "@/lib/store";
 
-/** MCP の計算結果に付く「ツールで開く」リンクの受け口。URL の # 以降の物件データを展開して保存する */
-async function unpack(packed: string): Promise<Project> {
-  const b64 = packed.replace(/-/g, "+").replace(/_/g, "/");
-  const bytes = Uint8Array.from(atob(b64 + "=".repeat((4 - (b64.length % 4)) % 4)), (c) => c.charCodeAt(0));
-  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
-  return JSON.parse(await new Response(stream).text()) as Project;
-}
-
+// 「共有リンク」と MCP の「ツールで開く」リンクの受け口。URL の # 以降の物件データを展開し、複製として保存する
 export default function ImportPage() {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -25,7 +19,7 @@ export default function ImportPage() {
       setError("リンクに物件データが入っていません。");
       return;
     }
-    unpack(packed)
+    unpackProject(packed)
       .then((raw) => {
         if (!raw.specs || !raw.surfaces) throw new Error("bad");
         const p = normalizeProject({ ...raw, id: newId("prj") });

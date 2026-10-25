@@ -4,12 +4,56 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Mascot } from "@/components/ez/Mascot";
-import { AppFrame, EzButton } from "@/components/ez/ui";
+import { AppFrame, EzButton, Modal } from "@/components/ez/ui";
 import { calculate } from "@/lib/gaihi/calc";
 import { newId, newProject, normalizeProject, sampleProject } from "@/lib/gaihi/defaults";
 import type { Project } from "@/lib/gaihi/types";
 import { fmt, fmtDate } from "@/lib/format";
+import { shareUrl } from "@/lib/share";
 import { deleteProject, listProjects, saveProject } from "@/lib/store";
+
+/** 共有リンクのダイアログ。リンクは相手のブラウザに「複製」を作るだけで、元の物件とはつながらない */
+function ShareModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  const [url, setUrl] = useState("");
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    shareUrl(window.location.origin, project).then(setUrl);
+  }, [project]);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      (document.getElementById("share-url") as HTMLTextAreaElement | null)?.select();
+      document.execCommand("copy");
+    }
+    setCopied(true);
+  };
+  const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
+  return (
+    <Modal
+      title={`共有リンク：${project.name}`}
+      onClose={onClose}
+      width={620}
+      footer={
+        <>
+          {canShare && (
+            <EzButton icon="export" label="アプリで送る" disabled={!url} onClick={() => navigator.share({ title: project.name, url }).catch(() => {})} />
+          )}
+          <EzButton icon="copy" label={copied ? "コピーしました" : "リンクをコピー"} disabled={!url} onClick={copy} />
+        </>
+      }
+    >
+      <p className="small" style={{ marginTop: 0 }}>
+        このリンクを開いた人のブラウザに、<b>この物件の複製</b>が取り込まれ、入力内容・計算結果・計算書をそのまま見られます。
+      </p>
+      <textarea id="share-url" className="share-url" readOnly value={url || "リンクを作っています…"} onFocus={(e) => e.target.select()} rows={4} />
+      <ul className="small muted" style={{ paddingLeft: 18, marginBottom: 0 }}>
+        <li>渡すのは今の時点のコピーです。このあと物件を直しても、相手の側には反映されません（相手が直してもこちらは変わりません）。</li>
+        <li>データはリンクの中に入っていて、サーバーには保存されません。リンクを知っている人なら誰でも取り込めるので、送る相手に注意してください。</li>
+      </ul>
+    </Modal>
+  );
+}
 
 function ProjectList() {
   const router = useRouter();
@@ -17,6 +61,7 @@ function ProjectList() {
   const [projects, setProjects] = useState<Project[] | null>(null);
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [error, setError] = useState("");
+  const [sharing, setSharing] = useState<Project | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const refresh = () => setProjects(listProjects());
@@ -154,6 +199,9 @@ function ProjectList() {
                       onClick={() => open({ ...structuredClone(p), id: newId("prj"), name: `${p.name}_コピー` })}
                     >
                       <span className="label">複製</span>
+                    </button>{" "}
+                    <button className="ez-btn small ghost" style={{ minWidth: 0 }} onClick={() => setSharing(p)}>
+                      <span className="label">共有</span>
                     </button>
                   </td>
                 </tr>
@@ -162,8 +210,9 @@ function ProjectList() {
           </tbody>
         </table>
         <p className="small muted" style={{ marginTop: 10 }}>
-          物件はこのブラウザに保存されます。同じ物件を「複製」して仕様違いのパターンを作り、比較やプレゼンに使えます。
+          物件はこのブラウザに保存されます。同じ物件を「複製」して仕様違いのパターンを作り、比較やプレゼンに使えます。「共有」でできるリンクを送ると、相手にこの物件の複製を渡せます。
         </p>
+        {sharing && <ShareModal project={sharing} onClose={() => setSharing(null)} />}
       </main>
     </AppFrame>
   );

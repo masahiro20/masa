@@ -334,3 +334,7 @@ input.w-num { width: 90px; }
 @media (min-width: 1101px) {
   .ez-main > div:first-child { position: sticky; top: 0; align-self: start; max-height: 100vh; overflow-y: auto; }
 }
+
+/* 共有リンク */
+.share-url { width: 100%; font-family: ui-monospace, monospace; font-size: 11px; word-break: break-all; resize: none; padding: 6px; border: 1px solid #bbb; border-radius: 3px; background: #fafafa; }
+.ez-list td:last-child { white-space: nowrap; }
