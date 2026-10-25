@@ -6,6 +6,10 @@
     <h1>{{ category.name }}</h1>
     <p>{{ category.description }}</p>
   </header>
+  {% if category.photo %}<figure class="cat-photo">
+    <img src="{{ base_url }}/static/img/{{ category.photo }}-1200.webp" srcset="{{ base_url }}/static/img/{{ category.photo }}-640.webp 640w, {{ base_url }}/static/img/{{ category.photo }}-1200.webp 1200w" sizes="(max-width: 800px) 100vw, 1100px" width="1200" height="525" loading="lazy" decoding="async" alt="">
+    <figcaption>イメージ写真</figcaption>
+  </figure>{% endif %}
   {% if articles %}
   <ul class="grid">{% for a in articles %}{% include "_card.html" %}{% endfor %}</ul>
   {% else %}<p class="empty">このカテゴリの記事は準備中です。</p>{% endif %}

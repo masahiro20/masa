@@ -40,6 +40,20 @@
     </div>
   </section>
 
+  <section class="section story">
+    <figure class="story-photo">
+      <img src="{{ base_url }}/static/img/smiling-pair-1200.webp" srcset="{{ base_url }}/static/img/smiling-pair-640.webp 640w, {{ base_url }}/static/img/smiling-pair-1200.webp 1200w" sizes="(max-width: 800px) 100vw, 560px" width="1200" height="525" loading="lazy" decoding="async" alt="パソコンの画面を見ながら、一緒に考えている二人のイメージ写真">
+      <figcaption>イメージ写真</figcaption>
+    </figure>
+    <div class="story-text">
+      <h2 class="section-title"><span>スキルコンパスについて</span></h2>
+      {% if site.operator_message %}<p>{{ site.operator_message }}</p>{% else %}
+      <p>学び直しや転職を考えるとき、情報は山ほどあるのに、「何を信じて、何から決めればいいのか」がわからなくなる。そんな迷いは、誰にでもあるものだと思います。</p>
+      <p>スキルコンパスは、公式サイトや公的機関の情報をもとに、比べる軸と判断の材料を整理して、迷う時間を少しでも短くするための道しるべでありたいと考えています。</p>
+      <p>申し込みを急がせることはしません。話を聞いて合わないと感じたら、見送る選択も大切にしています。</p>{% endif %}
+    </div>
+  </section>
+
   <section class="section about-strip">
     <h2 class="section-title"><span>編集方針</span></h2>
     <div class="about-cols">

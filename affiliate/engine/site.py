@@ -264,6 +264,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
     for page_file in sorted(pages_dir.glob("*.md")):
         page = _parse_page(page_file.read_text(encoding="utf-8"), cfg)
         slug = page_file.stem
+        page["slug"] = slug
         body_html, _ = render_markdown(page["body"], cfg.programs_by_id, link_targets)
         url = f"{base}/{slug}/"
         write(f"{slug}/index.html", env.get_template("page.html").render(
