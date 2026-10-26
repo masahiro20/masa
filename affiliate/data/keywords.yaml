@@ -2,20 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 子ども 生成AI 使わせ方 注意点
-  intent: informational
-  category: learning
-  program: learning-family-ai
-  score: 4000.0
-  status: queued
-- keyword: html css javascript 独学
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 1500.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: Python 独学 ロードマップ 社会人
   intent: informational
   category: learning
@@ -674,6 +660,15 @@ keywords:
   score: 2000.0
   status: published
   slug: online-course-vs-programming-school
+- keyword: html css javascript 独学
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: html-css-javascript-dokugaku
 - keyword: javascript 独学 難しい
   intent: informational
   category: learning
@@ -844,6 +839,14 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事programming-school-kyufukin-conditionsと検索意図が重複
+- keyword: 子ども 生成AI 使わせ方 注意点
+  intent: informational
+  category: learning
+  program: learning-family-ai
+  score: 4000.0
+  status: rejected
+  issues:
+  - 既存記事seisei-ai-oyako-manabu-houhouと検索意図が重複
 - keyword: web制作 副業 ロードマップ
   intent: informational
   category: learning

@@ -89,3 +89,5 @@
 {"ts": "2026-10-25T21:49:09+00:00", "source": "routine", "published": ["javascript-dokugaku-muzukashii"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-26T03:50:20+00:00", "source": "routine", "published": ["seisei-ai-oyako-manabu-houhou"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-26T09:49:42+00:00", "source": "routine", "published": ["seisei-ai-manabikata-shoshinsha-shakaijin"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-10-26T21:48:58+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["子ども 生成AI 使わせ方 注意点"], "errors": ["既存記事seisei-ai-oyako-manabu-houhouと検索意図が重複"]}
+{"ts": "2026-10-26T21:49:58+00:00", "source": "routine", "published": ["html-css-javascript-dokugaku"], "refreshed": [], "rejected": [], "errors": []}
