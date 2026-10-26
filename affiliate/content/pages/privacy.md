@@ -8,7 +8,9 @@ description: 当サイトの個人情報・アクセス解析・Cookieの取り�
 
 ## アクセス解析ツールについて
 
-当サイトでは、Googleによるアクセス解析ツール「Googleアナリティクス」を利用する場合があります。Googleアナリティクスはデータ収集のためにCookieを使用します。このデータは匿名で収集され、個人を特定するものではありません。Cookieを無効にすることで収集を拒否できます。詳しくは[Googleのポリシーと規約](https://policies.google.com/technologies/partner-sites)をご覧ください。
+当サイトでは、サイトの利用状況を把握して記事の改善に役立てるため、Google LLC が提供するアクセス解析ツール「Googleアナリティクス」を利用しています。Googleアナリティクスは Cookie などを使い、閲覧したページのURL、参照元、閲覧日時、ご利用の端末・ブラウザの情報、IPアドレス、広告リンクのクリックなどの情報を Google LLC に送信します。これらは個人を特定する形では収集されません。
+
+収集を望まない場合は、ブラウザの設定で Cookie を無効にするか、[Googleアナリティクス オプトアウト アドオン](https://tools.google.com/dlpage/gaoptout?hl=ja)をご利用ください。詳しくは[Googleのポリシーと規約](https://policies.google.com/technologies/partner-sites)をご覧ください。
 
 ## アフィリエイトプログラムについて
 
