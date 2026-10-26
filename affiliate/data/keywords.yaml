@@ -2,12 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 生成AI 親子 学ぶ 方法
-  intent: commercial
-  category: learning
-  program: learning-family-ai
-  score: 8000.0
-  status: queued
 - keyword: 生成AI 学び方 初心者 社会人
   intent: commercial
   category: learning
@@ -539,6 +533,13 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: engineer-tenshoku-mikeiken-shiboudouki
+- keyword: 生成AI 親子 学ぶ 方法
+  intent: commercial
+  category: learning
+  program: learning-family-ai
+  score: 8000.0
+  status: published
+  slug: seisei-ai-oyako-manabu-houhou
 - keyword: プログラミングスクール 料金 相場 分割払い
   intent: commercial
   category: school
