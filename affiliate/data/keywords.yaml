@@ -2,22 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: プログラマー 30代 未経験 無理
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: データサイエンティスト 未経験 30代
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: aws 資格 未経験 転職
   intent: commercial
   category: career
@@ -350,6 +334,15 @@ keywords:
   score: 20000.0
   status: published
   slug: mukiteiru-shigoto-wakaranai-shindan
+- keyword: データサイエンティスト 未経験 30代
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: data-scientist-mikeiken-30dai
 - keyword: エンジニア 転職 フルリモート
   intent: commercial
   category: career
@@ -880,6 +873,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事wordpress-blog-start-server-domain-stepsと検索意図が重複
+- keyword: プログラマー 30代 未経験 無理
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複
 - keyword: エンジニア 転職 30代 未経験
   intent: commercial
   category: career
