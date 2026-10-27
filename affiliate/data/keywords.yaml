@@ -2,12 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: Python 独学 ロードマップ 社会人
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 1000.0
-  status: queued
 - keyword: 働きながら プログラミング 学習時間 確保 方法
   intent: informational
   category: learning
@@ -723,6 +717,13 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: web-seisaku-fukugyo-kasegenai
+- keyword: Python 独学 ロードマップ 社会人
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1000.0
+  status: published
+  slug: python-dokugaku-roadmap-shakaijin
 - keyword: python 独学 おすすめ本
   intent: commercial
   category: learning
