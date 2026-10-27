@@ -2,6 +2,70 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: プログラマー 30代 未経験 無理
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: データサイエンティスト 未経験 30代
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: aws 資格 未経験 転職
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: webデザイン 独学 働きながら
+  intent: commercial
+  category: school
+  program: school-general
+  score: 12000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: java 独学 ロードマップ
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: java 独学 難しい
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: php 独学 難しい
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: webデザイン 独学 何から
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: 働きながら プログラミング 学習時間 確保 方法
   intent: informational
   category: learning
@@ -14,6 +78,14 @@ keywords:
   program: learning-online-course
   score: 1000.0
   status: queued
+- keyword: sql 独学 本
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: プログラミング 入門書 選び方 言語別
   intent: commercial
   category: learning
@@ -210,6 +282,15 @@ keywords:
   boost: 1.5
   source: manual
   slug: claude-code-kenshu-kojin-osusume
+- keyword: wordpress 独学 難易度
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 24000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: wordpress-dokugaku-nanido
 - keyword: 組み込み エンジニア 転職 エージェント
   intent: commercial
   category: career
