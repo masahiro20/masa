@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: webデザイン 独学 働きながら
-  intent: commercial
-  category: school
-  program: school-general
-  score: 12000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: java 独学 ロードマップ
   intent: informational
   category: learning
@@ -445,6 +437,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-shakaijin-muryo
+- keyword: webデザイン 独学 働きながら
+  intent: commercial
+  category: school
+  program: school-general
+  score: 12000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: webdesign-dokugaku-hatarakinagara
 - keyword: 半導体 エンジニア 未経験 転職
   intent: informational
   category: career

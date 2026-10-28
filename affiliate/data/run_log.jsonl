@@ -95,3 +95,4 @@
 {"ts": "2026-10-27T09:50:20+00:00", "source": "routine", "published": ["wordpress-dokugaku-nanido"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-27T21:49:16+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["プログラマー 30代 未経験 無理"], "errors": ["既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複"]}
 {"ts": "2026-10-27T21:50:27+00:00", "source": "routine", "published": ["data-scientist-mikeiken-30dai"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-10-28T03:49:35+00:00", "source": "routine", "published": ["webdesign-dokugaku-hatarakinagara"], "refreshed": [], "rejected": [], "errors": []}
