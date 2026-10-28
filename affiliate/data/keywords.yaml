@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: aws 資格 未経験 転職
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: java 独学 ロードマップ
   intent: informational
   category: learning
@@ -326,6 +318,15 @@ keywords:
   score: 20000.0
   status: published
   slug: mukiteiru-shigoto-wakaranai-shindan
+- keyword: aws 資格 未経験 転職
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 18000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: aws-shikaku-mikeiken-tenshoku
 - keyword: データサイエンティスト 未経験 30代
   intent: commercial
   category: career
