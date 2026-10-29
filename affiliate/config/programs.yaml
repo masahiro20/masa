@@ -72,6 +72,15 @@ programs:
     keywords: ["英語 プログラミング", "エンジニア 英語", "IT 英語", "英語 IT スクール"]
     cta: "無料カウンセリングの内容を確認する"
 
+  - id: side-crowdsourcing
+    name: "クラウドソーシング（副業の案件探し）"
+    category: fukugyo
+    asp: ""
+    url: ""
+    est_reward_jpy: 1000
+    keywords: ["副業 案件", "クラウドソーシング", "在宅 副業", "初案件"]
+    cta: "公開されている副業の案件を見てみる"
+
   - id: career-freelance
     name: "ITフリーランス案件紹介サービス"
     category: career

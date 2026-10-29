@@ -3,7 +3,7 @@ title: 会社員の副業Web制作の始め方｜準備から初案件までの�
 slug: kaishain-fukugyo-web-seisaku-hajimekata
 description: 副業でWeb制作を始めたい会社員の方へ。会社員が副業でWeb制作を始める手順を、就業規則の確認・スキル習得・ポートフォリオ作成・案件獲得・税金の手続きの順に整理。厚生労働省のガイドラインや国税庁の情報をもとに、副業ならではの注意点や向いていない人も解説します。
 audience: 副業でWeb制作を始めたい会社員の方へ
-category: tools
+category: fukugyo
 tags:
 - 副業
 - Web制作
