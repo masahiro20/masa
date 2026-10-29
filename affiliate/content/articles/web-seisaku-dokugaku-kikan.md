@@ -14,7 +14,7 @@ tags:
 keyword: web制作 独学 期間
 programs:
 - learning-online-course
-- school-general
+- school-webdesign
 published: '2026-10-25'
 updated: '2026-10-25'
 origin: ai
@@ -148,9 +148,9 @@ MDNは、このコースが学習者を「初心者」から「エキスパー�
 
 就職を目指す場合は、公的な職業訓練も選択肢です。JEEDによると、求職者支援訓練は雇用保険を受給できない求職者などを対象とし、受講料は原則無料（テキスト代などは自己負担）とされています。職業訓練の特徴は {{link:hello-training-hyouban|ハロートレーニングの評判}}、スクールの必要性は {{link:web-designer-mikeiken-school-hitsuyou|未経験からWebデザイナーにスクールは必要？}} で比べています。
 
-決められた期間で集中して学びたい人は、{{aff:school-general|スクールの無料カウンセリング}}で、目的に合うコースや学習期間の目安を相談してみてください。
+決められた期間で集中して学びたい人は、{{aff:school-webdesign|スクールの無料カウンセリング}}で、目的に合うコースや学習期間の目安を相談してみてください。
 
-{{aff:school-general}}
+{{aff:school-webdesign}}
 
 ## 迷ったときの次の一歩
 

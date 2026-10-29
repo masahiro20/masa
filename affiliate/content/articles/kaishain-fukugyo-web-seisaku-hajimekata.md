@@ -15,7 +15,7 @@ keyword: 会社員 副業 Web制作 始め方 手順
 programs:
 - tools-rental-server
 - learning-online-course
-- school-general
+- school-webdesign
 published: '2026-10-02'
 updated: '2026-10-29'
 origin: ai
@@ -184,7 +184,7 @@ Web制作の副業では、学習期間と案件の作業時間の両方が必�
 
 学習を一人で続けられるか不安な人は、副業向けのコースを用意しているスクールの無料カウンセリングで、カリキュラムや学習時間の目安を聞いてみるのも一つの方法です。
 
-{{aff:school-general}}
+{{aff:school-webdesign}}
 
 ## よくある質問
 

@@ -2,6 +2,18 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: 英語 プログラミング 同時に学ぶ
+  intent: commercial
+  category: school
+  program: school-kredo
+  score: 20000.0
+  status: queued
+- keyword: エンジニア 英語 勉強法 社会人
+  intent: informational
+  category: learning
+  program: school-kredo
+  score: 10000.0
+  status: queued
 - keyword: php 独学 難しい
   intent: informational
   category: learning
@@ -82,6 +94,78 @@ keywords:
   program: learning-books
   score: 200.0
   status: queued
+- keyword: プログラミングスクール ローン 分割 審査
+  intent: commercial
+  category: school
+  program: school-general
+  score: 160000.0
+  status: published
+  boost: 4.0
+  source: search-console
+  slug: programming-school-loan-shinsa
+- keyword: プログラミングスクール 対面 オンライン 違い
+  intent: commercial
+  category: school
+  program: school-general
+  score: 160000.0
+  status: published
+  boost: 4.0
+  source: search-console
+  slug: programming-school-taimen-online-chigai
+- keyword: プログラミングスクール 通い放題
+  intent: commercial
+  category: school
+  program: school-general
+  score: 160000.0
+  status: published
+  boost: 4.0
+  source: search-console
+  slug: programming-school-kayoi-houdai
+- keyword: aws 資格 未経験 転職
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: aws-shikaku-mikeiken-tenshoku
+- keyword: データサイエンティスト 未経験 30代
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: data-scientist-mikeiken-30dai
+- keyword: エンジニア 転職 フルリモート
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-tenshoku-full-remote
+- keyword: it転職 未経験 20代
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: it-tenshoku-mikeiken-20dai
+- keyword: 未経験 エンジニア やめとけ
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: mikeiken-engineer-yametoke
 - keyword: 転職 相談 無料 チャット
   intent: commercial
   category: career
@@ -91,6 +175,77 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: tenshoku-soudan-muryo-chat
+- keyword: webデザイン 独学 働きながら
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: webdesign-dokugaku-hatarakinagara
+- keyword: 40代 プログラミングスクール おすすめ
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: 40dai-programming-school-osusume
+- keyword: プログラミングスクール 社会人 安い
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: programming-school-shakaijin-yasui
+- keyword: プログラミングスクール やめとけ
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: programming-school-yametoke
+- keyword: 40代 未経験 IT転職 可能性 戦略
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 60000.0
+  status: published
+  slug: it-career-change-40s-inexperienced-strategy
+- keyword: 未経験 エンジニア転職 エージェント 使い方
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 60000.0
+  status: published
+  slug: mikeiken-engineer-tenshoku-agent-how-to-use
+- keyword: 転職エージェント IT 複数登録 メリット
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 60000.0
+  status: published
+  slug: it-tenshoku-agent-multiple-registration
+- keyword: インフラエンジニア 未経験 転職 求人 探し方
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 60000.0
+  status: published
+  slug: infra-engineer-mikeiken-tenshoku-kyujin
+- keyword: プログラミングスクール 無料カウンセリング 聞くべきこと
+  intent: transactional
+  category: school
+  program: school-general
+  score: 50000.0
+  status: published
+  slug: programming-school-counseling-questions
 - keyword: conoha wing 評判
   intent: commercial
   category: tools
@@ -118,6 +273,42 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: rental-server-yasui-erabikata
+- keyword: ポートフォリオ エンジニア 作り方
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-portfolio-tsukurikata
+- keyword: エンジニア 転職 面接
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-tenshoku-mensetsu
+- keyword: 社内se 未経験 やめとけ
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: shanai-se-mikeiken-yametoke
+- keyword: エンジニア 転職 未経験 志望動機
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-tenshoku-mikeiken-shiboudouki
 - keyword: 30代 転職 迷う 相談 どこ
   intent: commercial
   category: career
@@ -167,33 +358,34 @@ keywords:
   score: 40000.0
   status: published
   slug: wordpress-blog-start-server-domain-steps
-- keyword: プログラミングスクール ローン 分割 審査
+- keyword: プログラミングスクール 料金 相場 分割払い
   intent: commercial
   category: school
   program: school-general
-  score: 32000.0
+  score: 40000.0
   status: published
-  boost: 4.0
-  source: search-console
-  slug: programming-school-loan-shinsa
-- keyword: プログラミングスクール 対面 オンライン 違い
+  slug: programming-school-ryokin-souba-bunkatsu
+- keyword: プログラミングスクール 転職保証 デメリット
   intent: commercial
   category: school
   program: school-general
-  score: 32000.0
+  score: 40000.0
   status: published
-  boost: 4.0
-  source: search-console
-  slug: programming-school-taimen-online-chigai
-- keyword: プログラミングスクール 通い放題
+  slug: programming-school-tenshoku-hosho-demerit
+- keyword: Webデザイナー 未経験 スクール 必要か
   intent: commercial
   category: school
   program: school-general
-  score: 32000.0
+  score: 40000.0
   status: published
-  boost: 4.0
-  source: search-console
-  slug: programming-school-kayoi-houdai
+  slug: web-designer-mikeiken-school-hitsuyou
+- keyword: プログラミングスクール 選び方 社会人
+  intent: commercial
+  category: school
+  program: school-general
+  score: 40000.0
+  status: published
+  slug: programming-school-choice-for-workers
 - keyword: 会社員 副業 Web制作 始め方 手順
   intent: commercial
   category: tools
@@ -226,6 +418,61 @@ keywords:
   boost: 1.5
   source: manual
   slug: claude-code-kenshu-kojin-osusume
+- keyword: webデザイナー 未経験 在宅
+  intent: informational
+  category: school
+  program: school-general
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: webdesigner-mikeiken-zaitaku
+- keyword: webデザイナー 未経験 やめとけ
+  intent: informational
+  category: school
+  program: school-general
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: webdesigner-mikeiken-yametoke
+- keyword: 未経験 ポートフォリオ 評価されない 理由
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 30000.0
+  status: published
+  slug: mikeiken-portfolio-hyoukasarenai-riyuu
+- keyword: 在職中 転職活動 進め方 エンジニア
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 30000.0
+  status: published
+  slug: zaishokuchu-tenshoku-katsudou-engineer
+- keyword: ITエンジニア 職種 種類 違い 向いている人
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 30000.0
+  status: published
+  slug: it-engineer-shokushu-shurui-chigai
+- keyword: webデザイナー 未経験 30代 無理
+  intent: informational
+  category: school
+  program: school-general
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: webdesigner-mikeiken-30dai-muri
+- keyword: 30代 未経験 エンジニア 転職 現実
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 30000.0
+  status: published
+  slug: 30dai-mikeiken-engineer-tenshoku-genjitsu
 - keyword: wordpress 独学 難易度
   intent: informational
   category: tools
@@ -294,51 +541,6 @@ keywords:
   score: 20000.0
   status: published
   slug: mukiteiru-shigoto-wakaranai-shindan
-- keyword: aws 資格 未経験 転職
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: aws-shikaku-mikeiken-tenshoku
-- keyword: データサイエンティスト 未経験 30代
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: data-scientist-mikeiken-30dai
-- keyword: エンジニア 転職 フルリモート
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: engineer-tenshoku-full-remote
-- keyword: it転職 未経験 20代
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: it-tenshoku-mikeiken-20dai
-- keyword: 未経験 エンジニア やめとけ
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: mikeiken-engineer-yametoke
 - keyword: フリーランスエンジニア 案件 獲得 方法
   intent: commercial
   category: career
@@ -414,15 +616,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-shakaijin-muryo
-- keyword: webデザイン 独学 働きながら
-  intent: commercial
-  category: school
-  program: school-general
-  score: 12000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: webdesign-dokugaku-hatarakinagara
 - keyword: 半導体 エンジニア 未経験 転職
   intent: informational
   category: career
@@ -440,68 +633,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: freelance-engineer-yametoke
-- keyword: 40代 プログラミングスクール おすすめ
-  intent: commercial
-  category: school
-  program: school-general
-  score: 12000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: 40dai-programming-school-osusume
-- keyword: プログラミングスクール 社会人 安い
-  intent: commercial
-  category: school
-  program: school-general
-  score: 12000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: programming-school-shakaijin-yasui
-- keyword: プログラミングスクール やめとけ
-  intent: commercial
-  category: school
-  program: school-general
-  score: 12000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: programming-school-yametoke
-- keyword: 40代 未経験 IT転職 可能性 戦略
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 12000.0
-  status: published
-  slug: it-career-change-40s-inexperienced-strategy
-- keyword: 未経験 エンジニア転職 エージェント 使い方
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 12000.0
-  status: published
-  slug: mikeiken-engineer-tenshoku-agent-how-to-use
-- keyword: 転職エージェント IT 複数登録 メリット
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 12000.0
-  status: published
-  slug: it-tenshoku-agent-multiple-registration
-- keyword: インフラエンジニア 未経験 転職 求人 探し方
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 12000.0
-  status: published
-  slug: infra-engineer-mikeiken-tenshoku-kyujin
-- keyword: プログラミングスクール 無料カウンセリング 聞くべきこと
-  intent: transactional
-  category: school
-  program: school-general
-  score: 10000.0
-  status: published
-  slug: programming-school-counseling-questions
 - keyword: プログラミングスクール 給付金 対象 条件
   intent: commercial
   category: school
@@ -523,42 +654,6 @@ keywords:
   score: 9600.0
   status: published
   slug: programming-school-kyufukin-heiyo-agent
-- keyword: ポートフォリオ エンジニア 作り方
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 9000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: engineer-portfolio-tsukurikata
-- keyword: エンジニア 転職 面接
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 9000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: engineer-tenshoku-mensetsu
-- keyword: 社内se 未経験 やめとけ
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 9000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: shanai-se-mikeiken-yametoke
-- keyword: エンジニア 転職 未経験 志望動機
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 9000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: engineer-tenshoku-mikeiken-shiboudouki
 - keyword: 生成AI 学び方 初心者 社会人
   intent: commercial
   category: learning
@@ -573,34 +668,6 @@ keywords:
   score: 8000.0
   status: published
   slug: seisei-ai-oyako-manabu-houhou
-- keyword: プログラミングスクール 料金 相場 分割払い
-  intent: commercial
-  category: school
-  program: school-general
-  score: 8000.0
-  status: published
-  slug: programming-school-ryokin-souba-bunkatsu
-- keyword: プログラミングスクール 転職保証 デメリット
-  intent: commercial
-  category: school
-  program: school-general
-  score: 8000.0
-  status: published
-  slug: programming-school-tenshoku-hosho-demerit
-- keyword: Webデザイナー 未経験 スクール 必要か
-  intent: commercial
-  category: school
-  program: school-general
-  score: 8000.0
-  status: published
-  slug: web-designer-mikeiken-school-hitsuyou
-- keyword: プログラミングスクール 選び方 社会人
-  intent: commercial
-  category: school
-  program: school-general
-  score: 8000.0
-  status: published
-  slug: programming-school-choice-for-workers
 - keyword: リスキリング リカレント 違い
   intent: informational
   category: school
@@ -637,61 +704,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: reskilling-hojokin-tenshoku-shinai
-- keyword: webデザイナー 未経験 在宅
-  intent: informational
-  category: school
-  program: school-general
-  score: 6000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: webdesigner-mikeiken-zaitaku
-- keyword: webデザイナー 未経験 やめとけ
-  intent: informational
-  category: school
-  program: school-general
-  score: 6000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: webdesigner-mikeiken-yametoke
-- keyword: 未経験 ポートフォリオ 評価されない 理由
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 6000.0
-  status: published
-  slug: mikeiken-portfolio-hyoukasarenai-riyuu
-- keyword: 在職中 転職活動 進め方 エンジニア
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 6000.0
-  status: published
-  slug: zaishokuchu-tenshoku-katsudou-engineer
-- keyword: ITエンジニア 職種 種類 違い 向いている人
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 6000.0
-  status: published
-  slug: it-engineer-shokushu-shurui-chigai
-- keyword: webデザイナー 未経験 30代 無理
-  intent: informational
-  category: school
-  program: school-general
-  score: 6000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: webdesigner-mikeiken-30dai-muri
-- keyword: 30代 未経験 エンジニア 転職 現実
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 6000.0
-  status: published
-  slug: 30dai-mikeiken-engineer-tenshoku-genjitsu
 - keyword: 教育訓練給付金 申請 流れ 必要書類
   intent: informational
   category: school
@@ -828,6 +840,36 @@ keywords:
   score: 300.0
   status: published
   slug: dokuji-domain-torikata-shoshinsha
+- keyword: プログラミングスクール オンライン 注意点 デメリット
+  intent: commercial
+  category: school
+  program: school-general
+  score: 160000.0
+  status: rejected
+  boost: 4.0
+  source: search-console
+  issues:
+  - 既存記事programming-school-taimen-online-chigaiと検索意図が重複
+- keyword: プログラマー 30代 未経験 無理
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複
+- keyword: エンジニア 転職 30代 未経験
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複
 - keyword: キャリアコーチング 怪しい
   intent: commercial
   category: career
@@ -858,16 +900,18 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事blog-rental-server-hitsuyouと検索意図が重複
-- keyword: プログラミングスクール オンライン 注意点 デメリット
+- keyword: プログラミングスクール 後悔 理由 対策
   intent: commercial
   category: school
   program: school-general
-  score: 32000.0
+  score: 40000.0
   status: rejected
-  boost: 4.0
-  source: search-console
   issues:
-  - 既存記事programming-school-taimen-online-chigaiと検索意図が重複
+  - 編集長レビュー 6点（合格 7点以上）
+  - 内部リンクの数と対象がルール違反。{{link:}}は1〜3本までで、かつ指示内で提示された既存記事slugのみ使用可だが、本文では programming-school-choice-for-workers / it-career-change-40s-inexperienced-strategy / reskilling-hojokin-kojin-hikaku / programming-school-kyufukin-conditions / programming-school-counseling-questions / programming-school-kyufukin-heiyo-agent の6本を使用しており、いずれも存在を確認できないslug（リンク切れ＝信頼性毀損）。最大でも実在slug 1〜3本に削減すること。
+  - 図解ブロックが過多。ルールは合計3〜6個だが、point×4・warning×3・merit/demerit・check・steps で10個超。セクションごとにブロックが並び、地の文が痩せて『装飾で埋めた』印象になっている。効果の高い4〜6個（給付金のwarning、契約前check、stepsなど）に絞り、残りは本文の文章に戻す。
+  - フロントマターの programs に career-it-agent が含まれていないのに本文で {{aff:career-it-agent}} を使用しており、メタ情報と本文が不整合。programs を実際の使用IDに合わせるか、CTAを差し替える。
+  - 出典表記が『データサイエンスコラム』『教育訓練給付金.JP』『ライフィ保険ニュース解説』など媒体名の略記にとどまり、読者が一次情報にたどり着けない。特に給付率・上限額（80%・年間64万円）や2024年10月改正は、厚生労働省／政府広報オンラインという公的出所と『◯年◯月時点』の時点表記を本文に明記すべき。民間スクール公式ページ由来の数値（最大80%・64万円・192万円）は『民間スクールの公式説明による』と出所の性質を明示すること。
 - keyword: wordpress 始め方 超 初心者
   intent: informational
   category: tools
@@ -878,26 +922,6 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事wordpress-blog-start-server-domain-stepsと検索意図が重複
-- keyword: プログラマー 30代 未経験 無理
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: rejected
-  boost: 1.5
-  source: google-suggest
-  issues:
-  - 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複
-- keyword: エンジニア 転職 30代 未経験
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 18000.0
-  status: rejected
-  boost: 1.5
-  source: google-suggest
-  issues:
-  - 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複
 - keyword: 機械設計 転職 難しい
   intent: informational
   category: career
@@ -907,18 +931,6 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事kikai-sekkei-tenshoku-agentと検索意図が重複
-- keyword: プログラミングスクール 後悔 理由 対策
-  intent: commercial
-  category: school
-  program: school-general
-  score: 8000.0
-  status: rejected
-  issues:
-  - 編集長レビュー 6点（合格 7点以上）
-  - 内部リンクの数と対象がルール違反。{{link:}}は1〜3本までで、かつ指示内で提示された既存記事slugのみ使用可だが、本文では programming-school-choice-for-workers / it-career-change-40s-inexperienced-strategy / reskilling-hojokin-kojin-hikaku / programming-school-kyufukin-conditions / programming-school-counseling-questions / programming-school-kyufukin-heiyo-agent の6本を使用しており、いずれも存在を確認できないslug（リンク切れ＝信頼性毀損）。最大でも実在slug 1〜3本に削減すること。
-  - 図解ブロックが過多。ルールは合計3〜6個だが、point×4・warning×3・merit/demerit・check・steps で10個超。セクションごとにブロックが並び、地の文が痩せて『装飾で埋めた』印象になっている。効果の高い4〜6個（給付金のwarning、契約前check、stepsなど）に絞り、残りは本文の文章に戻す。
-  - フロントマターの programs に career-it-agent が含まれていないのに本文で {{aff:career-it-agent}} を使用しており、メタ情報と本文が不整合。programs を実際の使用IDに合わせるか、CTAを差し替える。
-  - 出典表記が『データサイエンスコラム』『教育訓練給付金.JP』『ライフィ保険ニュース解説』など媒体名の略記にとどまり、読者が一次情報にたどり着けない。特に給付率・上限額（80%・年間64万円）や2024年10月改正は、厚生労働省／政府広報オンラインという公的出所と『◯年◯月時点』の時点表記を本文に明記すべき。民間スクール公式ページ由来の数値（最大80%・64万円・192万円）は『民間スクールの公式説明による』と出所の性質を明示すること。
 - keyword: 教育訓練給付金 働きながら
   intent: informational
   category: school

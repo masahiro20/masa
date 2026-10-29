@@ -16,13 +16,17 @@
 
 programs:
   - id: school-general
-    name: "プログラミングスクール（無料カウンセリング）"
+    name: "byTech（未経験からAI開発を学ぶオンラインスクール）"
     category: school
-    asp: ""
-    url: ""
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95323"
+    banner_height: 250
+    banner_width: 250
+    banner: "https://image.moshimo.com/af-img/5991/000000095323.png"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95323"
     est_reward_jpy: 10000
-    keywords: ["プログラミングスクール", "おすすめ", "比較", "評判", "無料カウンセリング"]
-    cta: "無料カウンセリングで学習プランを相談する"
+    keywords: ["プログラミングスクール", "おすすめ", "比較", "評判", "無料カウンセリング", "AIエンジニア"]
+    cta: "無料カウンセリングの内容を確認する"
 
   - id: school-kyufukin
     name: "給付金対象のプログラミング講座"
@@ -34,13 +38,39 @@ programs:
     cta: "給付金対象講座の条件を確認する"
 
   - id: career-it-agent
-    name: "IT・Web業界特化の転職エージェント"
+    name: "ユニゾンキャリア（エンジニア専門の転職エージェント）"
     category: career
-    asp: ""
-    url: ""
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849850&p_id=7675&pc_id=22217&pl_id=96755"
+    banner_height: 64
+    banner_width: 414
+    banner: "https://image.moshimo.com/af-img/5656/000000096755.png"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849850&p_id=7675&pc_id=22217&pl_id=96755"
     est_reward_jpy: 15000
     keywords: ["IT転職", "エンジニア転職", "転職エージェント", "未経験"]
-    cta: "無料でキャリア相談をしてみる"
+    cta: "無料の転職相談の内容を確認する"
+
+  - id: school-webdesign
+    name: "Webデザインスクール（無料カウンセリング）"
+    category: school
+    asp: ""
+    url: ""
+    est_reward_jpy: 10000
+    keywords: ["Webデザイン スクール", "Webデザイナー", "Web制作 スクール"]
+    cta: "無料カウンセリングで学習プランを相談する"
+
+  - id: school-kredo
+    name: "Kredo Online（英語とITをオンラインで学べるスクール）"
+    category: school
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5867032&p_id=7781&pc_id=22548&pl_id=97341"
+    banner_height: 500
+    banner_width: 500
+    banner: "https://image.moshimo.com/af-img/7553/000000097341.png"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5867032&p_id=7781&pc_id=22548&pl_id=97341"
+    est_reward_jpy: 5000
+    keywords: ["英語 プログラミング", "エンジニア 英語", "IT 英語", "英語 IT スクール"]
+    cta: "無料カウンセリングの内容を確認する"
 
   - id: career-freelance
     name: "ITフリーランス案件紹介サービス"
@@ -139,6 +169,20 @@ programs:
     est_reward_jpy: 2000
     keywords: ["生成AI 親子", "子ども 生成AI", "生成AI 学び方 初心者", "ChatGPT 子ども 使わせ方", "生成AI 家庭", "AI 習い事"]
     cta: "14日間の無料体験の内容を確認する"
+
+  - id: job-factory
+    name: "製造業の工場求人（寮・食費付き）"
+    category: career
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5872419&p_id=7694&pc_id=22266&pl_id=95905"
+    banner_height: 661
+    banner_width: 1001
+    banner: "https://image.moshimo.com/af-img/6249/000000095905.png"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5872419&p_id=7694&pc_id=22266&pl_id=95905"
+    est_reward_jpy: 0
+    keywords: []
+    cta: "求人の内容を確認する"
+    # スキルコンパスの読者（ITスキル・IT転職）とは別の層。広告コードの保管用で、記事の自動選定には使わない
 
   - id: edu-sougaku
     name: "ソウガク（発達障害・グレーゾーン専門のオンライン家庭教師）"
