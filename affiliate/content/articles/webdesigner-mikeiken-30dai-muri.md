@@ -12,7 +12,7 @@ tags:
 - スクール
 keyword: webデザイナー 未経験 30代 無理
 programs:
-- school-general
+- school-webdesign
 - school-kyufukin
 published: '2026-10-09'
 updated: '2026-10-09'
@@ -135,7 +135,7 @@ Webデザインのスキルは、転職だけでなく、今の仕事や副業�
 
 スクールを検討する場合は、複数のスクールの無料カウンセリングで、30代の受講者の実績や転職支援の内容を聞き比べてから判断しましょう。
 
-{{aff:school-general}}
+{{aff:school-webdesign}}
 
 ## よくある質問
 

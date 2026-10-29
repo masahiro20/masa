@@ -13,7 +13,7 @@ tags:
 - 教育訓練給付
 keyword: Webデザイナー 未経験 スクール 必要か
 programs:
-- school-general
+- school-webdesign
 - school-kyufukin
 - learning-online-course
 - career-coaching
@@ -193,7 +193,7 @@ Webデザイナーに興味はあるものの、スクールの料金ページ�
 
 編集部としては、いきなり1校に決めず、2校ほど無料カウンセリングで話を聞いて比べることをおすすめします。聞くだけなら費用はかかりませんし、その場で契約する必要もありません。
 
-{{aff:school-general}}
+{{aff:school-webdesign}}
 
 ### Webデザイナー以外の選択肢も含めて相談したい場合
 
