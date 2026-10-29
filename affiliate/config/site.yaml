@@ -20,7 +20,7 @@ site:
 
 # 扱うジャンル。planner（キーワード選定）と writer（記事生成）に渡される。
 niche:
-  theme: "プログラミング学習・IT転職・Web制作ツール"
+  theme: "プログラミング学習・IT転職・Web制作ツール・IT副業"
   audience: "未経験〜初級からITスキルを身につけて転職・副業・キャリアアップを目指す20〜40代の社会人"
   categories:
     - slug: school
@@ -47,6 +47,12 @@ niche:
       name: 独学・学習法
       color: "#7a4b2a"
       description: 働きながら学ぶための学習計画、教材の選び方、挫折しないコツを紹介します。
+    - slug: fukugyo
+      photo: home-desk
+      photo_pos: "50% 40%"
+      name: IT副業
+      color: "#2a6168"
+      description: Web制作・Webデザイン・ブログ・プログラミングなど、ITスキルを使った副業の始め方と、続けるための判断材料をまとめています。
 
 # 自動運用の設定
 autopilot:

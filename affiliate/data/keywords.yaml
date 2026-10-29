@@ -2,6 +2,38 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: プログラミング 副業 未経験 難しい
+  intent: commercial
+  category: fukugyo
+  program: school-general
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 副業 プログラミング 現実
+  intent: informational
+  category: fukugyo
+  program: school-general
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 副業 エンジニア 土日
+  intent: commercial
+  category: fukugyo
+  program: career-freelance
+  score: 24000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 副業 ブログ 稼げない
+  intent: informational
+  category: fukugyo
+  program: tools-rental-server
+  score: 24000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: 英語 プログラミング 同時に学ぶ
   intent: commercial
   category: school
@@ -14,6 +46,30 @@ keywords:
   program: school-kredo
   score: 10000.0
   status: queued
+- keyword: web制作 副業 未経験
+  intent: commercial
+  category: fukugyo
+  program: learning-online-course
+  score: 3000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 40代 web制作 副業
+  intent: commercial
+  category: fukugyo
+  program: learning-online-course
+  score: 3000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 副業 webデザイン 未経験
+  intent: commercial
+  category: fukugyo
+  program: learning-online-course
+  score: 3000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: php 独学 難しい
   intent: informational
   category: learning
@@ -27,6 +83,30 @@ keywords:
   category: learning
   program: learning-online-course
   score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: web制作 副業 土日のみ
+  intent: informational
+  category: fukugyo
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: web制作 副業 きつい
+  intent: informational
+  category: fukugyo
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: web制作 副業 案件
+  intent: commercial
+  category: fukugyo
+  program: side-crowdsourcing
+  score: 1200.0
   status: queued
   boost: 1.5
   source: google-suggest
