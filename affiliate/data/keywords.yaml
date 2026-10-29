@@ -30,14 +30,6 @@ keywords:
   program: learning-online-course
   score: 1000.0
   status: queued
-- keyword: sql 独学 本
-  intent: commercial
-  category: learning
-  program: learning-books
-  score: 600.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: プログラミング 入門書 選び方 言語別
   intent: commercial
   category: learning
@@ -802,6 +794,15 @@ keywords:
   score: 1000.0
   status: published
   slug: python-dokugaku-roadmap-shakaijin
+- keyword: sql 独学 本
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: sql-dokugaku-hon
 - keyword: python 独学 おすすめ本
   intent: commercial
   category: learning
