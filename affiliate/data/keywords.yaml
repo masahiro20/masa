@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: 副業 エンジニア 土日
-  intent: commercial
-  category: fukugyo
-  program: career-freelance
-  score: 24000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 副業 ブログ 稼げない
   intent: informational
   category: fukugyo
@@ -554,6 +546,15 @@ keywords:
   score: 30000.0
   status: published
   slug: 30dai-mikeiken-engineer-tenshoku-genjitsu
+- keyword: 副業 エンジニア 土日
+  intent: commercial
+  category: fukugyo
+  program: career-freelance
+  score: 24000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: fukugyo-engineer-donichi
 - keyword: wordpress 独学 難易度
   intent: informational
   category: tools
