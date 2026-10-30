@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: 副業 ブログ 稼げない
-  intent: informational
-  category: fukugyo
-  program: tools-rental-server
-  score: 24000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 英語 プログラミング 同時に学ぶ
   intent: commercial
   category: school
@@ -546,6 +538,15 @@ keywords:
   score: 30000.0
   status: published
   slug: 30dai-mikeiken-engineer-tenshoku-genjitsu
+- keyword: 副業 ブログ 稼げない
+  intent: informational
+  category: fukugyo
+  program: tools-rental-server
+  score: 24000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: fukugyo-blog-kasegenai
 - keyword: 副業 エンジニア 土日
   intent: commercial
   category: fukugyo
