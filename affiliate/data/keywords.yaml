@@ -10,12 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: 英語 プログラミング 同時に学ぶ
-  intent: commercial
-  category: school
-  program: school-kredo
-  score: 20000.0
-  status: queued
 - keyword: エンジニア 英語 勉強法 社会人
   intent: informational
   category: learning
@@ -617,6 +611,13 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: rental-server-hiyou-kanjoukamoku
+- keyword: 英語 プログラミング 同時に学ぶ
+  intent: commercial
+  category: school
+  program: school-kredo
+  score: 20000.0
+  status: published
+  slug: eigo-programming-douji-manabu
 - keyword: 未経験 職種 向いている仕事 わからない 診断
   intent: informational
   category: career
