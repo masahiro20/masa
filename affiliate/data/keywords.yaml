@@ -2,20 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 副業 プログラミング 現実
-  intent: informational
-  category: fukugyo
-  program: school-general
-  score: 30000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: エンジニア 英語 勉強法 社会人
-  intent: informational
-  category: learning
-  program: school-kredo
-  score: 10000.0
-  status: queued
 - keyword: web制作 副業 未経験
   intent: commercial
   category: fukugyo
@@ -717,6 +703,13 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: freelance-engineer-yametoke
+- keyword: エンジニア 英語 勉強法 社会人
+  intent: informational
+  category: learning
+  program: school-kredo
+  score: 10000.0
+  status: published
+  slug: engineer-eigo-benkyouhou-shakaijin
 - keyword: プログラミングスクール 給付金 対象 条件
   intent: commercial
   category: school
@@ -996,6 +989,16 @@ keywords:
   - 図解ブロックが過多。ルールは合計3〜6個だが、point×4・warning×3・merit/demerit・check・steps で10個超。セクションごとにブロックが並び、地の文が痩せて『装飾で埋めた』印象になっている。効果の高い4〜6個（給付金のwarning、契約前check、stepsなど）に絞り、残りは本文の文章に戻す。
   - フロントマターの programs に career-it-agent が含まれていないのに本文で {{aff:career-it-agent}} を使用しており、メタ情報と本文が不整合。programs を実際の使用IDに合わせるか、CTAを差し替える。
   - 出典表記が『データサイエンスコラム』『教育訓練給付金.JP』『ライフィ保険ニュース解説』など媒体名の略記にとどまり、読者が一次情報にたどり着けない。特に給付率・上限額（80%・年間64万円）や2024年10月改正は、厚生労働省／政府広報オンラインという公的出所と『◯年◯月時点』の時点表記を本文に明記すべき。民間スクール公式ページ由来の数値（最大80%・64万円・192万円）は『民間スクールの公式説明による』と出所の性質を明示すること。
+- keyword: 副業 プログラミング 現実
+  intent: informational
+  category: fukugyo
+  program: school-general
+  score: 30000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事programming-fukugyo-mikeiken-muzukashiiと検索意図が重複
 - keyword: wordpress 始め方 超 初心者
   intent: informational
   category: tools
