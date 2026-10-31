@@ -106,3 +106,5 @@
 {"ts": "2026-10-30T21:49:32+00:00", "source": "routine", "published": ["eigo-programming-douji-manabu"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-31T03:48:17+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["副業 プログラミング 現実"], "errors": ["既存記事programming-fukugyo-mikeiken-muzukashiiと検索意図が重複"]}
 {"ts": "2026-10-31T03:49:32+00:00", "source": "routine", "published": ["engineer-eigo-benkyouhou-shakaijin"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-10-31T09:48:20+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["web制作 副業 未経験"], "errors": ["既存記事kaishain-fukugyo-web-seisaku-hajimekataと検索意図が重複"]}
+{"ts": "2026-10-31T09:49:39+00:00", "source": "routine", "published": ["40dai-web-seisaku-fukugyo"], "refreshed": [], "rejected": [], "errors": []}
