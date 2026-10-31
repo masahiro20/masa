@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 副業 webデザイン 未経験
-  intent: commercial
-  category: fukugyo
-  program: learning-online-course
-  score: 3000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: php 独学 難しい
   intent: informational
   category: learning
@@ -39,14 +31,6 @@ keywords:
   category: fukugyo
   program: learning-online-course
   score: 1500.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: web制作 副業 案件
-  intent: commercial
-  category: fukugyo
-  program: side-crowdsourcing
-  score: 1200.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -869,6 +853,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: web-seisaku-fukugyo-kasegenai
+- keyword: web制作 副業 案件
+  intent: commercial
+  category: fukugyo
+  program: side-crowdsourcing
+  score: 1200.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: web-seisaku-fukugyo-anken
 - keyword: Python 独学 ロードマップ 社会人
   intent: informational
   category: learning
@@ -1029,6 +1022,16 @@ keywords:
   status: rejected
   issues:
   - 既存記事seisei-ai-oyako-manabu-houhouと検索意図が重複
+- keyword: 副業 webデザイン 未経験
+  intent: commercial
+  category: fukugyo
+  program: learning-online-course
+  score: 3000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事kaishain-fukugyo-web-seisaku-hajimekataと検索意図が重複
 - keyword: web制作 副業 未経験
   intent: commercial
   category: fukugyo
