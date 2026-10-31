@@ -234,12 +234,15 @@ def find_blank(recs, r, c):
     return None, None
 
 
-def fill_blank_with_label(recs, r, c, isst):
+def fill_blank_with_label(recs, r, c, isst=None, rk=None):
     """空白セルに文字(共有文字列の番号 isst)を入れる。MULBLANKなら前後に分ける。書式は元の空白セルのまま"""
     i, xf = find_blank(recs, r, c)
     assert i is not None, '空白セルが見つからない: %s' % ((r, c),)
     t, d, _ = recs[i]
-    new = [[LABELSST, bytearray(struct.pack('<HHHI', r - 1, c - 1, xf, isst)), 0]]
+    if rk is not None:
+        new = [[RK, bytearray(struct.pack('<HHH', r - 1, c - 1, xf) + rk_encode(rk)), 0]]
+    else:
+        new = [[LABELSST, bytearray(struct.pack('<HHHI', r - 1, c - 1, xf, isst)), 0]]
     if t == 0xBE:
         row, c1 = struct.unpack_from('<HH', d, 0)
         c2 = struct.unpack_from('<H', d, len(d) - 2)[0]
@@ -393,6 +396,9 @@ def patch(src, dst, strings, numbers, formulas, blank_textboxes, forbid, clear=(
         total -= len(orphaned)
     # 4c. 空白だったセルに文字を入れる(書式は元の空白セルのまま)
     for (r, c), text in (fill or {}).items():
+        if isinstance(text, (int, float)):          # 数値は整数(RK)で入れる
+            fill_blank_with_label(recs, r, c, rk=text)
+            continue
         entries.append({'raw': encode_string(text), 'text': text})
         unique += 1
         total += 1
