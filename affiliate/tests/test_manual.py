@@ -128,3 +128,27 @@ def test_gsc_import_and_rewrite_priority(tmp_path, monkeypatch, cfg):
     out = json.loads(buf.getvalue())
     assert [t["slug"] for t in out["targets"]] == ["rank-me", "ctr-me", "old"]
     assert out["targets"][1]["focus"] == "ctr"
+
+
+def test_gsc_impressions_only_export_orders_rewrites(tmp_path, monkeypatch, cfg):
+    import contextlib
+    import io
+    from engine import gsc
+    monkeypatch.setattr(gsc, "PAGES_FILE", tmp_path / "gsc_pages.json")
+    monkeypatch.setattr(gsc, "QUERIES_FILE", tmp_path / "gsc_queries.json")
+    base = cfg.site["base_url"]
+    f = tmp_path / "ページ.csv"
+    f.write_text(f"上位のページ,表示回数\n{base}/articles/seen/,21\n", encoding="utf-8")
+    assert gsc.import_export(f) == {"pages": 1}
+    arts = [Article(title=s, slug=s, description="", category="school", body="本文", published=p, updated=p)
+            for s, p in [("old", "2026-09-01"), ("seen", "2026-10-01")]]
+    assert gsc.opportunities(arts, base, gsc.load_pages()) == []
+    monkeypatch.setattr(manual, "load_articles", lambda: arts)
+
+    class A:
+        n = 2
+
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        manual.cmd_rewrite_next(cfg, A())
+    assert [t["slug"] for t in json.loads(buf.getvalue())["targets"]] == ["seen", "old"]

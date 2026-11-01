@@ -98,8 +98,14 @@ def cmd_rewrite_next(cfg: Config, args) -> int:
     def has_live_ad(a) -> bool:
         return any(pid in live for pid in re.findall(r"\{\{aff:([a-z0-9-]+)", a.body))
 
-    # 広告が実際に入っている記事を先に、その中では古いものから
-    todo.sort(key=lambda a: (not has_live_ad(a), a.published or "", a.slug))
+    # 検索で表示されている記事（Search Console の表示回数が多い順）を先に、次に広告が入っている記事、その中では古いものから
+    pages = gsc.load_pages()
+    base = cfg.site["base_url"].rstrip("/")
+
+    def impressions(a) -> float:
+        return (pages.get(f"{base}/{a.url_path}") or {}).get("impressions") or 0
+
+    todo.sort(key=lambda a: (-impressions(a), not has_live_ad(a), a.published or "", a.slug))
 
     def target(a, op=None) -> dict:
         t = {"slug": a.slug, "title": a.title, "path": f"content/articles/{a.slug}.md", "category": a.category,
@@ -110,7 +116,7 @@ def cmd_rewrite_next(cfg: Config, args) -> int:
 
     # Search Console の数字があれば、伸ばしどころの記事（広告ありを優先）を先に回す
     by_slug = {a.slug: a for a in articles}
-    ops = gsc.opportunities(articles, cfg.site["base_url"], gsc.load_pages())
+    ops = gsc.opportunities(articles, cfg.site["base_url"], pages)
     ops.sort(key=lambda o: not has_live_ad(by_slug[o["slug"]]))
     targets = [target(by_slug[o["slug"]], o) for o in ops[: args.n]]
     picked = {t["slug"] for t in targets}
