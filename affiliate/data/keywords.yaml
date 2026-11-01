@@ -18,14 +18,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: 生成ai 副業 初心者
-  intent: commercial
-  category: fukugyo
-  program: school-general
-  score: 60000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 生成ai 副業 スクール
   intent: commercial
   category: school
@@ -219,6 +211,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: mikeiken-engineer-yametoke
+- keyword: 生成ai 副業 初心者
+  intent: commercial
+  category: fukugyo
+  program: school-general
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: seisei-ai-fukugyo-shoshinsha
 - keyword: プログラミング 副業 未経験 難しい
   intent: commercial
   category: fukugyo
