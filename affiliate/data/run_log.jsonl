@@ -111,3 +111,7 @@
 {"ts": "2026-10-31T21:48:18+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["副業 webデザイン 未経験"], "errors": ["既存記事kaishain-fukugyo-web-seisaku-hajimekataと検索意図が重複"]}
 {"ts": "2026-10-31T21:49:42+00:00", "source": "routine", "published": ["web-seisaku-fukugyo-anken"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-01T03:49:50+00:00", "source": "routine", "published": ["php-dokugaku-muzukashii"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-01T09:48:25+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["webデザイン 独学 何から"], "errors": ["既存記事webdesign-dokugaku-hatarakinagaraと検索意図が重複"]}
+{"ts": "2026-11-01T09:48:37+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["web制作 副業 土日のみ"], "errors": ["既存記事fukugyo-engineer-donichiと検索意図が重複"]}
+{"ts": "2026-11-01T09:48:56+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["web制作 副業 きつい"], "errors": ["既存記事web-seisaku-fukugyo-kasegenaiと検索意図が重複"]}
+{"ts": "2026-11-01T09:50:25+00:00", "source": "routine", "published": ["ai-engineer-mikeiken-tenshoku"], "refreshed": [], "rejected": [], "errors": []}
