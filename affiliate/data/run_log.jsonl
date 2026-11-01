@@ -110,3 +110,4 @@
 {"ts": "2026-10-31T09:49:39+00:00", "source": "routine", "published": ["40dai-web-seisaku-fukugyo"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-10-31T21:48:18+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["副業 webデザイン 未経験"], "errors": ["既存記事kaishain-fukugyo-web-seisaku-hajimekataと検索意図が重複"]}
 {"ts": "2026-10-31T21:49:42+00:00", "source": "routine", "published": ["web-seisaku-fukugyo-anken"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-01T03:49:50+00:00", "source": "routine", "published": ["php-dokugaku-muzukashii"], "refreshed": [], "rejected": [], "errors": []}
