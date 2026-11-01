@@ -1,173 +1,551 @@
 {
  "imported": "2026-11-01",
  "rows": {
-  "https://skill-compass.jp/articles/it-career-change-40s-inexperienced-strategy/": {
-   "clicks": null,
-   "impressions": 21.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/rental-server-hiyou-kanjoukamoku/": {
-   "clicks": null,
-   "impressions": 14.0,
-   "ctr": null,
-   "position": null
-  },
   "https://skill-compass.jp/articles/reskilling-hojokin-itsu-moraeru/": {
-   "clicks": null,
-   "impressions": 13.0,
-   "ctr": null,
-   "position": null
+   "clicks": 9.0,
+   "impressions": 108.0,
+   "ctr": 0.0833,
+   "position": 6.82
   },
-  "https://skill-compass.jp/articles/claude-code-ryokin/": {
-   "clicks": null,
-   "impressions": 3.0,
-   "ctr": null,
-   "position": null
+  "https://skill-compass.jp/about/": {
+   "clicks": 7.0,
+   "impressions": 57.0,
+   "ctr": 0.12279999999999999,
+   "position": 6.42
   },
   "https://skill-compass.jp/": {
-   "clicks": null,
-   "impressions": 2.0,
-   "ctr": null,
-   "position": null
+   "clicks": 6.0,
+   "impressions": 25.0,
+   "ctr": 0.24,
+   "position": 6.28
+  },
+  "https://skill-compass.jp/articles/tenshoku-soudan-muryo-chat/": {
+   "clicks": 3.0,
+   "impressions": 51.0,
+   "ctr": 0.0588,
+   "position": 10.37
+  },
+  "https://skill-compass.jp/contact/": {
+   "clicks": 3.0,
+   "impressions": 5.0,
+   "ctr": 0.6,
+   "position": 21.8
+  },
+  "https://skill-compass.jp/articles/kyoiku-kunren-kyufukin-shinsei-nagare/": {
+   "clicks": 2.0,
+   "impressions": 123.0,
+   "ctr": 0.0163,
+   "position": 7.72
   },
   "https://skill-compass.jp/articles/ai-coding-muryo-osusume/": {
-   "clicks": null,
-   "impressions": 2.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/ai-coding-shoshinsha-roadmap/": {
-   "clicks": null,
-   "impressions": 2.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/html-css-javascript-dokugaku/": {
-   "clicks": null,
-   "impressions": 2.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/java-dokugaku-roadmap/": {
-   "clicks": null,
-   "impressions": 2.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/python-dokugaku-nanjikan/": {
-   "clicks": null,
-   "impressions": 2.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/webdesigner-mikeiken-zaitaku/": {
-   "clicks": null,
-   "impressions": 2.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/ai-kudou-kaihatsu-vibe-coding-chigai/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/aws-shikaku-mikeiken-tenshoku/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/claude-code-kenshu-kojin-osusume/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/dokuji-domain-torikata-shoshinsha/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/engineer-portfolio-tsukurikata/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/engineer-tenshoku-mensetsu/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/freelance-engineer-shu3-anken/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/freelance-engineer-unit-price-by-skill/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/it-tenshoku-agent-multiple-registration/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/kumikomi-engineer-tenshoku-agent/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/mukiteiru-shigoto-wakaranai-shindan/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/programming-school-choice-for-workers/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
-  },
-  "https://skill-compass.jp/articles/programming-school-kayoi-houdai/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
+   "clicks": 2.0,
+   "impressions": 50.0,
+   "ctr": 0.04,
+   "position": 23.4
   },
   "https://skill-compass.jp/articles/programming-school-ryokin-souba-bunkatsu/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
+   "clicks": 1.0,
+   "impressions": 100.0,
+   "ctr": 0.01,
+   "position": 37.87
+  },
+  "https://skill-compass.jp/articles/it-career-change-40s-inexperienced-strategy/": {
+   "clicks": 1.0,
+   "impressions": 60.0,
+   "ctr": 0.0167,
+   "position": 18.38
+  },
+  "https://skill-compass.jp/articles/programming-dokugaku-nanikara/": {
+   "clicks": 1.0,
+   "impressions": 44.0,
+   "ctr": 0.0227,
+   "position": 55.84
+  },
+  "https://skill-compass.jp/articles/ai-coding-shoshinsha-roadmap/": {
+   "clicks": 1.0,
+   "impressions": 42.0,
+   "ctr": 0.023799999999999998,
+   "position": 7.67
+  },
+  "https://skill-compass.jp/articles/reskilling-hojokin-tenshoku-shinai/": {
+   "clicks": 1.0,
+   "impressions": 32.0,
+   "ctr": 0.031200000000000002,
+   "position": 8.25
+  },
+  "https://skill-compass.jp/articles/python-dokugaku-roadmap-shakaijin/": {
+   "clicks": 1.0,
+   "impressions": 24.0,
+   "ctr": 0.0417,
+   "position": 45.04
+  },
+  "https://skill-compass.jp/articles/hello-training-hyouban/": {
+   "clicks": 1.0,
+   "impressions": 22.0,
+   "ctr": 0.0455,
+   "position": 11.64
+  },
+  "https://skill-compass.jp/articles/ai-kudou-kaihatsu-manabikata-engineer/": {
+   "clicks": 1.0,
+   "impressions": 12.0,
+   "ctr": 0.0833,
+   "position": 6.58
+  },
+  "https://skill-compass.jp/articles/yaritaikoto-wakaranai-tenshoku-20dai/": {
+   "clicks": 1.0,
+   "impressions": 11.0,
+   "ctr": 0.0909,
+   "position": 31.91
+  },
+  "https://skill-compass.jp/articles/claude-code-kenshu-kojin-osusume/": {
+   "clicks": 1.0,
+   "impressions": 6.0,
+   "ctr": 0.16670000000000001,
+   "position": 5.67
+  },
+  "https://skill-compass.jp/articles/engineer-portfolio-tsukurikata/": {
+   "clicks": 1.0,
+   "impressions": 3.0,
+   "ctr": 0.3333,
+   "position": 7.67
+  },
+  "https://skill-compass.jp/articles/rental-server-hiyou-kanjoukamoku/": {
+   "clicks": 0.0,
+   "impressions": 79.0,
+   "ctr": 0.0,
+   "position": 15.1
+  },
+  "https://skill-compass.jp/articles/it-tenshoku-agent-multiple-registration/": {
+   "clicks": 0.0,
+   "impressions": 74.0,
+   "ctr": 0.0,
+   "position": 65.62
+  },
+  "https://skill-compass.jp/articles/online-course-vs-programming-school/": {
+   "clicks": 0.0,
+   "impressions": 72.0,
+   "ctr": 0.0,
+   "position": 37.07
+  },
+  "https://skill-compass.jp/articles/mukiteiru-shigoto-wakaranai-shindan/": {
+   "clicks": 0.0,
+   "impressions": 55.0,
+   "ctr": 0.0,
+   "position": 12.47
+  },
+  "https://skill-compass.jp/articles/web-designer-mikeiken-school-hitsuyou/": {
+   "clicks": 0.0,
+   "impressions": 45.0,
+   "ctr": 0.0,
+   "position": 21.64
   },
   "https://skill-compass.jp/articles/programming-school-yametoke/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
+   "clicks": 0.0,
+   "impressions": 39.0,
+   "ctr": 0.0,
+   "position": 51.0
+  },
+  "https://skill-compass.jp/articles/career-coaching-muryo-yuryo-chigai/": {
+   "clicks": 0.0,
+   "impressions": 38.0,
+   "ctr": 0.0,
+   "position": 24.13
+  },
+  "https://skill-compass.jp/articles/programming-school-kayoi-houdai/": {
+   "clicks": 0.0,
+   "impressions": 34.0,
+   "ctr": 0.0,
+   "position": 11.97
+  },
+  "https://skill-compass.jp/articles/webdesigner-mikeiken-30dai-muri/": {
+   "clicks": 0.0,
+   "impressions": 31.0,
+   "ctr": 0.0,
+   "position": 16.1
+  },
+  "https://skill-compass.jp/articles/wordpress-portfolio-tsukurikata-mikeiken/": {
+   "clicks": 0.0,
+   "impressions": 29.0,
+   "ctr": 0.0,
+   "position": 11.34
+  },
+  "https://skill-compass.jp/articles/it-engineer-shokushu-shurui-chigai/": {
+   "clicks": 0.0,
+   "impressions": 28.0,
+   "ctr": 0.0,
+   "position": 77.82
+  },
+  "https://skill-compass.jp/articles/it-passport-sankousho-osusume/": {
+   "clicks": 0.0,
+   "impressions": 25.0,
+   "ctr": 0.0,
+   "position": 7.96
+  },
+  "https://skill-compass.jp/articles/web-seisaku-fukugyo-kasegenai/": {
+   "clicks": 0.0,
+   "impressions": 21.0,
+   "ctr": 0.0,
+   "position": 29.0
+  },
+  "https://skill-compass.jp/articles/dokuji-domain-torikata-shoshinsha/": {
+   "clicks": 0.0,
+   "impressions": 20.0,
+   "ctr": 0.0,
+   "position": 38.95
+  },
+  "https://skill-compass.jp/articles/python-dokugaku-nanjikan/": {
+   "clicks": 0.0,
+   "impressions": 19.0,
+   "ctr": 0.0,
+   "position": 16.32
+  },
+  "https://skill-compass.jp/articles/reskilling-recurrent-chigai/": {
+   "clicks": 0.0,
+   "impressions": 19.0,
+   "ctr": 0.0,
+   "position": 24.84
+  },
+  "https://skill-compass.jp/articles/javascript-dokugaku-muzukashii/": {
+   "clicks": 0.0,
+   "impressions": 16.0,
+   "ctr": 0.0,
+   "position": 9.38
+  },
+  "https://skill-compass.jp/articles/reskilling-hojokin-itsu-moraeru/#h-3b6dd99d": {
+   "clicks": 0.0,
+   "impressions": 15.0,
+   "ctr": 0.0,
+   "position": 2.73
+  },
+  "https://skill-compass.jp/articles/reskilling-hojokin-itsu-moraeru/#h-42a9ae64": {
+   "clicks": 0.0,
+   "impressions": 15.0,
+   "ctr": 0.0,
+   "position": 2.73
+  },
+  "https://skill-compass.jp/articles/programming-school-kyufukin-conditions/": {
+   "clicks": 0.0,
+   "impressions": 15.0,
+   "ctr": 0.0,
+   "position": 14.0
+  },
+  "https://skill-compass.jp/articles/programming-school-choice-for-workers/": {
+   "clicks": 0.0,
+   "impressions": 14.0,
+   "ctr": 0.0,
+   "position": 25.07
+  },
+  "https://skill-compass.jp/articles/30dai-tenshoku-mayou-soudan/": {
+   "clicks": 0.0,
+   "impressions": 14.0,
+   "ctr": 0.0,
+   "position": 33.93
+  },
+  "https://skill-compass.jp/articles/reskilling-hojokin-itsu-moraeru/#h-2886ea94": {
+   "clicks": 0.0,
+   "impressions": 13.0,
+   "ctr": 0.0,
+   "position": 2.85
+  },
+  "https://skill-compass.jp/articles/reskilling-hojokin-itsu-moraeru/#h-38cb540c": {
+   "clicks": 0.0,
+   "impressions": 13.0,
+   "ctr": 0.0,
+   "position": 2.85
+  },
+  "https://skill-compass.jp/articles/programming-school-loan-shinsa/": {
+   "clicks": 0.0,
+   "impressions": 12.0,
+   "ctr": 0.0,
+   "position": 12.58
+  },
+  "https://skill-compass.jp/articles/conoha-wing-hyouban/": {
+   "clicks": 0.0,
+   "impressions": 12.0,
+   "ctr": 0.0,
+   "position": 14.5
+  },
+  "https://skill-compass.jp/articles/webdesigner-mikeiken-zaitaku/": {
+   "clicks": 0.0,
+   "impressions": 12.0,
+   "ctr": 0.0,
+   "position": 33.08
+  },
+  "https://skill-compass.jp/articles/freelance-engineer-yametoke/": {
+   "clicks": 0.0,
+   "impressions": 12.0,
+   "ctr": 0.0,
+   "position": 48.0
+  },
+  "https://skill-compass.jp/articles/30dai-mikeiken-engineer-tenshoku-genjitsu/": {
+   "clicks": 0.0,
+   "impressions": 12.0,
+   "ctr": 0.0,
+   "position": 76.67
+  },
+  "https://skill-compass.jp/articles/it-tenshoku-mikeiken-20dai/": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 49.64
+  },
+  "https://skill-compass.jp/articles/freelance-engineer-shu3-anken/": {
+   "clicks": 0.0,
+   "impressions": 10.0,
+   "ctr": 0.0,
+   "position": 34.5
+  },
+  "https://skill-compass.jp/articles/kumikomi-engineer-tenshoku-agent/": {
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 21.78
   },
   "https://skill-compass.jp/articles/python-dokugaku-muryo/": {
-   "clicks": null,
-   "impressions": 1.0,
-   "ctr": null,
-   "position": null
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 30.33
+  },
+  "https://skill-compass.jp/articles/claude-code-ryokin/": {
+   "clicks": 0.0,
+   "impressions": 8.0,
+   "ctr": 0.0,
+   "position": 12.38
+  },
+  "https://skill-compass.jp/articles/wordpress-blog-start-server-domain-steps/": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 8.57
+  },
+  "https://skill-compass.jp/articles/rental-server-fukusu-blog/": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "https://skill-compass.jp/articles/programming-school-shakaijin-muryo/": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 32.0
+  },
+  "https://skill-compass.jp/articles/programming-school-shakaijin-yasui/": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 50.0
+  },
+  "https://skill-compass.jp/articles/freelance-engineer-unit-price-by-skill/": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 70.29
+  },
+  "https://skill-compass.jp/articles/career-coaching-imi-nai-koukai/": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 15.67
+  },
+  "https://skill-compass.jp/articles/web-seisaku-dokugaku-kikan/": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 16.5
+  },
+  "https://skill-compass.jp/articles/html-css-javascript-dokugaku/": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 7.6
+  },
+  "https://skill-compass.jp/articles/java-dokugaku-muzukashii/": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 10.6
+  },
+  "https://skill-compass.jp/articles/programming-school-taimen-online-chigai/": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 15.0
+  },
+  "https://skill-compass.jp/articles/reskilling-hojokin-kojin-hikaku/": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 43.8
+  },
+  "https://skill-compass.jp/articles/rental-server-yasui-erabikata/": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 74.4
+  },
+  "https://skill-compass.jp/articles/ai-kudou-kaihatsu-shiyou-kudou-chigai/": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 7.0
+  },
+  "https://skill-compass.jp/category/career/": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 26.5
+  },
+  "https://skill-compass.jp/articles/shanai-se-mikeiken-yametoke/": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 29.0
+  },
+  "https://skill-compass.jp/articles/java-dokugaku-roadmap/": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 3.67
+  },
+  "https://skill-compass.jp/articles/aws-shikaku-mikeiken-tenshoku/": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 5.0
   },
   "https://skill-compass.jp/articles/seisei-ai-oyako-manabu-houhou/": {
-   "clicks": null,
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 25.67
+  },
+  "https://skill-compass.jp/articles/handoutai-engineer-mikeiken-tenshoku/": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 36.67
+  },
+  "https://skill-compass.jp/articles/kikai-sekkei-tenshoku-agent/": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 38.0
+  },
+  "https://skill-compass.jp/articles/rental-server-norikae-iko-tejun/": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 77.67
+  },
+  "https://skill-compass.jp/articles/rental-server-erabikata-shoshinsha-wordpress/": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  "https://skill-compass.jp/articles/python-dokugaku-osusume-hon/": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 8.5
+  },
+  "https://skill-compass.jp/articles/mikeiken-engineer-tenshoku-agent-how-to-use/": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 15.5
+  },
+  "https://skill-compass.jp/articles/blog-rental-server-hitsuyou/": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 17.5
+  },
+  "https://skill-compass.jp/articles/ai-kudou-kaihatsu-vibe-coding-chigai/": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 19.5
+  },
+  "https://skill-compass.jp/articles/seisei-ai-manabikata-shoshinsha-shakaijin/": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 76.0
+  },
+  "https://skill-compass.jp/articles/engineer-tenshoku-mikeiken-shiboudouki/": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 88.5
+  },
+  "https://skill-compass.jp/articles/": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 90.5
+  },
+  "https://skill-compass.jp/privacy/": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 218.0
+  },
+  "https://skill-compass.jp/articles/engineer-tenshoku-mensetsu/": {
+   "clicks": 0.0,
    "impressions": 1.0,
-   "ctr": null,
-   "position": null
+   "ctr": 0.0,
+   "position": 1.0
+  },
+  "https://skill-compass.jp/articles/programming-fukugyo-mikeiken-muzukashii/": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 6.0
+  },
+  "https://skill-compass.jp/articles/kaishain-fukugyo-web-seisaku-hajimekata/": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  "https://skill-compass.jp/articles/engineer-tenshoku-full-remote/": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "https://skill-compass.jp/articles/freelance-engineer-mikeiken-anken/": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 46.0
+  },
+  "https://skill-compass.jp/articles/webdesigner-mikeiken-yametoke/": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 50.0
+  },
+  "https://skill-compass.jp/category/learning/": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 71.0
+  },
+  "https://skill-compass.jp/articles/webdesign-dokugaku-hatarakinagara/": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 79.0
+  },
+  "https://skill-compass.jp/ad-policy/": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 88.0
   }
  }
 }

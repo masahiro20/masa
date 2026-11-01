@@ -112,11 +112,11 @@ def opportunities(articles: list[Article], base_url: str, pages: dict[str, dict]
         imp, pos, ctr = m["impressions"], m.get("position"), m.get("ctr")
         if pos is None or ctr is None:
             continue
-        if imp >= 50 and pos <= 10 and ctr < 0.015:
+        if imp >= 50 and pos <= 10 and ctr < 0.025:
             found.append({"slug": a.slug, "kind": "ctr", "impressions": imp, "position": round(pos, 1),
                           "reason": f"平均{pos:.1f}位・表示{int(imp)}回なのにクリック率{ctr * 100:.1f}%。"
                                     "タイトルと description を、検索した人が『自分の答えがある』と思える言葉に直す"})
-        elif imp >= 30 and 4 <= pos <= 20:
+        elif imp >= 20 and 4 <= pos <= 20:
             found.append({"slug": a.slug, "kind": "rank", "impressions": imp, "position": round(pos, 1),
                           "reason": f"平均{pos:.1f}位・表示{int(imp)}回。あと少しで1ページ目上位。"
                                     "検索意図への答えを冒頭で示し、足りない論点・比較表・よくある質問を補う"})
