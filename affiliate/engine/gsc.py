@@ -48,13 +48,16 @@ def parse_csv(text: str) -> tuple[str, dict[str, dict]]:
     idx = {}
     for key, names in _COLS.items():
         idx[key] = next((i for i, h in enumerate(header) if any(n in h for n in names)), None)
-    if not kind or any(v is None for v in idx.values()):
+    # 表示回数だけのエクスポート（クリック数・CTR・掲載順位の列を外して出したもの）も受け付ける。
+    # ない列は None にして、順位やCTRを使う判定には使わない
+    if not kind or idx["impressions"] is None:
         return "", {}
     out = {}
     for r in rows[1:]:
         if not r or not r[0].strip():
             continue
-        out[r[0].strip()] = {k: _num(r[i]) if i < len(r) else 0.0 for k, i in idx.items()}
+        out[r[0].strip()] = {k: (_num(r[i]) if i < len(r) else 0.0) if i is not None else None
+                             for k, i in idx.items()}
     return kind, out
 
 
@@ -106,7 +109,9 @@ def opportunities(articles: list[Article], base_url: str, pages: dict[str, dict]
         m = pages.get(f"{base_url}/{a.url_path}")
         if not m or _days_since(a.updated or a.published, today) < MIN_DAYS_BETWEEN_UPDATES:
             continue
-        imp, pos, ctr = m["impressions"], m["position"], m["ctr"]
+        imp, pos, ctr = m["impressions"], m.get("position"), m.get("ctr")
+        if pos is None or ctr is None:
+            continue
         if imp >= 50 and pos <= 10 and ctr < 0.015:
             found.append({"slug": a.slug, "kind": "ctr", "impressions": imp, "position": round(pos, 1),
                           "reason": f"平均{pos:.1f}位・表示{int(imp)}回なのにクリック率{ctr * 100:.1f}%。"
