@@ -2,27 +2,67 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: webデザイン 独学 何から
-  intent: informational
-  category: learning
-  program: learning-online-course
-  score: 1500.0
+- keyword: ネットワークエンジニア 未経験 30代
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: web制作 副業 土日のみ
-  intent: informational
-  category: fukugyo
-  program: learning-online-course
-  score: 1500.0
+- keyword: エンジニア 転職 年収 交渉
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: web制作 副業 きつい
-  intent: informational
+- keyword: 生成ai 副業 初心者
+  intent: commercial
   category: fukugyo
-  program: learning-online-course
-  score: 1500.0
+  program: school-general
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 生成ai 副業 スクール
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: プログラミングスクール 転職支援 30代
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: キャリアコーチング 選び方
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 社内se 転職 資格
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: エンジニア 転職 年収 下がる
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -38,6 +78,14 @@ keywords:
   program: learning-online-course
   score: 1000.0
   status: queued
+- keyword: linux 独学 参考書
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: プログラミング 入門書 選び方 言語別
   intent: commercial
   category: learning
@@ -117,6 +165,15 @@ keywords:
   boost: 4.0
   source: search-console
   slug: programming-school-kayoi-houdai
+- keyword: ai エンジニア 未経験 転職
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: ai-engineer-mikeiken-tenshoku
 - keyword: aws 資格 未経験 転職
   intent: commercial
   category: career
@@ -1043,6 +1100,36 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事kaishain-fukugyo-web-seisaku-hajimekataと検索意図が重複
+- keyword: web制作 副業 きつい
+  intent: informational
+  category: fukugyo
+  program: learning-online-course
+  score: 1500.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事web-seisaku-fukugyo-kasegenaiと検索意図が重複
+- keyword: web制作 副業 土日のみ
+  intent: informational
+  category: fukugyo
+  program: learning-online-course
+  score: 1500.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事fukugyo-engineer-donichiと検索意図が重複
+- keyword: webデザイン 独学 何から
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事webdesign-dokugaku-hatarakinagaraと検索意図が重複
 - keyword: web制作 副業 ロードマップ
   intent: informational
   category: learning
