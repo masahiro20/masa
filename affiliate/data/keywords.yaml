@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: ネットワークエンジニア 未経験 30代
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 90000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: エンジニア 転職 年収 交渉
   intent: commercial
   category: career
@@ -157,6 +149,15 @@ keywords:
   boost: 4.0
   source: search-console
   slug: programming-school-kayoi-houdai
+- keyword: ネットワークエンジニア 未経験 30代
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: network-engineer-mikeiken-30dai
 - keyword: ai エンジニア 未経験 転職
   intent: commercial
   category: career
