@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: エンジニア 転職 年収 交渉
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 90000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 生成ai 副業 スクール
   intent: commercial
   category: school
@@ -22,14 +14,6 @@ keywords:
   intent: commercial
   category: school
   program: school-general
-  score: 60000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: キャリアコーチング 選び方
-  intent: commercial
-  category: career
-  program: career-coaching
   score: 60000.0
   status: queued
   boost: 1.5
@@ -149,6 +133,15 @@ keywords:
   boost: 4.0
   source: search-console
   slug: programming-school-kayoi-houdai
+- keyword: エンジニア 転職 年収 交渉
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-tenshoku-nenshu-koushou
 - keyword: ネットワークエンジニア 未経験 30代
   intent: commercial
   category: career
@@ -993,6 +986,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複
+- keyword: キャリアコーチング 選び方
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 60000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事career-coaching-imi-nai-koukai・career-coaching-muryo-yuryo-chigaiと検索意図が重複
 - keyword: キャリアコーチング 怪しい
   intent: commercial
   category: career
