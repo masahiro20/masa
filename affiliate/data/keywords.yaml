@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: エンジニア 転職 年収 下がる
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 45000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 働きながら プログラミング 学習時間 確保 方法
   intent: informational
   category: learning
@@ -323,6 +315,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: rental-server-yasui-erabikata
+- keyword: エンジニア 転職 年収 下がる
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: engineer-tenshoku-nenshu-sagaru
 - keyword: 社内se 転職 資格
   intent: informational
   category: career
