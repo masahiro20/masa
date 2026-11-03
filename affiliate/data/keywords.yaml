@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: プログラミングスクール 転職支援 30代
-  intent: commercial
-  category: school
-  program: school-general
-  score: 60000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 働きながら プログラミング 学習時間 確保 方法
   intent: informational
   category: learning
@@ -181,6 +173,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: mikeiken-engineer-yametoke
+- keyword: プログラミングスクール 転職支援 30代
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: programming-school-tenshoku-shien-30dai
 - keyword: 生成ai 副業 スクール
   intent: commercial
   category: school
