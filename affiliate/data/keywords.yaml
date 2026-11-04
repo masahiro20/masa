@@ -2,6 +2,46 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: 教育訓練給付金 対象講座 it
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 教育訓練給付金 受給資格確認票 どこでもらえる
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 教育訓練給付金 電子申請 やり方
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: リスキリング 補助金 いつまで
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: リスキリング 補助金 主婦
+  intent: commercial
+  category: school
+  program: learning-online-course
+  score: 3000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: 社会人 独学 プログラミング 挫折 対策
   intent: informational
   category: learning
