@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: 教育訓練給付金 受給資格確認票 どこでもらえる
-  intent: informational
-  category: school
-  program: career-coaching
-  score: 30000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 教育訓練給付金 電子申請 やり方
   intent: informational
   category: school
@@ -495,6 +487,15 @@ keywords:
   score: 32000.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: 教育訓練給付金 受給資格確認票 どこでもらえる
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: kyufukin-jukyu-shikaku-kakuninhyo
 - keyword: aiコーディング おすすめ 無料
   intent: commercial
   category: learning
