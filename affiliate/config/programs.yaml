@@ -128,7 +128,7 @@ programs:
     cta: "使いたいドメインが空いているか調べる"
 
   - id: learning-online-course
-    name: "オンライン動画講座"
+    name: "オンライン動画講座（生成AI・IT・資格をスマホで学べる）"
     category: learning
     asp: "moshimo"
     url: "https://af.moshimo.com/af/c/click?a_id=5849852&p_id=7682&pc_id=22239&pl_id=95906"
