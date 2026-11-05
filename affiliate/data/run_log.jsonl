@@ -127,3 +127,5 @@
 {"ts": "2026-11-04T09:50:50+00:00", "source": "routine", "published": ["kyufukin-jukyu-shikaku-kakuninhyo"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-04T21:50:08+00:00", "source": "routine", "published": ["kyufukin-taisho-koza-it"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-05T03:49:39+00:00", "source": "routine", "published": ["kyufukin-denshi-shinsei-yarikata"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-05T09:48:50+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["リスキリング 補助金 いつまで"], "errors": ["既存記事reskilling-hojokin-itsu-moraeruと検索意図が重複（いつまで申し込めるかを同記事で扱っている）"]}
+{"ts": "2026-11-05T09:50:48+00:00", "source": "routine", "published": ["reskilling-hojokin-shufu"], "refreshed": [], "rejected": [], "errors": []}
