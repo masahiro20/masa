@@ -67,3 +67,12 @@ def test_blocks_and_internal_links(cfg, good_article):
     b = copy.deepcopy(good_article)
     b.body += "\n\n{{link:no-such-article}}"
     assert any("内部リンク" in i for i in run(cfg, b).issues)
+
+
+def test_held_program_is_rejected(cfg, good_article):
+    from engine.quality import check_article
+    progs = {**cfg.programs_by_id, "held": {"id": "held", "name": "保管", "url": "https://x.example", "hold": True}}
+    good_article.body += "\n\n{{aff:held}}"
+    report = check_article(good_article, quality=cfg.quality, programs=progs,
+                           categories=set(cfg.category_names), existing=[])
+    assert any("保管のみ" in i for i in report.issues)

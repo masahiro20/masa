@@ -173,7 +173,7 @@ def cmd_next(cfg: Config, args) -> int:
         "next": items,
         "queued_remaining": len(queue.queued),
         "existing_articles": existing,
-        "program_ids": list(cfg.programs_by_id),
+        "program_ids": [pid for pid, p in cfg.programs_by_id.items() if not p.get("hold")],
         "voice_reminder": VOICE_REMINDER,
         "categories": list(cfg.category_names),
     }, ensure_ascii=False, indent=1))

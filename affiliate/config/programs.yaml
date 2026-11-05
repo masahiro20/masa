@@ -11,6 +11,9 @@
 #   記事テーマの優先順位づけにだけ使う「仮の目安」です。実際の報酬額ではありません。
 #   提携後、ASP管理画面の報酬額に書き換えると優先順位の精度が上がります。
 #
+# ■ hold: true の案件
+#   読者層や方針に合わないため、広告コードを保管しているだけの案件。記事には使えない（品質ゲートで止まる）。
+#
 # ■ 記事での書き方
 #   本文中に {{aff:ID}} と書くとCTAボックス、{{aff:ID|リンク文言}} と書くと文中リンクになります。
 
@@ -191,7 +194,38 @@ programs:
     est_reward_jpy: 0
     keywords: []
     cta: "求人の内容を確認する"
+    hold: true
     # スキルコンパスの読者（ITスキル・IT転職）とは別の層。広告コードの保管用で、記事の自動選定には使わない
+
+  - id: money-unemployment-support
+    name: "失業保険給付金サポートの比較ランキング"
+    category: career
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5872417&p_id=7793&pc_id=22595&pl_id=97059"
+    banner_height: 280
+    banner_width: 336
+    banner: "https://image.moshimo.com/af-img/7297/000000097059.jpg"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5872417&p_id=7793&pc_id=22595&pl_id=97059"
+    est_reward_jpy: 0
+    keywords: []
+    cta: "比較ランキングを見る"
+    hold: true
+    # 「最大80万円得」など確かめられない訴求があり、中立に比べるサイトの方針と合わないため保管のみ（記事には使わない）
+
+  - id: money-fp-consult
+    name: "FPへの保険の無料相談"
+    category: career
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5884518&p_id=7356&pc_id=21162&pl_id=92616"
+    banner_height: 500
+    banner_width: 600
+    banner: "https://image.moshimo.com/af-img/3025/000000092616.jpg"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5884518&p_id=7356&pc_id=21162&pl_id=92616"
+    est_reward_jpy: 0
+    keywords: []
+    cta: "無料相談の内容を確認する"
+    hold: true
+    # 保険相談は読者層（ITスキル・IT転職）と別の分野で、お金の分野は審査も厳しいため保管のみ（記事には使わない）
 
   - id: edu-sougaku
     name: "ソウガク（発達障害・グレーゾーン専門のオンライン家庭教師）"
@@ -205,6 +239,7 @@ programs:
     est_reward_jpy: 0
     keywords: []
     cta: "体験授業の内容を確認する"
+    hold: true
     # スキルコンパスの読者（社会人のITスキル・転職）とは別の層。広告コードの保管用で、記事の自動選定には使わない
 
   - id: learning-books
