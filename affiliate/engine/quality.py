@@ -120,6 +120,9 @@ def check_article(
     unknown = sorted({c for c in codes if c not in programs})
     if unknown:
         issues.append(f"未知のアフィリエイトIDがあります: {', '.join(unknown)}")
+    held = sorted({c for c in codes if programs.get(c, {}).get("hold")})
+    if held:
+        issues.append(f"保管のみの案件は記事に使えません: {', '.join(held)}")
     if not codes:
         issues.append("アフィリエイトのショートコード {{aff:ID}} が1つもありません")
     elif len(codes) > 6:
