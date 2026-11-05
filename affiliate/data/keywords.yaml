@@ -2,13 +2,61 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: lpic 未経験 勉強 時間
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ccna 勉強時間 未経験
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: linux 初心者 勉強 方法
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: インフラエンジニア 独学 サイト
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: react 勉強 方法
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: 社会人 独学 プログラミング 挫折 対策
   intent: informational
   category: learning
   program: learning-online-course
   score: 1000.0
   status: queued
-- keyword: linux 独学 参考書
+- keyword: lpic level1 独学
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ccna 独学 参考書
   intent: commercial
   category: learning
   program: learning-books
@@ -55,6 +103,30 @@ keywords:
   boost: 1.5
   source: google-suggest
 - keyword: 基本情報技術者 勉強時間 itパスポート合格者
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: lpic 勉強時間 目安
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 応用情報 勉強時間 社会人
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 情報セキュリティマネジメント 勉強時間 itパスポート
   intent: informational
   category: learning
   program: learning-books
@@ -963,6 +1035,15 @@ keywords:
   score: 1000.0
   status: published
   slug: python-dokugaku-roadmap-shakaijin
+- keyword: linux 独学 参考書
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: linux-dokugaku-sankousho
 - keyword: sql 独学 本
   intent: commercial
   category: learning
