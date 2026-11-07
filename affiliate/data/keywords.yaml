@@ -16,22 +16,6 @@ keywords:
   program: learning-online-course
   score: 1000.0
   status: queued
-- keyword: lpic level1 独学
-  intent: commercial
-  category: learning
-  program: learning-books
-  score: 600.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: ccna 独学 参考書
-  intent: commercial
-  category: learning
-  program: learning-books
-  score: 600.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: プログラミング 入門書 選び方 言語別
   intent: commercial
   category: learning
@@ -1039,6 +1023,15 @@ keywords:
   score: 1000.0
   status: published
   slug: python-dokugaku-roadmap-shakaijin
+- keyword: ccna 独学 参考書
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: ccna-dokugaku-sankousho
 - keyword: linux 独学 参考書
   intent: commercial
   category: learning
@@ -1281,3 +1274,13 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事kaishain-fukugyo-web-seisaku-hajimekataと検索意図が重複
+- keyword: lpic level1 独学
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 600.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事lpic-mikeiken-benkyou-jikan・linux-dokugaku-sankoushoと検索意図が重複
