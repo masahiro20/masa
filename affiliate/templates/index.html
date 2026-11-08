@@ -54,6 +54,13 @@
     </li>{% endfor %}</ul>
   </section>{% endif %}
 
+  {% if tools %}<section class="section">
+    <h2 class="section-title"><span>無料ツール</span></h2>
+    <ul class="guide-cards">{% for t in tools %}<li>
+      <a href="{{ base_url }}/tools/{{ t.slug }}/"><span class="guide-cards-kicker">TOOL</span><span class="guide-cards-title">{{ t.title }}</span><span class="guide-cards-desc">{{ t.description }}</span></a>
+    </li>{% endfor %}</ul>
+  </section>{% endif %}
+
   <section class="section">
     <h2 class="section-title"><span>カテゴリ</span></h2>
     <div class="cat-cols">

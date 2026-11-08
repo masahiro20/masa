@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="wrap">
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>/</span>無料ツール</nav>
+  <header class="cat-header guide-header">
+    <p class="guide-kicker">無料ツール</p>
+    <h1>{{ tool.title }}</h1>
+    <p>{{ tool.intro }}</p>
+  </header>
+
+  <form class="tool-form" id="quiz" onsubmit="return false"></form>
+  <p class="tool-progress" id="progress" aria-live="polite"></p>
+  <section class="tool-result" id="result" aria-live="polite"></section>
+
+  <section class="tool-section">
+    <h2>この診断について</h2>
+    <p>8つの質問への答えから、6つの職種のうち、今の好みや経験に近いものを選ぶ簡単な診断です。適性を決めつけるものではありません。気になる職種が見つかったら、記事で仕事内容と最初の一歩を確かめてみてください。</p>
+    <p>職業の適性をもっと詳しく知りたい場合は、厚生労働省の職業情報提供サイト（job tag）の診断も役立ちます。使い方は{% if tool.jobtag %}<a href="{{ base_url }}/{{ tool.jobtag.url_path }}">{{ tool.jobtag.title }}</a>{% else %}関連記事{% endif %}で紹介しています。</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  var A = {{ tool.articles_json | safe }};
+  var TYPES = {
+    web: {name: 'Webエンジニア・プログラマー', text: 'Webサービスやアプリを作る仕事です。作ったものがすぐ画面で動く手応えがあり、在宅やリモートの求人も比較的多い職種です。未経験からは、HTML・CSS・JavaScriptやPythonなど1つの言語で小さな作品を作るところから始めるのが近道です。', links: ['programming-dokugaku-nanikara', 'html-css-javascript-dokugaku', 'engineer-portfolio-tsukurikata']},
+    infra: {name: 'インフラ・ネットワークエンジニア', text: 'サーバーやネットワーク、クラウドなど、システムの土台を支える仕事です。トラブルの原因を切り分けて直すのが得意な人に向きます。監視・運用の仕事から入る道があり、CCNAやLPICなどの資格で基礎を示しやすい職種です。', links: ['infra-engineer-mikeiken-tenshoku-kyujin', 'network-engineer-mikeiken-30dai', 'ccna-benkyou-jikan-mikeiken']},
+    shanai: {name: '社内SE', text: '自分の会社のシステムやパソコン環境を整え、社内の困りごとを解決する仕事です。人の話を聞いて調整するのが得意な人に向きます。事務や総務の経験が活きやすい一方、未経験の求人は多くないので、求人票の見極めが大切です。', links: ['shanai-se-mikeiken-yametoke', 'shanai-se-tenshoku-shikaku', 'it-engineer-shokushu-shurui-chigai']},
+    design: {name: 'Webデザイナー', text: 'Webサイトの見た目や使いやすさを設計する仕事です。配色やレイアウトを整えるのが好きな人に向きます。デザインツールに加えて、HTML・CSSを書けると仕事の幅が広がります。副業や在宅から始める人もいる職種です。', links: ['webdesigner-mikeiken-30dai-muri', 'web-designer-mikeiken-school-hitsuyou', 'webdesigner-mikeiken-zaitaku']},
+    data: {name: 'データ・AIエンジニア', text: 'データを集めて分析したり、AIを使った仕組みを作ったりする仕事です。数字から傾向を見つけるのが好きな人に向きます。Pythonと統計の基礎が入口になり、生成AIの広がりで注目が高まっている分野です。', links: ['ai-engineer-mikeiken-tenshoku', 'data-scientist-mikeiken-30dai', 'python-dokugaku-roadmap-shakaijin']},
+    embedded: {name: '組み込み・メーカー系エンジニア', text: '家電や自動車、産業機械などに入るソフトウェアや、設計に関わる仕事です。ものづくりや機械の仕組みに興味がある人に向きます。製造・設計・電気系の経験が強みになりやすく、メーカーに強い転職エージェントを使う人も多い分野です。', links: ['kumikomi-engineer-tenshoku-agent', 'handoutai-engineer-mikeiken-tenshoku', 'kikai-sekkei-tenshoku-agent']}
+  };
+  var Q = [
+    ['パソコンで何をしているときが楽しい？', [['作ったものが画面ですぐ動くのを見る', {web: 2, design: 1}], ['見た目や配色を整える', {design: 2}], ['機械や家電の仕組みを知る', {embedded: 2, infra: 1}], ['数字やデータから傾向を見つける', {data: 2}]]],
+    ['仕事でいちばん大事にしたいのは？', [['安定していること・働く時間が読めること', {shanai: 2, infra: 1}], ['新しい技術に触れ続けること', {web: 1, data: 2}], ['自分のアイデアを形にすること', {design: 1, web: 1}], ['ものづくりの現場に関わること', {embedded: 2}]]],
+    ['人とのやり取りについて近いのは？', [['社内の人の困りごとを聞いて解決したい', {shanai: 2}], ['一人で集中して作業したい', {infra: 1, embedded: 1, data: 1}], ['相手の要望を聞いて形にしたい', {design: 2, web: 1}]]],
+    ['トラブルが起きたら、どう動く？', [['原因を一つずつ切り分けて調べる', {infra: 2, embedded: 1}], ['まず回避する方法を考えて動かす', {web: 1, shanai: 1}], ['数字や記録を見て根本の原因を探す', {data: 2}]]],
+    ['数学や理系の科目は？', [['得意・好きなほう', {data: 2, embedded: 1}], ['ふつう', {web: 1, infra: 1}], ['苦手なほう', {design: 1, shanai: 1}]]],
+    ['今までの経験にいちばん近いのは？', [['事務・総務・社内の窓口', {shanai: 2}], ['製造・設計・電気系', {embedded: 2}], ['販売・接客・営業', {web: 1, shanai: 1}], ['デザイン・企画・SNS運用', {design: 2}], ['特にない・学生・ブランクがある', {web: 1, infra: 1}]]],
+    ['働き方の希望は？', [['在宅・リモート中心で働きたい', {web: 2, design: 1}], ['シフトや夜勤があっても、未経験から入りやすい道がいい', {infra: 2}], ['地元の会社で長く働きたい', {shanai: 1, embedded: 1}]]],
+    ['学ぶなら、どれに興味がある？', [['プログラミング言語でアプリを作る', {web: 2}], ['Linux・ネットワーク・クラウドの仕組み', {infra: 2}], ['Python・統計・AI', {data: 2}], ['デザインツールとHTML・CSS', {design: 2}], ['C言語・電子回路', {embedded: 2}]]]
+  ];
+  var form = document.getElementById('quiz'), out = document.getElementById('result'), prog = document.getElementById('progress');
+  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); };
+  form.innerHTML = Q.map(function (q, i) {
+    return '<fieldset><legend>Q' + (i + 1) + '. ' + q[0] + '</legend>' + q[1].map(function (o, j) {
+      return '<label><input type="radio" name="q' + i + '" value="' + j + '"> ' + o[0] + '</label>';
+    }).join('') + '</fieldset>';
+  }).join('');
+  function card(slug) {
+    var a = A[slug]; if (!a) { return ''; }
+    return '<li><a href="' + esc(a.url) + '"><img src="' + esc(a.thumb) + '" alt="" width="640" height="336" loading="lazy" decoding="async"><span class="guide-item-text"><span class="guide-item-title">' + esc(a.title) + '</span></span></a></li>';
+  }
+  function render() {
+    var score = {}, answered = 0;
+    Object.keys(TYPES).forEach(function (k) { score[k] = 0; });
+    Q.forEach(function (q, i) {
+      var c = form.querySelector('input[name=q' + i + ']:checked');
+      if (!c) { return; }
+      answered++;
+      var pts = q[1][Number(c.value)][1];
+      Object.keys(pts).forEach(function (k) { score[k] += pts[k]; });
+    });
+    if (answered < Q.length) { prog.textContent = 'あと' + (Q.length - answered) + '問で結果が出ます'; out.innerHTML = ''; return; }
+    prog.textContent = '';
+    var order = Object.keys(TYPES).sort(function (a, b) { return score[b] - score[a]; });
+    var top = TYPES[order[0]], second = TYPES[order[1]];
+    var share = encodeURIComponent('IT職種診断の結果は「' + top.name + '」タイプでした｜スキルコンパス');
+    var url = encodeURIComponent(location.href.split('#')[0]);
+    out.innerHTML = '<h2>診断結果</h2><div class="tool-card tool-card-wide"><p class="tool-card-kind">いちばん近いのは</p>' +
+      '<p class="tool-card-total">' + top.name + '</p><p>' + top.text + '</p>' +
+      '<p class="tool-hint">次に近いのは「' + second.name + '」です。</p></div>' +
+      '<h3 class="tool-subhead">' + top.name + 'を目指すなら、まず読みたい記事</h3><ul class="guide-list">' + top.links.map(card).join('') + '</ul>' +
+      {% if tool.guide %}'<p><a class="guide-link" href="{{ base_url }}/guide/{{ tool.guide.slug }}/"><span class="guide-link-label">このテーマのまとめ</span><span class="guide-link-title">{{ tool.guide.title }}</span></a></p>' +{% endif %}
+      '<div class="share"><span class="share-label">結果をシェア</span>' +
+      '<a href="https://twitter.com/intent/tweet?text=' + share + '&amp;url=' + url + '" target="_blank" rel="noopener">X</a>' +
+      '<a href="https://social-plugins.line.me/lineit/share?url=' + url + '" target="_blank" rel="noopener">LINE</a>' +
+      '<a href="https://b.hatena.ne.jp/add?mode=confirm&amp;url=' + url + '" target="_blank" rel="noopener">はてブ</a></div>';
+    out.scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+  form.addEventListener('change', render); render();
+})();
+</script>
+{% endblock %}

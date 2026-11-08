@@ -63,6 +63,27 @@ niche:
       color: "#2a6168"
       description: Web制作・Webデザイン・ブログ・プログラミングなど、ITスキルを使った副業の始め方と、続けるための判断材料をまとめています。
 
+  # 無料ツール（/tools/<slug>/）。templates/tools/<slug>.html を使う。guide に入っている記事の末尾からもリンクされる
+  tools:
+    - slug: kyufukin-keisan
+      updated: '2026-11-08'         # ツールの中身を変えたら更新する（サイトマップの更新日になる）
+      title: 【2026年】教育訓練給付金シミュレーター｜いくらもらえるか計算
+      description: 教育訓練給付金がいくらもらえるかを、講座の種類（一般・特定一般・専門実践）と受講費用から計算できる無料ツールです。資格取得・就職や賃金上昇による追加分、自己負担の目安もわかります。
+      intro: 講座の種類と受講費用を入れると、教育訓練給付金の支給額と自己負担の目安がその場でわかります。講座の種類がわからない場合は、3種類まとめて比べられます。計算のルールは、厚生労働省の案内にもとづいています。
+      category: FinanceApplication
+      guide: kyufukin
+      cta: 教育訓練給付金がいくらになるか、費用を入れて計算する
+      links: [kyoiku-kunren-kyufukin-shinsei-nagare, kyufukin-jukyu-shikaku-kakuninhyo, kyufukin-taisho-koza-it, programming-school-kyufukin-conditions]
+    - slug: it-shokushu-shindan
+      updated: '2026-11-08'         # ツールの中身を変えたら更新する（サイトマップの更新日になる）
+      title: IT職種診断｜8つの質問で向いている仕事の目安がわかる【無料】
+      description: 未経験からIT業界を目指す社会人向けに、8つの質問で、Webエンジニア・インフラ・社内SE・Webデザイナー・データ/AI・組み込みのうち、向いている職種の目安がわかる無料の診断です。
+      intro: 未経験からIT業界を考えていても、職種が多くて、どれが自分に合うのかわかりにくいものです。8つの質問に答えると、6つの職種の中から、今の好みや経験に近いものと、次に読むべき記事がわかります。1分ほどで終わります。
+      category: EducationalApplication
+      guide: mikeiken-it-tenshoku
+      jobtag: mukiteiru-shigoto-wakaranai-shindan
+      cta: 8つの質問で、向いているIT職種を診断する（無料・1分）
+
   # テーマ別ガイド（/guide/<slug>/）。強いテーマの記事を「読む順番」に並べたまとめページで、各記事からもリンクされる。
   # match はタイトル・キーワードに対する正規表現。記事は最初に当てはまったガイドの、最初に当てはまった段階に入る
   guides:

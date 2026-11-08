@@ -266,7 +266,19 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
 
     related_by_slug = related_map(articles)
     guides, guide_of = build_guides(articles, cfg.niche.get("guides", []))
+    by_slug = {a.slug: a for a in articles}
+    tools = []
+    for t in cfg.niche.get("tools", []):
+        if not (TEMPLATES_DIR / "tools" / f"{t['slug']}.html").exists():
+            continue
+        tools.append({**t, "links": [by_slug[s] for s in t.get("links", []) if s in by_slug],
+                      "jobtag": by_slug.get(t.get("jobtag", "")), "guide_slug": t.get("guide"),
+                      "guide": next((g for g in guides if g["slug"] == t.get("guide")), None)})
+    for g in guides:
+        # ガイドに入っている記事の末尾から、そのテーマの無料ツールへ案内する
+        g["tool"] = next((t for t in tools if t["guide_slug"] == g["slug"]), None)
     common["guides"] = guides
+    common["tools"] = tools
     targets = money_targets(articles, live_ad_articles(articles, cfg.programs_by_id))
     for a in articles:
         cat = cats.get(a.category, {"name": a.category, "color": "#162238", "slug": a.category})
@@ -331,6 +343,22 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
             **common, guide=g, url=url, page_title=g["title"], page_description=g["description"], json_ld=ld,
         ))
         urls.append((url, max((a.updated or a.published) for a in members)))
+
+    articles_json = json.dumps({a.slug: {"url": f"{base}/{a.url_path}", "title": a.title, "thumb": thumb_url(a)}
+                                for a in articles}, ensure_ascii=False).replace("</", "<\\/")
+    for t in tools:
+        url = f"{base}/tools/{t['slug']}/"
+        ld = _dump_ld([{
+            "@context": "https://schema.org", "@type": "WebApplication", "name": t["title"], "url": url,
+            "description": t["description"], "applicationCategory": t.get("category", "UtilitiesApplication"),
+            "operatingSystem": "Any", "inLanguage": "ja",
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "JPY"},
+        }])
+        write(f"tools/{t['slug']}/index.html", env.get_template(f"tools/{t['slug']}.html").render(
+            **common, tool={**t, "articles_json": articles_json}, url=url,
+            page_title=t["title"], page_description=t["description"], json_ld=ld,
+        ))
+        urls.append((url, str(t.get("updated") or date.today().isoformat())))
 
     for page_file in sorted(pages_dir.glob("*.md")):
         page = _parse_page(page_file.read_text(encoding="utf-8"), cfg)

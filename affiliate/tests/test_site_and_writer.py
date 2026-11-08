@@ -95,3 +95,12 @@ def test_build_guides_assigns_steps():
     found, member_of = build_guides(arts, guides)
     assert [len(g["items"]) for g in found[0]["groups"]] == [1, 1]
     assert member_of["a"]["slug"] == "kyufukin" and "c" not in member_of
+
+
+def test_tool_pages_are_built(cfg, good_article, tmp_path):
+    cfg.programs_by_id["school-general"]["url"] = ""
+    info = build_site(cfg, articles=[good_article], out_dir=tmp_path / "public")
+    for t in cfg.niche.get("tools", []):
+        page = (tmp_path / "public" / "tools" / t["slug"] / "index.html").read_text(encoding="utf-8")
+        assert '"WebApplication"' in page and "<script>" in page
+        assert any(u.endswith(f"/tools/{t['slug']}/") for u in info["urls"])
