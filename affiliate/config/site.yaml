@@ -17,6 +17,15 @@ site:
   contact_form_url: ""       # Googleフォーム等のURL
   ga4_measurement_id: "G-TTNCMCDF91"     # 例: G-XXXXXXXXXX（任意）
   gsc_verification: "K3a1gyVNkXPvUw1vqq4Rwu0J1Pz8zjMqYdScHal3YKU"  # Search Console の HTML タグ認証用 content 値（任意）
+  # X（旧Twitter）への自動投稿。GitHub の Secrets にキーを登録したときだけ動く（engine/social.py）
+  social:
+    x_max_per_run: 3           # 1回の公開で投稿する最大数（リンク付き投稿は1件ごとに課金されるため）
+    hashtags:                  # カテゴリごとに1つだけ付ける
+      school: "#学び直し"
+      career: "#IT転職"
+      tools: "#ブログ初心者"
+      learning: "#プログラミング学習"
+      fukugyo: "#副業"
 
 # 扱うジャンル。planner（キーワード選定）と writer（記事生成）に渡される。
 niche:

@@ -290,6 +290,7 @@ def main(argv: list[str] | None = None) -> int:
     from .ads import register as register_ads
     from .gsc import register as register_gsc
     from .manual import register
+    from .social import register as register_social
 
     commands = {
         "autopilot": cmd_autopilot,
@@ -300,6 +301,7 @@ def main(argv: list[str] | None = None) -> int:
         **register(sub),
         **register_ads(sub),
         **register_gsc(sub),
+        **register_social(sub),
     }
     args = parser.parse_args(argv)
     cfg = load_config()
