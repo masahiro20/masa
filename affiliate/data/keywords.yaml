@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: リスキリング 補助金 50代
-  intent: commercial
-  category: school
-  program: career-coaching
-  score: 60000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 20代 高卒 転職エージェント
   intent: commercial
   category: career
@@ -281,6 +273,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: mikeiken-engineer-yametoke
+- keyword: リスキリング 補助金 50代
+  intent: commercial
+  category: school
+  program: career-coaching
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: reskilling-hojokin-50dai
 - keyword: 教育訓練給付金 対象講座 it
   intent: commercial
   category: school
