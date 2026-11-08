@@ -22,6 +22,8 @@
     {% if toc %}<nav class="toc" aria-label="目次"><p class="toc-title">目次</p>{{ toc | safe }}</nav>{% endif %}
     <div class="body">{{ body | safe }}</div>
 
+    {% if guide and guide.tool %}<a class="tool-link" href="{{ base_url }}/tools/{{ guide.tool.slug }}/"><span class="tool-link-label">無料ツール</span><span class="tool-link-title">{{ guide.tool.cta }}</span></a>{% endif %}
+
     <div class="share" aria-label="この記事をシェア">
       <span class="share-label">この記事をシェア</span>
       <a href="https://twitter.com/intent/tweet?text={{ article.title | urlencode }}&amp;url={{ url | urlencode }}" target="_blank" rel="noopener">X</a>

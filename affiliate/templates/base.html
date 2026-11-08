@@ -65,8 +65,9 @@ document.addEventListener('click',function(e){var a=e.target.closest('a[rel~="sp
         <a href="{{ base_url }}/articles/">記事一覧</a>
       </nav>
       {% if guides %}<nav aria-label="テーマ別ガイド">
-        <p class="footer-head">テーマ別ガイド</p>
+        <p class="footer-head">ガイド・無料ツール</p>
         {% for g in guides %}<a href="{{ base_url }}/guide/{{ g.slug }}/">{{ g.title }}</a>{% endfor %}
+        {% for t in tools %}<a href="{{ base_url }}/tools/{{ t.slug }}/">{{ t.title }}</a>{% endfor %}
       </nav>{% endif %}
       {% if pillars %}<nav aria-label="おすすめ記事">
         <p class="footer-head">おすすめの記事</p>

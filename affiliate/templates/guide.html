@@ -7,6 +7,7 @@
     <h1>{{ guide.title }}</h1>
     <p>{{ guide.intro }}</p>
   </header>
+  {% if guide.tool %}<a class="tool-link" href="{{ base_url }}/tools/{{ guide.tool.slug }}/"><span class="tool-link-label">無料ツール</span><span class="tool-link-title">{{ guide.tool.cta }}</span></a>{% endif %}
   {% if guide.groups | selectattr("items") | list | length > 1 %}<nav class="toc guide-toc" aria-label="このガイドの流れ"><p class="toc-title">このガイドの流れ</p><ol>
     {% for grp in guide.groups if grp["items"] %}<li><a href="#step-{{ loop.index }}">{{ grp.name }}</a></li>{% endfor %}
   </ol></nav>{% endif %}

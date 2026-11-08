@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="wrap">
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>/</span>無料ツール</nav>
+  <header class="cat-header guide-header">
+    <p class="guide-kicker">無料ツール</p>
+    <h1>{{ tool.title }}</h1>
+    <p>{{ tool.intro }}</p>
+  </header>
+
+  <form class="tool-form" id="calc" onsubmit="return false">
+    <fieldset>
+      <legend>1. 講座の種類</legend>
+      <label><input type="radio" name="kind" value="ippan"> 一般教育訓練</label>
+      <label><input type="radio" name="kind" value="tokutei"> 特定一般教育訓練</label>
+      <label><input type="radio" name="kind" value="senmon"> 専門実践教育訓練</label>
+      <label><input type="radio" name="kind" value="unknown" checked> わからない（3種類とも計算する）</label>
+      <p class="tool-hint">講座がどの種類かは、講座の案内か、厚生労働省の<a href="https://www.kyufu.mhlw.go.jp/kensaku/" target="_blank" rel="noopener">教育訓練講座検索システム</a>で確かめられます。</p>
+    </fieldset>
+    <fieldset>
+      <legend>2. 受講にかかる費用（入学料＋受講料）</legend>
+      <label class="tool-yen"><input type="number" id="cost" min="0" step="1000" value="300000" inputmode="numeric"> 円</label>
+      <p class="tool-hint">検定試験の受験料、教材の任意購入、パソコン代、交通費などは含めません。</p>
+    </fieldset>
+    <fieldset id="years-box">
+      <legend>3. 訓練期間（専門実践の場合）</legend>
+      <select id="years"><option value="1">1年</option><option value="2" selected>2年</option><option value="3">3年</option></select>
+    </fieldset>
+    <fieldset>
+      <legend>4. 修了後の見込み</legend>
+      <label><input type="checkbox" id="shikaku"> 資格を取得して、修了から1年以内に雇用保険に入って働く（就職する・すでに働いている）</label>
+      <label><input type="checkbox" id="chingin"> さらに、修了後の賃金が受講前より5%以上上がる（専門実践のみ）</label>
+    </fieldset>
+  </form>
+
+  <section class="tool-result" id="result" aria-live="polite"></section>
+
+  <section class="tool-section">
+    <h2>計算のルール（厚生労働省の案内より）</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>種類</th><th>基本の支給</th><th>資格取得・就職した場合</th><th>賃金が5%以上上がった場合</th></tr></thead>
+      <tbody>
+        <tr><td>一般教育訓練</td><td>費用の20%（上限10万円）</td><td>追加なし</td><td>追加なし</td></tr>
+        <tr><td>特定一般教育訓練</td><td>費用の40%（上限20万円）</td><td>費用の10%を追加（上限5万円）</td><td>追加なし</td></tr>
+        <tr><td>専門実践教育訓練</td><td>費用の50%（年間上限40万円）</td><td>費用の20%を追加（年間上限16万円）</td><td>費用の10%を追加（年間上限8万円）</td></tr>
+      </tbody>
+    </table></div>
+    <ul class="tool-notes">
+      <li>計算した額が4,000円を超えない場合は支給されません。</li>
+      <li>資格取得・就職による追加（特定一般・専門実践）と、賃金上昇による追加（専門実践）は、受講開始日が2024年10月1日以降の場合です。</li>
+      <li>専門実践は、実際には受講開始日から6か月ごとに支給額が決まります。このツールは、期間全体の費用と年間上限から目安を出しています。</li>
+      <li>受け取るには、雇用保険の加入期間（支給要件期間）が原則3年以上（初めて受ける人は、一般・特定一般は1年以上、専門実践は2年以上）などの条件があります。</li>
+    </ul>
+    <p class="note">出典：厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/jinzaikaihatsu/kyouiku.html" target="_blank" rel="noopener">教育訓練給付金</a>」、同省のパンフレット「<a href="https://www.mhlw.go.jp/content/001529629.pdf" target="_blank" rel="noopener">一般教育訓練の「教育訓練給付金」のご案内</a>」「<a href="https://www.mhlw.go.jp/content/001529624.pdf" target="_blank" rel="noopener">特定一般教育訓練の「教育訓練給付金」のご案内</a>」「<a href="https://www.mhlw.go.jp/content/001529622.pdf" target="_blank" rel="noopener">専門実践教育訓練の「教育訓練給付金」のご案内</a>」。結果はあくまで目安です。受け取れるか・いくらになるかは、ハローワークで確認してください。</p>
+  </section>
+
+  {% if tool.links %}<section class="tool-section">
+    <h2>次に読みたい記事</h2>
+    <ul class="guide-list">{% for a in tool.links %}<li>
+      <a href="{{ base_url }}/{{ a.url_path }}"><img src="{{ thumb_url(a) }}" alt="" width="640" height="336" loading="lazy" decoding="async"><span class="guide-item-text"><span class="guide-item-title">{{ a.title }}</span>{% if a.audience %}<span class="guide-item-aud">{{ a.audience }}</span>{% endif %}</span></a>
+    </li>{% endfor %}</ul>
+  </section>{% endif %}
+</div>
+
+<script>
+(function () {
+  var f = document.getElementById('calc'), out = document.getElementById('result');
+  var yen = function (n) { return Math.round(n).toLocaleString('ja-JP') + '円'; };
+  var NAMES = {ippan: '一般教育訓練', tokutei: '特定一般教育訓練', senmon: '専門実践教育訓練'};
+  function calc(kind, cost, years, shikaku, chingin) {
+    var rows = [], total = 0, base = 0;
+    if (kind === 'ippan') { base = Math.min(cost * 0.2, 100000); }
+    if (kind === 'tokutei') { base = Math.min(cost * 0.4, 200000); }
+    if (kind === 'senmon') { base = Math.min(cost * 0.5, 400000 * years); }
+    if (base <= 4000) { return {total: 0, rows: [['基本の支給', 0]], note: '計算した額が4,000円以下のため、支給されません。'}; }
+    rows.push(['基本の支給', base]); total += base;
+    if (shikaku && kind === 'tokutei') { var a = Math.min(cost * 0.1, 50000); rows.push(['資格取得・就職による追加', a]); total += a; }
+    if (shikaku && kind === 'senmon') { var b = Math.min(cost * 0.2, 160000 * years); rows.push(['資格取得・就職による追加', b]); total += b; }
+    if (shikaku && chingin && kind === 'senmon') { var c = Math.min(cost * 0.1, 80000 * years); rows.push(['賃金上昇による追加', c]); total += c; }
+    return {total: total, rows: rows, note: ''};
+  }
+  function render() {
+    var kind = (f.querySelector('input[name=kind]:checked') || {}).value || 'unknown';
+    var cost = Math.max(0, Number(document.getElementById('cost').value) || 0);
+    var years = Number(document.getElementById('years').value) || 1;
+    var shikaku = document.getElementById('shikaku').checked, chingin = document.getElementById('chingin').checked;
+    document.getElementById('years-box').style.display = (kind === 'senmon' || kind === 'unknown') ? '' : 'none';
+    var kinds = kind === 'unknown' ? ['ippan', 'tokutei', 'senmon'] : [kind];
+    var html = '<h2>計算結果の目安</h2><div class="tool-cards">';
+    kinds.forEach(function (k) {
+      var r = calc(k, cost, years, shikaku, chingin);
+      html += '<div class="tool-card"><p class="tool-card-kind">' + NAMES[k] + '</p>' +
+        '<p class="tool-card-total">' + yen(r.total) + '</p>' +
+        '<p class="tool-card-self">自己負担の目安 ' + yen(Math.max(0, cost - r.total)) + '</p><ul>';
+      r.rows.forEach(function (row) { html += '<li><span>' + row[0] + '</span><span>' + yen(row[1]) + '</span></li>'; });
+      html += '</ul>' + (r.note ? '<p class="tool-hint">' + r.note + '</p>' : '') + '</div>';
+    });
+    html += '</div><p class="tool-hint">受講費用 ' + yen(cost) + (kinds.indexOf('senmon') >= 0 ? '・専門実践は訓練期間 ' + years + '年' : '') + 'で計算しています。</p>';
+    out.innerHTML = html;
+  }
+  f.addEventListener('input', render); f.addEventListener('change', render); render();
+})();
+</script>
+{% endblock %}
