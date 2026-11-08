@@ -125,6 +125,25 @@ def money_targets(articles: list[Article], monetized: set[str]) -> dict[str, Art
     return result
 
 
+def build_guides(articles: list[Article], guides: list[dict]) -> tuple[list[dict], dict[str, dict]]:
+    """テーマ別ガイドに記事を割り当てる。返り値は（ガイドの一覧、記事slug → 所属ガイド）。"""
+    result, member_of = [], {}
+    for g in guides or []:
+        result.append({**g, "groups": [{"name": s["name"], "items": []} for s in g.get("steps", [])],
+                       "others": [], "count": 0})
+    for a in articles:
+        text = f"{a.title} {a.keyword or ''}"
+        for g in result:
+            if not re.search(g["match"], text, re.I):
+                continue
+            idx = next((i for i, s in enumerate(g.get("steps", [])) if re.search(s["match"], text, re.I)), None)
+            (g["groups"][idx]["items"] if idx is not None else g["others"]).append(a)
+            g["count"] += 1
+            member_of[a.slug] = g
+            break
+    return [g for g in result if g["count"]], member_of
+
+
 def pillar_articles(articles: list[Article], n: int = 6) -> list[Article]:
     """本文からリンクされている数が多い記事（サイトの軸になる記事）。フッターから全ページにリンクする。"""
     counts = {a.slug: 0 for a in articles}
@@ -246,6 +265,8 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
     urls: list[tuple[str, str]] = [(f"{base}/", articles[0].updated if articles else date.today().isoformat())]
 
     related_by_slug = related_map(articles)
+    guides, guide_of = build_guides(articles, cfg.niche.get("guides", []))
+    common["guides"] = guides
     targets = money_targets(articles, live_ad_articles(articles, cfg.programs_by_id))
     for a in articles:
         cat = cats.get(a.category, {"name": a.category, "color": "#162238", "slug": a.category})
@@ -260,7 +281,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         url = f"{base}/{a.url_path}"
         write(f"{a.url_path}index.html", env.get_template("article.html").render(
             **{**common, "og_image": cover_url(a)}, article=a, body=body_html, toc=toc, url=url, category=cat,
-            related=related_by_slug[a.slug], minutes=reading_minutes(a.body),
+            related=related_by_slug[a.slug], minutes=reading_minutes(a.body), guide=guide_of.get(a.slug),
             json_ld=_article_ld(a, cfg, url, cat["name"], cover_url(a), base),
             page_title=a.title, page_description=a.description, og_type="article",
         ))
@@ -295,6 +316,21 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         ))
         if items:
             urls.append((url, items[0].updated))
+
+    for g in guides:
+        url = f"{base}/guide/{g['slug']}/"
+        members = [a for grp in g["groups"] for a in grp["items"]] + g["others"]
+        ld = _dump_ld([{
+            "@context": "https://schema.org", "@type": "CollectionPage", "name": g["title"], "url": url,
+            "description": g["description"], "inLanguage": "ja",
+            "mainEntity": {"@type": "ItemList", "itemListElement": [
+                {"@type": "ListItem", "position": i, "url": f"{base}/{a.url_path}", "name": a.title}
+                for i, a in enumerate(members, 1)]},
+        }])
+        write(f"guide/{g['slug']}/index.html", env.get_template("guide.html").render(
+            **common, guide=g, url=url, page_title=g["title"], page_description=g["description"], json_ld=ld,
+        ))
+        urls.append((url, max((a.updated or a.published) for a in members)))
 
     for page_file in sorted(pages_dir.glob("*.md")):
         page = _parse_page(page_file.read_text(encoding="utf-8"), cfg)

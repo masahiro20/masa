@@ -9,6 +9,7 @@ Search Console → 検索パフォーマンス → 右上の「エクスポー�
 from __future__ import annotations
 
 import csv
+import re
 import io
 import json
 import zipfile
@@ -124,6 +125,46 @@ def opportunities(articles: list[Article], base_url: str, pages: dict[str, dict]
     return found
 
 
+def load_queries() -> dict[str, dict]:
+    if not QUERIES_FILE.exists():
+        return {}
+    return json.loads(QUERIES_FILE.read_text(encoding="utf-8")).get("rows", {})
+
+
+QUESTION_RE = re.compile(r"[？?]$|ありますか|ですか|ますか|には$|とは$|どこで|いつ|どうすれば")
+
+
+def ideas(queries: dict[str, dict], articles: list[Article], n: int = 15) -> dict[str, list[dict]]:
+    """Search Console に出ている検索語から、次に書く・補うべきものを選ぶ。
+
+    - questions: 文章で打ち込まれた質問。記事の見出しや「よくある質問」にそのまま使うと拾われやすい
+    - near_miss: 表示はあるのに 8〜40 位にとどまる語。専用の記事を書くか、近い記事に節を足す候補
+    サイト名での検索や、既存記事のキーワードとほぼ同じ語は除く。
+    """
+    covered = {re.sub(r"\s+", "", (a.keyword or "").lower()) for a in articles}
+    brand = ("スキルコンパス", "skill compass", "skillcompass")
+    questions, near = [], []
+    for q, m in queries.items():
+        key = re.sub(r"\s+", "", q.lower())
+        if any(b in q.lower() for b in brand) or key in covered or q.startswith("intitle:"):
+            continue
+        row = {"query": q, "impressions": int(m.get("impressions") or 0),
+               "position": round(m.get("position") or 0, 1)}
+        if QUESTION_RE.search(q):
+            questions.append(row)
+        elif row["impressions"] >= 3 and 8 <= row["position"] <= 40:
+            near.append(row)
+    questions.sort(key=lambda r: -r["impressions"])
+    near.sort(key=lambda r: (-r["impressions"], r["position"]))
+    return {"questions": questions[:n], "near_miss": near[:n]}
+
+
+def cmd_ideas(cfg, args) -> int:
+    from .articles import load_articles
+    print(json.dumps(ideas(load_queries(), load_articles(), args.n), ensure_ascii=False, indent=1))
+    return 0
+
+
 def cmd_gsc_import(cfg, args) -> int:
     path = Path(args.file)
     if not path.exists():
@@ -146,4 +187,6 @@ def cmd_gsc_import(cfg, args) -> int:
 def register(sub) -> dict:
     p = sub.add_parser("gsc-import")
     p.add_argument("file")
-    return {"gsc-import": cmd_gsc_import}
+    p = sub.add_parser("ideas")
+    p.add_argument("--n", type=int, default=15)
+    return {"gsc-import": cmd_gsc_import, "ideas": cmd_ideas}

@@ -7,7 +7,8 @@
       <a class="label" href="{{ base_url }}/category/{{ article.category }}/" style="--cat: {{ category.color }}">{{ category.name }}</a>
       <h1>{{ article.title }}</h1>
       {% if article.audience %}<p class="audience">{{ article.audience }}</p>{% endif %}
-      <p class="lead">{{ article.description }}</p>
+      {% set lead = article.description %}{% if article.audience and lead.startswith(article.audience) %}{% set lead = lead[article.audience|length:].lstrip("。") %}{% endif %}
+      <p class="lead">{{ lead }}</p>
       <p class="byline">
         <span>文・編集　<a href="{{ base_url }}/about/">{{ site.operator_name }}</a></span>
         {% if article.updated and article.updated != article.published %}<span>更新 <time datetime="{{ article.updated }}">{{ article.updated | replace('-', '.') }}</time></span>{% endif %}
@@ -15,6 +16,7 @@
         <span>約{{ minutes }}分</span>
       </p>
     </header>
+    {% if guide %}<a class="guide-link" href="{{ base_url }}/guide/{{ guide.slug }}/"><span class="guide-link-label">このテーマのまとめ</span><span class="guide-link-title">{{ guide.title }}</span></a>{% endif %}
     <p class="pr-notice"><span class="pr-tag">PR</span>本記事にはアフィリエイト広告が含まれています。</p>
     <img class="cover" src="{{ cover_webp(article) }}" alt="{{ article.title }}" width="1200" height="630" fetchpriority="high">
     {% if toc %}<nav class="toc" aria-label="目次"><p class="toc-title">目次</p>{{ toc | safe }}</nav>{% endif %}

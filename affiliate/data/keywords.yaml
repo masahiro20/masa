@@ -2,6 +2,110 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: リスキリング 補助金 50代
+  intent: commercial
+  category: school
+  program: career-coaching
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 20代 高卒 転職エージェント
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: プログラミングスクール 怪しい
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: c言語 組み込み 難しい
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 教育訓練給付金 退職後
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 転職エージェント 断り方 例文
+  intent: informational
+  category: career
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 転職エージェント line 返信
+  intent: informational
+  category: career
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ドメイン代 勘定科目
+  intent: informational
+  category: fukugyo
+  program: tools-rental-server
+  score: 24000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: webデザイナー 未経験 40代
+  intent: commercial
+  category: school
+  program: learning-online-course
+  score: 3000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 教育訓練給付金 主婦
+  intent: informational
+  category: school
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: chatgpt 勘定科目 個人事業主
+  intent: informational
+  category: fukugyo
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: typescript 難しい
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: c言語 難しい 理由
+  intent: informational
+  category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: 社会人 独学 プログラミング 挫折 対策
   intent: informational
   category: learning

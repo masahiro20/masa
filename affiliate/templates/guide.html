@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="wrap">
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>/</span>テーマ別ガイド</nav>
+  <header class="cat-header guide-header">
+    <p class="guide-kicker">テーマ別ガイド</p>
+    <h1>{{ guide.title }}</h1>
+    <p>{{ guide.intro }}</p>
+  </header>
+  {% if guide.groups | selectattr("items") | list | length > 1 %}<nav class="toc guide-toc" aria-label="このガイドの流れ"><p class="toc-title">このガイドの流れ</p><ol>
+    {% for grp in guide.groups if grp["items"] %}<li><a href="#step-{{ loop.index }}">{{ grp.name }}</a></li>{% endfor %}
+  </ol></nav>{% endif %}
+  {% for grp in guide.groups if grp["items"] %}
+  <section class="guide-step" id="step-{{ loop.index }}">
+    <h2><span class="guide-step-num">STEP {{ loop.index }}</span>{{ grp.name }}</h2>
+    <ul class="guide-list">{% for a in grp["items"] %}<li>
+      <a href="{{ base_url }}/{{ a.url_path }}"><img src="{{ thumb_url(a) }}" alt="" width="640" height="336" loading="lazy" decoding="async"><span class="guide-item-text"><span class="guide-item-title">{{ a.title }}</span>{% if a.audience %}<span class="guide-item-aud">{{ a.audience }}</span>{% endif %}</span></a>
+    </li>{% endfor %}</ul>
+  </section>
+  {% endfor %}
+  {% if guide.others %}
+  <section class="guide-step">
+    <h2>あわせて読みたい</h2>
+    <ul class="guide-list">{% for a in guide.others %}<li>
+      <a href="{{ base_url }}/{{ a.url_path }}"><img src="{{ thumb_url(a) }}" alt="" width="640" height="336" loading="lazy" decoding="async"><span class="guide-item-text"><span class="guide-item-title">{{ a.title }}</span>{% if a.audience %}<span class="guide-item-aud">{{ a.audience }}</span>{% endif %}</span></a>
+    </li>{% endfor %}</ul>
+  </section>
+  {% endif %}
+  <p class="note guide-note">制度や料金は変わることがあります。各記事の出典と、公式サイトの最新情報をあわせてご確認ください。</p>
+</div>
+{% endblock %}

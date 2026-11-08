@@ -82,3 +82,16 @@ def test_writer_rejects_after_low_review(cfg, monkeypatch):
     assert result.article is None
     assert any("編集長レビュー" in i for i in result.issues)
     assert json.dumps(result.issues, ensure_ascii=False)
+
+
+def test_build_guides_assigns_steps():
+    from engine.articles import Article
+    from engine.site import build_guides
+    arts = [Article(title="教育訓練給付金の申請の流れ", slug="a", description="", category="school", body=""),
+            Article(title="リスキリング補助金は主婦でも使える？", slug="b", description="", category="school", body=""),
+            Article(title="Python独学ロードマップ", slug="c", description="", category="learning", body="")]
+    guides = [{"slug": "kyufukin", "title": "給付金", "description": "", "intro": "", "match": "給付|補助",
+               "steps": [{"name": "条件", "match": "主婦"}, {"name": "申請", "match": "申請"}]}]
+    found, member_of = build_guides(arts, guides)
+    assert [len(g["items"]) for g in found[0]["groups"]] == [1, 1]
+    assert member_of["a"]["slug"] == "kyufukin" and "c" not in member_of
