@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: プログラミングスクール 怪しい
-  intent: commercial
-  category: school
-  program: school-general
-  score: 60000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: c言語 組み込み 難しい
   intent: commercial
   category: career
@@ -273,6 +265,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: mikeiken-engineer-yametoke
+- keyword: プログラミングスクール 怪しい
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: programming-school-ayashii
 - keyword: リスキリング 補助金 50代
   intent: commercial
   category: school
