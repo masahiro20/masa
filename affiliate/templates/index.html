@@ -47,6 +47,13 @@
   <p class="empty">記事を準備中です。</p>
   {% endif %}
 
+  {% if guides %}<section class="section">
+    <h2 class="section-title"><span>テーマ別ガイド</span></h2>
+    <ul class="guide-cards">{% for g in guides %}<li>
+      <a href="{{ base_url }}/guide/{{ g.slug }}/"><span class="guide-cards-kicker">GUIDE {{ loop.index }}・{{ g.count }}本の記事</span><span class="guide-cards-title">{{ g.title }}</span><span class="guide-cards-desc">{{ g.description }}</span></a>
+    </li>{% endfor %}</ul>
+  </section>{% endif %}
+
   <section class="section">
     <h2 class="section-title"><span>カテゴリ</span></h2>
     <div class="cat-cols">

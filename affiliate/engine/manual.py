@@ -168,6 +168,7 @@ def cmd_next(cfg: Config, args) -> int:
         for i in queue.pick(args.n, queue.recent_programs(articles))
     ]
     existing = [{"slug": a.slug, "title": a.title, "category": a.category} for a in articles]
+    found = gsc.ideas(gsc.load_queries(), articles, 10)
     print(json.dumps({
         "today": datetime.now(timezone.utc).date().isoformat(),
         "next": items,
@@ -176,6 +177,9 @@ def cmd_next(cfg: Config, args) -> int:
         "program_ids": [pid for pid, p in cfg.programs_by_id.items() if not p.get("hold")],
         "voice_reminder": VOICE_REMINDER,
         "categories": list(cfg.category_names),
+        # Search Console に実際に出ている検索語。見出し・よくある質問に使い、在庫の補充（add-keywords）でも優先する
+        "search_console_questions": [r["query"] for r in found["questions"]],
+        "search_console_near_miss": [r["query"] for r in found["near_miss"]],
     }, ensure_ascii=False, indent=1))
     return 0
 
