@@ -53,4 +53,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SLUGS: ${{ steps.merge.outputs.slugs }}
-        run: gh workflow run affiliate-autopilot.yml --ref main -f mode=build -f slugs="${SLUGS}"
+        # GitHub API が一時的に 5xx を返すことがあるため、間を空けて最大4回試す
+        run: |
+          for wait in 0 10 30 60; do
+            sleep "$wait"
+            if gh workflow run affiliate-autopilot.yml --ref main -f mode=build -f slugs="${SLUGS}"; then exit 0; fi
+          done
+          exit 1
