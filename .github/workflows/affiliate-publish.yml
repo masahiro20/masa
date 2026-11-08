@@ -44,6 +44,10 @@ jobs:
           SLUGS=$(git diff --name-only --diff-filter=AM origin/main...HEAD -- content/articles \
             | sed -n 's#^affiliate/content/articles/\(.*\)\.md$#\1#p' | tr '\n' ' ')
           echo "slugs=${SLUGS}" >> "$GITHUB_OUTPUT"
+          # 新しく追加した記事だけ（書き直しは含めない）。X への自動投稿に使う
+          NEW_SLUGS=$(git diff --name-only --diff-filter=A origin/main...HEAD -- content/articles \
+            | sed -n 's#^affiliate/content/articles/\(.*\)\.md$#\1#p' | tr '\n' ' ')
+          echo "new_slugs=${NEW_SLUGS}" >> "$GITHUB_OUTPUT"
           git checkout -B main origin/main
           git merge --no-ff "origin/${BRANCH}" -m "publish: ${BRANCH} を公開"
           git push origin main
@@ -53,10 +57,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SLUGS: ${{ steps.merge.outputs.slugs }}
+          NEW_SLUGS: ${{ steps.merge.outputs.new_slugs }}
         # GitHub API が一時的に 5xx を返すことがあるため、間を空けて最大4回試す
         run: |
           for wait in 0 10 30 60; do
             sleep "$wait"
-            if gh workflow run affiliate-autopilot.yml --ref main -f mode=build -f slugs="${SLUGS}"; then exit 0; fi
+            if gh workflow run affiliate-autopilot.yml --ref main -f mode=build -f slugs="${SLUGS}" -f new_slugs="${NEW_SLUGS}"; then exit 0; fi
           done
           exit 1

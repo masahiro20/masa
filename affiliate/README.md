@@ -61,6 +61,7 @@
 | ⑤ | 独自ドメインを取得し、`config/site.yaml` の `base_url` を変更して Pages のカスタムドメインに設定 | 15分 | 推奨 |
 | ⑥ | Search Console の API 用サービスアカウントを作り、JSON キーを `GSC_SERVICE_ACCOUNT_JSON`（Secret）、プロパティURLを `GSC_SITE_URL`（Variable）に登録 | 20分 | 任意 |
 | ⑥' | （⑥の代わりに簡単な方法）Search Console の「検索パフォーマンス」→「エクスポート」→「CSV をダウンロード」した ZIP を Claude Code のセッションに渡す（`python -m engine gsc-import`）。2週間に1回程度 | 3分 | 推奨 |
+| ⑦ | X（旧Twitter）への自動投稿：developer.x.com でアプリを作り、権限を「Read and Write」にしてから API Key・Secret と Access Token・Secret を発行し、GitHub の Secrets に `X_API_KEY` `X_API_SECRET` `X_ACCESS_TOKEN` `X_ACCESS_TOKEN_SECRET` として登録。X API は従量課金（リンク付き投稿は1件ごと）なので、Developer Console で月の利用上限も設定する | 20分 | 任意 |
 
 ①②が終われば毎朝自動で動きます。
 

@@ -16,6 +16,10 @@ on:
         description: "検索エンジンに通知する記事の slug（空白区切り・任意）"
         required: false
         default: ""
+      new_slugs:
+        description: "X に投稿する新しい記事の slug（空白区切り・任意。キー未登録なら投稿しない）"
+        required: false
+        default: ""
       articles:
         description: "[generate] 今回生成する記事数（空欄なら設定値）"
         required: false
@@ -163,3 +167,30 @@ jobs:
           else
             python -m engine ping
           fi
+
+  # 新しく公開した記事を X に投稿する（Secrets にキーがなければ何もしない。失敗しても公開は止めない）
+  post-to-x:
+    needs: deploy
+    if: github.event_name == 'workflow_dispatch' && inputs.new_slugs != ''
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: affiliate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Post new articles to X
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          INPUT_NEW_SLUGS: ${{ inputs.new_slugs }}
+        run: |
+          # slug は英小文字・数字・ハイフンのみ受け付ける
+          SLUGS=$(echo "$INPUT_NEW_SLUGS" | tr ' ' '\n' | grep -E '^[a-z0-9-]+$' | tr '\n' ' ')
+          if [ -n "$SLUGS" ]; then python -m engine post-x --slugs $SLUGS; fi
