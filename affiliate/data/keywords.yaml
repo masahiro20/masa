@@ -8,12 +8,6 @@ keywords:
   program: learning-online-course
   score: 1000.0
   status: queued
-- keyword: プログラミング 入門書 選び方 言語別
-  intent: commercial
-  category: learning
-  program: learning-books
-  score: 400.0
-  status: queued
 - keyword: エンジニア 転職 未経験 資格
   intent: informational
   category: career
@@ -1069,6 +1063,13 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: it-passport-sankousho-osusume
+- keyword: プログラミング 入門書 選び方 言語別
+  intent: commercial
+  category: learning
+  program: learning-books
+  score: 400.0
+  status: published
+  slug: programming-nyumonsho-erabikata
 - keyword: 独自ドメイン 取り方 初心者 おすすめ
   intent: transactional
   category: tools
