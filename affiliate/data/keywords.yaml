@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: c言語 組み込み 難しい
-  intent: commercial
-  category: career
-  program: career-maker-agent
-  score: 36000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 教育訓練給付金 退職後
   intent: informational
   category: school
@@ -575,6 +567,15 @@ keywords:
   score: 40000.0
   status: published
   slug: programming-school-choice-for-workers
+- keyword: c言語 組み込み 難しい
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: c-gengo-kumikomi-muzukashii
 - keyword: 会社員 副業 Web制作 始め方 手順
   intent: commercial
   category: tools
