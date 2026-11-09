@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 教育訓練給付金 退職後
-  intent: informational
-  category: school
-  program: career-coaching
-  score: 30000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 転職エージェント 断り方 例文
   intent: informational
   category: career
@@ -23,14 +15,6 @@ keywords:
   category: career
   program: career-coaching
   score: 30000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: ドメイン代 勘定科目
-  intent: informational
-  category: fukugyo
-  program: tools-rental-server
-  score: 24000.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -591,6 +575,15 @@ keywords:
   score: 32000.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: 教育訓練給付金 退職後
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: kyufukin-taishokugo
 - keyword: 教育訓練給付金 電子申請 やり方
   intent: informational
   category: school
@@ -1287,6 +1280,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事programming-fukugyo-mikeiken-muzukashiiと検索意図が重複
+- keyword: ドメイン代 勘定科目
+  intent: informational
+  category: fukugyo
+  program: tools-rental-server
+  score: 24000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事rental-server-hiyou-kanjoukamokuと検索意図が重複
 - keyword: wordpress 始め方 超 初心者
   intent: informational
   category: tools
