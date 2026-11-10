@@ -27,6 +27,7 @@ CHANGED_FILE = DATA_DIR / "last_changed.json"
 ALERT_FILE = DATA_DIR / "ALERT.md"
 ASP_MILESTONE = 10  # この記事数に達したら ASP 審査の申請を促す
 STATUS_FILE = DATA_DIR / "STATUS.md"
+GROWTH_LOG_FILE = DATA_DIR / "growth_log.md"  # 毎週の改善ルーチンが「- 日付: やったこと」を1行ずつ足す
 
 
 def _has_credentials() -> bool:
@@ -255,6 +256,25 @@ def write_status(cfg: Config) -> None:
         f"- 提携済み案件: {len(linked)} / {len(cfg.programs)}",
         "",
     ]
+    from . import gsc
+
+    weeks = gsc.weekly_trend(gsc.load_daily())[:6]
+    if weeks:
+        lines += ["## 検索での伸び（Google、週ごと）", "",
+                  "| 週 | 表示回数 | クリック | CTR | 平均順位 |", "|---|---|---|---|---|"]
+        lines += [f"| {w['start'][5:]}〜{w['end'][5:]} | {w['impressions']:,} | {w['clicks']} | {w['ctr'] * 100:.1f}% | {w['position']} |"
+                  for w in weeks]
+        if len(weeks) >= 2 and weeks[1]["impressions"]:
+            lines.append(f"\n前の週と比べて、表示回数は {weeks[0]['impressions'] / weeks[1]['impressions'] * 100 - 100:+.0f}%。")
+        lines.append("")
+    ops = gsc.opportunities(articles, cfg.site["base_url"], gsc.load_pages())
+    if ops:
+        lines += ["## 伸ばしどころ（毎晩の書き直しで優先している記事）", ""]
+        lines += [f"- {o['slug']}（平均{o['position']}位・表示{int(o['impressions'])}回）" for o in ops[:5]]
+        lines.append("")
+    if GROWTH_LOG_FILE.exists():
+        log = GROWTH_LOG_FILE.read_text(encoding="utf-8").strip().splitlines()
+        lines += ["## 最近の改善（毎週の改善ルーチン）", ""] + log[-12:] + [""]
     if unlinked:
         lines += ["## 要対応: 広告リンク未設定の案件", "",
                   "ASPで提携したら `config/programs.yaml` の `url` に広告リンクを貼ってください。", ""]

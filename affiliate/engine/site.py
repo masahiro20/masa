@@ -17,6 +17,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from .articles import Article, load_articles
 from .blocks import expand_links, extract_faq, render_blocks
 from .config import PAGES_DIR, PUBLIC_DIR, STATIC_DIR, TEMPLATES_DIR, Config
+from .gsc import load_pages as gsc_pages
 from .links import expand_shortcodes, route_unlinked_ctas, with_early_cta
 from .visuals import logo_png, logo_svg, save_cover, site_cover
 
@@ -144,8 +145,21 @@ def build_guides(articles: list[Article], guides: list[dict]) -> tuple[list[dict
     return [g for g in result if g["count"]], member_of
 
 
-def pillar_articles(articles: list[Article], n: int = 6) -> list[Article]:
-    """本文からリンクされている数が多い記事（サイトの軸になる記事）。フッターから全ページにリンクする。"""
+def pillar_articles(articles: list[Article], n: int = 6, pages: dict[str, dict] | None = None,
+                    base: str = "") -> list[Article]:
+    """フッターから全ページにリンクする記事。
+
+    Search Console のデータがあれば、検索でよく見られている記事（クリックを重く数える）を選ぶ。
+    伸びている記事に内部リンクを集めると、上位を保ちやすくなる。データがなければ、本文からのリンクが多い記事。
+    """
+    if pages:
+        def seen(a: Article) -> float:
+            m = pages.get(f"{base}/{a.url_path}") or {}
+            return (m.get("clicks") or 0) * 20 + (m.get("impressions") or 0)
+
+        ranked = sorted((a for a in articles if seen(a) > 0), key=seen, reverse=True)
+        if len(ranked) >= n:
+            return ranked[:n]
     counts = {a.slug: 0 for a in articles}
     for a in articles:
         for target in re.findall(r"\{\{link:([a-z0-9-]+)", a.body):
@@ -258,7 +272,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         "logo": logo_svg(34),
         "cover_url": cover_url,
         "cover_webp": cover_webp,
-        "pillars": pillar_articles(articles),
+        "pillars": pillar_articles(articles, pages=gsc_pages(), base=base),
         "thumb_url": thumb_url,
         "og_image": f"{base}/static/og-default.png",
     }
@@ -295,7 +309,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
             **{**common, "og_image": cover_url(a)}, article=a, body=body_html, toc=toc, url=url, category=cat,
             related=related_by_slug[a.slug], minutes=reading_minutes(a.body), guide=guide_of.get(a.slug),
             json_ld=_article_ld(a, cfg, url, cat["name"], cover_url(a), base),
-            page_title=a.title, page_description=a.description, og_type="article",
+            page_title=a.title, page_description=a.description, og_type="article", bare_title=True,
         ))
         urls.append((url, a.updated or a.published))
 
@@ -341,6 +355,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         }])
         write(f"guide/{g['slug']}/index.html", env.get_template("guide.html").render(
             **common, guide=g, url=url, page_title=g["title"], page_description=g["description"], json_ld=ld,
+            bare_title=True,
         ))
         urls.append((url, max((a.updated or a.published) for a in members)))
 
@@ -356,7 +371,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         }])
         write(f"tools/{t['slug']}/index.html", env.get_template(f"tools/{t['slug']}.html").render(
             **common, tool={**t, "articles_json": articles_json}, url=url,
-            page_title=t["title"], page_description=t["description"], json_ld=ld,
+            page_title=t["title"], page_description=t["description"], json_ld=ld, bare_title=True,
         ))
         urls.append((url, str(t.get("updated") or date.today().isoformat())))
 
