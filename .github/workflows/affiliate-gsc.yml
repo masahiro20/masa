@@ -1,0 +1,53 @@
+name: affiliate-gsc
+
+# 毎週、Search Console API から検索パフォーマンス（ページ別・検索語別・日別）を取り、data/ に保存する。
+# 書き直しの優先順位（rewrite-next）、執筆に渡す検索語（next / ideas）、運用レポートの「検索での伸び」に使われる。
+# Secrets の GSC_SERVICE_ACCOUNT_JSON と Variables の GSC_SITE_URL がないときは、何もせずに終わる。
+on:
+  schedule:
+    - cron: "23 19 * * 0"   # 毎週月曜 4:23（日本時間）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: affiliate-publish   # 記事の公開と同時に main へ書き込まないようにする
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: affiliate
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: affiliate/requirements.txt
+      - run: pip install -r requirements.txt
+      - name: Fetch Search Console data
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_SITE_URL: ${{ vars.GSC_SITE_URL }}
+        run: python -m engine gsc-fetch
+      - name: Commit data
+        run: |
+          git config user.name "affiliate-gsc[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m engine status > /dev/null
+          git add data
+          if git diff --cached --quiet; then
+            echo "変更なし"
+          else
+            git commit -m "gsc: $(date -u +%Y-%m-%d) Search Console のデータを更新"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

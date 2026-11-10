@@ -2,9 +2,12 @@
 
   python -m engine gsc-import FILE      エクスポートの ZIP（または中の「ページ.csv」「クエリ.csv」）を取り込む
 
+  python -m engine gsc-fetch            Search Console API から同じデータを取る（毎週 GitHub Actions が実行）
+
 Search Console → 検索パフォーマンス → 右上の「エクスポート」→「CSV をダウンロード」で得た ZIP をそのまま渡せる。
 取り込んだ数字は data/gsc_pages.json / data/gsc_queries.json に保存され、`rewrite-next` が
 「あと少しで1ページ目上位」「表示は多いのにクリックされない」記事を優先して書き直し対象にする。
+gsc-fetch は環境変数 GSC_SERVICE_ACCOUNT_JSON（サービスアカウントのJSONキー）と GSC_SITE_URL が必要。
 """
 from __future__ import annotations
 
@@ -12,8 +15,9 @@ import csv
 import re
 import io
 import json
+import os
 import zipfile
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 from .articles import Article
@@ -21,6 +25,8 @@ from .config import DATA_DIR
 
 PAGES_FILE = DATA_DIR / "gsc_pages.json"
 QUERIES_FILE = DATA_DIR / "gsc_queries.json"
+DAILY_FILE = DATA_DIR / "gsc_daily.json"
+GSC_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly"
 MIN_DAYS_BETWEEN_UPDATES = 21
 
 _COLS = {
@@ -45,7 +51,8 @@ def parse_csv(text: str) -> tuple[str, dict[str, dict]]:
         return "", {}
     header = [h.strip().lower() for h in rows[0]]
     first = header[0]
-    kind = "pages" if ("ページ" in first or "page" in first) else "queries" if ("クエリ" in first or "quer" in first) else ""
+    kind = ("pages" if ("ページ" in first or "page" in first) else "queries" if ("クエリ" in first or "quer" in first)
+            else "daily" if ("日付" in first or first == "date") else "")
     idx = {}
     for key, names in _COLS.items():
         idx[key] = next((i for i, h in enumerate(header) if any(n in h for n in names)), None)
@@ -77,7 +84,7 @@ def import_export(path: Path) -> dict[str, int]:
         kind, rows = parse_csv(text)
         if not kind:
             continue
-        target = PAGES_FILE if kind == "pages" else QUERIES_FILE
+        target = {"pages": PAGES_FILE, "queries": QUERIES_FILE, "daily": DAILY_FILE}[kind]
         target.write_text(json.dumps({"imported": today, "rows": rows}, ensure_ascii=False, indent=1), encoding="utf-8")
         counts[kind] = len(rows)
     return counts
@@ -165,6 +172,64 @@ def cmd_ideas(cfg, args) -> int:
     return 0
 
 
+def fetch(session, site: str, dimension: str, start: date, end: date) -> dict[str, dict]:
+    """Search Console API の検索パフォーマンス（ウェブ検索）を、1つの軸で取り出す。"""
+    from urllib.parse import quote
+
+    url = f"https://www.googleapis.com/webmasters/v3/sites/{quote(site, safe='')}/searchAnalytics/query"
+    body = {"startDate": start.isoformat(), "endDate": end.isoformat(), "dimensions": [dimension],
+            "type": "web", "rowLimit": 1000}
+    resp = session.post(url, json=body, timeout=60)
+    resp.raise_for_status()
+    return {r["keys"][0]: {"clicks": r["clicks"], "impressions": r["impressions"], "ctr": r["ctr"],
+                           "position": r["position"]}
+            for r in resp.json().get("rows", [])}
+
+
+def cmd_gsc_fetch(cfg, args) -> int:
+    raw, site = os.environ.get("GSC_SERVICE_ACCOUNT_JSON"), os.environ.get("GSC_SITE_URL")
+    if not raw or not site:
+        print("Search Console の認証情報が登録されていないため、取得しません")
+        return 0
+    from google.auth.transport.requests import AuthorizedSession
+    from google.oauth2 import service_account
+
+    creds = service_account.Credentials.from_service_account_info(json.loads(raw), scopes=[GSC_SCOPE])
+    session = AuthorizedSession(creds)
+    end = date.today() - timedelta(days=2)  # Search Console のデータは2〜3日遅れて確定する
+    start = end - timedelta(days=args.days - 1)
+    today = date.today().isoformat()
+    period = {"start": start.isoformat(), "end": end.isoformat()}
+    for dimension, path in (("page", PAGES_FILE), ("query", QUERIES_FILE), ("date", DAILY_FILE)):
+        rows = fetch(session, site, dimension, start, end)
+        path.write_text(json.dumps({"imported": today, "period": period, "rows": rows}, ensure_ascii=False,
+                                   indent=1, sort_keys=True), encoding="utf-8")
+        print(f"{dimension}: {len(rows)}行")
+    return 0
+
+
+def weekly_trend(daily: dict[str, dict]) -> list[dict]:
+    """日別の数字を、直近から7日ずつまとめる（新しい順）。"""
+    days = sorted(daily)
+    weeks = []
+    while days:
+        chunk, days = days[-7:], days[:-7]
+        if len(chunk) < 7:
+            break
+        imp = sum(daily[d]["impressions"] for d in chunk)
+        clicks = sum(daily[d]["clicks"] for d in chunk)
+        pos = sum((daily[d]["position"] or 0) * daily[d]["impressions"] for d in chunk) / imp if imp else 0
+        weeks.append({"start": chunk[0], "end": chunk[-1], "impressions": int(imp), "clicks": int(clicks),
+                      "ctr": clicks / imp if imp else 0, "position": round(pos, 1)})
+    return weeks
+
+
+def load_daily() -> dict[str, dict]:
+    if not DAILY_FILE.exists():
+        return {}
+    return json.loads(DAILY_FILE.read_text(encoding="utf-8")).get("rows", {})
+
+
 def cmd_gsc_import(cfg, args) -> int:
     path = Path(args.file)
     if not path.exists():
@@ -174,7 +239,8 @@ def cmd_gsc_import(cfg, args) -> int:
     if not counts:
         print("Search Console のエクスポート（ページ / クエリの CSV）として読めませんでした")
         return 1
-    print("取り込みました: " + "、".join(f"{'ページ' if k == 'pages' else 'クエリ'} {n}行" for k, n in counts.items()))
+    names = {"pages": "ページ", "queries": "クエリ", "daily": "日付"}
+    print("取り込みました: " + "、".join(f"{names[k]} {n}行" for k, n in counts.items()))
     if "pages" in counts:
         from .articles import load_articles
         ops = opportunities(load_articles(), cfg.site["base_url"], load_pages())
@@ -189,4 +255,6 @@ def register(sub) -> dict:
     p.add_argument("file")
     p = sub.add_parser("ideas")
     p.add_argument("--n", type=int, default=15)
-    return {"gsc-import": cmd_gsc_import, "ideas": cmd_ideas}
+    p = sub.add_parser("gsc-fetch")
+    p.add_argument("--days", type=int, default=90)
+    return {"gsc-import": cmd_gsc_import, "ideas": cmd_ideas, "gsc-fetch": cmd_gsc_fetch}

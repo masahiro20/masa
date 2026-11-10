@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% if page_title %}{{ page_title }}｜{{ site.name }}{% else %}{{ site.name }}（{{ site.name_en }}）｜{{ site.home_title }}{% endif %}</title>
+{# 記事・ガイド・ツールはサイト名を付けない（検索結果ではサイト名が別に表示され、付けるとタイトルの後半が切れるため） #}
+<title>{% if page_title %}{{ page_title }}{% if not bare_title %}｜{{ site.name }}{% endif %}{% else %}{{ site.name }}（{{ site.name_en }}）｜{{ site.home_title }}{% endif %}</title>
 {% if page_description %}<meta name="description" content="{{ page_description }}">{% endif %}
 <link rel="canonical" href="{{ url }}">
 {% if noindex %}<meta name="robots" content="noindex, follow">{% else %}<meta name="robots" content="index, follow, max-image-preview:large">{% endif %}
@@ -70,7 +71,7 @@ document.addEventListener('click',function(e){var a=e.target.closest('a[rel~="sp
         {% for t in tools %}<a href="{{ base_url }}/tools/{{ t.slug }}/">{{ t.title }}</a>{% endfor %}
       </nav>{% endif %}
       {% if pillars %}<nav aria-label="おすすめ記事">
-        <p class="footer-head">おすすめの記事</p>
+        <p class="footer-head">よく読まれている記事</p>
         {% for a in pillars %}<a href="{{ base_url }}/{{ a.url_path }}">{{ a.title }}</a>{% endfor %}
       </nav>{% endif %}
       <nav aria-label="サイト情報">
