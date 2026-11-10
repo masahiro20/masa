@@ -2,9 +2,65 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: 社内se 志望動機 未経験
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: it 転職 未経験 30代 女性
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 転職エージェント 面談 服装 オンライン
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 教育訓練給付金 2回目 条件
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 教育訓練給付金 大学院 条件
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: プログラミング 習い事 何歳から
+  intent: commercial
+  category: learning
+  program: learning-family-ai
+  score: 12000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: webデザイナー 未経験 40代
   intent: commercial
   category: school
+  program: learning-online-course
+  score: 3000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: webデザイナー 主婦 未経験
+  intent: commercial
+  category: fukugyo
   program: learning-online-course
   score: 3000.0
   status: queued
@@ -37,6 +93,14 @@ keywords:
 - keyword: c言語 難しい 理由
   intent: informational
   category: learning
+  program: learning-online-course
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 教育訓練給付金 パート
+  intent: informational
+  category: school
   program: learning-online-course
   score: 1500.0
   status: queued
@@ -105,6 +169,30 @@ keywords:
   boost: 1.5
   source: google-suggest
 - keyword: 情報セキュリティマネジメント 勉強時間 itパスポート
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: itパスポート 勉強 何日
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: itパスポート 意味ない
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 基本情報技術者 独学 勉強時間
   intent: informational
   category: learning
   program: learning-books
