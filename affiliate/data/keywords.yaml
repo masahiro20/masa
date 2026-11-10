@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 転職エージェント line 返信
-  intent: informational
-  category: career
-  program: career-coaching
-  score: 30000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: webデザイナー 未経験 40代
   intent: commercial
   category: school
@@ -567,6 +559,15 @@ keywords:
   score: 32000.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: 転職エージェント line 返信
+  intent: informational
+  category: career
+  program: career-coaching
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: tenshoku-agent-line-henshin
 - keyword: 転職エージェント 断り方 例文
   intent: informational
   category: career
