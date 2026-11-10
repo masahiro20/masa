@@ -144,3 +144,4 @@
 {"ts": "2026-11-09T09:53:49+00:00", "source": "routine", "published": ["20dai-kousotsu-tenshoku-agent"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-09T21:48:58+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["ドメイン代 勘定科目"], "errors": ["既存記事rental-server-hiyou-kanjoukamokuと検索意図が重複"]}
 {"ts": "2026-11-09T21:50:10+00:00", "source": "routine", "published": ["kyufukin-taishokugo"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-10T03:49:45+00:00", "source": "routine", "published": ["tenshoku-agent-kotowarikata"], "refreshed": [], "rejected": [], "errors": []}
