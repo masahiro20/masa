@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: it 転職 未経験 30代 女性
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 60000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 教育訓練給付金 2回目 条件
   intent: informational
   category: school
@@ -298,6 +290,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: mikeiken-engineer-yametoke
+- keyword: it 転職 未経験 30代 女性
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: it-tenshoku-mikeiken-30dai-josei
 - keyword: 20代 高卒 転職エージェント
   intent: commercial
   category: career
