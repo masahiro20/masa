@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: 転職エージェント 面談 服装 オンライン
-  intent: informational
-  category: career
-  program: career-it-agent
-  score: 45000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 教育訓練給付金 2回目 条件
   intent: informational
   category: school
@@ -485,6 +477,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: rental-server-yasui-erabikata
+- keyword: 転職エージェント 面談 服装 オンライン
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: tenshoku-agent-mendan-fukusou-online
 - keyword: lpic 未経験 勉強 時間
   intent: informational
   category: career
