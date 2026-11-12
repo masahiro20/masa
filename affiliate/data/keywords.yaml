@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 教育訓練給付金 大学院 条件
-  intent: informational
-  category: school
-  program: career-coaching
-  score: 30000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: プログラミング 習い事 何歳から
   intent: commercial
   category: learning
@@ -642,6 +634,15 @@ keywords:
   score: 32000.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: 教育訓練給付金 大学院 条件
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: kyufukin-daigakuin-jouken
 - keyword: 教育訓練給付金 2回目 条件
   intent: informational
   category: school
