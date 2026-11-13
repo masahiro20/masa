@@ -48,14 +48,6 @@ keywords:
   program: learning-online-course
   score: 1000.0
   status: queued
-- keyword: エンジニア 転職 未経験 資格
-  intent: informational
-  category: career
-  program: learning-books
-  score: 300.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: itパスポート 勉強時間 社会人
   intent: informational
   category: learning
@@ -1269,6 +1261,15 @@ keywords:
   score: 400.0
   status: published
   slug: programming-nyumonsho-erabikata
+- keyword: エンジニア 転職 未経験 資格
+  intent: informational
+  category: career
+  program: learning-books
+  score: 300.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: mikeiken-engineer-tenshoku-shikaku
 - keyword: 独自ドメイン 取り方 初心者 おすすめ
   intent: transactional
   category: tools
