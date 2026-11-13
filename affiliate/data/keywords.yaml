@@ -2,22 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 教育訓練給付金 主婦
-  intent: informational
-  category: school
-  program: learning-online-course
-  score: 1500.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: chatgpt 勘定科目 個人事業主
-  intent: informational
-  category: fukugyo
-  program: learning-online-course
-  score: 1500.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: typescript 難しい
   intent: informational
   category: learning
@@ -1060,6 +1044,15 @@ keywords:
   score: 2000.0
   status: published
   slug: online-course-vs-programming-school
+- keyword: chatgpt 勘定科目 個人事業主
+  intent: informational
+  category: fukugyo
+  program: learning-online-course
+  score: 1500.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: chatgpt-kanjoukamoku-kojinjigyounushi
 - keyword: react 勉強 方法
   intent: informational
   category: learning
@@ -1446,6 +1439,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事kaishain-fukugyo-web-seisaku-hajimekataと検索意図が重複
+- keyword: 教育訓練給付金 主婦
+  intent: informational
+  category: school
+  program: learning-online-course
+  score: 1500.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事reskilling-hojokin-shufu・kyufukin-taishokugoと検索意図が重複
 - keyword: web制作 副業 きつい
   intent: informational
   category: fukugyo
