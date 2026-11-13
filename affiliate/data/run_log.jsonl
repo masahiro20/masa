@@ -155,3 +155,5 @@
 {"ts": "2026-11-12T21:50:05+00:00", "source": "routine", "published": ["webdesigner-mikeiken-40dai"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-13T03:49:24+00:00", "source": "routine", "published": ["webdesigner-shufu-mikeiken"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-13T09:49:40+00:00", "source": "routine", "published": ["mikeiken-engineer-tenshoku-shikaku"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-13T21:48:21+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["教育訓練給付金 主婦"], "errors": ["既存記事reskilling-hojokin-shufu・kyufukin-taishokugoと検索意図が重複"]}
+{"ts": "2026-11-13T21:49:54+00:00", "source": "routine", "published": ["chatgpt-kanjoukamoku-kojinjigyounushi"], "refreshed": [], "rejected": [], "errors": []}
