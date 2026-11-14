@@ -22,11 +22,13 @@ programs:
     name: "byTech（未経験からAI開発を学ぶオンラインスクール）"
     category: school
     asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95323"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95251"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95323"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95323"
     banner_height: 250
     banner_width: 250
     banner: "https://image.moshimo.com/af-img/5991/000000095323.png"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95323"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95251"
     est_reward_jpy: 10000
     keywords: ["プログラミングスクール", "おすすめ", "比較", "評判", "無料カウンセリング", "AIエンジニア"]
     cta: "無料カウンセリングの内容を確認する"
@@ -44,11 +46,13 @@ programs:
     name: "ユニゾンキャリア（エンジニア専門の転職エージェント）"
     category: career
     asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5849850&p_id=7675&pc_id=22217&pl_id=96755"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849850&p_id=7675&pc_id=22217&pl_id=95783"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5849850&p_id=7675&pc_id=22217&pl_id=96755"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5849850&p_id=7675&pc_id=22217&pl_id=96755"
     banner_height: 64
     banner_width: 414
     banner: "https://image.moshimo.com/af-img/5656/000000096755.png"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849850&p_id=7675&pc_id=22217&pl_id=96755"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849850&p_id=7675&pc_id=22217&pl_id=95783"
     est_reward_jpy: 15000
     keywords: ["IT転職", "エンジニア転職", "転職エージェント", "未経験"]
     cta: "無料の転職相談の内容を確認する"
