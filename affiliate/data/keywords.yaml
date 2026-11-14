@@ -32,14 +32,6 @@ keywords:
   program: learning-online-course
   score: 1000.0
   status: queued
-- keyword: itパスポート 勉強時間 社会人
-  intent: informational
-  category: learning
-  program: learning-books
-  score: 300.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 基本情報技術者 未経験 独学
   intent: informational
   category: learning
@@ -1254,6 +1246,15 @@ keywords:
   score: 400.0
   status: published
   slug: programming-nyumonsho-erabikata
+- keyword: itパスポート 勉強時間 社会人
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: it-passport-benkyou-jikan-shakaijin
 - keyword: エンジニア 転職 未経験 資格
   intent: informational
   category: career
