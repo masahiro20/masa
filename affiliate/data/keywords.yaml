@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 3.0
   source: google-suggest
-- keyword: conoha wing エックスサーバー 比較
-  intent: transactional
-  category: tools
-  program: tools-rental-server
-  score: 120000.0
-  status: queued
-  boost: 3.0
-  source: google-suggest
 - keyword: メーカーズジョブ 評判
   intent: transactional
   category: career
@@ -186,6 +178,15 @@ keywords:
   boost: 4.0
   source: search-console
   slug: programming-school-kayoi-houdai
+- keyword: conoha wing エックスサーバー 比較
+  intent: transactional
+  category: tools
+  program: tools-rental-server
+  score: 120000.0
+  status: published
+  boost: 3.0
+  source: google-suggest
+  slug: conoha-wing-xserver-hikaku
 - keyword: 社内se 志望動機 未経験
   intent: commercial
   category: career
