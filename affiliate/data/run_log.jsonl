@@ -158,3 +158,4 @@
 {"ts": "2026-11-13T21:48:21+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["教育訓練給付金 主婦"], "errors": ["既存記事reskilling-hojokin-shufu・kyufukin-taishokugoと検索意図が重複"]}
 {"ts": "2026-11-13T21:49:54+00:00", "source": "routine", "published": ["chatgpt-kanjoukamoku-kojinjigyounushi"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-14T03:49:58+00:00", "source": "routine", "published": ["it-passport-benkyou-jikan-shakaijin"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-14T09:50:40+00:00", "source": "routine", "published": ["unison-career-kuchikomi"], "refreshed": [], "rejected": [], "errors": []}
