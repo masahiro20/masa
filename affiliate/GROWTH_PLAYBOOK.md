@@ -35,6 +35,10 @@ data/gsc_pages.json（ページ別）と data/gsc_queries.json（検索語別）
 3. `next` の existing_articles と検索意図が重なるものは除く（同じ悩みに2記事目を作らない）。
 4. program は、config/programs.yaml で url があり `hold: true` でない案件から、内容に合うものを選ぶ。
 5. JSON（keyword, intent, category, program, "boost": 1.5, "source": "google-suggest"）にして `python -m engine add-keywords <file>`。
+6. **提携済みの案件のサービス名の語（最優先）**：config/programs.yaml で url があり hold でない案件ごとに、
+   「<サービス名> 評判／口コミ／やめとけ／怪しい／未経験／比較」をサジェストで確かめ、まだ記事がない語を1〜3件足す
+   （intent は transactional、boost は 3.0）。サービス名で検索する人は申込に最も近く、新しいサイトでも上位を取りやすい。
+   書き方は執筆ルール30（口コミは作らず、公式・公的な情報で確かめる）に従う。
 
 ## 3. 施策B：検索結果でクリックされやすくする（2本まで）
 

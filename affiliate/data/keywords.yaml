@@ -2,6 +2,54 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: ユニゾンキャリア 口コミ
+  intent: transactional
+  category: career
+  program: career-it-agent
+  score: 225000.0
+  status: queued
+  boost: 3.0
+  source: google-suggest
+- keyword: ユニゾンキャリア 未経験
+  intent: transactional
+  category: career
+  program: career-it-agent
+  score: 225000.0
+  status: queued
+  boost: 3.0
+  source: google-suggest
+- keyword: conoha wing エックスサーバー 比較
+  intent: transactional
+  category: tools
+  program: tools-rental-server
+  score: 120000.0
+  status: queued
+  boost: 3.0
+  source: google-suggest
+- keyword: メーカーズジョブ 評判
+  intent: transactional
+  category: career
+  program: career-maker-agent
+  score: 90000.0
+  status: queued
+  boost: 3.0
+  source: google-suggest
+- keyword: kredo 評判
+  intent: transactional
+  category: school
+  program: school-kredo
+  score: 75000.0
+  status: queued
+  boost: 3.0
+  source: google-suggest
+- keyword: ai駆動開発協会 とは
+  intent: transactional
+  category: learning
+  program: learning-ai-coding
+  score: 50000.0
+  status: queued
+  boost: 2.0
+  source: google-suggest
 - keyword: typescript 難しい
   intent: informational
   category: learning
