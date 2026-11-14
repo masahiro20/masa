@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: ユニゾンキャリア 口コミ
-  intent: transactional
-  category: career
-  program: career-it-agent
-  score: 225000.0
-  status: queued
-  boost: 3.0
-  source: google-suggest
 - keyword: ユニゾンキャリア 未経験
   intent: transactional
   category: career
@@ -158,6 +150,15 @@ keywords:
   program: learning-books
   score: 200.0
   status: queued
+- keyword: ユニゾンキャリア 口コミ
+  intent: transactional
+  category: career
+  program: career-it-agent
+  score: 225000.0
+  status: published
+  boost: 3.0
+  source: google-suggest
+  slug: unison-career-kuchikomi
 - keyword: プログラミングスクール ローン 分割 審査
   intent: commercial
   category: school
