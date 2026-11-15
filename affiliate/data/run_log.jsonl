@@ -160,3 +160,5 @@
 {"ts": "2026-11-14T03:49:58+00:00", "source": "routine", "published": ["it-passport-benkyou-jikan-shakaijin"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-14T09:50:40+00:00", "source": "routine", "published": ["unison-career-kuchikomi"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-14T21:50:12+00:00", "source": "routine", "published": ["conoha-wing-xserver-hikaku"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-15T03:48:11+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["ユニゾンキャリア 未経験"], "errors": ["公式サイトに接続できず未経験向け支援の内容を確認できない。既存記事unison-career-kuchikomi・mikeiken-engineer-tenshoku-agent-how-to-useと意図も近い"]}
+{"ts": "2026-11-15T03:49:42+00:00", "source": "routine", "published": ["makers-job-hyouban"], "refreshed": [], "rejected": [], "errors": []}
