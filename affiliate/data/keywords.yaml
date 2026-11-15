@@ -2,22 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: ユニゾンキャリア 未経験
-  intent: transactional
-  category: career
-  program: career-it-agent
-  score: 225000.0
-  status: queued
-  boost: 3.0
-  source: google-suggest
-- keyword: メーカーズジョブ 評判
-  intent: transactional
-  category: career
-  program: career-maker-agent
-  score: 90000.0
-  status: queued
-  boost: 3.0
-  source: google-suggest
 - keyword: kredo 評判
   intent: transactional
   category: school
@@ -187,6 +171,15 @@ keywords:
   boost: 3.0
   source: google-suggest
   slug: conoha-wing-xserver-hikaku
+- keyword: メーカーズジョブ 評判
+  intent: transactional
+  category: career
+  program: career-maker-agent
+  score: 90000.0
+  status: published
+  boost: 3.0
+  source: google-suggest
+  slug: makers-job-hyouban
 - keyword: 社内se 志望動機 未経験
   intent: commercial
   category: career
@@ -1321,6 +1314,16 @@ keywords:
   score: 300.0
   status: published
   slug: dokuji-domain-torikata-shoshinsha
+- keyword: ユニゾンキャリア 未経験
+  intent: transactional
+  category: career
+  program: career-it-agent
+  score: 225000.0
+  status: rejected
+  boost: 3.0
+  source: google-suggest
+  issues:
+  - 公式サイトに接続できず未経験向け支援の内容を確認できない。既存記事unison-career-kuchikomi・mikeiken-engineer-tenshoku-agent-how-to-useと意図も近い
 - keyword: プログラミングスクール オンライン 注意点 デメリット
   intent: commercial
   category: school
