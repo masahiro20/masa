@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: kredo 評判
-  intent: transactional
-  category: school
-  program: school-kredo
-  score: 75000.0
-  status: queued
-  boost: 3.0
-  source: google-suggest
 - keyword: ai駆動開発協会 とは
   intent: transactional
   category: learning
@@ -261,6 +253,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: mikeiken-engineer-yametoke
+- keyword: kredo 評判
+  intent: transactional
+  category: school
+  program: school-kredo
+  score: 75000.0
+  status: published
+  boost: 3.0
+  source: google-suggest
+  slug: kredo-hyouban
 - keyword: it 転職 未経験 30代 女性
   intent: commercial
   category: career
