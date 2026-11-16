@@ -2,13 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 中卒 転職エージェント line
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 60000.0
-  status: queued
-  source: gsc-question（表示5回・4.2位）
 - keyword: byTech 評判
   intent: transactional
   category: school
@@ -275,6 +268,14 @@ keywords:
   boost: 3.0
   source: google-suggest
   slug: kredo-hyouban
+- keyword: 中卒 転職エージェント line
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 60000.0
+  status: published
+  source: gsc-question（表示5回・4.2位）
+  slug: chusotsu-tenshoku-agent-line
 - keyword: it 転職 未経験 30代 女性
   intent: commercial
   category: career
