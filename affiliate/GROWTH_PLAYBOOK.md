@@ -30,7 +30,7 @@ data/gsc_pages.json（ページ別）と data/gsc_queries.json（検索語別）
 
 1. 候補は、`ideas` の questions / near_miss と、上位に出ている記事の周辺の語から作る。
 2. 各候補を Google サジェストで確かめる：
-   `curl -sS -G https://suggestqueries.google.com/complete/search --data-urlencode "q=<語> " -d client=firefox -d hl=ja`
+   `python -m engine suggest "<語1>" "<語2>" …`（curl は自動承認で止まることがあるので、このコマンドを使う）
    サジェストに出た言い回しを優先し、出ない語は boost を付けない。
 3. `next` の existing_articles と検索意図が重なるものは除く（同じ悩みに2記事目を作らない）。
 4. program は、config/programs.yaml で url があり `hold: true` でない案件から、内容に合うものを選ぶ。

@@ -172,6 +172,29 @@ def cmd_ideas(cfg, args) -> int:
     return 0
 
 
+SUGGEST_URL = "https://suggestqueries.google.com/complete/search"
+
+
+def suggest(query: str) -> list[str]:
+    """Google のサジェスト（検索窓に出る候補）。実際に検索されている言い回しかを確かめるのに使う。"""
+    import requests
+
+    resp = requests.get(SUGGEST_URL, params={"q": query.strip() + " ", "client": "firefox", "hl": "ja"}, timeout=15)
+    resp.raise_for_status()
+    return list(json.loads(resp.content.decode("utf-8", errors="replace"))[1])
+
+
+def cmd_suggest(cfg, args) -> int:
+    for q in args.queries:
+        try:
+            found = suggest(q)
+        except Exception as e:  # noqa: BLE001 - 1語の失敗で全体を止めない
+            print(f"{q}: 取得できませんでした（{e}）")
+            continue
+        print(f"{q}: " + (" / ".join(found[:10]) if found else "（候補なし）"))
+    return 0
+
+
 def fetch(session, site: str, dimension: str, start: date, end: date) -> dict[str, dict]:
     """Search Console API の検索パフォーマンス（ウェブ検索）を、1つの軸で取り出す。"""
     from urllib.parse import quote
@@ -257,4 +280,6 @@ def register(sub) -> dict:
     p.add_argument("--n", type=int, default=15)
     p = sub.add_parser("gsc-fetch")
     p.add_argument("--days", type=int, default=90)
-    return {"gsc-import": cmd_gsc_import, "ideas": cmd_ideas, "gsc-fetch": cmd_gsc_fetch}
+    p = sub.add_parser("suggest")
+    p.add_argument("queries", nargs="+", help="確かめたい語（複数可。空白を含む語は引用符で囲む）")
+    return {"gsc-import": cmd_gsc_import, "ideas": cmd_ideas, "gsc-fetch": cmd_gsc_fetch, "suggest": cmd_suggest}
