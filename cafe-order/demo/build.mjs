@@ -35,5 +35,19 @@ for (const name of ['admin.html', 'order.html']) {
     .replace('<script type="module"', '<script src="./demo-shim.js"></script>\n  <script type="module"');
   fs.writeFileSync(f, html);
 }
-fs.copyFileSync(path.join(ROOT, 'demo/index.html'), path.join(OUT, 'index.html'));
+// 外枠のページ：<head> に入れるもの（title・meta・link・style）と本文に分けて、完全なHTMLにする
+const page = fs.readFileSync(path.join(ROOT, 'demo/index.html'), 'utf8');
+const bodyStart = page.indexOf('<header>');
+fs.writeFileSync(path.join(OUT, 'index.html'), `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+${page.slice(0, bodyStart).trim()}
+</head>
+<body>
+${page.slice(bodyStart).trim()}
+</body>
+</html>
+`);
 console.log(`demo built → ${path.relative(process.cwd(), OUT)}/`);
