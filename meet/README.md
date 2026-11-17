@@ -38,6 +38,14 @@ npm start            # http://localhost:8080
 | `ROOM_TTL_DAYS` | リンクの有効期間（日） | `30` |
 | `DATA_FILE` | 発行したリンクを残すファイル（再起動してもリンクが切れない） | `meet/data/rooms.json` |
 
+### Vercel で動かす（いまのお試し版）
+
+- 公開先：https://compass-meet.vercel.app （Vercel プロジェクト `compass-meet`、ルートは `meet/`）
+- 合図のやりとりは Upstash Redis（Vercel の Storage から追加。無料プラン）。環境変数 `KV_REST_API_URL` / `KV_REST_API_TOKEN` が入っていれば自動で使う
+- Upstash がつながっていないときは、Vercel 上では「準備中です」と返す（メモリでは通話がつながらないため）
+- ブラウザは合図を取りに行く間隔を変える（つなぎ始めは 0.6 秒、静かなときは 2.5 秒）。Upstash の利用回数を節約するため
+- Vercel の無料（Hobby）プランは個人利用向け。お客様との打ち合わせに本格的に使うなら、有料プランか別の置き場所を検討する
+
 ### 本番で必ず要るもの
 
 1. **HTTPS**：ブラウザは HTTPS でないとカメラ・マイクを使わせません（localhost だけは例外）。
