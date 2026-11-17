@@ -28,7 +28,6 @@ let camStream = null;     // カメラ＋マイク
 let screenStream = null;  // 画面共有
 let micOn = true;
 let camOn = true;
-let es = null;
 let inCall = false;
 let unread = 0;
 let callStart = 0;
@@ -206,8 +205,16 @@ function createPeer(id, name, initiator) {
   const peer = { pc, name, stream, tile, pending: [], state: { mic: true, cam: true, screen: false }, polite: !initiator };
   peers.set(id, peer);
 
+  // 接続の候補はまとめて送る（1 件ずつ送ると往復が増える）
+  let iceBuf = [];
+  let iceTimer = null;
   pc.onicecandidate = (e) => {
-    if (e.candidate) post('signal', { to: id, data: { type: 'ice', candidate: e.candidate } }).catch(() => {});
+    if (!e.candidate) return;
+    iceBuf.push(e.candidate.toJSON ? e.candidate.toJSON() : e.candidate);
+    if (!iceTimer) iceTimer = setTimeout(() => {
+      const list = iceBuf; iceBuf = []; iceTimer = null;
+      post('signal', { to: id, data: { type: 'ice', candidates: list } }).catch(() => {});
+    }, 150);
   };
   pc.ontrack = (e) => {
     stream.getTracks().filter((t) => t.kind === e.track.kind).forEach((t) => stream.removeTrack(t));
@@ -264,8 +271,10 @@ async function onSignal({ from, name, data }) {
     await p.pc.setRemoteDescription({ type: 'answer', sdp: data.sdp });
     await flushIce(p);
   } else if (data.type === 'ice' && p) {
-    if (p.pc.remoteDescription) await p.pc.addIceCandidate(data.candidate).catch(() => {});
-    else p.pending.push(data.candidate);
+    for (const c of data.candidates || [data.candidate]) {
+      if (p.pc.remoteDescription) await p.pc.addIceCandidate(c).catch(() => {});
+      else p.pending.push(c);
+    }
   }
 }
 
@@ -305,47 +314,91 @@ async function join() {
   listen();
 }
 
-function listen() {
-  es = new EventSource(api(`/events?peerId=${encodeURIComponent(me.peerId)}&secret=${encodeURIComponent(me.secret)}`));
-  es.addEventListener('waiting', () => $('waitBox').classList.remove('hidden'));
-  es.addEventListener('denied', () => { es.close(); fatal('入室できませんでした', '担当者に入室を断られました。お心当たりがない場合は、担当者にご連絡ください。'); });
-  es.addEventListener('admitted', (e) => enterCall(JSON.parse(e.data)));
-  es.addEventListener('resumed', () => {});
-  es.addEventListener('peer-joined', (e) => {
-    const { id, name } = JSON.parse(e.data);
-    // 新しく入った人が offer を送ってくるので、ここでは待つだけ
+// サーバーに数秒おきに「自分あての合図」を取りに行く。
+// 接続を張っている最中や何か届いた直後は短い間隔、静かなときは間隔をのばす（伝言板の利用回数を節約）。
+let polling = false;
+let lastActivity = 0;
+let failCount = 0;
+
+const handlers = {
+  waiting: () => $('waitBox').classList.remove('hidden'),
+  denied: () => {
+    polling = false;
+    fatal('入室できませんでした', '担当者に入室を断られました。お心当たりがない場合は、担当者にご連絡ください。');
+  },
+  closed: () => { polling = false; leave(); fatal('この通話は終了しました', ''); },
+  admitted: (d) => enterCall(d),
+  'peer-joined': ({ id, name }) => {
+    // 新しく入った人が offer を送ってくるので、ここでは受け皿を作って待つ
     toast(`${name} さんが参加しました`);
-    renderPeople();
     if (!peers.has(id)) createPeer(id, name, false);
     renderPeople();
-  });
-  es.addEventListener('peer-left', (e) => {
-    const { id } = JSON.parse(e.data);
+    // 新しい人に自分のマイク・カメラの状態を知らせ直す
+    post('state', { mic: micOn, cam: camOn && !!camTrack(), screen: !!screenStream }).catch(() => {});
+  },
+  'peer-left': ({ id }) => {
     const p = peers.get(id);
     if (p) toast(`${p.name} さんが退出しました`);
     dropPeer(id);
-  });
-  es.addEventListener('peer-state', (e) => {
-    const s = JSON.parse(e.data);
+  },
+  'peer-state': (s) => {
     const p = peers.get(s.id);
     if (!p) return;
     p.state = s;
     setTileState(p.tile, s);
     renderPeople();
-  });
-  es.addEventListener('signal', (e) => onSignal(JSON.parse(e.data)).catch((err) => console.error(err)));
-  es.addEventListener('chat', (e) => addChat(JSON.parse(e.data)));
-  es.addEventListener('knock', (e) => {
-    const k = JSON.parse(e.data);
+  },
+  signal: (d) => onSignal(d),
+  chat: (d) => addChat(d),
+  knock: (k) => {
     knocks.set(k.id, k);
     renderPeople();
     toast(`${k.name} さんが参加を求めています`, [['許可', () => decide(k.id, true)], ['参加者を見る', () => openSide('people')]]);
-  });
-  es.addEventListener('knock-cancel', (e) => { knocks.delete(JSON.parse(e.data).id); renderPeople(); });
-  es.onerror = () => {
-    // EventSource は自動でつなぎ直す。通話中なら知らせるだけ。
-    if (inCall) toast('サーバーとの接続を立て直しています…');
-  };
+  },
+  'knock-cancel': ({ id }) => { knocks.delete(id); renderPeople(); },
+};
+
+function nextDelay() {
+  const idle = Date.now() - lastActivity;
+  if (!inCall) return 1000;                 // 待機室
+  if (idle < 15000) return 600;             // つなぎ始め・やりとりの直後
+  const connecting = [...peers.values()].some((p) => p.pc.connectionState !== 'connected');
+  return connecting ? 800 : 2500;
+}
+
+async function listen() {
+  polling = true;
+  lastActivity = Date.now();
+  while (polling && me.peerId) {
+    try {
+      const q = `?peerId=${encodeURIComponent(me.peerId)}&secret=${encodeURIComponent(me.secret)}`;
+      const r = await fetch(api(`/poll${q}`), { cache: 'no-store' });
+      if (r.status === 403 || r.status === 404) {
+        polling = false;
+        if (inCall) { toast('通話から外れました。もう一度参加してください。'); leave(); }
+        else fatal('参加できませんでした', '時間がたちすぎたか、通話が終了しました。リンクを開き直してください。');
+        break;
+      }
+      const j = await r.json();
+      if (failCount >= 3 && inCall) toast('サーバーとの接続が戻りました');
+      failCount = 0;
+      if (j.events.length) lastActivity = Date.now();
+      for (const ev of j.events) {
+        const h = handlers[ev.type];
+        if (h) { try { await h(ev.data); } catch (e) { console.error(e); } }
+      }
+      if (j.state === 'denied' && polling) handlers.denied();
+      // 一覧にいない人は抜けたとみなす（回線が切れた場合の後始末）
+      if (inCall && j.roster) {
+        const present = new Set(j.roster.map((x) => x.id));
+        for (const id of [...peers.keys()]) if (!present.has(id)) dropPeer(id);
+      }
+    } catch (e) {
+      failCount++;
+      if (failCount === 3 && inCall) toast('サーバーとの接続を立て直しています…');
+    }
+    await new Promise((res) => setTimeout(res, failCount ? Math.min(5000, 1000 * failCount) : nextDelay()));
+  }
 }
 
 function enterCall({ peers: others, room }) {
@@ -375,7 +428,7 @@ function leave() {
     const body = JSON.stringify({ peerId: me.peerId, secret: me.secret });
     navigator.sendBeacon(api('/leave'), new Blob([body], { type: 'application/json' }));
   }
-  if (es) es.close();
+  polling = false;
   for (const id of [...peers.keys()]) dropPeer(id);
   for (const s of [camStream, screenStream]) if (s) s.getTracks().forEach((t) => t.stop());
   inCall = false;

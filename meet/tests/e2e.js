@@ -6,13 +6,14 @@ const path = require('node:path');
 const assert = require('node:assert/strict');
 const { chromium } = require('playwright');
 
-process.env.DATA_FILE = 'none';
-const { start } = require('../server.js');
+// E2E_MODE=vercel なら Vercel の入り口（api/handler.js）を通して確かめる
+const { start } = process.env.E2E_MODE === 'vercel' ? require('./vercel-sim.js') : require('../server.js');
 
 const shots = process.argv[2];
 
 (async () => {
   const server = await start(0);
+  console.log(`（${process.env.E2E_MODE === 'vercel' ? 'Vercel の入り口' : '手元のサーバー'}で確認）`);
   const base = `http://localhost:${server.address().port}`;
   const browser = await chromium.launch({
     args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--auto-select-desktop-capture-source=Entire screen', '--auto-accept-this-tab-capture'],
