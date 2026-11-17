@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COMPASS 通話</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="home">
+  <header>
+    <div class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15 8v8H5V8h10m1-2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4V7a1 1 0 0 0-1-1Z"/></svg></div>
+    <strong>COMPASS 通話</strong>
+  </header>
+
+  <h1>お客様とのオンライン打ち合わせ</h1>
+  <p class="lead">アプリのインストールは不要です。リンクを開くだけで、パソコンでもスマートフォンでも参加できます。</p>
+
+  <div class="grid">
+    <section class="card">
+      <h2>予定に通話リンクをつける</h2>
+      <div class="field"><label for="title">打ち合わせの名前</label><input id="title" placeholder="例：○○様 間取り打ち合わせ" maxlength="80"></div>
+      <div class="row" style="gap:12px">
+        <div class="field" style="flex:1 1 150px"><label for="date">日にち</label><input id="date" type="date"></div>
+        <div class="field" style="flex:1 1 100px"><label for="start">開始</label><input id="start" type="time" step="900"></div>
+        <div class="field" style="flex:1 1 100px"><label for="end">終了</label><input id="end" type="time" step="900"></div>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="create">通話リンクを作る</button>
+        <button class="btn" id="now">今すぐ始める</button>
+      </div>
+      <div class="result hidden" id="result">
+        <div class="muted" style="margin-bottom:6px">このリンクをお客様に送ってください。</div>
+        <div class="linkbox"><span id="url"></span><button class="btn" id="copy">コピー</button></div>
+        <div class="row" style="margin-top:12px">
+          <a class="btn" id="gcal" target="_blank" rel="noopener">Google カレンダーに入れる</a>
+          <button class="btn" id="ics">予定ファイル（.ics）</button>
+          <button class="btn" id="copyMemo">COMPASS 予定メモ用にコピー</button>
+          <a class="btn primary" id="open">通話を開く</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>通話に参加する</h2>
+      <div class="field"><label for="code">送られてきたリンク、または通話コード</label><input id="code" placeholder="abc-defg-hij"></div>
+      <button class="btn primary" id="join">参加</button>
+      <p class="muted" style="margin-top:18px">お客様が入ってくるときは、先に入っている人の画面に「入室の許可」が出ます。知らない人が入ってくることはありません。</p>
+    </section>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const toast = (t) => { const el = $('toast'); el.textContent = t; el.classList.remove('hidden'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.add('hidden'), 2500); };
+let made = null;
+
+// 既定は今日・次の 30 分きざみ
+(function initDate() {
+  const d = new Date(Date.now() + 30 * 60e3);
+  d.setMinutes(d.getMinutes() < 30 ? 30 : 60, 0, 0);
+  const pad = (n) => String(n).padStart(2, '0');
+  $('date').value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  $('start').value = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const e = new Date(d.getTime() + 60 * 60e3);
+  $('end').value = `${pad(e.getHours())}:${pad(e.getMinutes())}`;
+})();
+
+async function createRoom(body) {
+  const r = await fetch('/api/rooms', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || '作れませんでした');
+  return j;
+}
+
+function isoLocal(date, time) { return date && time ? `${date}T${time}` : ''; }
+function gcalStamp(local) { // 端末の時刻 → UTC の 20261117T010000Z
+  return new Date(local).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+}
+
+$('create').onclick = async () => {
+  const title = $('title').value.trim() || 'オンライン打ち合わせ';
+  const start = isoLocal($('date').value, $('start').value);
+  const end = isoLocal($('date').value, $('end').value);
+  try {
+    made = await createRoom({ title, start, end });
+  } catch (e) { return toast(e.message); }
+  $('url').textContent = made.url;
+  $('open').href = made.url;
+  const details = `オンライン通話に参加: ${made.url}`;
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: title, details, location: made.url });
+  if (start && end) q.set('dates', `${gcalStamp(start)}/${gcalStamp(end)}`);
+  $('gcal').href = `https://calendar.google.com/calendar/render?${q}`;
+  $('result').classList.remove('hidden');
+};
+
+$('now').onclick = async () => {
+  try {
+    const r = await createRoom({ title: $('title').value.trim() || 'オンライン打ち合わせ' });
+    location.href = r.url;
+  } catch (e) { toast(e.message); }
+};
+
+async function copy(text, msg) {
+  try { await navigator.clipboard.writeText(text); toast(msg); }
+  catch (_) { prompt('コピーしてください', text); }
+}
+$('copy').onclick = () => copy(made.url, 'リンクをコピーしました');
+$('copyMemo').onclick = () => copy(`オンライン通話 ${made.url}`, 'COMPASS の予定メモに貼り付けてください');
+
+$('ics').onclick = () => {
+  if (!made) return;
+  const s = made.start ? gcalStamp(made.start) : gcalStamp(new Date().toISOString());
+  const e = made.end ? gcalStamp(made.end) : s;
+  const esc = (t) => t.replace(/[\\;,]/g, (m) => '\\' + m).replace(/\n/g, '\\n');
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//COMPASS Meet//JA', 'BEGIN:VEVENT',
+    `UID:${made.id}@compass-meet`, `DTSTAMP:${gcalStamp(new Date().toISOString())}`,
+    `DTSTART:${s}`, `DTEND:${e}`, `SUMMARY:${esc(made.title || 'オンライン打ち合わせ')}`,
+    `LOCATION:${made.url}`, `URL:${made.url}`, `DESCRIPTION:${esc('オンライン通話に参加: ' + made.url)}`,
+    'END:VEVENT', 'END:VCALENDAR', '',
+  ].join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+  a.download = `${made.id}.ics`;
+  a.click();
+};
+
+$('join').onclick = () => {
+  const v = $('code').value.trim();
+  const m = v.match(/[a-z]{3}-[a-z]{4}-[a-z]{3}/);
+  if (!m) return toast('通話コードは abc-defg-hij の形です');
+  location.href = `/r/${m[0]}`;
+};
+$('code').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('join').click(); });
+</script>
+</body>
+</html>

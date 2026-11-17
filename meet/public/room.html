@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>COMPASS 通話</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- 読み込み中・エラー -->
+<div class="center-msg" id="loading"><div><div class="spinner"></div>通話を準備しています…</div></div>
+<div class="center-msg hidden" id="fatal"><div><h2 id="fatalTitle">この通話は見つかりません</h2><p class="muted" id="fatalText"></p><a class="btn" href="/">はじめの画面へ</a></div></div>
+
+<!-- 入室前 -->
+<div class="lobby hidden" id="lobby">
+  <div class="inner">
+    <div class="preview">
+      <video id="preview" autoplay playsinline muted></video>
+      <div class="off hidden" id="previewOff">カメラはオフです</div>
+      <div class="ctrls">
+        <button class="round" id="pMic" title="マイク"></button>
+        <button class="round" id="pCam" title="カメラ"></button>
+      </div>
+    </div>
+    <div>
+      <h1 id="lTitle">オンライン打ち合わせ</h1>
+      <div class="when" id="lWhen"></div>
+      <div class="notice hidden" id="mediaNotice"></div>
+      <div class="field"><label for="name">お名前（画面に出ます）</label><input id="name" maxlength="40" placeholder="例：山田 太郎"></div>
+      <div class="row">
+        <button class="btn primary" id="joinBtn">参加する</button>
+        <a class="btn" href="/">戻る</a>
+      </div>
+      <div class="notice hidden" id="waitBox" style="margin-top:16px"><div class="spinner" style="width:22px;height:22px;margin:0 0 8px"></div>担当者が入室を許可するまで、少しお待ちください。</div>
+    </div>
+  </div>
+</div>
+
+<!-- 通話中 -->
+<div class="call hidden" id="call">
+  <div class="main">
+    <div class="stage n1" id="stage"></div>
+    <aside class="side hidden" id="side">
+      <header><h3 id="sideTitle">チャット</h3><button class="x" id="sideClose" aria-label="閉じる">×</button></header>
+      <div class="body" id="peoplePane"></div>
+      <div class="body hidden" id="chatPane"><div class="muted" id="chatEmpty">ここに書いたことは、この通話の参加者だけに見えます。退出すると消えます。</div></div>
+      <div class="foot hidden" id="chatFoot"><input id="chatInput" maxlength="1000" placeholder="メッセージを送信"><button class="btn primary" id="chatSend">送信</button></div>
+    </aside>
+  </div>
+  <div class="bar">
+    <div class="left"><span id="clock"></span> ｜ <span id="cTitle"></span></div>
+    <div class="center">
+      <button class="round" id="mic" title="マイク（Ctrl+D）"></button>
+      <button class="round" id="cam" title="カメラ（Ctrl+E）"></button>
+      <button class="round" id="screen" title="画面を共有"></button>
+      <button class="round leave" id="leave" title="退出"></button>
+    </div>
+    <div class="right">
+      <button class="round" id="peopleBtn" title="参加者"></button>
+      <button class="round" id="chatBtn" title="チャット"></button>
+      <button class="round" id="linkBtn" title="招待リンクをコピー"></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+<script src="/static/room.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+name: meet-ci
+
+on:
+  push:
+    paths: ["meet/**", ".github/workflows/meet-ci.yml"]
+  pull_request:
+    paths: ["meet/**", ".github/workflows/meet-ci.yml"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: meet
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm test
+      - run: npm install --no-save playwright && npx playwright install --with-deps chromium
+      - run: node tests/e2e.js
