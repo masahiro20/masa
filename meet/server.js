@@ -10,6 +10,8 @@ const { createCore, ROOM_ID_RE } = require('./lib/core');
 const { storeFromEnv } = require('./lib/store');
 
 const PUBLIC_DIR = path.join(__dirname, 'public');
+// Vercel（vercel.json）と同じ安全用ヘッダー
+const SECURITY_HEADERS = Object.fromEntries(require('./lib/headers.json').map((h) => [h.key, h.value]));
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -22,7 +24,7 @@ function serveFile(res, file) {
   if (!p.startsWith(PUBLIC_DIR)) { res.writeHead(404); return res.end(); }
   fs.readFile(p, (e, buf) => {
     if (e) { res.writeHead(404); return res.end('not found'); }
-    res.writeHead(200, { 'Content-Type': MIME[path.extname(p)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+    res.writeHead(200, { ...SECURITY_HEADERS, 'Content-Type': MIME[path.extname(p)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
     res.end(buf);
   });
 }
@@ -77,13 +79,13 @@ function start(port = Number(process.env.PORT || 8080), { store = storeFromEnv()
 }
 
 function send(res, status, body) {
-  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+  res.writeHead(status, { ...SECURITY_HEADERS, 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
   res.end(JSON.stringify(body));
 }
 
 if (require.main === module) {
   start().then((s) => {
-    console.log(`COMPASS 通話: http://localhost:${s.address().port}`);
+    console.log(`COMPASS Meet: http://localhost:${s.address().port}`);
     if (!process.env.MEET_API_KEY) console.log('※ MEET_API_KEY が未設定です。本番では必ず設定してください。');
   });
 }

@@ -17,6 +17,12 @@ function parseIceServers(raw) {
   return [{ urls: 'stun:stun.l.google.com:19302' }];
 }
 
+function sameSecret(a, b) {
+  const x = Buffer.from(String(a || ''));
+  const y = Buffer.from(String(b || ''));
+  return x.length > 0 && x.length === y.length && crypto.timingSafeEqual(x, y);
+}
+
 function str(v, max) { return typeof v === 'string' ? v.trim().slice(0, max) : ''; }
 
 function createCore({ store, env = process.env }) {
@@ -36,7 +42,7 @@ function createCore({ store, env = process.env }) {
   }
 
   function authorized(headers) {
-    if (!API_KEY) return true;
+    if (!API_KEY) return false; // 鍵が設定されていなければ、鍵が要る操作はすべて断る
     const h = headers.authorization || '';
     const given = h.startsWith('Bearer ') ? h.slice(7) : (headers['x-api-key'] || '');
     const a = Buffer.from(String(given));
@@ -145,11 +151,12 @@ function createCore({ store, env = process.env }) {
     }
 
     // ここから先は参加者本人だけ
+    // 合言葉は GET ではヘッダーで受け取る（アドレスに載せると、配信サービスのアクセス記録に残るため）
     const peerId = method === 'GET' ? query.peerId : body.peerId;
-    const secret = method === 'GET' ? query.secret : body.secret;
+    const secret = method === 'GET' ? headers['x-peer-secret'] : body.secret;
     let peers = await store.getPeers(roomId);
     const me = peers[peerId];
-    if (!me || me.secret !== secret) return err(403, '参加の手続きがされていません');
+    if (!me || !sameSecret(me.secret, secret)) return err(403, '参加の手続きがされていません');
 
     if (method === 'GET' && action === 'poll') {
       await store.touch(roomId, me.id, now, TTL);

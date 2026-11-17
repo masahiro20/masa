@@ -23,7 +23,7 @@ async function call(method, path, body, headers = {}) {
   return { status: r.status, body: await r.json() };
 }
 
-const poll = async (room, p) => (await call('GET', `/api/rooms/${room}/poll?peerId=${p.peerId}&secret=${p.secret}`)).body;
+const poll = async (room, p) => (await call('GET', `/api/rooms/${room}/poll?peerId=${p.peerId}`, null, { 'X-Peer-Secret': p.secret })).body;
 const types = (r) => r.events.map((e) => e.type);
 
 test('予定の情報つきで通話を発行し、Meet 形のリンクが返る', async () => {
@@ -43,7 +43,23 @@ test('無いルームは 404、通話ページは形の正しい ID だけ返す
   const room = (await call('POST', '/api/rooms', {})).body;
   const page = await fetch(`${base}/r/${room.id}`);
   assert.equal(page.status, 200);
-  assert.match(await page.text(), /COMPASS 通話/);
+  assert.match(await page.text(), /COMPASS Meet/);
+});
+
+test('API キーが未設定でも、削除はできない（鍵のない削除を許さない）', async () => {
+  const s = await start(0, { store: createMemoryStore(), env: {} });
+  const b2 = `http://127.0.0.1:${s.address().port}`;
+  const room = await (await fetch(`${b2}/api/rooms`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })).json();
+  const del = await fetch(`${b2}/api/rooms/${room.id}`, { method: 'DELETE' });
+  assert.equal(del.status, 401);
+  s.closeAllConnections(); s.close();
+});
+
+test('ページには埋め込み防止などの安全用ヘッダーが付く', async () => {
+  const r = await fetch(`${base}/`);
+  assert.match(r.headers.get('content-security-policy') || '', /frame-ancestors 'none'/);
+  assert.equal(r.headers.get('x-frame-options'), 'DENY');
+  assert.equal(r.headers.get('referrer-policy'), 'no-referrer');
 });
 
 test('ルームの削除は API キーが要る', async () => {
@@ -72,7 +88,9 @@ test('最初の人はすぐ入り、2人目は待機室で許可を待つ。許�
   // 許可される前は中継できない・合言葉が違うと操作できない
   assert.equal((await call('POST', `/api/rooms/${room}/signal`, { peerId: b.peerId, secret: b.secret, to: a.peerId, data: {} })).status, 403);
   assert.equal((await call('POST', `/api/rooms/${room}/admit`, { peerId: a.peerId, secret: 'x', target: b.peerId })).status, 403);
-  assert.equal((await call('GET', `/api/rooms/${room}/poll?peerId=${b.peerId}&secret=x`)).status, 403);
+  assert.equal((await call('GET', `/api/rooms/${room}/poll?peerId=${b.peerId}`, null, { 'X-Peer-Secret': 'x' })).status, 403);
+  // アドレスに合言葉を載せても受け付けない（記録に残る形は使わせない）
+  assert.equal((await call('GET', `/api/rooms/${room}/poll?peerId=${b.peerId}&secret=${b.secret}`)).status, 403);
 
   assert.equal((await call('POST', `/api/rooms/${room}/admit`, { peerId: a.peerId, secret: a.secret, target: b.peerId })).status, 200);
   const rb = await poll(room, b);
@@ -134,7 +152,7 @@ test('30 秒以上取りに来ない人は抜けたとみなし、ほかの人�
   const a = await c('POST', `/api/rooms/${room}/join`, { name: 'A' });
   const b = await c('POST', `/api/rooms/${room}/join`, { name: 'B' });
   await store.touch(room, b.peerId, Date.now() - 31000, 3600);  // B の回線が切れたことにする
-  const ra = await c('GET', `/api/rooms/${room}/poll?peerId=${a.peerId}&secret=${a.secret}`);
+  const ra = await (await fetch(`${b2}/api/rooms/${room}/poll?peerId=${a.peerId}`, { headers: { 'X-Peer-Secret': a.secret } })).json();
   assert.ok(ra.events.some((e) => e.type === 'peer-left' && e.data.id === b.peerId));
   assert.equal(ra.roster.length, 1);
   s.closeAllConnections(); s.close();

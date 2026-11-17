@@ -371,8 +371,10 @@ async function listen() {
   lastActivity = Date.now();
   while (polling && me.peerId) {
     try {
-      const q = `?peerId=${encodeURIComponent(me.peerId)}&secret=${encodeURIComponent(me.secret)}`;
-      const r = await fetch(api(`/poll${q}`), { cache: 'no-store' });
+      const r = await fetch(api(`/poll?peerId=${encodeURIComponent(me.peerId)}`), {
+        cache: 'no-store',
+        headers: { 'X-Peer-Secret': me.secret },
+      });
       if (r.status === 403 || r.status === 404) {
         polling = false;
         if (inCall) { toast('通話から外れました。もう一度参加してください。'); leave(); }
@@ -439,9 +441,8 @@ function leave() {
   again.className = 'btn primary';
   again.textContent = 'もう一度参加する';
   again.href = location.pathname;
-  again.style.marginRight = '8px';
-  const box = $('fatal').querySelector('div');
-  box.insertBefore(again, box.querySelector('a'));
+  const acts = $('fatalActions');
+  acts.insertBefore(again, acts.firstChild);
   show('fatal');
 }
 
@@ -504,7 +505,7 @@ function renderPeople() {
     row.innerHTML = '<div class="dot"></div><div class="nm"></div><div class="m"></div>';
     row.querySelector('.dot').textContent = initial(x.name);
     row.querySelector('.nm').textContent = x.name;
-    row.querySelector('.m').innerHTML = x.mic ? '' : `<span style="color:var(--danger);display:inline-block;width:18px">${ICON.micOff}</span>`;
+    row.querySelector(".m").innerHTML = x.mic ? "" : ICON.micOff;
     pane.appendChild(row);
   }
   const pb = $('peopleBtn');
@@ -552,9 +553,16 @@ async function boot() {
   } catch (e) {
     return fatal('この通話は見つかりません', e.message);
   }
-  document.title = `${roomMeta.title || 'オンライン打ち合わせ'} - COMPASS 通話`;
+  document.title = `${roomMeta.title || 'オンライン打ち合わせ'} | COMPASS Meet`;
   $('lTitle').textContent = roomMeta.title || 'オンライン打ち合わせ';
-  $('lWhen').textContent = [fmtWhen(roomMeta.start, roomMeta.end), roomMeta.participants ? `いま ${roomMeta.participants}人が参加中` : 'まだ誰も参加していません'].filter(Boolean).join('　');
+  const when = $('lWhen');
+  when.textContent = '';
+  const w = fmtWhen(roomMeta.start, roomMeta.end);
+  if (w) { const s1 = document.createElement('span'); s1.textContent = w; when.appendChild(s1); }
+  const live = document.createElement('span');
+  live.className = 'live' + (roomMeta.participants ? '' : ' empty');
+  live.textContent = roomMeta.participants ? `${roomMeta.participants}名が参加中` : 'まだどなたも参加していません';
+  when.appendChild(live);
   const q = new URLSearchParams(location.search);
   let saved = '';
   try { saved = localStorage.getItem('meet.name') || ''; } catch (_) {}

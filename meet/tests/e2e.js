@@ -24,7 +24,12 @@ const shots = process.argv[2];
   const errors = [];
   for (const [who, p] of [['担当', host], ['お客様', guest]]) {
     p.on('pageerror', (e) => errors.push(`${who}: ${e.message}`));
-    p.on('console', (m) => { if (m.type() === 'error') errors.push(`${who}: ${m.text()}`); });
+    p.on('console', (m) => {
+      if (m.type() !== 'error') return;
+      // この試験環境からは Google Fonts に出られないので、文字の読み込み失敗だけは無視する
+      if (/fonts\.(googleapis|gstatic)\.com/.test((m.location() || {}).url || '')) return;
+      errors.push(`${who}: ${m.text()}`);
+    });
   }
 
   // 1) はじめの画面で予定つきの通話リンクを作る
