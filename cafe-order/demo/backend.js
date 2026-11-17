@@ -4,7 +4,7 @@
 import { createApp } from '../lib/app.js';
 import { LocalStore } from './local-store.js';
 
-const PREFIX = 'nua-demo:';
+const PREFIX = 'nua-demo2:';
 const DEMO_PIN = '1234';
 
 const lsGet = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
@@ -67,7 +67,9 @@ async function call(method, url, body) {
 async function seed() {
   if (lsGet(`${PREFIX}seeded`)) return;
   await call('POST', '/api/admin/login', { pin: DEMO_PIN });
-  await call('PUT', '/api/admin/settings', { notice: 'デモ版です。自由に注文・会計してみてください。' });
+  await call('PUT', '/api/admin/settings', { notice: 'デモ版です。自由に注文・会計してみてください。', paypay: { mode: 'simulator' } });
+  // レジは開いた状態から始める（釣銭準備金 3万円）
+  await call('POST', '/api/admin/register/open', { float: 30000 });
   const patch = (id, groupId, choiceId, detail) => call('PATCH', `/api/admin/items/${id}`, { choice: { groupId, choiceId, detail } });
   // 黒板の中身（連動キーで、食べ比べ・モーニング側の同じ枠にも入る）
   await patch('basque', 'flavor', 'l1', '和栗');

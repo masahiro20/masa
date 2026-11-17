@@ -4,6 +4,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import QRCode from 'qrcode';
 import { newId, newTagKey, randomToken } from './base-store.js';
+import { installRegister } from './features/register.js';
+import { installPrinting } from './features/printing.js';
+import { installPayPay } from './features/paypay-routes.js';
 import {
   businessContext, itemStatus, priceLine, computeTotals, activeLines, isSoldOutToday, stockLeft, unservedCount, yen,
 } from '../public/shared/calc.js';
@@ -30,8 +33,17 @@ const dateOk = (v) => (v === '' || /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : '');
 
 // store: 保存先（lib/store.js のファイル保存など）
 // onEvent: リアルタイム通知を外へ流すフック（ブラウザ版デモで使用）
-export function createApp({ store, now = () => new Date(), onEvent = null } = {}) {
+// paypay: PayPay連携の設定を上書きする（テスト用）。printerTransport: 印刷の送り先を差し替える（テスト用）
+export function createApp({ store, now = () => new Date(), onEvent = null, env = {}, fetchImpl, printerTransport } = {}) {
   if (!store) throw new Error('store is required');
+  // 機能どうしをつなぐ小さなイベント（注文が入った・支払いがあった など）
+  const listeners = new Map();
+  const on = (name, fn) => { if (!listeners.has(name)) listeners.set(name, []); listeners.get(name).push(fn); };
+  const emit = (name, payload) => {
+    for (const fn of listeners.get(name) || []) {
+      try { const r = fn(payload); if (r?.catch) r.catch((e) => console.error(`[${name}]`, e)); } catch (e) { console.error(`[${name}]`, e); }
+    }
+  };
   const S = () => store.state;
   const ctx = () => businessContext(now(), S().settings.timeZone, S().settings.businessDayStartHour);
 
@@ -247,8 +259,11 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     return {
       settings, categories: s.categories, items: s.items, tags: s.tags, openChecks: s.openChecks, pendingServe: s.pendingServe, calls: s.calls,
       ctx: ctx(), serverTime: now().toISOString(), ordering: orderingState(),
+      ...Object.assign({}, ...extraState.map((fn) => fn())),
     };
   }
+  const extraState = [];
+  const settingsHandlers = [];
 
   // ---- 売上集計 ----
   function report(date) {
@@ -302,7 +317,23 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     const rows = [];
     const tz = S().settings.timeZone;
     const fmt = (iso) => new Date(iso).toLocaleString('ja-JP', { timeZone: tz });
-    if (type === 'items') {
+    if (type === 'daily') {
+      // 会計ソフトへの売上計上用：1営業日1行、税率別・支払方法別
+      const per = dates.map((d) => {
+        const r = { date: d, checks: 0, guests: 0, sales: 0, t10: 0, t8: 0, tax10: 0, tax8: 0, ticket: 0, discount: 0, voids: 0, methods: {} };
+        for (const c of store.getHistory(d)) {
+          if (c.status !== 'closed') { r.voids += 1; continue; }
+          const t = c.totals || computeTotals(c, S().settings);
+          r.checks += 1; r.guests += c.people || 1; r.sales += t.total; r.ticket += t.ticketDiscount; r.discount += t.discountTotal;
+          if (t.taxRate === 8) { r.t8 += t.total; r.tax8 += t.tax; } else { r.t10 += t.total; r.tax10 += t.tax; }
+          for (const p of c.payments) r.methods[p.method] = (r.methods[p.method] || 0) + p.amount;
+        }
+        return r;
+      });
+      const methods = [...new Set(per.flatMap((r) => Object.keys(r.methods)))];
+      rows.push(['営業日', '会計数', '客数', '売上合計(税込)', '10%対象(税込)', '内消費税10%', '8%対象(税込)', '内消費税8%', 'チケット値引', '割引', ...methods.map((m) => `入金:${m}`), '取消件数']);
+      for (const r of per) rows.push([r.date, r.checks, r.guests, r.sales, r.t10, r.tax10, r.t8, r.tax8, r.ticket, r.discount, ...methods.map((m) => r.methods[m] || 0), r.voids]);
+    } else if (type === 'items') {
       rows.push(['営業日', '伝票ID', '番号札', '会計日時', '商品', 'オプション', '数量', '単価', '金額', 'サービス', 'ステータス']);
       for (const d of dates) for (const c of store.getHistory(d)) for (const l of allLines(c)) {
         rows.push([d, c.id, c.tagNo ?? 'カウンター', fmt(c.closedAt), l.name, l.options.map((o) => o.label).join(' / '), l.qty, l.unitPrice,
@@ -376,7 +407,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
   const route = (method, pattern, handler, opts = {}) => {
     const keys = [];
     const re = new RegExp('^' + pattern.replace(/:(\w+)/g, (_, k) => { keys.push(k); return '([^/]+)'; }) + '$');
-    routes.push({ method, re, keys, handler, admin: pattern.startsWith('/api/admin') && !opts.public });
+    routes.push({ method, re, keys, handler, raw: !!opts.raw, admin: pattern.startsWith('/api/admin') && !opts.public });
   };
 
   // ===== お客様向け API =====
@@ -419,6 +450,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     }
     if (deviceId) check.devices[deviceId] = name || check.devices[deviceId] || '';
     changed(check, 'order', { orderId: order.id, count: order.lines.reduce((s, l) => s + l.qty, 0) });
+    emit('order', { check, order });
     return { ok: true, orderId: order.id, check: customerCheckView(check, deviceId) };
   });
 
@@ -501,6 +533,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     }
     if (b.ticket) s.ticket = { enabled: !!b.ticket.enabled, name: str(b.ticket.name, 30) || 'コーヒーチケット', value: clampInt(b.ticket.value, 0, 100000, 500) };
     if (b.receipt) s.receipt = { address: str(b.receipt.address, 120), phone: str(b.receipt.phone, 30), invoiceNumber: str(b.receipt.invoiceNumber, 20), footer: str(b.receipt.footer, 120) };
+    for (const fn of settingsHandlers) fn(b, s);
     if ('adminPin' in b) {
       const pin = str(b.adminPin, 20);
       if (!/^\d{4,12}$/.test(pin)) fail(400, 'PINは4〜12桁の数字にしてください');
@@ -615,6 +648,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     const check = findOpen(params.id);
     const order = addOrder(check, body.lines, { staff: true, name: 'スタッフ', clientOrderId: str(body.clientOrderId, 60) });
     changed(check, 'staff-order', { orderId: order.id });
+    emit('order', { check, order });
     return { ok: true, check };
   });
 
@@ -717,35 +751,50 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     return { ok: true, check };
   });
 
-  route('POST', '/api/admin/checks/:id/payments', ({ params, body }) => {
-    const check = findOpen(params.id);
+  // 支払いを記録し、全額そろったら会計を締める（現金・PayPay連携など共通）
+  function recordPayment(check, { method, amount, label = '', received, external }) {
     const t = computeTotals(check, S().settings);
-    const method = str(body.method, 20) || '現金';
-    const amount = int(body.amount);
+    amount = int(amount);
     if (amount <= 0) fail(400, '金額を入力してください');
     if (amount > t.remaining) fail(400, `残りは${yen(t.remaining)}です`);
-    const p = { id: newId('p_'), method, amount, label: str(body.label, 30), at: now().toISOString() };
-    if (method === '現金' && body.received != null && body.received !== '') {
-      const received = int(body.received);
-      if (received < amount) fail(400, 'お預かり金額が足りません');
-      p.received = received; p.change = received - amount;
+    const p = { id: newId('p_'), method: str(method, 20) || '現金', amount, label: str(label, 30), at: now().toISOString() };
+    if (p.method === '現金' && received != null && received !== '') {
+      const r = int(received);
+      if (r < amount) fail(400, 'お預かり金額が足りません');
+      p.received = r; p.change = r - amount;
     }
+    if (external) p.external = external;
     check.payments.push(p);
     const after = computeTotals(check, S().settings);
-    if (after.remaining <= 0 && after.total > 0) {
-      closeCheck(check);
-      return { ok: true, payment: p, closed: true, check };
-    }
-    changed(check, 'payment');
-    return { ok: true, payment: p, closed: false, check };
+    const closed = after.remaining <= 0 && after.total > 0;
+    if (closed) closeCheck(check); else changed(check, 'payment');
+    emit('payment', { check, payment: p, closed });
+    return { payment: p, closed };
+  }
+
+  route('POST', '/api/admin/checks/:id/payments', ({ params, body }) => {
+    const check = findOpen(params.id);
+    const r = recordPayment(check, { method: body.method, amount: body.amount, label: body.label, received: body.received });
+    return { ok: true, payment: r.payment, closed: r.closed, check };
   });
 
-  route('DELETE', '/api/admin/checks/:id/payments/:pid', ({ params }) => {
+  route('DELETE', '/api/admin/checks/:id/payments/:pid', async ({ params }) => {
     const check = findOpen(params.id);
-    check.payments = check.payments.filter((p) => p.id !== params.pid);
+    const p = check.payments.find((x) => x.id === params.pid) || fail(404, '支払いが見つかりません');
+    // PayPayなど外部の決済は、先に返金してから記録を消す
+    if (p.external) await refundExternal(p);
+    check.payments = check.payments.filter((x) => x.id !== params.pid);
     changed(check);
     return { ok: true, check };
   });
+
+  // 外部決済の返金（paypay-routes.js が登録する）
+  const refunders = {};
+  async function refundExternal(p) {
+    const fn = refunders[p.external.provider];
+    if (!fn) fail(409, `${p.method} の返金方法がわかりません。決済サービスの管理画面で返金してください`);
+    await fn(p);
+  }
 
   route('POST', '/api/admin/checks/:id/close', ({ params }) => {
     const check = findOpen(params.id);
@@ -781,11 +830,12 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     const c = store.getHistory(dateOk(params.date) || fail(400, '日付が不正です')).find((x) => x.id === params.id);
     return c || fail(404, '伝票が見つかりません');
   });
-  route('POST', '/api/admin/history/:date/:id/reopen', ({ params }) => {
+  route('POST', '/api/admin/history/:date/:id/reopen', async ({ params }) => {
     const date = dateOk(params.date) || fail(400, '日付が不正です');
     const list = store.getHistory(date);
     const idx = list.findIndex((x) => x.id === params.id);
     if (idx < 0) fail(404, '伝票が見つかりません');
+    for (const pay of list[idx].payments.filter((x) => x.external)) await refundExternal(pay);
     const [check] = list.splice(idx, 1);
     store.saveHistory(date);
     S().pendingServe = S().pendingServe.filter((c) => c.id !== check.id);
@@ -803,7 +853,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     const today = ctx().bizDate;
     const from = dateOk(str(query.from, 10)) || today;
     const to = dateOk(str(query.to, 10)) || from;
-    const type = query.type === 'items' ? 'items' : 'checks';
+    const type = ['items', 'daily'].includes(query.type) ? query.type : 'checks';
     res.writeHead(200, {
       'Content-Type': 'text/csv; charset=utf-8',
       'Content-Disposition': `attachment; filename="${type}_${from}_${to}.csv"`,
@@ -811,7 +861,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     res.end(exportCsv(from, to, type));
   });
   route('GET', '/api/admin/backup', ({ res }) => {
-    const { sessions, ...state } = S();
+    const { sessions, secrets, ...state } = S();
     const history = Object.fromEntries(store.historyDates().map((d) => [d, store.getHistory(d)]));
     res.writeHead(200, {
       'Content-Type': 'application/json; charset=utf-8',
@@ -838,6 +888,13 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
     }
     if (!size) return {};
     try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new HttpError(400, 'JSONが不正です'); }
+  }
+
+  async function readRaw(req) {
+    if (req.body !== undefined) return typeof req.body === 'string' ? req.body : '';
+    const chunks = [];
+    for await (const ch of req) chunks.push(ch);
+    return Buffer.concat(chunks).toString('utf8');
   }
 
   function sendJson(res, status, obj) {
@@ -883,7 +940,8 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
           if (!m) continue;
           if (r.admin && !isAdmin(req)) return sendJson(res, 401, { error: 'ログインしてください', code: 'auth' });
           const params = Object.fromEntries(r.keys.map((k, i) => [k, decodeURIComponent(m[i + 1])]));
-          const body = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method) ? await readBody(req) : {};
+          const hasBody = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method);
+          const body = hasBody ? (r.raw ? await readRaw(req) : await readBody(req)) : {};
           const out = await r.handler({ req, res, params, query, body });
           if (!res.headersSent) sendJson(res, 200, out ?? { ok: true });
           return;
@@ -895,6 +953,7 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
       if (p === '/' || p === '/index.html') return serveFile(res, path.join(PUBLIC, 'index.html'));
       if (p === '/admin' || p === '/admin/') return serveFile(res, path.join(PUBLIC, 'admin.html'));
       if (/^\/t\/\d+$/.test(p)) return serveFile(res, path.join(PUBLIC, 'order.html'));
+      if (/^\/pay\/sim\/[\w-]+$/.test(p)) return serveFile(res, path.join(PUBLIC, 'paysim.html'));
       if (p.startsWith('/uploads/')) {
         const f = path.join(store.uploadsDir, path.basename(p));
         return serveFile(res, f, 'public, max-age=31536000, immutable');
@@ -908,6 +967,17 @@ export function createApp({ store, now = () => new Date(), onEvent = null } = {}
       return sendJson(res, 500, { error: 'サーバーでエラーが発生しました' });
     }
   }
+
+  // ---- 追加機能（まめレジ）----
+  const feature = {
+    route, S, store, ctx, now, fail, str, int, clampInt, newId, randomToken, yen, on, emit,
+    findOpen, closeCheck, changed, notifyAdmin, recordPayment, publicBase, refunders, computeTotals, activeLines,
+    env, fetchImpl, printerTransport, QRCode, onSettings: (fn) => settingsHandlers.push(fn),
+  };
+  const register = installRegister(feature);
+  const printing = installPrinting(feature);
+  const paypay = installPayPay(feature);
+  extraState.push(register.state, printing.state, paypay.state);
 
   return { handle, store };
 }

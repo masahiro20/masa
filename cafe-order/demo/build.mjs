@@ -11,7 +11,7 @@ const shim = (f) => path.join(ROOT, 'demo/shims', f);
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.cpSync(path.join(ROOT, 'public'), OUT, { recursive: true });
 fs.rmSync(path.join(OUT, 'index.html'));
-fs.rmSync(path.join(OUT, 'admin.webmanifest'));
+for (const f of ['admin.webmanifest', 'sw.js', 'paysim.html']) fs.rmSync(path.join(OUT, f));
 
 await build({
   entryPoints: [path.join(ROOT, 'demo/backend.js')],
@@ -21,7 +21,7 @@ await build({
   target: 'es2021',
   minify: true,
   outfile: path.join(OUT, 'demo-shim.js'),
-  alias: { 'node:fs': shim('empty.js'), 'node:path': shim('path.js'), 'node:url': shim('url.js') },
+  alias: { 'node:fs': shim('empty.js'), 'node:path': shim('path.js'), 'node:url': shim('url.js'), 'node:net': shim('empty.js'), 'node:crypto': shim('empty.js') },
   define: { 'import.meta.url': '"file:///demo/lib/app.js"' },
   logLevel: 'warning',
 });

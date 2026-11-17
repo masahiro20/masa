@@ -7,7 +7,7 @@ import { Store } from './lib/store.js';
 
 const port = Number(process.env.PORT) || 3000;
 const dataDir = process.env.DATA_DIR || path.resolve('data');
-const app = createApp({ store: new Store(dataDir) });
+const app = createApp({ store: new Store(dataDir), env: process.env });
 
 const server = http.createServer((req, res) => app.handle(req, res));
 server.listen(port, () => {

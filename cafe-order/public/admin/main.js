@@ -10,6 +10,7 @@ import { renderMenu, menuActions, menuInput, menuUpload, catInput } from './menu
 import { renderSales, salesActions, salesChanges } from './sales.js';
 import { renderSettings, settingsActions, settingsInput, resetSettingsDraft } from './settings.js';
 import { pickerActions, pickerInputs, staffOrderActions, staffOrderInputs, staffOrderChanges } from './ordering.js';
+import { renderRegister, registerActions, registerInputs, registerChange, registerChanged } from './register.js';
 
 S.station = localStorageGet('cafe_station', 'all');
 
@@ -17,6 +18,7 @@ const VIEWS = [
   ['hall', 'ホール', renderHall],
   ['orders', '注文', renderKitchen],
   ['checkout', '会計', renderCheckout],
+  ['register', 'レジ締め', renderRegister],
   ['today', '本日の準備', renderToday],
   ['menu', 'メニュー', renderMenu],
   ['sales', '売上', renderSales],
@@ -25,9 +27,9 @@ const VIEWS = [
 
 const actions = {
   ...hallActions, ...kitchenActions, ...checkoutActions, ...todayActions, ...menuActions, ...salesActions, ...settingsActions,
-  ...pickerActions, ...staffOrderActions,
+  ...pickerActions, ...staffOrderActions, ...registerActions,
 };
-const inputs = { ...pickerInputs, ...staffOrderInputs };
+const inputs = { ...pickerInputs, ...staffOrderInputs, ...registerInputs };
 const changes = { ...hallChanges, ...salesChanges, ...staffOrderChanges };
 
 const $root = document.getElementById('app');
@@ -46,7 +48,7 @@ setKitchenRerender(() => renderMain());
 
 function renderLogin() {
   $root.innerHTML = `<div class="login"><div class="card login-card">
-    <div class="login-logo">☕</div><h1 class="serif">オーナー画面</h1><p class="muted small">PINを入力してください</p>
+    <img class="login-logo" src="/icon.svg" alt="" width="72" height="72"><h1>まめレジ</h1><p class="muted small">PINを入力してください</p>
     <div class="pin-dots">${Array.from({ length: Math.max(4, pin.length) }, (_, i) => `<span class="${i < pin.length ? 'on' : ''}"></span>`).join('')}</div>
     <div class="keypad">${['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', '⌫'].map((k) => `<button class="key" data-act="pin" data-k="${k}">${k}</button>`).join('')}</div>
     <button class="btn btn-primary btn-lg btn-block" data-act="login" ${pin.length >= 4 ? '' : 'disabled'}>ログイン</button>
@@ -65,14 +67,14 @@ function badges() {
 function headerHtml() {
   const d = S.data;
   const b = badges();
-  return `<header class="hdr">
-    <div class="brand serif">${esc(d.settings.shopName)}</div>
+  return `<div class="hdr-wrap"><header class="hdr">
+    <div class="brand"><span class="brand-app">まめレジ</span><span class="brand-shop serif">${esc(d.settings.shopName)}</span></div>
     <nav class="nav">${VIEWS.map(([k, label]) => `<button class="nav-btn ${S.view === k ? 'on' : ''}" data-act="view" data-v="${k}">${label}${b[k] ? `<span class="badge ${k === 'hall' ? 'pulse' : ''}">${b[k]}</span>` : ''}</button>`).join('')}</nav>
     <span class="spacer"></span>
     <button class="status-pill ${d.settings.orderingPaused ? 'off' : 'on'}" data-act="toggle-ordering" title="スマホ注文の受付">${d.settings.orderingPaused ? '⏸ 注文停止中' : '● 注文受付中'}</button>
     <button class="status-pill ${S.soundOn ? 'on' : 'off'}" data-act="sound">${S.soundOn ? '🔔' : '🔕 音をON'}</button>
     <span class="clock num" id="clock"></span>
-  </header>`;
+  </header>${S.offline ? '<div class="offline-bar">サーバーにつながっていません。Wi-Fiを確認してください（自動で再接続します）</div>' : ''}</div>`;
 }
 
 function renderMain() {
@@ -86,7 +88,7 @@ function renderMain() {
   renderBadges();
 }
 function renderBadges() {
-  const hdr = document.querySelector('.hdr');
+  const hdr = document.querySelector('.hdr-wrap');
   if (hdr) hdr.outerHTML = headerHtml();
   tick();
 }
@@ -128,9 +130,12 @@ function connect() {
     toast(`🔔 ${d.tagNo}番：${d.type}`, 'notify', 10000);
     await refresh();
   });
-  for (const ev of ['changed', 'closed', 'opened', 'payment', 'staff-order', 'menu', 'settings', 'call-done']) {
+  for (const ev of ['changed', 'closed', 'opened', 'payment', 'staff-order', 'menu', 'settings', 'call-done', 'paypay']) {
     es.addEventListener(ev, () => refresh());
   }
+  es.addEventListener('register', () => { registerChanged(); refresh(); });
+  es.addEventListener('print-error', (e) => toast(`🖨 ${JSON.parse(e.data).message}`, 'error', 10000));
+  es.addEventListener('error', () => { if (!S.offline) { S.offline = true; hooks.renderBadges?.(); } });
 }
 // iPadがスリープから戻った時など
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && S.data) { refresh(); if (es?.readyState === 2) connect(); } });
@@ -142,7 +147,12 @@ document.addEventListener('click', async (ev) => {
   const el = ev.target.closest('[data-act]');
   if (!el) return;
   const act = el.dataset.act;
-  if (act === 'modal-backdrop') { if (ev.target === el) closeModal(S.modals[Number(el.dataset.i)]); return; }
+  if (act === 'modal-backdrop') {
+    const m = S.modals[Number(el.dataset.i)];
+    // PayPayのQR表示中は、外側をタップしても閉じない（「やめる」で閉じる）
+    if (ev.target === el && !m?.paypay) closeModal(m);
+    return;
+  }
   if (act === 'modal-close') { closeModal(); return; }
   if (act === 'dlg') { S.modals.at(-1)?.resolve(el.dataset.v === '1'); return; }
   if (act === 'view') { setView(el.dataset.v); return; }
@@ -187,6 +197,7 @@ document.addEventListener('change', (ev) => {
     if (S.view === 'settings' && settingsInput(el)) return;
   }
   if (S.view === 'today' && todayChange(el)) return;
+  if (S.view === 'register' && registerChange(el)) return;
 });
 
 // 入力欄でEnterを押したら確定（本日の準備の入力をすぐ保存）
@@ -200,6 +211,10 @@ document.addEventListener('keydown', (ev) => {
   if (S.needLogin) { renderLogin(); return; }
   renderAll();
   connect();
+  // タブレットのホーム画面に追加して使うためのオフライン対応（https か localhost のときだけ）
+  try {
+    if (!window.__cafeDemo && 'serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('/sw.js').catch(() => {});
+  } catch { /* 使えない環境では何もしない */ }
 })();
 
 export { callsFor };

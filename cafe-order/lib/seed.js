@@ -143,5 +143,7 @@ export function defaultSettings() {
       footer: 'またのご来店をお待ちしております',
     },
     newOrderSound: true,
+    paypay: { mode: 'off' },
+    printer: { type: 'none', host: '', port: 9100, paper: 80, autoReceipt: false, drawer: true, kitchenTicket: false },
   };
 }

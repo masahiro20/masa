@@ -33,6 +33,7 @@
     padding-block: 14px 20px; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box;
   }
   header { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 20px; }
+  h1 .for { font-family: var(--body); font-size: 14px; font-weight: 600; color: var(--muted); margin-left: 6px; letter-spacing: 0; }
   h1 { font-family: var(--display); font-size: 24px; margin: 0; letter-spacing: .04em; text-wrap: balance; }
   .lead { color: var(--muted); margin: 2px 0 0; }
   .steps { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; flex: 1; min-width: 0; }
@@ -81,13 +82,14 @@
 
 <header>
   <div>
-    <h1>喫茶ヌア 注文システム</h1>
+    <h1>まめレジ <small class="for">喫茶ヌア</small></h1>
     <p class="lead">デモ版です。オーナーのiPadとお客様のスマホ、両方の画面を実際に操作できます。</p>
   </div>
   <ol class="steps">
     <li><b>1</b>スマホでメニューを選んで注文</li>
     <li><b>2</b>iPadのホール・注文に届く</li>
-    <li><b>3</b>iPadの「会計」で番号札の番号を入力</li>
+    <li><b>3</b>iPadの「会計」で番号札の番号を入力（PayPayはテストモード）</li>
+    <li><b>4</b>閉店時は「レジ締め」で現金を数えて精算</li>
   </ol>
   <span class="confirm" id="reset-area"><button class="btn" id="reset" type="button">最初の状態に戻す</button></span>
 </header>

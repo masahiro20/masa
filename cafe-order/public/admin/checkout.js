@@ -86,6 +86,7 @@ function checkoutHtml(c) {
     <span class="spacer"></span>
     <button class="pill ${c.takeout ? 'on' : ''}" data-act="co-takeout">${c.takeout ? '持ち帰り（8%）' : `店内（${s.taxRate}%）`}</button>
     <button class="btn" data-act="co-add">＋ 追加</button></div>
+  ${S.data.registerOpen === false ? '<div class="warnbox" style="margin-bottom:10px">レジがまだ開いていません。「レジ締め」タブで釣銭準備金を入れて開けると、閉店時に現金の過不足を確認できます。</div>' : ''}
   <div class="co-main">`;
 
   // 左：明細と調整
@@ -170,8 +171,12 @@ function checkoutHtml(c) {
 }
 
 // 支払い方法とお預かり
+// PayPay連携が有効なら、支払い方法に「PayPay」（金額入りQR）を加える
+const paypayOn = () => S.data.paypay && S.data.paypay.mode !== 'off';
+const PAYPAY = 'PayPay';
+
 function payPanel(c, t, { label, amount }) {
-  const methods = settings().paymentMethods;
+  const methods = [...settings().paymentMethods.filter((m) => m !== PAYPAY), ...(paypayOn() ? [PAYPAY] : [])];
   CO.pay ||= { label, method: methods[0], received: '' };
   if (CO.pay.label !== label) CO.pay = { label, method: CO.pay.method, received: '' };
   const p = CO.pay;
@@ -186,7 +191,74 @@ function payPanel(c, t, { label, amount }) {
         <div class="row"><span class="small muted">おつり</span><span class="spacer"></span><b class="num change ${p.received && change < 0 ? 'neg' : ''}">${p.received ? (change >= 0 ? yen(change) : `${yen(-change)} 不足`) : '—'}</b></div>
         <div class="quick">${quick.map((v) => `<button class="btn btn-sm" data-act="co-quick" data-v="${v}">${v === amount ? 'ちょうど' : yen(v)}</button>`).join('')}</div></div>
       ${keypad('co-cash-key')}</div>` : ''}
-    <button class="btn btn-ok btn-lg btn-block" data-act="co-pay" ${cash && p.received && change < 0 ? 'disabled' : ''}>${cash ? (p.received ? `お預かり ${yen(rec)} で会計` : `${yen(amount)} 現金で会計`) : `${esc(p.method)}で ${yen(amount)} 会計`}</button></div>`;
+    ${p.method === PAYPAY && paypayOn() ? `<div class="paypay-note small">お客様のPayPayアプリで読み取る、<b>金額入りのQRコード</b>を表示します。支払いが終わると自動で会計に記録されます。${S.data.paypay.mode === 'simulator' ? '<br><span class="chip chip-warn">テストモード（実際のお金は動きません）</span>' : ''}</div>
+      <button class="btn btn-paypay btn-lg btn-block" data-act="co-paypay">PayPayのQRを表示（${yen(amount)}）</button></div>` : `
+    <button class="btn btn-ok btn-lg btn-block" data-act="co-pay" ${cash && p.received && change < 0 ? 'disabled' : ''}>${cash ? (p.received ? `お預かり ${yen(rec)} で会計` : `${yen(amount)} 現金で会計`) : `${esc(p.method)}で ${yen(amount)} 会計`}</button></div>`}`;
+}
+
+// ---- PayPay：金額入りQRを表示して支払いを待つ ----
+async function openPaypay(c, p) {
+  const r = await run(() => api('POST', `/api/admin/checks/${c.id}/paypay`, { amount: p.amount, label: p.label }));
+  if (!r) return;
+  const st = { checkId: c.id, pending: r.pending, svg: r.svg, status: 'pending', busy: false };
+  const m = openModal({ paypay: st, html: () => paypayHtml(st), onClose: () => { clearInterval(st.timer); } });
+  st.timer = setInterval(() => pollPaypay(m), 2000);
+}
+
+function paypayHtml(st) {
+  const sim = st.pending.simulated;
+  const done = st.status === 'completed';
+  return `<div class="modal-head"><h2>PayPayでお支払い</h2>${sim ? '<span class="chip chip-warn">テストモード</span>' : ''}<span class="spacer"></span>
+      <button class="btn btn-ghost" data-act="pp-cancel">✕</button></div>
+    <div class="modal-body paypay-body">
+      <div class="pp-amount num">${yen(st.pending.amount)}</div>
+      ${done ? '<div class="pp-done">✓ お支払いが完了しました</div>' : `<div class="pp-qr">${st.svg}</div>
+      <p class="pp-guide">お客様のスマホの <b>PayPay アプリ</b> で<br>このQRコードを読み取ってください</p>
+      <div class="pp-wait"><span class="spinner"></span>お支払いを待っています…</div>`}
+      ${st.status === 'failed' ? '<div class="warnbox">支払いがキャンセルされたか、期限が切れました。もう一度QRを表示してください。</div>' : ''}
+      ${sim && !done ? '<button class="btn btn-block" data-act="pp-sim">（テスト）お客様が支払ったことにする</button>' : ''}
+    </div>
+    <div class="modal-foot"><span class="small muted">画面をお客様に向けてください</span><span class="spacer"></span>
+      <button class="btn" data-act="pp-cancel">${done ? '閉じる' : 'やめる'}</button></div>`;
+}
+
+async function settlePaypay(m, res) {
+  const st = m.paypay;
+  clearInterval(st.timer);
+  st.status = 'completed';
+  updateModal();
+  setTimeout(() => {
+    closeModal(m);
+    CO.pay = null; CO.amountStr = '';
+    if (res.closed) CO.done = { check: res.check, change: null, received: null };
+    else toast(`PayPay：${yen(res.payment.amount)} を受け取りました`, '', 5000);
+    refresh();
+  }, 900);
+}
+
+async function pollPaypay(m) {
+  const st = m.paypay;
+  if (st.busy || st.status !== 'pending') return;
+  st.busy = true;
+  try {
+    const r = await api('GET', `/api/admin/checks/${st.checkId}/paypay`);
+    if (r.status === 'completed') return settlePaypay(m, r);
+    if (r.status === 'failed') { st.status = 'failed'; clearInterval(st.timer); updateModal(); }
+    if (r.status === 'closed' || r.status === 'none') { clearInterval(st.timer); closeModal(m); refresh(); }
+  } catch (e) {
+    toast(e.message, 'error');
+  } finally { st.busy = false; }
+  return undefined;
+}
+
+// 印刷：レシートプリンターがあれば直接、なければiPadのAirPrint
+export async function printReceipt(check, date) {
+  if (S.data.printer && S.data.printer.type !== 'none') {
+    const r = await run(() => api('POST', '/api/admin/print/receipt', { checkId: check.id, date }));
+    if (r) toast(r.queued ? 'プリンターに送りました（まもなく印刷されます）' : 'レシートを印刷しました');
+    return;
+  }
+  printHtml(receiptHtml(check));
 }
 
 // ---- 完了 ----
@@ -354,7 +426,25 @@ export const checkoutActions = {
     const r = await run(() => api('POST', `/api/admin/checks/${CO.checkId}/close`));
     if (r) { CO.done = { check: r.check, change: null, received: null }; await refresh(); }
   },
-  'co-receipt': () => printHtml(receiptHtml(CO.done.check)),
+  'co-receipt': () => printReceipt(CO.done.check, CO.done.check.closedBizDate),
+  'co-paypay': () => { const c = cur(); if (c && CO.pay) openPaypay(c, CO.pay); },
+  'pp-sim': async () => {
+    const m = S.modals.findLast((x) => x.paypay);
+    await run(() => api('POST', `/api/pay/sim/${m.paypay.pending.merchantPaymentId}`));
+    pollPaypay(m);
+  },
+  'pp-cancel': async () => {
+    const m = S.modals.findLast((x) => x.paypay);
+    if (!m) return;
+    if (m.paypay.status !== 'pending') { closeModal(m); return; }
+    clearInterval(m.paypay.timer);
+    const r = await run(() => api('DELETE', `/api/admin/checks/${m.paypay.checkId}/paypay`));
+    // やめる直前に支払われていたら、その支払いを記録する
+    if (r?.status === 'completed') return settlePaypay(m, r);
+    closeModal(m);
+    return undefined;
+  },
+  'co-drawer': async () => { const r = await run(() => api('POST', '/api/admin/drawer/open')); if (r) toast(r.sent ? 'ドロアを開けました' : 'プリンターが設定されていません（設定 → レシートプリンター）'); },
   'co-ryoshu': () => printRyoshu(CO.done.check),
   'co-next': () => { CO.done = null; CO.checkId = null; hooks.renderMain(); },
 };

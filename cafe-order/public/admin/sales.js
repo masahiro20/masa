@@ -1,7 +1,7 @@
 // 売上：日別の集計・会計履歴・再印刷・会計の取り消し・CSV
 import { computeTotals, activeLines, lineGross } from '../shared/calc.js';
 import { S, esc, yen, api, run, refresh, openModal, closeModal, timeStr, tagLabel, printHtml, confirmDialog, toast, hooks } from './core.js';
-import { receiptHtml, printRyoshu } from './checkout.js';
+import { printReceipt, printRyoshu } from './checkout.js';
 
 const R = { date: '', data: null, loading: false };
 
@@ -22,7 +22,8 @@ export function renderSales() {
     <button class="btn btn-sm" data-act="s-today">今日</button><span class="spacer"></span>
     <a class="btn" href="/api/admin/export.csv?from=${R.date}&to=${R.date}&type=checks">会計CSV</a>
     <a class="btn" href="/api/admin/export.csv?from=${R.date}&to=${R.date}&type=items">商品別CSV</a>
-    <button class="btn" data-act="s-month">月間CSV</button></div>`;
+    <button class="btn" data-act="s-month">月間CSV</button>
+    <button class="btn" data-act="s-daily">会計ソフト用（日別）</button></div>`;
   if (!r) return `${h}<div class="empty">読み込み中…</div>`;
 
   h += `<div class="kpis">
@@ -73,8 +74,15 @@ async function openHistory(id) {
 export const salesActions = {
   's-today': () => loadReport(S.data.ctx.bizDate),
   's-open': (el) => openHistory(el.dataset.id),
-  's-print': () => printHtml(receiptHtml(S.modals.findLast((m) => m.hist).hist)),
+  's-print': () => printReceipt(S.modals.findLast((m) => m.hist).hist, R.date),
   's-ryoshu': () => printRyoshu(S.modals.findLast((m) => m.hist).hist),
+  's-daily': () => {
+    const d = R.date || S.data.ctx.bizDate;
+    const last = new Date(Number(d.slice(0, 4)), Number(d.slice(5, 7)), 0).getDate();
+    const a = document.createElement('a');
+    a.href = `/api/admin/export.csv?from=${d.slice(0, 8)}01&to=${d.slice(0, 8)}${String(last).padStart(2, '0')}&type=daily`;
+    document.body.append(a); a.click(); a.remove();
+  },
   's-month': () => {
     const d = R.date || S.data.ctx.bizDate;
     const from = `${d.slice(0, 8)}01`;

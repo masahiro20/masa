@@ -328,3 +328,46 @@ label.check.big input { margin-top: 2px; }
 /* オーナー画面の通知は下に出してナビを隠さない */
 .toast-wrap { top: auto; bottom: calc(16px + env(safe-area-inset-bottom)); left: 16px; right: auto; align-items: flex-start; flex-direction: column-reverse; }
 .toast-wrap .toast:nth-last-child(n+5) { display: none; }
+
+/* ---- まめレジ：ブランド・接続状態 ---- */
+.brand { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-app { font-size: 11px; font-weight: 800; letter-spacing: .12em; color: var(--accent); }
+.brand-shop { font-size: 16px; font-weight: 700; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hdr-wrap { flex: none; }
+.offline-bar { background: var(--danger); color: #fff; font-weight: 700; text-align: center; padding: 6px 12px; font-size: 14px; }
+.login-logo { display: block; margin: 0 auto 6px; border-radius: 16px; }
+
+/* ---- PayPay ---- */
+.btn-paypay { background: #e60012; border-color: #e60012; color: #fff; }
+.paypay-note { background: var(--surface); border-radius: 10px; padding: 10px 12px; }
+.paypay-body { text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.pp-amount { font-size: 40px; font-weight: 800; }
+.pp-qr { width: min(300px, 70vw); background: #fff; padding: 12px; border-radius: 16px; box-shadow: var(--shadow); }
+.pp-qr svg { width: 100%; height: auto; display: block; }
+.pp-guide { margin: 0; font-size: 16px; }
+.pp-wait { display: flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 600; }
+.pp-done { font-size: 26px; font-weight: 800; color: var(--ok); padding: 40px 0; }
+.spinner { width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--accent); animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
+/* ---- レジ締め ---- */
+.reg-open { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.reg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+.reg-grid .row { padding: 3px 0; }
+.kpi-row { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 6px; }
+.kpi-row .big { font-size: 26px; font-weight: 800; }
+.total-row { border-top: 2px solid var(--line); margin-top: 6px; padding-top: 8px !important; font-size: 16px; }
+.total-row .big { font-size: 24px; }
+.diff-ok { color: var(--ok); }
+.diff-bad { color: var(--danger); }
+.denoms { display: grid; gap: 6px; margin: 8px 0; }
+.denom { display: grid; grid-template-columns: 76px auto 1fr; align-items: center; gap: 10px; }
+.denom .dn { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.denom .dv { text-align: right; color: var(--muted); }
+.denom .stepper input { width: 56px; border: 0; text-align: center; padding: 6px 2px; font-weight: 700; background: transparent; }
+.done-mark.warn { background: var(--warn); }
+.copybox { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; overflow-x: auto; }
+.copybox code { font-size: 13px; white-space: nowrap; }
+details summary { cursor: pointer; font-weight: 600; }
+@media (max-width: 1000px) { .reg-grid { grid-template-columns: 1fr; } }

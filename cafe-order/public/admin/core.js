@@ -27,9 +27,16 @@ export const uid = () => Math.random().toString(36).slice(2, 10);
 
 // ---- 通信 ----
 export async function api(method, path, body) {
-  const res = await fetch(path, {
-    method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined, credentials: 'same-origin',
-  });
+  let res;
+  try {
+    res = await fetch(path, {
+      method, headers: { 'Content-Type': 'application/json' }, body: body ? JSON.stringify(body) : undefined, credentials: 'same-origin',
+    });
+  } catch {
+    if (!S.offline) { S.offline = true; hooks.renderBadges?.(); }
+    throw new Error('サーバーにつながりません。Wi-Fiを確認してください');
+  }
+  if (S.offline) { S.offline = false; hooks.renderBadges?.(); }
   const data = await res.json().catch(() => ({}));
   if (res.status === 401 && !path.endsWith('/login')) { S.needLogin = true; hooks.render(); }
   if (!res.ok) { const e = new Error(data.error || `通信に失敗しました (${res.status})`); e.code = data.code; throw e; }
