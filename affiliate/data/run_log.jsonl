@@ -172,3 +172,5 @@
 {"ts": "2026-11-17T21:49:28+00:00", "source": "routine", "published": ["kihon-jouhou-mikeiken-dokugaku"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-18T03:50:34+00:00", "source": "routine", "published": ["kyufukin-part"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-18T09:49:48+00:00", "source": "routine", "published": ["shakaijin-programming-zasetsu-taisaku"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-18T21:48:15+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["基本情報技術者 勉強時間 初心者"], "errors": ["既存記事kihon-jouhou-mikeiken-dokugakuと検索意図が重複"]}
+{"ts": "2026-11-18T21:50:08+00:00", "source": "routine", "published": ["tenshoku-agent-30dai-mikeiken"], "refreshed": [], "rejected": [], "errors": []}

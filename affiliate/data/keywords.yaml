@@ -2,11 +2,75 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 基本情報技術者 勉強時間 初心者
+- keyword: キャリアコーチング 高い
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 生成ai スクール 比較
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 生成ai スクール 補助金
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 生成ai スクール 安い
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: キャリアコーチング とは
   intent: informational
-  category: learning
-  program: learning-books
-  score: 300.0
+  category: career
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: レンタルサーバー 使い方 初心者
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 24000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: webデザインスクール 社会人 おすすめ
+  intent: commercial
+  category: school
+  program: school-webdesign
+  score: 12000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: フリーランス エンジニア 30代
+  intent: informational
+  category: career
+  program: career-freelance
+  score: 12000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: webデザイン 教育訓練給付金 条件
+  intent: informational
+  category: school
+  program: school-kyufukin
+  score: 7200.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -117,6 +181,15 @@ keywords:
   boost: 3.0
   source: google-suggest
   slug: conoha-wing-xserver-hikaku
+- keyword: 転職エージェント おすすめ 30代 未経験
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: tenshoku-agent-30dai-mikeiken
 - keyword: メーカーズジョブ 評判
   intent: transactional
   category: career
@@ -1584,3 +1657,13 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事lpic-mikeiken-benkyou-jikan・linux-dokugaku-sankoushoと検索意図が重複
+- keyword: 基本情報技術者 勉強時間 初心者
+  intent: informational
+  category: learning
+  program: learning-books
+  score: 300.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事kihon-jouhou-mikeiken-dokugakuと検索意図が重複
