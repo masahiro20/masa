@@ -142,6 +142,10 @@ async function openDevices() {
   }
   if (old) old.getTracks().forEach((t) => t.stop());
   $('preview').srcObject = camStream;
+  const a = audioTrack(); const v = camTrack();
+  $('micName').textContent = a ? (a.label || '使用できます').replace(/\s*\(.*?\)\s*$/, '') : '使えません';
+  $('camName').textContent = v ? (v.label || '使用できます').replace(/\s*\(.*?\)\s*$/, '') : '使えません';
+  $('micChip').classList.toggle('ng', !a); $('camChip').classList.toggle('ng', !v);
   startMeter();
   refreshLocal();
 }
@@ -278,6 +282,21 @@ function layout() {
     if (!sharerId && annOn) setAnn(false);
   }
   $('annBtn').classList.toggle('hidden', !sharerId);
+  updateAlone();
+}
+
+function updateAlone() {
+  const alone = inCall && peers.size === 0 && !wbOpen;
+  $('alone').classList.toggle('hidden', !alone);
+  if (!alone) return;
+  if (isHost()) {
+    $('aloneTitle').textContent = waiting.size ? `${waiting.size} 名が入室を待っています` : 'お客様の入室を待っています';
+    $('aloneText').textContent = 'お客様がリンクを開いて「参加する」を押すと、右上に通知が出ます。';
+    $('aloneUrl').textContent = `${location.host}/r/${roomId}`;
+  } else {
+    $('aloneTitle').textContent = 'まもなく始まります';
+    $('aloneText').textContent = 'ほかの参加者が入室すると、ここに映像が表示されます。';
+  }
 }
 
 // ---------- 接続（WebRTC） ----------
@@ -682,7 +701,6 @@ const handlers = {
   },
   knock: (k) => {
     waiting.set(k.id, k); renderPeople();
-    toast(`${k.name} さんが入室を待っています`, [['許可', () => decide(k.id, true)], ['確認する', () => openSide('people', true)]]);
     beep();
   },
   'knock-cancel': ({ id }) => { waiting.delete(id); renderPeople(); },
@@ -754,6 +772,8 @@ async function listen() {
 async function enterCall({ you, peers: others, waiting: w, room: r }, resumed) {
   if (inCall) return;
   inCall = true;
+  callStart = Date.now();
+  document.body.classList.add('in-call');
   if (you) Object.assign(me, { role: you.role, name: you.name });
   if (r) room = { ...room, ...r };
   document.body.classList.toggle('is-host', isHost());
@@ -773,7 +793,7 @@ async function enterCall({ you, peers: others, waiting: w, room: r }, resumed) {
   }
   refreshLocal(); renderPeople(); updateRec(); updateChatNote(); syncToolbar(); tick();
   if (isHost()) loadNotes();
-  if (isHost() && waiting.size) toast(`${waiting.size} 名が入室を待っています`, [['確認する', () => openSide('people')]]);
+  renderKnockCards();
 }
 
 async function decide(id, ok) {
@@ -787,6 +807,7 @@ function stopAll() {
   for (const s of [camStream, screenStream]) if (s) s.getTracks().forEach((t) => t.stop());
   stopTranscription();
   inCall = false;
+  document.body.classList.remove('in-call');
   try { sessionStorage.removeItem(STORE_KEY); } catch (_) { /* 何もしない */ }
 }
 
@@ -903,6 +924,25 @@ function renderPeople() {
     row.append(lock, muteAll, end); pane.appendChild(row);
   }
   $('peopleBtn').innerHTML = ICON.people + (waiting.size ? `<span class="badge">${waiting.size}</span>` : '');
+  renderKnockCards();
+  updateAlone();
+}
+
+function renderKnockCards() {
+  const box = $('kcards'); box.textContent = '';
+  if (!isHost() || !inCall) return;
+  for (const k of [...waiting.values()].slice(0, 4)) {
+    const c = el('div', 'kcard');
+    c.appendChild(el('span', 'kc-avatar', initial(k.name)));
+    const t = el('div', 'kc-text');
+    t.appendChild(el('b', '', `${k.name} さん`));
+    t.appendChild(el('small', '', '入室を待っています'));
+    const ok = el('button', 'btn sm primary', '許可'); ok.onclick = () => decide(k.id, true);
+    const ng = el('button', 'btn sm ghost', 'お断り'); ng.onclick = () => decide(k.id, false);
+    c.append(t, ng, ok);
+    box.appendChild(c);
+  }
+  if (waiting.size > 4) box.appendChild(el('div', 'kmore', `ほか ${waiting.size - 4} 名`));
 }
 
 // ---------- チャット ----------
@@ -1088,11 +1128,13 @@ function beep() {
   } catch (_) { /* 音が出せなくても続ける */ }
 }
 
+let callStart = 0;
 function tick() {
   if (!inCall) return;
-  const d = new Date();
-  $('clock').textContent = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
-  setTimeout(tick, 15000 - (Date.now() % 15000));
+  const sec = Math.floor((Date.now() - callStart) / 1000);
+  const h = Math.floor(sec / 3600); const m = Math.floor((sec % 3600) / 60); const s2 = sec % 60;
+  $('elapsed').textContent = h ? `${h}:${String(m).padStart(2, '0')}:${String(s2).padStart(2, '0')}` : `${m}:${String(s2).padStart(2, '0')}`;
+  setTimeout(tick, 1000 - (Date.now() % 1000));
 }
 
 // ---------- 起動 ----------
@@ -1115,6 +1157,7 @@ async function boot() {
   if (!window.RTCPeerConnection || !navigator.mediaDevices) return fatal('このブラウザでは参加できません', 'Chrome・Safari・Edge の新しい版でお開きください。LINE などのアプリの中で開いた場合は、右上のメニューから「ブラウザで開く」を選んでください。');
 
   for (const [id, icon] of [['screen', ICON.screen], ['annBtn', ICON.pen], ['wbBtn', ICON.board], ['reactBtn', ICON.smile], ['leave', ICON.leave], ['peopleBtn', ICON.people], ['chatBtn', ICON.chat], ['notesBtn', ICON.notes], ['moreBtn', ICON.more], ['pSettings', ICON.gear]]) $(id).innerHTML = icon;
+  for (const b of document.querySelectorAll('.round[aria-label]')) b.dataset.tip = b.getAttribute('aria-label');
   buildToolbar(); buildReactMenu(); syncToolbar();
   // 画面共有ができない端末（スマートフォンなど）では、共有のボタンを出さない
   if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) $('screen').classList.add('hidden');
@@ -1146,10 +1189,9 @@ async function boot() {
     Object.assign(me, { peerId: null, secret: null, role: 'guest' });
   }
 
-  const when = $('lWhen'); when.textContent = '';
-  const w = fmtWhen(pub.start, pub.end);
-  if (w) when.appendChild(el('span', '', w));
-  when.appendChild(el('span', '', `担当：${pub.ownerName}`));
+  $('lWhen').textContent = fmtWhen(pub.start, pub.end);
+  $('hcName').textContent = pub.ownerName;
+  $('hcAvatar').textContent = initial(pub.ownerName);
   const asHost = !!(staff || hostToken);
   $('pinField').classList.toggle('hidden', !pub.requiresPin || asHost);
   $('hostNote').classList.toggle('hidden', !asHost);
@@ -1157,6 +1199,8 @@ async function boot() {
   try { name = localStorage.getItem('meet.name') || ''; } catch (_) { /* 無ければ空 */ }
   $('name').value = staff ? staff.name : name;
   if (staff) $('name').disabled = true;
+  const syncName = () => { const n = $('name').value.trim(); $('previewName').textContent = n; $('pvAvatar').textContent = initial(n); };
+  $('name').addEventListener('input', syncName); syncName();
   show('lobby');
   await openDevices();
 }
@@ -1164,6 +1208,9 @@ async function boot() {
 $('pMic').onclick = $('mic').onclick = () => { micOn = !micOn; refreshLocal(); renderPeople(); };
 $('pCam').onclick = $('cam').onclick = () => { camOn = !camOn; refreshLocal(); };
 $('pSettings').onclick = deviceDialog;
+$('micChip').onclick = deviceDialog;
+$('camChip').onclick = deviceDialog;
+$('aloneCopy').onclick = () => navigator.clipboard.writeText(`${location.origin}/r/${roomId}`).then(() => toast('お客様用のリンクをコピーしました')).catch(() => {});
 $('screen').onclick = toggleScreen;
 $('annBtn').onclick = () => setAnn(!annOn);
 $('wbBtn').onclick = () => setWb(!wbOpen);

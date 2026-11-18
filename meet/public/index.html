@@ -26,11 +26,48 @@
       <div class="eyebrow">Online Meeting</div>
       <h1>お客様との打ち合わせを、<br>リンクひとつで。</h1>
       <p class="lead">予定ごとに打ち合わせのリンクを発行します。お客様はリンクを開くだけで参加でき、アプリのインストールやアカウント登録は要りません。</p>
-      <ul class="facts">
-        <li><b>入室</b><span>担当者が許可するまで、お客様は待合室でお待ちいただきます。</span></li>
-        <li><b>図面</b><span>画面共有やホワイトボードの図面に、お客様と一緒に書き込めます。</span></li>
-        <li><b>記録</b><span>打ち合わせ中のメモや決定事項を、あとから見返せます。</span></li>
-      </ul>
+      <figure class="scene" aria-label="図面に書き込みながら打ち合わせをしている画面のイメージ">
+        <svg viewBox="-24 -12 608 396" role="img" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1f27"/><stop offset="1" stop-color="#0d1015"/></linearGradient>
+            <linearGradient id="av1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b4a63"/><stop offset="1" stop-color="#232b39"/></linearGradient>
+            <linearGradient id="av2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5c4a3d"/><stop offset="1" stop-color="#2f2620"/></linearGradient>
+            <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0f1b2d" flood-opacity=".22"/></filter>
+          </defs>
+          <rect x="8" y="8" width="544" height="336" rx="18" fill="url(#sg1)" filter="url(#sh)"/>
+          <!-- 共有中の図面 -->
+          <rect x="24" y="24" width="388" height="262" rx="10" fill="#f7f6f2"/>
+          <g fill="none" stroke="#1f2a3a" stroke-width="3">
+            <rect x="60" y="52" width="316" height="206"/>
+            <line x1="200" y1="52" x2="200" y2="150"/><line x1="60" y1="150" x2="250" y2="150"/>
+            <line x1="250" y1="150" x2="250" y2="258"/><line x1="300" y1="52" x2="300" y2="110"/>
+          </g>
+          <g fill="none" stroke="#1f2a3a" stroke-width="1" opacity=".35">
+            <line x1="270" y1="190" x2="356" y2="190"/><line x1="270" y1="214" x2="356" y2="214"/><rect x="88" y="176" width="54" height="34" rx="3"/>
+          </g>
+          <g font-family="Noto Sans JP, sans-serif" font-size="12" fill="#4f5a6b">
+            <text x="112" y="104">洋室</text><text x="236" y="86">WIC</text><text x="318" y="86">洋室</text><text x="140" y="236">LDK 20帖</text><text x="292" y="240">和室</text>
+          </g>
+          <!-- お客様の書き込み -->
+          <path d="M178 118c22-18 66-16 72 8 6 26-38 44-66 32-22-10-26-28-6-40" fill="none" stroke="#c63d2f" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M252 132 L274 124" stroke="#c63d2f" stroke-width="3" stroke-linecap="round"/><path d="M274 124 l-9 -2 m9 2 l-5 7" stroke="#c63d2f" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <rect x="278" y="106" width="124" height="26" rx="6" fill="#c63d2f"/>
+          <text x="287" y="124" font-family="Noto Sans JP, sans-serif" font-size="12" font-weight="700" fill="#fff">この壁をなくしたい</text>
+          <rect x="182" y="164" width="58" height="18" rx="4" fill="#c63d2f"/><text x="190" y="177" font-family="Noto Sans JP, sans-serif" font-size="10.5" font-weight="700" fill="#fff">山田 様</text>
+          <!-- 参加者 -->
+          <rect x="424" y="24" width="112" height="76" rx="10" fill="url(#av1)"/><circle cx="480" cy="56" r="16" fill="#e9ecf1" opacity=".9"/><text x="474" y="61" font-family="Noto Sans JP, sans-serif" font-size="14" font-weight="700" fill="#2a3446">中</text>
+          <rect x="430" y="82" width="58" height="12" rx="3" fill="#0b0d11" opacity=".6"/><text x="434" y="91" font-family="Noto Sans JP, sans-serif" font-size="8" fill="#fff">中谷（担当）</text>
+          <rect x="424" y="110" width="112" height="76" rx="10" fill="url(#av2)" stroke="#3fbf7f" stroke-width="2"/><circle cx="480" cy="142" r="16" fill="#f1ebe4" opacity=".9"/><text x="474" y="147" font-family="Noto Sans JP, sans-serif" font-size="14" font-weight="700" fill="#4a3a2e">山</text>
+          <rect x="430" y="168" width="44" height="12" rx="3" fill="#0b0d11" opacity=".6"/><text x="434" y="177" font-family="Noto Sans JP, sans-serif" font-size="8" fill="#fff">山田 様</text>
+          <rect x="424" y="196" width="112" height="76" rx="10" fill="#202530"/><circle cx="480" cy="228" r="16" fill="#3a414e"/><text x="474" y="233" font-family="Noto Sans JP, sans-serif" font-size="14" font-weight="700" fill="#d7dbe2">花</text>
+          <!-- 操作の帯 -->
+          <rect x="176" y="298" width="208" height="34" rx="17" fill="#ffffff" opacity=".07"/>
+          <g fill="#2a2f38"><circle cx="198" cy="315" r="11"/><circle cx="228" cy="315" r="11"/><circle cx="258" cy="315" r="11" fill="#eceef1"/><circle cx="288" cy="315" r="11"/></g>
+          <rect x="306" y="304" width="62" height="22" rx="11" fill="#c63d2f"/>
+          <g fill="#cfd4dc"><rect x="194" y="309" width="8" height="11" rx="4"/><rect x="222" y="310" width="12" height="9" rx="2"/><rect x="282" y="309" width="12" height="11" rx="2"/></g>
+          <path d="M252 318l5-6 4 4 5-6" stroke="#0c0e11" stroke-width="2" fill="none"/>
+        </svg>
+      </figure>
     </div>
 
     <div class="sheet">
@@ -91,6 +128,12 @@
       </section>
     </div>
   </main>
+
+  <section class="features">
+    <div><b>入室</b><p>お客様は担当者が許可するまで待合室でお待ちいただきます。知らない人が入ることはありません。</p></div>
+    <div><b>図面</b><p>画面共有やホワイトボードの図面に、お客様と担当者が同時に書き込めます。</p></div>
+    <div><b>記録</b><p>打ち合わせ中のメモ・決定事項・宿題を、あとから見返せます。</p></div>
+  </section>
 
   <footer class="foot-note">
     <span>映像と音声は参加者の端末どうしで直接やりとりされ、録画はされません。</span>

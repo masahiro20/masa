@@ -36,7 +36,8 @@
     <div>
       <div class="preview">
         <video id="preview" autoplay playsinline muted></video>
-        <div class="off hidden" id="previewOff">カメラはオフです</div>
+        <div class="off hidden" id="previewOff"><span class="pv-avatar" id="pvAvatar">?</span><span>カメラはオフです</span></div>
+        <div class="pv-name" id="previewName"></div>
         <div class="meter" aria-hidden="true"><span id="meterBar"></span></div>
         <div class="ctrls">
           <button class="round" id="pMic" aria-label="マイク"></button>
@@ -44,18 +45,22 @@
           <button class="round" id="pSettings" aria-label="カメラ・マイクの設定"></button>
         </div>
       </div>
-      <p class="muted center small" id="deviceHint">話すと、左下の緑の線が動きます。動かないときはマイクの設定をご確認ください。</p>
+      <div class="devchips">
+        <button class="devchip" id="micChip" type="button"><span class="dot-ok"></span><span class="lbl">マイク</span><span class="val" id="micName">確認中</span></button>
+        <button class="devchip" id="camChip" type="button"><span class="dot-ok"></span><span class="lbl">カメラ</span><span class="val" id="camName">確認中</span></button>
+      </div>
+      <p class="muted center small" id="deviceHint">話すと、映像の左下の線が動きます。</p>
     </div>
     <div>
       <div class="eyebrow">Online Meeting</div>
-      <h1>オンライン打ち合わせ</h1>
-      <div class="when" id="lWhen"></div>
+      <h1>参加の準備はできましたか？</h1>
+      <div class="hostcard" id="hostCard"><span class="hc-avatar" id="hcAvatar"></span><span class="hc-text"><small>担当</small><b id="hcName"></b></span><span class="hc-when" id="lWhen"></span></div>
       <div class="notice hidden" id="mediaNotice"></div>
       <div class="notice host-note hidden" id="hostNote">担当者として入室します。お客様の入室はあなたが許可します。</div>
       <div class="field"><label for="name">お名前</label><input id="name" maxlength="30" placeholder="山田 太郎" autocomplete="name"></div>
       <div class="field hidden" id="pinField"><label for="pin">確認コード（担当者からお知らせした 6 桁の数字）</label><input id="pin" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></div>
       <div class="row">
-        <button class="btn primary" id="joinBtn">参加する</button>
+        <button class="btn primary lg" id="joinBtn">参加する</button>
         <a class="btn ghost" href="/">戻る</a>
       </div>
       <div class="wait muted hidden" id="waitBox"><div class="spinner"></div><span id="waitText">担当者が入室を許可するまで、このままお待ちください。</span></div>
@@ -95,6 +100,14 @@
         <input type="file" id="fileBg" accept="image/png,image/jpeg,image/webp,application/pdf" hidden>
       </div>
       <div class="reactions" id="reactionLayer" aria-live="polite"></div>
+      <div class="alone hidden" id="alone">
+        <div class="alone-card">
+          <h3 id="aloneTitle">お客様の入室を待っています</h3>
+          <p class="muted small" id="aloneText">お客様がリンクを開いて「参加する」を押すと、ここに通知が出ます。</p>
+          <div class="alone-link host-only"><span id="aloneUrl"></span><button class="btn sm" id="aloneCopy">コピー</button></div>
+        </div>
+      </div>
+      <div class="kcards" id="kcards" aria-live="assertive"></div>
     </div>
     <aside class="side hidden" id="side">
       <header>
@@ -123,7 +136,7 @@
     </aside>
   </div>
   <div class="bar">
-    <div class="left"><span id="clock"></span><span class="sep"></span><span id="cTitle"></span></div>
+    <div class="left"><span class="elapsed" id="elapsed">0:00</span><span class="sep"></span><span id="cTitle"></span></div>
     <div class="center">
       <button class="round" id="mic" aria-label="マイク"></button>
       <button class="round" id="cam" aria-label="カメラ"></button>

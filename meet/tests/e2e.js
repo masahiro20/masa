@@ -68,7 +68,7 @@ const shot = async (page, name) => { if (shots) await page.screenshot({ path: pa
   await guest.waitForSelector('#lobby:not(.hidden)');
   const lobbyText = await guest.textContent('#lobby');
   assert.ok(!lobbyText.includes('山田 太郎') && !lobbyText.includes('間取り'), '入室前の画面に件名・お客様名が出ている');
-  assert.ok(lobbyText.includes('担当：中谷 真弘'));
+  assert.equal(await guest.textContent('#hcName'), '中谷 真弘', '担当者名（社員名）は表示する');
   await guest.fill('#name', '山田 太郎');
   await guest.waitForFunction(() => document.querySelector('#preview').videoWidth > 0);
   await shot(guest, '02-guest-lobby.png');
