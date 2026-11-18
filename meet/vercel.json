@@ -12,8 +12,12 @@
       "destination": "/room.html"
     },
     {
-      "source": "/static/:file",
-      "destination": "/:file"
+      "source": "/records",
+      "destination": "/records.html"
+    },
+    {
+      "source": "/static/:path*",
+      "destination": "/:path*"
     }
   ],
   "headers": [

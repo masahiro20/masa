@@ -1,16 +1,19 @@
-// COMPASS Meet — はじめの画面
+// COMPASS Meet — はじめの画面（社員ログイン・打ち合わせの作成・一覧）
 'use strict';
 const $ = (id) => document.getElementById(id);
 const toast = (t) => {
-  const el = $('toast');
-  el.textContent = t;
-  el.classList.remove('hidden');
-  clearTimeout(toast.t);
-  toast.t = setTimeout(() => el.classList.add('hidden'), 2500);
+  const e = $('toast'); e.textContent = t; e.classList.remove('hidden');
+  clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.add('hidden'), 2800);
 };
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 let made = null;
 
-// 既定は今日・次の 30 分きざみ・1 時間
+async function jfetch(url, opts = {}) {
+  const r = await fetch(url, { ...opts, headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) } });
+  let j = {}; try { j = await r.json(); } catch (_) { /* 空 */ }
+  return { ok: r.ok, status: r.status, body: j };
+}
+
 (function initDate() {
   const d = new Date(Date.now() + 30 * 60e3);
   d.setMinutes(d.getMinutes() < 30 ? 30 : 60, 0, 0);
@@ -21,40 +24,66 @@ let made = null;
   $('end').value = `${pad(e.getHours())}:${pad(e.getMinutes())}`;
 })();
 
-async function createRoom(body) {
-  const r = await fetch('/api/rooms', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  const j = await r.json();
-  if (!r.ok) throw new Error(j.error || '作成できませんでした');
-  return j;
+async function refreshMe() {
+  const r = await jfetch('/api/auth/me');
+  const signed = r.ok;
+  $('loginBox').classList.toggle('hidden', signed);
+  $('createBox').classList.toggle('hidden', !signed);
+  $('listBox').classList.toggle('hidden', !signed);
+  $('whoBox').classList.toggle('hidden', !signed);
+  if (signed) { $('whoName').textContent = `${r.body.staff.name} さん`; loadList(); }
 }
 
-const isoLocal = (date, time) => (date && time ? `${date}T${time}` : '');
-// 端末の時刻 → UTC の 20261117T010000Z
-const stamp = (local) => new Date(local).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+$('loginForm').onsubmit = async (e) => {
+  e.preventDefault();
+  $('loginErr').classList.add('hidden');
+  const r = await jfetch('/api/auth/login', { method: 'POST', body: JSON.stringify({ id: $('loginId').value.trim(), password: $('loginPw').value }) });
+  $('loginPw').value = '';
+  if (!r.ok) { $('loginErr').textContent = r.body.error || 'ログインできませんでした'; $('loginErr').classList.remove('hidden'); return; }
+  refreshMe();
+};
+$('logout').onclick = async () => { await jfetch('/api/auth/logout', { method: 'POST', body: '{}' }); refreshMe(); };
+
+const toIso = (date, time) => (date && time ? new Date(`${date}T${time}`).toISOString() : undefined);
+const stamp = (iso) => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+
+async function create(now) {
+  const body = {
+    title: $('title').value.trim() || 'オンライン打ち合わせ',
+    customerName: $('customerName').value.trim() || undefined,
+    customerId: $('customerId').value.trim() || undefined,
+    pin: $('usePin').checked,
+  };
+  if (!now) { body.start = toIso($('date').value, $('start').value); body.end = toIso($('date').value, $('end').value); }
+  const r = await jfetch('/api/rooms', { method: 'POST', body: JSON.stringify(body) });
+  if (!r.ok) { toast(r.body.error || '作成できませんでした'); if (r.status === 401) refreshMe(); return null; }
+  return { ...r.body, start: body.start, end: body.end };
+}
 
 $('create').onclick = async () => {
-  const title = $('title').value.trim() || 'オンライン打ち合わせ';
-  const start = isoLocal($('date').value, $('start').value);
-  const end = isoLocal($('date').value, $('end').value);
-  try { made = await createRoom({ title, start, end }); } catch (e) { return toast(e.message); }
+  made = await create(false);
+  if (!made) return;
   $('url').textContent = made.url;
   $('open').href = made.url;
-  const q = new URLSearchParams({ action: 'TEMPLATE', text: title, details: `オンライン打ち合わせ（COMPASS Meet）\n${made.url}`, location: made.url });
-  if (start && end) q.set('dates', `${stamp(start)}/${stamp(end)}`);
+  $('pinBox').classList.toggle('hidden', !made.pin);
+  $('pinVal').textContent = made.pin || '';
+  // お客様向けの予定には件名だけを入れる（お客様名・顧客 ID は入れない）
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: made.title, details: `オンライン打ち合わせ（COMPASS Meet）\n${made.url}`, location: made.url });
+  if (made.start && made.end) q.set('dates', `${stamp(made.start)}/${stamp(made.end)}`);
   $('gcal').href = `https://calendar.google.com/calendar/render?${q}`;
   $('result').classList.remove('hidden');
+  loadList();
 };
 
 $('now').onclick = async () => {
-  try {
-    const r = await createRoom({ title: $('title').value.trim() || 'オンライン打ち合わせ' });
-    location.href = r.url;
-  } catch (e) { toast(e.message); }
+  const r = await create(true);
+  if (!r) return;
+  if (r.pin) { await navigator.clipboard.writeText(r.pin).catch(() => {}); alert(`確認コード：${r.pin}\n（お客様にお伝えください。クリップボードにもコピーしました）`); }
+  location.href = r.url;
 };
 
 async function copy(text, msg) {
-  try { await navigator.clipboard.writeText(text); toast(msg); }
-  catch (_) { prompt('コピーしてください', text); }
+  try { await navigator.clipboard.writeText(text); toast(msg); } catch (_) { prompt('コピーしてください', text); }
 }
 $('copy').onclick = () => copy(made.url, 'リンクをコピーしました');
 $('copyMemo').onclick = () => copy(`オンライン打ち合わせ ${made.url}`, 'COMPASS の予定メモに貼り付けてください');
@@ -67,7 +96,7 @@ $('ics').onclick = () => {
   const ics = [
     'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//COMPASS Meet//JA', 'BEGIN:VEVENT',
     `UID:${made.id}@compass-meet`, `DTSTAMP:${stamp(new Date().toISOString())}`,
-    `DTSTART:${s}`, `DTEND:${e}`, `SUMMARY:${esc(made.title || 'オンライン打ち合わせ')}`,
+    `DTSTART:${s}`, `DTEND:${e}`, `SUMMARY:${esc(made.title)}`,
     `LOCATION:${made.url}`, `URL:${made.url}`, `DESCRIPTION:${esc('オンライン打ち合わせ（COMPASS Meet）: ' + made.url)}`,
     'END:VEVENT', 'END:VCALENDAR', '',
   ].join('\r\n');
@@ -77,9 +106,38 @@ $('ics').onclick = () => {
   a.click();
 };
 
+const STATUS = { open: '予定・開催中', ended: '終了', expired: '期限切れ', gone: '削除済み' };
+async function loadList() {
+  const r = await jfetch('/api/rooms');
+  const box = $('list');
+  if (!r.ok) return;
+  box.textContent = '';
+  if (!r.body.rooms.length) { box.appendChild(el('p', 'muted small', 'まだありません。')); return; }
+  for (const m of r.body.rooms.slice(0, 8)) {
+    const row = el('div', 'mrow');
+    const t = el('div', 'mt');
+    t.appendChild(el('b', '', m.title));
+    const when = m.start ? new Date(m.start).toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit' }) : new Date(m.createdAt).toLocaleDateString('ja-JP');
+    t.appendChild(el('span', 'muted small', `${when}${m.customerName ? `・${m.customerName} 様` : ''}`));
+    const st = el('span', `pill s-${m.status}`, STATUS[m.status] || m.status);
+    const acts = el('div', 'mact');
+    if (m.status === 'open') {
+      const op = el('a', 'btn sm', '開く'); op.href = `/r/${m.id}`;
+      const cp = el('button', 'btn sm ghost', 'リンク'); cp.onclick = () => copy(`${location.origin}/r/${m.id}`, 'お客様用のリンクをコピーしました');
+      acts.append(cp, op);
+    }
+    const rec = el('a', 'btn sm ghost', '記録'); rec.href = `/records#${m.id}`;
+    acts.appendChild(rec);
+    row.append(t, st, acts);
+    box.appendChild(row);
+  }
+}
+
 $('join').onclick = () => {
   const m = $('code').value.trim().match(/[a-z]{3}-[a-z]{4}-[a-z]{3}/);
   if (!m) return toast('通話コードは abc-defg-hij の形です');
   location.href = `/r/${m[0]}`;
 };
 $('code').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('join').click(); });
+
+refreshMe();

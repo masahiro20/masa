@@ -18,30 +18,48 @@
       <span class="word">COMPASS<i>.</i></span>
       <span class="sub">Meet</span>
     </a>
-    <span class="note">ホームランディック一級建築士事務所</span>
+    <nav class="who hidden" id="whoBox"><span id="whoName"></span><a class="btn ghost sm" href="/records">打ち合わせ記録</a><button class="btn ghost sm" id="logout">ログアウト</button></nav>
   </header>
 
   <main class="hero">
     <div>
       <div class="eyebrow">Online Meeting</div>
       <h1>お客様との打ち合わせを、<br>リンクひとつで。</h1>
-      <p class="lead">予定ごとに通話リンクを発行します。お客様はリンクを開くだけで参加でき、アプリのインストールやアカウント登録は要りません。</p>
+      <p class="lead">予定ごとに打ち合わせのリンクを発行します。お客様はリンクを開くだけで参加でき、アプリのインストールやアカウント登録は要りません。</p>
       <ul class="facts">
         <li><b>入室</b><span>担当者が許可するまで、お客様は待合室でお待ちいただきます。</span></li>
-        <li><b>画面共有</b><span>図面や資料を、細い線まで読める画質でお見せできます。</span></li>
-        <li><b>端末</b><span>パソコン・スマートフォン・タブレットのブラウザで使えます。</span></li>
+        <li><b>図面</b><span>画面共有やホワイトボードの図面に、お客様と一緒に書き込めます。</span></li>
+        <li><b>記録</b><span>打ち合わせ中のメモや決定事項を、あとから見返せます。</span></li>
       </ul>
     </div>
 
     <div class="sheet">
-      <section>
+      <!-- 社員ログイン -->
+      <section id="loginBox" class="hidden">
+        <h2>社員ログイン</h2>
+        <p class="muted small">打ち合わせのリンクを作るには、社員 ID でログインしてください。</p>
+        <form id="loginForm" autocomplete="on">
+          <div class="field"><label for="loginId">社員 ID</label><input id="loginId" autocomplete="username" required></div>
+          <div class="field"><label for="loginPw">パスワード</label><input id="loginPw" type="password" autocomplete="current-password" required></div>
+          <button class="btn primary" type="submit">ログイン</button>
+          <p class="muted small error-text hidden" id="loginErr" role="alert"></p>
+        </form>
+      </section>
+
+      <!-- 打ち合わせの作成 -->
+      <section id="createBox" class="hidden">
         <h2>打ち合わせのリンクを作る</h2>
-        <div class="field"><label for="title">件名</label><input id="title" placeholder="例：山田様 間取りのご相談" maxlength="80" autocomplete="off"></div>
+        <div class="field"><label for="title">件名</label><input id="title" placeholder="例：間取りのご相談（2 回目）" maxlength="80" autocomplete="off"></div>
+        <div class="row two">
+          <div class="field"><label for="customerName">お客様名（記録用・お客様には表示されません）</label><input id="customerName" maxlength="60" autocomplete="off"></div>
+          <div class="field"><label for="customerId">顧客 ID（任意）</label><input id="customerId" maxlength="64" autocomplete="off" placeholder="COMPASS の顧客 ID"></div>
+        </div>
         <div class="times">
           <div class="field"><label for="date">日付</label><input id="date" type="date"></div>
           <div class="field"><label for="start">開始</label><input id="start" type="time" step="900"></div>
           <div class="field"><label for="end">終了</label><input id="end" type="time" step="900"></div>
         </div>
+        <label class="check"><input type="checkbox" id="usePin"> 確認コード（6 桁）を付ける<small>リンクが他の人に転送されても入れないよう、コードを電話などで別にお伝えします</small></label>
         <div class="row">
           <button class="btn primary" id="create">リンクを作成</button>
           <button class="btn" id="now">いますぐ開始</button>
@@ -49,14 +67,21 @@
         <div class="result hidden" id="result">
           <div class="muted">お客様にお送りするリンク</div>
           <div class="linkbox"><span id="url"></span><button class="btn sm" id="copy">コピー</button></div>
+          <div class="pinbox hidden" id="pinBox">確認コード <b id="pinVal"></b><small>この画面でしか表示されません。お客様に別の方法でお伝えください。</small></div>
           <div class="actions">
             <a class="btn sm" id="gcal" target="_blank" rel="noopener">Google カレンダーに追加</a>
             <button class="btn sm" id="ics">予定ファイル（.ics）</button>
             <button class="btn sm" id="copyMemo">COMPASS の予定メモ用にコピー</button>
-            <a class="btn sm primary" id="open">開く</a>
+            <a class="btn sm primary" id="open">担当者として開く</a>
           </div>
         </div>
       </section>
+
+      <section id="listBox" class="hidden">
+        <h2>最近の打ち合わせ</h2>
+        <div id="list" class="mlist"><p class="muted small">まだありません。</p></div>
+      </section>
+
       <section>
         <h2>リンクを受け取った方</h2>
         <div class="join">
@@ -73,7 +98,7 @@
   </footer>
 </div>
 
-<div class="toast hidden" id="toast"></div>
+<div class="toast hidden" id="toast" role="status"></div>
 <script src="/static/home.js"></script>
 </body>
 </html>

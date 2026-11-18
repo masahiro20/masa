@@ -18,25 +18,26 @@ function start(port = 0) {
       url.searchParams.set('p', sub);
       req.url = `/api/handler?${url.searchParams}`;
       req.headers['x-forwarded-proto'] = 'http'; // Vercel は必ず付けてくる
+      req.headers['x-real-ip'] = req.socket.remoteAddress;
       const chunks = [];
       req.on('data', (c) => chunks.push(c));
       req.on('end', async () => {
         const raw = Buffer.concat(chunks).toString('utf8');
-        req.body = raw ? JSON.parse(raw) : undefined; // Vercel は JSON を読んで渡す
+        try { req.body = raw ? JSON.parse(raw) : undefined; } catch (_) { req.body = raw; } // Vercel は JSON を読んで渡す
         await handler(req, res);
       });
       return;
     }
-    for (const r of cfg.rewrites) {
-      if (r.source === '/r/:id' && /^\/r\/[^/]+$/.test(p)) p = r.destination;
-      if (r.source === '/static/:file' && p.startsWith('/static/')) p = '/' + p.slice(8);
-    }
+    if (/^\/r\/[^/]+$/.test(p)) p = '/room.html';
+    else if (p === '/records') p = '/records.html';
+    else if (p.startsWith('/static/')) p = '/' + p.slice(8);
     if (p === '/') p = '/index.html';
     const file = path.join(root, cfg.outputDirectory, p);
     fs.readFile(file, (e, buf) => {
       if (e) { res.writeHead(404); return res.end(); }
-      const type = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css' }[path.extname(file)];
-      res.writeHead(200, { 'Content-Type': type });
+      const type = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml' }[path.extname(file)];
+      const sec = Object.fromEntries(cfg.headers[0].headers.map((h) => [h.key, h.value]));
+      res.writeHead(200, { ...sec, 'Content-Type': type });
       res.end(buf);
     });
   });

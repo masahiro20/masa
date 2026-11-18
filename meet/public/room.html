@@ -12,9 +12,16 @@
 </head>
 <body>
 
-<!-- 読み込み中・エラー -->
+<!-- 読み込み中・終了・エラー -->
 <div class="center-msg" id="loading"><div><div class="spinner"></div><span class="muted">準備しています</span></div></div>
-<div class="center-msg hidden" id="fatal"><div><h2 id="fatalTitle">この通話は見つかりません</h2><p class="muted" id="fatalText"></p><div class="row" id="fatalActions"><a class="btn" href="/">トップへ戻る</a></div></div></div>
+<div class="center-msg hidden" id="fatal">
+  <div class="end-card">
+    <svg class="mark big" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 5.5 19.2 16H12.8Z" fill="#c63d2f"/><path d="M16 26.5 12.8 16h6.4Z" fill="currentColor"/></svg>
+    <h2 id="fatalTitle">この打ち合わせは見つかりません</h2>
+    <p class="muted" id="fatalText"></p>
+    <div class="row" id="fatalActions"></div>
+  </div>
+</div>
 
 <!-- 入室前 -->
 <div class="lobby hidden" id="lobby">
@@ -26,57 +33,127 @@
     </a>
   </header>
   <div class="inner">
-    <div class="preview">
-      <video id="preview" autoplay playsinline muted></video>
-      <div class="off hidden" id="previewOff">カメラはオフです</div>
-      <div class="ctrls">
-        <button class="round" id="pMic" title="マイク"></button>
-        <button class="round" id="pCam" title="カメラ"></button>
+    <div>
+      <div class="preview">
+        <video id="preview" autoplay playsinline muted></video>
+        <div class="off hidden" id="previewOff">カメラはオフです</div>
+        <div class="meter" aria-hidden="true"><span id="meterBar"></span></div>
+        <div class="ctrls">
+          <button class="round" id="pMic" aria-label="マイク"></button>
+          <button class="round" id="pCam" aria-label="カメラ"></button>
+          <button class="round" id="pSettings" aria-label="カメラ・マイクの設定"></button>
+        </div>
       </div>
+      <p class="muted center small" id="deviceHint">話すと、左下の緑の線が動きます。動かないときはマイクの設定をご確認ください。</p>
     </div>
     <div>
       <div class="eyebrow">Online Meeting</div>
-      <h1 id="lTitle">オンライン打ち合わせ</h1>
+      <h1>オンライン打ち合わせ</h1>
       <div class="when" id="lWhen"></div>
       <div class="notice hidden" id="mediaNotice"></div>
-      <div class="field"><label for="name">お名前</label><input id="name" maxlength="40" placeholder="山田 太郎" autocomplete="name"></div>
+      <div class="notice host-note hidden" id="hostNote">担当者として入室します。お客様の入室はあなたが許可します。</div>
+      <div class="field"><label for="name">お名前</label><input id="name" maxlength="30" placeholder="山田 太郎" autocomplete="name"></div>
+      <div class="field hidden" id="pinField"><label for="pin">確認コード（担当者からお知らせした 6 桁の数字）</label><input id="pin" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></div>
       <div class="row">
         <button class="btn primary" id="joinBtn">参加する</button>
         <a class="btn ghost" href="/">戻る</a>
       </div>
-      <div class="wait muted hidden" id="waitBox"><div class="spinner"></div><span>担当者が入室を許可するまで、このままお待ちください。</span></div>
+      <div class="wait muted hidden" id="waitBox"><div class="spinner"></div><span id="waitText">担当者が入室を許可するまで、このままお待ちください。</span></div>
+      <p class="muted small privacy">映像と音声は参加者の端末どうしで直接やりとりされ、録画はされません。</p>
     </div>
   </div>
 </div>
 
 <!-- 通話中 -->
 <div class="call hidden" id="call">
+  <div class="topstrip" id="topstrip">
+    <span class="rec hidden" id="recBadge">● 文字起こし中</span>
+    <span class="lockb hidden" id="lockBadge">入室締切中</span>
+    <span class="net" id="netBadge" title="回線の状態"></span>
+  </div>
   <div class="main">
-    <div class="stage n1" id="stage"></div>
+    <div class="stagewrap" id="stagewrap">
+      <div class="stage n1" id="stage"></div>
+      <canvas class="overlay" id="annCanvas" aria-label="画面共有への書き込み"></canvas>
+      <div class="wb hidden" id="wb">
+        <canvas id="wbCanvas" aria-label="ホワイトボード"></canvas>
+      </div>
+      <div class="toolbar hidden" id="toolbar" role="toolbar" aria-label="書き込みの道具">
+        <div class="tgroup" id="tools"></div>
+        <div class="tgroup" id="colors"></div>
+        <div class="tgroup" id="widths"></div>
+        <div class="tgroup">
+          <button class="tbtn" id="tUndo" title="元に戻す">戻す</button>
+          <button class="tbtn" id="tClear" title="消去">消去</button>
+          <button class="tbtn wb-only" id="tImage" title="画像・図面を貼る">画像</button>
+          <button class="tbtn wb-only host-only" id="tBg" title="下敷き（図面）">図面</button>
+          <button class="tbtn" id="tSave" title="画像として保存">保存</button>
+          <button class="tbtn wb-only host-only" id="tShow" title="全員に表示">全員に表示</button>
+        </div>
+        <div class="authors" id="authors"></div>
+        <input type="file" id="fileImage" accept="image/png,image/jpeg,image/webp,application/pdf" hidden>
+        <input type="file" id="fileBg" accept="image/png,image/jpeg,image/webp,application/pdf" hidden>
+      </div>
+      <div class="reactions" id="reactionLayer" aria-live="polite"></div>
+    </div>
     <aside class="side hidden" id="side">
-      <header><h3 id="sideTitle">チャット</h3><button class="x" id="sideClose" aria-label="閉じる">×</button></header>
+      <header>
+        <div class="tabs" role="tablist">
+          <button class="tab" data-tab="people" role="tab">参加者</button>
+          <button class="tab" data-tab="chat" role="tab">チャット</button>
+          <button class="tab host-only" data-tab="notes" role="tab">メモ</button>
+        </div>
+        <button class="x" id="sideClose" aria-label="閉じる">×</button>
+      </header>
       <div class="body" id="peoplePane"></div>
-      <div class="body hidden" id="chatPane"><div class="muted" id="chatEmpty">メッセージは参加中の方にだけ表示され、通話が終わると残りません。</div></div>
-      <div class="foot hidden" id="chatFoot"><input id="chatInput" maxlength="1000" placeholder="メッセージを送信"><button class="btn primary" id="chatSend">送信</button></div>
+      <div class="body hidden" id="chatPane">
+        <div class="muted small" id="chatEmpty">メッセージは参加中の方にだけ表示されます。</div>
+        <div id="chatList"></div>
+      </div>
+      <div class="foot hidden" id="chatFoot"><input id="chatInput" maxlength="1000" placeholder="メッセージを入力" aria-label="メッセージ"><button class="btn primary" id="chatSend">送信</button></div>
+      <div class="body hidden" id="notesPane">
+        <div class="muted small" id="notesStatus">入力すると自動で保存されます。保存した内容は「打ち合わせ記録」から見られます。</div>
+        <div class="field"><label for="nCustomer">お客様名</label><input id="nCustomer" maxlength="60"></div>
+        <div class="row two"><div class="field"><label for="nProject">案件 ID</label><input id="nProject" maxlength="64"></div><div class="field"><label>担当</label><input id="nOwner" disabled></div></div>
+        <div class="field"><label for="nBody">メモ</label><textarea id="nBody" rows="6"></textarea></div>
+        <div class="field"><label for="nDecisions">決定事項</label><textarea id="nDecisions" rows="3"></textarea></div>
+        <div class="field"><label for="nPending">未決定事項</label><textarea id="nPending" rows="3"></textarea></div>
+        <div class="field"><label for="nTodos">次回までの確認事項（誰が・何を・いつまでに）</label><textarea id="nTodos" rows="3"></textarea></div>
+      </div>
     </aside>
   </div>
   <div class="bar">
     <div class="left"><span id="clock"></span><span class="sep"></span><span id="cTitle"></span></div>
     <div class="center">
-      <button class="round" id="mic" title="マイク（Ctrl+D）"></button>
-      <button class="round" id="cam" title="カメラ（Ctrl+E）"></button>
-      <button class="round" id="screen" title="画面を共有"></button>
-      <button class="round leave" id="leave" title="退出"></button>
+      <button class="round" id="mic" aria-label="マイク"></button>
+      <button class="round" id="cam" aria-label="カメラ"></button>
+      <button class="round" id="screen" aria-label="画面を共有"></button>
+      <button class="round hidden" id="annBtn" aria-label="共有画面に書き込む"></button>
+      <button class="round" id="wbBtn" aria-label="ホワイトボード"></button>
+      <button class="round" id="reactBtn" aria-label="リアクション"></button>
+      <button class="round leave" id="leave" aria-label="退出"></button>
     </div>
     <div class="right">
-      <button class="round" id="peopleBtn" title="参加者"></button>
-      <button class="round" id="chatBtn" title="チャット"></button>
-      <button class="round" id="linkBtn" title="招待リンクをコピー"></button>
+      <button class="round" id="peopleBtn" aria-label="参加者"></button>
+      <button class="round" id="chatBtn" aria-label="チャット"></button>
+      <button class="round host-only" id="notesBtn" aria-label="メモ"></button>
+      <button class="round" id="moreBtn" aria-label="その他"></button>
     </div>
+  </div>
+  <div class="popover hidden" id="reactMenu" role="menu"></div>
+  <div class="popover hidden" id="moreMenu" role="menu"></div>
+</div>
+
+<!-- 汎用の確認ダイアログ -->
+<div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="sheet-modal">
+    <h3 id="modalTitle"></h3>
+    <div id="modalBody"></div>
+    <div class="row end" id="modalActions"></div>
   </div>
 </div>
 
-<div class="toast hidden" id="toast"></div>
-<script src="/static/room.js"></script>
+<div class="toast hidden" id="toast" role="status"></div>
+<script type="module" src="/static/room.js"></script>
 </body>
 </html>
