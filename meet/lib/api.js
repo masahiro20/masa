@@ -15,6 +15,7 @@ const { createLimiter } = require('./ratelimit');
 const { createAuth } = require('./auth');
 const { createTurn } = require('./turn');
 const { createAi } = require('./ai');
+const { createGoogle } = require('./google');
 
 const ROOM_ID_RE = /^[a-z]{3}-[a-z]{4}-[a-z]{3}$/;
 const ALPHA = 'abcdefghijkmnpqrstuvwxyz';
@@ -45,6 +46,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
   const auth = createAuth({ store, env, keys, limiter });
   const turn = createTurn(env, fetchImpl);
   const ai = createAi(env, fetchImpl);
+  const google = createGoogle({ env, keys, fetchImpl });
   const MAX_PEERS = Math.min(Number(env.MAX_PEERS || 6), 8);
   const RETENTION = Number(env.MEETING_RETENTION_DAYS || 180) * 86400;
   const PUBLIC_URL = (env.PUBLIC_URL || '').replace(/\/$/, '');
@@ -242,7 +244,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
     }
     if (method === 'GET' && p1 === 'healthz') return ok({ ok: true });
     if (method === 'GET' && p1 === 'config') {
-      return ok({ maxPeers: MAX_PEERS, transcription, ai: ai.enabled, staffLogin: auth.configured.password, reactions: REACTIONS });
+      return ok({ maxPeers: MAX_PEERS, transcription, ai: ai.enabled, staffLogin: auth.configured.password, googleLogin: google.enabled, googleDomain: google.enabled ? google.domain : '', reactions: REACTIONS });
     }
 
     if (p1 === 'auth') return handleAuth(req, parts);
@@ -342,6 +344,27 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
   // ---------- 認証 ----------
   async function handleAuth(req, parts) {
     const a = parts[2];
+    // Google（会社のドメイン）でのログイン：画面の移動で使うので GET
+    if (a === 'google' && req.method === 'GET') {
+      if (!google.enabled) return fail(404, 'Google でのログインは設定されていません');
+      if (parts[3] === 'start') {
+        const s = google.start(req);
+        return { status: 302, body: null, headers: { Location: s.location, 'Set-Cookie': s.cookie } };
+      }
+      if (parts[3] === 'callback') {
+        const lim = await limiter.peek('login_fail_ip', req.ip || 'unknown');
+        if (!lim.ok) return { status: 302, body: null, headers: { Location: '/?login_error=toomany', 'Set-Cookie': google.clearCookie } };
+        let r;
+        try { r = await google.callback(req); } catch (_) { r = { error: 'token' }; }
+        if (r.error) {
+          if (r.error !== 'cancelled') await limiter.hit('login_fail_ip', req.ip || 'unknown');
+          return { status: 302, body: null, headers: { Location: `/?login_error=${r.error}`, 'Set-Cookie': google.clearCookie } };
+        }
+        const sess = await auth.issueSession(r.staff);
+        return { status: 302, body: null, headers: { Location: r.ret || '/', 'Set-Cookie': [sess.cookie, google.clearCookie] } };
+      }
+      return fail(404, '見つかりません');
+    }
     if (req.method === 'GET' && a === 'me') {
       const staff = await auth.staffOf(req);
       return staff ? ok({ staff: { id: staff.id, name: staff.name, role: staff.role } }) : fail(401, 'ログインしていません');

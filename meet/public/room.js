@@ -1195,6 +1195,10 @@ async function boot() {
   const asHost = !!(staff || hostToken);
   $('pinField').classList.toggle('hidden', !pub.requiresPin || asHost);
   $('hostNote').classList.toggle('hidden', !asHost);
+  if (!asHost && config.googleLogin) {
+    $('staffLogin').href = `/api/auth/google/start?returnTo=${encodeURIComponent(location.pathname)}`;
+    $('staffLogin').classList.remove('hidden');
+  }
   let name = '';
   try { name = localStorage.getItem('meet.name') || ''; } catch (_) { /* 無ければ空 */ }
   $('name').value = staff ? staff.name : name;

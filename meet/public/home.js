@@ -24,7 +24,29 @@ async function jfetch(url, opts = {}) {
   $('end').value = `${pad(e.getHours())}:${pad(e.getMinutes())}`;
 })();
 
+const LOGIN_ERRORS = {
+  domain: '会社の Google アカウント（@{d}）でログインしてください。個人のアカウントでは入れません。',
+  notallowed: 'このアカウントには、まだ利用の許可がありません。管理者にお問い合わせください。',
+  cancelled: 'ログインを取りやめました。',
+  state: 'ログインの確認に失敗しました。もう一度お試しください。',
+  expired: 'ログインの有効時間が切れました。もう一度お試しください。',
+  token: 'Google での確認に失敗しました。もう一度お試しください。',
+  toomany: 'ログインの失敗が続いたため、しばらくお待ちください。',
+};
+let cfg = {};
 async function refreshMe() {
+  cfg = (await jfetch('/api/config')).body || {};
+  $('googleBtn').classList.toggle('hidden', !cfg.googleLogin);
+  $('loginForm').classList.toggle('hidden', !cfg.staffLogin);
+  if (cfg.googleLogin) $('loginLead').textContent = `打ち合わせのリンクを作るには、会社の Google アカウント（@${cfg.googleDomain}）でログインしてください。`;
+  else if (cfg.staffLogin) $('loginLead').textContent = '打ち合わせのリンクを作るには、社員 ID でログインしてください。';
+  else $('loginLead').textContent = 'ログインの設定がまだされていません。管理者にお問い合わせください。';
+  const err = new URLSearchParams(location.search).get('login_error');
+  if (err && LOGIN_ERRORS[err]) {
+    $('googleErr').textContent = LOGIN_ERRORS[err].replace('{d}', cfg.googleDomain || '会社のドメイン');
+    $('googleErr').classList.remove('hidden');
+    history.replaceState(null, '', '/');
+  }
   const r = await jfetch('/api/auth/me');
   const signed = r.ok;
   $('loginBox').classList.toggle('hidden', signed);

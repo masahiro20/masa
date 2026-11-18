@@ -28,7 +28,8 @@ STAFF_ACCOUNTS='[ ...上の 1 行... ]' INSECURE_COOKIE=1 npm start   # http://l
 | 環境変数 | 作り方 |
 |---|---|
 | `DATA_KEY`、`SESSION_SECRET`（、`MEET_API_KEY`） | `node scripts/setup.js keys` |
-| `STAFF_ACCOUNTS` | `node scripts/setup.js staff <社員ID> <表示名> [admin]` で 1 件ずつ作り、JSON の配列にする |
+| `GOOGLE_CLIENT_ID` など | 会社の Google アカウントでのログイン。手順は [docs/Googleログインの設定手順.md](docs/Googleログインの設定手順.md) |
+| `STAFF_ACCOUNTS`（任意） | Google ログインを使わない場合だけ。`node scripts/setup.js staff <社員ID> <表示名> [admin]` で作る |
 | `KV_REST_API_URL`、`KV_REST_API_TOKEN` | Vercel の Storage から Upstash を追加すると、自動で入る |
 | TURN、文字起こし、AI | 「docs/仕組み.md」の 11 章を参照（どれも契約・承認のあとで設定する） |
 
@@ -37,7 +38,7 @@ STAFF_ACCOUNTS='[ ...上の 1 行... ]' INSECURE_COOKIE=1 npm start   # http://l
 ## 試験
 
 ```bash
-npm test                       # API と部品の試験（47 件）
+npm test                       # API・Google ログイン・部品の試験（61 件）
 node tests/e2e.js              # ブラウザ 3 台（Chromium・偽のカメラ）での通しの確認
 E2E_MODE=vercel node tests/e2e.js   # Vercel の入口（api/handler.js）を通した形で確認
 ```

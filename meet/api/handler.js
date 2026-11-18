@@ -41,6 +41,12 @@ module.exports = async (req, res) => {
       method: req.method, path, query: Object.fromEntries(url.searchParams), headers: req.headers, body,
       origin: `${proto}://${host}`, ip: String(ip).split(',')[0].trim(),
     });
+    if (r.status === 302) {
+      res.statusCode = 302;
+      res.setHeader('Cache-Control', 'no-store');
+      for (const [k, v] of Object.entries(r.headers || {})) res.setHeader(k, v);
+      return res.end();
+    }
     send(res, r.status, r.body, r.headers || {});
   } catch (e) {
     console.error('サーバーの不具合', e && e.message);

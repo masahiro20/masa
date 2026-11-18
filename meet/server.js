@@ -85,6 +85,7 @@ function start(port = Number(process.env.PORT || 8080), { store = storeFromEnv()
         origin: `http://${req.headers.host}`,
         ip: req.socket.remoteAddress,
       });
+      if (r.status === 302) { res.writeHead(302, { ...SECURITY_HEADERS, 'Cache-Control': 'no-store', ...r.headers }); return res.end(); }
       send(res, r.status, r.body, r.headers || {});
     } catch (e) {
       console.error('サーバーの不具合', e && e.message); // 本文・個人情報はログに出さない

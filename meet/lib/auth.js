@@ -145,7 +145,7 @@ function createAuth({ store, env, keys, limiter }) {
   }
 
   return {
-    staffOf, sameOrigin, login, logout, exchangeCompass,
+    staffOf, sameOrigin, login, logout, exchangeCompass, issueSession,
     configured: { password: accounts.size > 0, apiKey: !!apiKey, compass: !!compassSecret },
   };
 }

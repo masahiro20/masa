@@ -11,7 +11,7 @@ const ACCOUNTS = [
   { id: 'boss', name: '管理者', role: 'admin', hash: sec.hashPassword(PASSWORD) },
 ];
 
-async function boot(extraEnv = {}) {
+async function boot(extraEnv = {}, { fetchImpl } = {}) {
   const store = createMemoryStore();
   const env = {
     STAFF_ACCOUNTS: JSON.stringify(ACCOUNTS),
@@ -20,7 +20,7 @@ async function boot(extraEnv = {}) {
     COMPASS_JWT_SECRET: 'c'.repeat(40),
     ...extraEnv,
   };
-  const server = await start(0, { store, env });
+  const server = await start(0, { store, env, fetchImpl });
   const base = `http://127.0.0.1:${server.address().port}`;
   const close = () => { server.closeAllConnections(); server.close(); };
 

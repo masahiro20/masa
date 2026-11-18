@@ -74,8 +74,10 @@
       <!-- 社員ログイン -->
       <section id="loginBox" class="hidden">
         <h2>社員ログイン</h2>
-        <p class="muted small">打ち合わせのリンクを作るには、社員 ID でログインしてください。</p>
-        <form id="loginForm" autocomplete="on">
+        <p class="muted small" id="loginLead">打ち合わせのリンクを作るには、会社の Google アカウントでログインしてください。</p>
+        <a class="btn google hidden" id="googleBtn" href="/api/auth/google/start"><svg class="g" viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1S8.7 6 12 6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.5 14.6 2.5 12 2.5 6.8 2.5 2.6 6.7 2.6 12s4.2 9.5 9.4 9.5c5.4 0 9-3.8 9-9.2 0-.6-.1-1.1-.2-1.6H12Z"/></svg><span>Google でログイン</span></a>
+        <p class="muted small error-text hidden" id="googleErr" role="alert"></p>
+        <form id="loginForm" class="hidden" autocomplete="on">
           <div class="field"><label for="loginId">社員 ID</label><input id="loginId" autocomplete="username" required></div>
           <div class="field"><label for="loginPw">パスワード</label><input id="loginPw" type="password" autocomplete="current-password" required></div>
           <button class="btn primary" type="submit">ログイン</button>
