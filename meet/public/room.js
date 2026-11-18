@@ -1007,6 +1007,11 @@ function buildReactMenu() {
 function buildMoreMenu() {
   const m = $('moreMenu'); m.textContent = '';
   const add = (label, fn, cls) => { const b = el('button', `menu-item ${cls || ''}`, label); b.onclick = () => { m.classList.add('hidden'); fn(); }; m.appendChild(b); };
+  if (window.matchMedia('(max-width: 720px)').matches) {
+    // スマートフォンでは、リアクション・挙手をこのメニューに入れる（ボタンが画面からはみ出さないように）
+    for (const k of config.reactions || Object.keys(REACT_LABEL)) add(`リアクション：${REACT_LABEL[k] || k}`, () => post('react', { kind: k }).catch((e) => toast(e.message)));
+    add(handUp ? '手を下げる' : '手を挙げる', () => { handUp = !handUp; post('hand', { up: handUp }).catch((e) => toast(e.message)); });
+  }
   add('カメラ・マイクの設定', deviceDialog);
   if (/Android|iPhone|iPad/.test(navigator.userAgent)) add('カメラを切り替える（前・後）', flipCamera);
   add('全画面表示', () => { const s = $('stagewrap'); if (document.fullscreenElement) document.exitFullscreen(); else if (s.requestFullscreen) s.requestFullscreen().catch(() => {}); });
@@ -1111,6 +1116,8 @@ async function boot() {
 
   for (const [id, icon] of [['screen', ICON.screen], ['annBtn', ICON.pen], ['wbBtn', ICON.board], ['reactBtn', ICON.smile], ['leave', ICON.leave], ['peopleBtn', ICON.people], ['chatBtn', ICON.chat], ['notesBtn', ICON.notes], ['moreBtn', ICON.more], ['pSettings', ICON.gear]]) $(id).innerHTML = icon;
   buildToolbar(); buildReactMenu(); syncToolbar();
+  // 画面共有ができない端末（スマートフォンなど）では、共有のボタンを出さない
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) $('screen').classList.add('hidden');
 
   // ページを開き直した場合：前の参加を続ける
   let saved = null;
