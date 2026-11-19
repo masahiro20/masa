@@ -341,7 +341,62 @@ function layout() {
   }
   $('annBtn').classList.toggle('hidden', !sharerId);
   updateAlone();
+  placeTiles();
 }
+
+// 映像の大きさと位置を、画面の広さと人数から毎回計算して置く（重ならないように）
+const GAP = 10;
+function placeTiles() {
+  const stage = $('stage');
+  const tiles = [...stage.children];
+  if (wbOpen || !inCall) { stage.classList.remove('abs'); tiles.forEach((t) => { t.style.left = t.style.top = t.style.width = t.style.height = ''; }); return; }
+  stage.classList.add('abs');
+  const cs = getComputedStyle(stage);
+  const pl = parseFloat(cs.paddingLeft); const pt = parseFloat(cs.paddingTop);
+  const W = stage.clientWidth - pl - parseFloat(cs.paddingRight);
+  const H = stage.clientHeight - pt - parseFloat(cs.paddingBottom);
+  if (W <= 0 || H <= 0) return;
+  const put = (t, x, y, w, h) => { t.style.left = `${pl + x}px`; t.style.top = `${pt + y}px`; t.style.width = `${Math.max(0, w)}px`; t.style.height = `${Math.max(0, h)}px`; };
+  // 決まった枠の中に、16:9 の映像をできるだけ大きく並べる
+  const fit = (list, ox, oy, w0, h0) => {
+    const n = list.length; if (!n) return;
+    let best = null;
+    for (let c = 1; c <= n; c++) {
+      const r = Math.ceil(n / c);
+      const w = Math.min((w0 - GAP * (c - 1)) / c, ((h0 - GAP * (r - 1)) / r) * 16 / 9);
+      if (!best || w > best.w) best = { c, r, w };
+    }
+    const { c, r, w } = best; const h = w * 9 / 16;
+    const top = oy + (h0 - (r * h + GAP * (r - 1))) / 2;
+    list.forEach((t, i) => {
+      const row = Math.floor(i / c); const inRow = row === r - 1 ? n - row * c : c; // 最後の行は真ん中に寄せる
+      const left = ox + (w0 - (inRow * w + GAP * (inRow - 1))) / 2;
+      put(t, left + (i % c) * (w + GAP), top + row * (h + GAP), w, h);
+    });
+  };
+  const featured = tiles.find((t) => t.classList.contains('featured'));
+  if (!featured) return fit(tiles, 0, 0, W, H);
+  const others = tiles.filter((t) => t !== featured);
+  if (!others.length) return put(featured, 0, 0, W, H);
+  if (W >= 720) {
+    // 大きな映像（画面共有など）を左に、ほかの人を右の列に
+    const sw = Math.max(160, Math.min(260, W * 0.2));
+    const fw = W - sw - GAP;
+    put(featured, 0, 0, fw, H);
+    const k = others.length;
+    const th = Math.min(sw * 9 / 16, (H - GAP * (k - 1)) / k);
+    const tw = th * 16 / 9;
+    const y0 = (H - (k * th + GAP * (k - 1))) / 2;
+    others.forEach((t, i) => put(t, fw + GAP + (sw - tw) / 2, y0 + i * (th + GAP), tw, th));
+  } else {
+    // スマートフォン：大きな映像を上に、ほかの人を下に
+    const fh = Math.min(W * 9 / 16, H * 0.6);
+    put(featured, 0, 0, W, fh);
+    fit(others, 0, fh + GAP, W, H - fh - GAP);
+  }
+}
+if (window.ResizeObserver) new ResizeObserver(() => placeTiles()).observe($('stagewrap'));
+window.addEventListener('resize', () => placeTiles());
 
 let aloneDismissed = false;
 function updateAlone() {
@@ -929,9 +984,9 @@ function openSide(tab, keep) {
   $('notesPane').classList.toggle('hidden', tab !== 'notes');
   if (tab === 'chat') { unread = 0; badge(); $('chatInput').focus(); }
   renderPeople();
-  setTimeout(() => { annBoard.dirty = true; wbBoard.dirty = true; }, 50);
+  setTimeout(() => { placeTiles(); annBoard.dirty = true; wbBoard.dirty = true; }, 50);
 }
-function closeSide() { sideTab = null; $('side').classList.add('hidden'); setTimeout(() => { annBoard.dirty = true; wbBoard.dirty = true; }, 50); }
+function closeSide() { sideTab = null; $('side').classList.add('hidden'); setTimeout(() => { placeTiles(); annBoard.dirty = true; wbBoard.dirty = true; }, 50); }
 
 function renderPeople() {
   const pane = $('peoplePane'); pane.textContent = '';

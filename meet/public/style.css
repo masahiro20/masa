@@ -706,3 +706,8 @@ body.in-call .modal .muted { color: #a7adb7; }
 
 .round.locked { opacity: .55; }
 .round.locked:hover { opacity: .8; }
+
+/* 映像の並びは JavaScript で計算して置く（重なり防止） */
+.stage.abs { display: block; position: relative; }
+.stage.abs .tile { position: absolute; aspect-ratio: auto; margin: 0; grid-row: auto; }
+.stage.abs .tile.featured { aspect-ratio: auto; }
