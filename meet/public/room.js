@@ -4,6 +4,7 @@
 // カメラ⇔画面共有の切り替えは枠の中身を差し替えるだけにしている（つなぎ直しが要らない）。
 import { Board, COLORS, WIDTHS, fileToDataUrl, pdfToDataUrl } from './board.js';
 import { Effects, PRESETS, available as fxAvailable, prepareCustomImage } from './effects.js';
+import { drawCard, cardThumb } from './brand.js';
 
 const $ = (id) => document.getElementById(id);
 const roomId = location.pathname.split('/').pop();
@@ -40,7 +41,7 @@ let iceServers = [{ urls: ['stun:stun.l.google.com:19302'] }];
 let camStream = null; let screenStream = null;
 let micOn = true; let camOn = true;
 let inCall = false; let polling = false; let lastActivity = 0; let failCount = 0;
-let unread = 0; let sideTab = null; let handUp = false; let hostToken = null; let staff = null;
+let unread = 0; let sideTab = null; let handUp = false; let hostToken = null; let staff = null; let myStaff = null;
 let wbOpen = false; let annOn = false; let sharerId = null;
 let audioCtx = null;
 const peers = new Map();
@@ -156,7 +157,9 @@ async function openDevices() {
   watchTracks();
   rememberInputs();
   // 前回の背景の設定を引き継ぐ
-  const saved = fxSaved();
+  // スタッフは、まだ自分で選んでいなければ「会社の名刺」の背景を使う（全員で統一）
+  let chosen = null; try { chosen = localStorage.getItem(FX_KEY); } catch (_) { /* 無ければ未選択 */ }
+  const saved = chosen ? fxSaved() : (myStaff ? { mode: 'image', imageId: 'card' } : { mode: 'none' });
   if (saved.mode !== 'none' && !fx.active && camTrack() && await fxAvailable()) await applyFx(saved.mode, saved.imageId, true);
 }
 
@@ -192,6 +195,8 @@ function refreshLocal() {
   const a = audioTrack(); if (a) a.enabled = micOn;
   const v = camTrack(); if (v) v.enabled = camOn;
   fx.setSource(v); fx.setPaused(!camOn);
+  // 文字の入った背景は、自分の画面でも左右反転せずに見せる（相手にはもともと正しく見えている）
+  document.body.classList.toggle('fx-text', fx.active && fx.mode === 'image' && (fx.imageId === 'card' || fx.imageId === 'brand'));
   if ($('preview').srcObject !== camView()) $('preview').srcObject = camView();
   setRound($('pMic'), micOn, ICON.mic, ICON.micOff);
   setRound($('pCam'), camOn, ICON.cam, ICON.camOff);
@@ -1560,9 +1565,16 @@ const FX_KEY = 'meet.fx'; const FX_CUSTOM = 'meet.fx.custom';
 const fxSaved = () => { try { return JSON.parse(localStorage.getItem(FX_KEY) || 'null') || { mode: 'none' }; } catch (_) { return { mode: 'none' }; } };
 const fxCustom = () => { try { return localStorage.getItem(FX_CUSTOM) || ''; } catch (_) { return ''; } };
 
+const CARD_KEY = 'meet.card';
+const cardTitle = () => { try { return localStorage.getItem(CARD_KEY) || ''; } catch (_) { return ''; } };
+const cardInfo = () => ({ name: (myStaff && myStaff.name) || me.name || '', title: cardTitle() });
+
 async function applyFx(mode, imageId, quiet) {
   try {
-    await fx.set(mode, imageId, imageId === 'custom' ? fxCustom() : '');
+    if (imageId === 'card') {
+      if (!myStaff) throw new Error('staff only');
+      await fx.set('image', 'card', '', await drawCard(cardInfo()));
+    } else await fx.set(mode, imageId, imageId === 'custom' ? fxCustom() : '');
     try { localStorage.setItem(FX_KEY, JSON.stringify({ mode, imageId: imageId || null })); } catch (_) { /* 保存できなくても続ける */ }
   } catch (e) {
     console.error(e);
@@ -1583,8 +1595,9 @@ async function fxDialog() {
   setPv(); wrap.appendChild(pv);
   wrap.appendChild(el('p', 'muted small', '映像の加工は、この端末の中だけで行います。外部には送りません。'));
   const grid = el('div', 'fx-grid'); wrap.appendChild(grid);
-  const cur = fxSaved();
+  const cur = fx.active ? { mode: fx.mode, imageId: fx.imageId } : { mode: 'none' };
   const items = [
+    ...(myStaff ? [{ mode: 'image', imageId: 'card', label: '会社の名刺', img: await cardThumb(cardInfo()).catch(() => '') }] : []),
     { mode: 'none', label: 'なし', cls: 'fx-none' },
     { mode: 'blur-light', label: '少しぼかす', cls: 'fx-blur1' },
     { mode: 'blur', label: 'ぼかす', cls: 'fx-blur2' },
@@ -1616,6 +1629,24 @@ async function fxDialog() {
     } catch (e) { toast(e.message || '画像を読み込めませんでした'); }
   };
   grid.append(add, file);
+  if (myStaff) {
+    // 名刺の背景に出す肩書き（名前はログインの名前を自動で使う）
+    const f = el('div', 'field fx-card');
+    const lab = el('label', '', '名刺の背景に出す肩書き（任意）'); lab.htmlFor = 'cardTitle';
+    const inp = document.createElement('input'); inp.id = 'cardTitle'; inp.maxLength = 24; inp.placeholder = '例：営業 ／ 一級建築士 ／ インテリアコーディネーター'; inp.value = cardTitle();
+    f.append(lab, inp, el('p', 'muted small', `お名前は「${cardInfo().name}」で表示されます。`));
+    let tmr = null;
+    inp.oninput = () => {
+      clearTimeout(tmr);
+      tmr = setTimeout(async () => {
+        try { localStorage.setItem(CARD_KEY, inp.value.trim()); } catch (_) { /* 何もしない */ }
+        const cardBtn = grid.querySelector('[data-image="card"]');
+        if (cardBtn) { const im = cardBtn.querySelector('img'); if (im) im.src = await cardThumb(cardInfo()); }
+        if (fx.active && fx.imageId === 'card') { await applyFx('image', 'card', true); setPv(); }
+      }, 400);
+    };
+    wrap.appendChild(f);
+  }
   await modal('背景とエフェクト', wrap, [['閉じる', true, 'primary']]);
   pv.srcObject = null;
 }
@@ -1710,7 +1741,9 @@ async function boot() {
   } catch (e) { return fatal('この打ち合わせは見つかりません', e.message || 'リンクをもう一度ご確認ください。'); }
   if (pub.status === 'ended') return fatal('この打ち合わせは終了しました', 'ご参加ありがとうございました。');
   if (pub.status === 'expired') return fatal('このリンクは有効期限が切れています', '担当者に新しいリンクをお尋ねください。');
-  if (pub.youAreHost) { try { const r = await fetch('/api/auth/me'); if (r.ok) staff = (await r.json()).staff; } catch (_) { /* ゲストとして続ける */ } }
+  // ログインしているスタッフ（会社の統一背景に名前を出すため）。主催者になれるかは別に判定する
+  try { const r = await fetch('/api/auth/me'); if (r.ok) myStaff = (await r.json()).staff; } catch (_) { /* ゲストとして続ける */ }
+  if (pub.youAreHost) staff = myStaff;
 
   if (!window.RTCPeerConnection || !navigator.mediaDevices) return fatal('このブラウザでは参加できません', 'Chrome・Safari・Edge の新しい版でお開きください。LINE などのアプリの中で開いた場合は、右上のメニューから「ブラウザで開く」を選んでください。');
 

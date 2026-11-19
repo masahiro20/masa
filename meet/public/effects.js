@@ -85,8 +85,8 @@ export class Effects {
   get active() { return this.mode !== 'none' && !!this.track && this.track.readyState === 'live'; }
 
   // 設定を変える（画像は id か、自分で選んだ画像の data URL）
-  async set(mode, imageId, customUrl) {
-    if (mode === 'image') {
+  async set(mode, imageId, customUrl, canvas) {
+    if (mode === 'image' && canvas) { this.image = canvas; this.imageId = imageId; } else if (mode === 'image') {
       const pre = PRESETS.find((p) => p.id === imageId);
       const src = pre ? pre.src : customUrl;
       if (!src) mode = 'none';

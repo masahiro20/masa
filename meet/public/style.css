@@ -800,3 +800,11 @@ body.is-staff .round.staff-only { display: grid !important; }
 .diag-t { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0 0 10px; font-size: 13px; }
 .diag-t dt { color: var(--ink-3); }
 .diag-t dd { margin: 0; }
+
+/* 文字の入った背景のときは、自分の映像も反転しない */
+body.fx-text .tile.self video, body.fx-text .preview video, body.fx-text .fx-preview, body.fx-text .ds-preview { transform: none; }
+.fx-card { margin-top: 12px; }
+.fx-card input { width: 100%; }
+body.fx-text .preview .pv-name { display: none; }
+.fx-add { color: inherit; }
+.fx-add span { opacity: .75; }
