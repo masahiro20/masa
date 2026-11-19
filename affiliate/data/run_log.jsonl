@@ -177,3 +177,4 @@
 {"ts": "2026-11-19T03:48:19+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["キャリアコーチング 高い"], "errors": ["既存記事career-coaching-muryo-yuryo-chigaiと検索意図が重複"]}
 {"ts": "2026-11-19T03:49:30+00:00", "source": "routine", "published": ["seisei-ai-school-hikaku"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-19T09:49:24+00:00", "source": "routine", "published": ["career-coaching-towa"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-19T21:49:13+00:00", "source": "routine", "published": ["seisei-ai-school-hojokin"], "refreshed": [], "rejected": [], "errors": []}
