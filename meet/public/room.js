@@ -222,6 +222,60 @@ async function deviceDialog() {
   if (canSink && devices.speaker) for (const v of document.querySelectorAll('.tile video')) v.setSinkId(devices.speaker).catch(() => {});
 }
 
+// マイク・カメラ・スピーカーをその場で切り替える（ボタン横の矢印から）
+async function openDevMenu(kind, anchor) {
+  const m = $('devMenu');
+  if (!m.classList.contains('hidden') && m.dataset.kind === kind) { m.classList.add('hidden'); return; }
+  $('reactMenu').classList.add('hidden'); $('moreMenu').classList.add('hidden');
+  m.dataset.kind = kind; m.textContent = '';
+  const list = await navigator.mediaDevices.enumerateDevices().catch(() => []);
+  const cur = { mic: (audioTrack() && audioTrack().getSettings().deviceId) || devices.mic, cam: (camTrack() && camTrack().getSettings().deviceId) || devices.cam, speaker: devices.speaker || 'default' };
+  const section = (title, devKind, key) => {
+    const opts = list.filter((d) => d.kind === devKind && d.deviceId);
+    m.appendChild(el('div', 'dm-title', title));
+    if (!opts.length) { m.appendChild(el('div', 'dm-empty', '見つかりません')); return; }
+    opts.forEach((d, i) => {
+      const b = el('button', 'menu-item dm-item');
+      const on = d.deviceId === cur[key] || (!cur[key] && i === 0);
+      b.appendChild(el('span', 'dm-check', on ? '✓' : ''));
+      b.appendChild(el('span', 'dm-label', (d.label || `${title} ${i + 1}`).replace(/\s*\(.*?\)\s*$/, '')));
+      b.onclick = async () => { m.classList.add('hidden'); await switchDevice(key, d.deviceId); };
+      m.appendChild(b);
+    });
+  };
+  if (kind === 'mic') {
+    section('マイク', 'audioinput', 'mic');
+    if ('setSinkId' in HTMLMediaElement.prototype) section('スピーカー', 'audiooutput', 'speaker');
+    else m.appendChild(el('div', 'dm-empty', 'スピーカーは端末の設定で切り替えてください'));
+  } else section('カメラ', 'videoinput', 'cam');
+  const more = el('button', 'menu-item dm-more', 'くわしい設定'); more.onclick = () => { m.classList.add('hidden'); deviceDialog(); };
+  m.appendChild(more);
+  const r = anchor.getBoundingClientRect();
+  m.style.left = `${Math.max(8, Math.min(window.innerWidth - 300, r.left - 120))}px`;
+  m.classList.remove('hidden');
+}
+
+async function switchDevice(key, id) {
+  devices[key] = id;
+  if (key === 'speaker') {
+    for (const v of document.querySelectorAll('.tile video')) if (v.setSinkId) v.setSinkId(id).catch(() => {});
+    return toast('スピーカーを切り替えました');
+  }
+  try {
+    const s = await navigator.mediaDevices.getUserMedia(key === 'mic'
+      ? { audio: { deviceId: { exact: id }, echoCancellation: true, noiseSuppression: true, autoGainControl: true } }
+      : { video: { deviceId: { exact: id }, width: { ideal: 1280 }, height: { ideal: 720 } } });
+    const nt = key === 'mic' ? s.getAudioTracks()[0] : s.getVideoTracks()[0];
+    const old = key === 'mic' ? audioTrack() : camTrack();
+    if (old) { camStream.removeTrack(old); old.stop(); }
+    camStream.addTrack(nt);
+    if (key === 'cam') camOn = true;
+    $('preview').srcObject = camStream;
+    refreshLocal();
+    toast(key === 'mic' ? 'マイクを切り替えました' : 'カメラを切り替えました');
+  } catch (_) { toast('切り替えられませんでした。ほかのアプリが使っていないかご確認ください', null, 5000); }
+}
+
 // ---------- 画面の並び ----------
 function makeTile(id, name, role, isSelf) {
   const tile = el('div', 'tile' + (isSelf ? ' self' : ''));
@@ -287,8 +341,9 @@ function layout() {
   updateAlone();
 }
 
+let aloneDismissed = false;
 function updateAlone() {
-  const alone = inCall && peers.size === 0 && !wbOpen;
+  const alone = inCall && peers.size === 0 && !wbOpen && !aloneDismissed;
   $('alone').classList.toggle('hidden', !alone);
   if (!alone) return;
   if (isHost()) {
@@ -1216,7 +1271,13 @@ $('pCam').onclick = $('cam').onclick = () => { camOn = !camOn; refreshLocal(); }
 $('pSettings').onclick = deviceDialog;
 $('micChip').onclick = deviceDialog;
 $('camChip').onclick = deviceDialog;
-$('aloneCopy').onclick = () => navigator.clipboard.writeText(`${location.origin}/r/${roomId}`).then(() => toast('お客様用のリンクをコピーしました')).catch(() => {});
+$('aloneCopy').onclick = () => navigator.clipboard.writeText(`${location.origin}/r/${roomId}`).then(() => {
+  toast('お客様用のリンクをコピーしました（もう一度コピーするときは「︙」のメニューから）');
+  aloneDismissed = true; updateAlone();
+}).catch(() => {});
+$('aloneClose').onclick = () => { aloneDismissed = true; updateAlone(); };
+$('micCaret').onclick = (e) => { e.stopPropagation(); openDevMenu('mic', e.currentTarget); };
+$('camCaret').onclick = (e) => { e.stopPropagation(); openDevMenu('cam', e.currentTarget); };
 $('screen').onclick = toggleScreen;
 $('annBtn').onclick = () => setAnn(!annOn);
 $('wbBtn').onclick = () => setWb(!wbOpen);
@@ -1233,7 +1294,8 @@ $('chatInput').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.
 for (const id of ['nCustomer', 'nProject', 'nBody', 'nDecisions', 'nPending', 'nTodos']) $(id).addEventListener('input', scheduleNotes);
 $('reactBtn').onclick = (e) => { e.stopPropagation(); $('moreMenu').classList.add('hidden'); $('reactMenu').classList.toggle('hidden'); };
 $('moreBtn').onclick = (e) => { e.stopPropagation(); $('reactMenu').classList.add('hidden'); buildMoreMenu(); $('moreMenu').classList.toggle('hidden'); };
-document.addEventListener('click', (e) => { if (!e.target.closest('.popover')) { $('reactMenu').classList.add('hidden'); $('moreMenu').classList.add('hidden'); } });
+document.addEventListener('click', (e) => { if (!e.target.closest('.popover')) { $('reactMenu').classList.add('hidden'); $('moreMenu').classList.add('hidden'); $('devMenu').classList.add('hidden'); } });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') for (const id of ['reactMenu', 'moreMenu', 'devMenu']) $(id).classList.add('hidden'); });
 document.addEventListener('keydown', (e) => {
   if (!inCall || !(e.ctrlKey || e.metaKey)) return;
   if (e.key === 'd') { e.preventDefault(); $('mic').click(); }

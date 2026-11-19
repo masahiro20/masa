@@ -103,6 +103,7 @@
       <div class="reactions" id="reactionLayer" aria-live="polite"></div>
       <div class="alone hidden" id="alone">
         <div class="alone-card">
+          <button class="alone-x" id="aloneClose" aria-label="閉じる">×</button>
           <h3 id="aloneTitle">お客様の入室を待っています</h3>
           <p class="muted small" id="aloneText">お客様がリンクを開いて「参加する」を押すと、ここに通知が出ます。</p>
           <div class="alone-link host-only"><span id="aloneUrl"></span><button class="btn sm" id="aloneCopy">コピー</button></div>
@@ -139,8 +140,8 @@
   <div class="bar">
     <div class="left"><span class="elapsed" id="elapsed">0:00</span><span class="sep"></span><span id="cTitle"></span></div>
     <div class="center">
-      <button class="round" id="mic" aria-label="マイク"></button>
-      <button class="round" id="cam" aria-label="カメラ"></button>
+      <div class="split"><button class="round" id="mic" aria-label="マイク"></button><button class="caret" id="micCaret" aria-label="マイク・スピーカーを選ぶ" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 14l5-5 5 5z"/></svg></button></div>
+      <div class="split"><button class="round" id="cam" aria-label="カメラ"></button><button class="caret" id="camCaret" aria-label="カメラを選ぶ" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 14l5-5 5 5z"/></svg></button></div>
       <button class="round" id="screen" aria-label="画面を共有"></button>
       <button class="round hidden" id="annBtn" aria-label="共有画面に書き込む"></button>
       <button class="round" id="wbBtn" aria-label="ホワイトボード"></button>
@@ -156,6 +157,7 @@
   </div>
   <div class="popover hidden" id="reactMenu" role="menu"></div>
   <div class="popover hidden" id="moreMenu" role="menu"></div>
+  <div class="popover devmenu hidden" id="devMenu" role="menu"></div>
 </div>
 
 <!-- 汎用の確認ダイアログ -->

@@ -675,3 +675,31 @@ body.in-call .popover { border-color: var(--line); }
 #loginForm { margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--line-2); }
 .staff-login { display: block; font-size: 12px; color: var(--ink-3); margin: -8px 0 18px; text-decoration: underline; text-underline-offset: 3px; }
 .staff-login:hover { color: var(--ink); }
+
+/* マイク・カメラの横の矢印と、機器を選ぶメニュー */
+.split { display: inline-flex; align-items: center; position: relative; }
+.caret { width: 20px; height: 46px; margin-left: -6px; border: none; border-radius: 0 999px 999px 0; background: rgba(255,255,255,.07); color: #c9ced6; cursor: pointer; display: grid; place-items: center; padding: 0 2px 0 0; }
+.caret:hover { background: rgba(255,255,255,.16); color: #fff; }
+.caret svg { width: 16px; height: 16px; }
+.split .round { position: relative; z-index: 1; }
+.split .round.off + .caret { background: rgba(198,61,47,.35); color: #fff; }
+.devmenu { min-width: 280px; max-width: 340px; padding: 8px; }
+.dm-title { font-size: 11px; font-weight: 600; letter-spacing: .1em; color: var(--ink-3); padding: 8px 10px 4px; }
+.dm-item { display: grid; grid-template-columns: 18px 1fr; gap: 6px; align-items: center; }
+.dm-check { color: #3fbf7f; font-weight: 700; }
+.dm-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dm-empty { font-size: 12px; color: var(--ink-3); padding: 4px 10px 8px; }
+.dm-more { border-top: 1px solid var(--line); margin-top: 6px; border-radius: 0 0 6px 6px; color: var(--ink-2); }
+@media (max-width: 720px) { .caret { display: none; } }
+
+/* ひとりのときの案内：閉じるボタン */
+.alone-card { position: relative; }
+.alone-x { position: absolute; top: 10px; right: 12px; border: none; background: none; color: #8d949e; font-size: 20px; line-height: 1; cursor: pointer; padding: 4px; }
+.alone-x:hover { color: #eceef1; }
+
+/* 暗い配色のダイアログでも選択欄の文字を読めるように */
+select { color: var(--ink); }
+body.in-call .modal select { background: #0f1216; color: #eceef1; border-color: #333944; }
+body.in-call .modal select option { background: #161a20; color: #eceef1; }
+body.in-call .modal .field label { color: #a7adb7; }
+body.in-call .modal .muted { color: #a7adb7; }
