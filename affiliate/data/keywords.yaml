@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 生成ai スクール 補助金
-  intent: commercial
-  category: school
-  program: school-general
-  score: 60000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 生成ai スクール 安い
   intent: commercial
   category: school
@@ -265,6 +257,15 @@ keywords:
   boost: 3.0
   source: google-suggest
   slug: kredo-hyouban
+- keyword: 生成ai スクール 補助金
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: seisei-ai-school-hojokin
 - keyword: 生成ai スクール 比較
   intent: commercial
   category: school
