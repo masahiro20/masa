@@ -18,7 +18,7 @@
       <span class="word">COMPASS<i>.</i></span>
       <span class="sub">Meet</span>
     </a>
-    <nav class="who hidden" id="whoBox"><span id="whoName"></span><a class="btn ghost sm" href="/records">打ち合わせ記録</a><button class="btn ghost sm" id="logout">ログアウト</button></nav>
+    <nav class="who hidden" id="whoBox"><span id="whoName"></span><a class="btn ghost sm" href="/records">打ち合わせ記録</a><button class="btn ghost sm hidden" id="pwLink">パスワード変更</button><button class="btn ghost sm" id="logout">ログアウト</button></nav>
   </header>
 
   <main class="hero">
@@ -82,6 +82,19 @@
           <div class="field"><label for="loginPw">パスワード</label><input id="loginPw" type="password" autocomplete="current-password" required></div>
           <button class="btn primary" type="submit">ログイン</button>
           <p class="muted small error-text hidden" id="loginErr" role="alert"></p>
+        </form>
+      </section>
+
+      <!-- パスワードの変更（初回は必須） -->
+      <section id="pwBox" class="hidden">
+        <h2 id="pwTitle">パスワードを変更してください</h2>
+        <p class="muted small" id="pwLead">はじめてのログインです。お渡しした初期パスワードは、ご自身だけが知っているパスワードに変えてから使ってください。</p>
+        <form id="pwForm" autocomplete="on">
+          <div class="field"><label for="pwCur">いまのパスワード</label><input id="pwCur" type="password" autocomplete="current-password" required></div>
+          <div class="field"><label for="pwNew">新しいパスワード（10 文字以上・社員 ID を含まない）</label><input id="pwNew" type="password" autocomplete="new-password" minlength="10" required></div>
+          <div class="field"><label for="pwNew2">新しいパスワード（確認）</label><input id="pwNew2" type="password" autocomplete="new-password" minlength="10" required></div>
+          <div class="row"><button class="btn primary" type="submit">変更する</button><button class="btn ghost hidden" type="button" id="pwCancel">やめる</button></div>
+          <p class="muted small error-text hidden" id="pwErr" role="alert"></p>
         </form>
       </section>
 

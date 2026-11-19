@@ -366,8 +366,8 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
       return fail(404, '見つかりません');
     }
     if (req.method === 'GET' && a === 'me') {
-      const staff = await auth.staffOf(req);
-      return staff ? ok({ staff: { id: staff.id, name: staff.name, role: staff.role } }) : fail(401, 'ログインしていません');
+      const staff = await auth.staffOf(req, { allowMustChange: true });
+      return staff ? ok({ staff: { id: staff.id, name: staff.name, role: staff.role, mustChange: !!staff.mustChange, canChangePassword: staff.via === 'password' } }) : fail(401, 'ログインしていません');
     }
     if (req.method !== 'POST') return fail(405, '使えない操作です');
     if (!auth.sameOrigin(req)) return fail(403, '不正な送信元です');
@@ -384,8 +384,16 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
       if (r.error) return fail(401, 'COMPASS からの引き継ぎに失敗しました');
       return ok({ staff: r.staff }, 200, { 'Set-Cookie': r.cookie });
     }
+    if (a === 'password') {
+      const staff = await auth.staffOf(req, { allowMustChange: true });
+      if (!staff) return fail(401, 'ログインしていません');
+      const r = await auth.changePassword(req, staff, req.body.current, req.body.next);
+      if (r.error === 429) return tooMany(r);
+      if (r.error) return fail(r.error, r.message);
+      return ok({ staff: r.staff }, 200, { 'Set-Cookie': r.cookie });
+    }
     if (a === 'logout') {
-      const staff = await auth.staffOf(req);
+      const staff = await auth.staffOf(req, { allowMustChange: true });
       return ok({ ok: true }, 200, { 'Set-Cookie': await auth.logout(staff) });
     }
     return fail(404, '見つかりません');

@@ -277,8 +277,10 @@ function layout() {
     || tiles.find((t) => t.classList.contains('screen'));
   const newSharer = shareTile ? shareTile.dataset.id : null;
   if (newSharer !== sharerId) {
+    // 共有が止まった・別の人に替わったときだけ書き込みを消す。
+    // 「共有が始まった」の知らせより先に書き込みが届くことがあるので、始まったときは消さない
+    if (sharerId && typeof annBoard !== 'undefined') { annBoard.shapes = []; annBoard.dirty = true; }
     sharerId = newSharer;
-    if (typeof annBoard !== 'undefined') { annBoard.shapes = []; annBoard.dirty = true; } // 共有が変わったら書き込みは消す
     if (!sharerId && annOn) setAnn(false);
   }
   $('annBtn').classList.toggle('hidden', !sharerId);

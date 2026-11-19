@@ -48,6 +48,18 @@ async function refreshMe() {
     history.replaceState(null, '', '/');
   }
   const r = await jfetch('/api/auth/me');
+  const must = r.ok && r.body.staff.mustChange;
+  $('pwBox').classList.toggle('hidden', !must);
+  $('pwCancel').classList.add('hidden');
+  $('pwTitle').textContent = 'パスワードを変更してください';
+  $('pwLead').classList.remove('hidden');
+  $('pwLink').classList.toggle('hidden', !(r.ok && r.body.staff.canChangePassword && !must));
+  if (must) {
+    for (const id of ['loginBox', 'createBox', 'listBox']) $(id).classList.add('hidden');
+    $('whoBox').classList.remove('hidden');
+    $('whoName').textContent = `${r.body.staff.name} さん`;
+    return;
+  }
   const signed = r.ok;
   $('loginBox').classList.toggle('hidden', signed);
   $('createBox').classList.toggle('hidden', !signed);
@@ -62,6 +74,24 @@ $('loginForm').onsubmit = async (e) => {
   const r = await jfetch('/api/auth/login', { method: 'POST', body: JSON.stringify({ id: $('loginId').value.trim(), password: $('loginPw').value }) });
   $('loginPw').value = '';
   if (!r.ok) { $('loginErr').textContent = r.body.error || 'ログインできませんでした'; $('loginErr').classList.remove('hidden'); return; }
+  refreshMe();
+};
+$('pwLink').onclick = () => {
+  $('pwBox').classList.remove('hidden');
+  $('pwTitle').textContent = 'パスワードを変更';
+  $('pwLead').classList.add('hidden');
+  $('pwCancel').classList.remove('hidden');
+  $('pwCur').focus();
+};
+$('pwCancel').onclick = () => $('pwBox').classList.add('hidden');
+$('pwForm').onsubmit = async (e) => {
+  e.preventDefault();
+  const err = $('pwErr'); err.classList.add('hidden');
+  if ($('pwNew').value !== $('pwNew2').value) { err.textContent = '新しいパスワードが一致しません'; err.classList.remove('hidden'); return; }
+  const r = await jfetch('/api/auth/password', { method: 'POST', body: JSON.stringify({ current: $('pwCur').value, next: $('pwNew').value }) });
+  if (!r.ok) { err.textContent = r.body.error || '変更できませんでした'; err.classList.remove('hidden'); return; }
+  for (const id of ['pwCur', 'pwNew', 'pwNew2']) $(id).value = '';
+  toast('パスワードを変更しました');
   refreshMe();
 };
 $('logout').onclick = async () => { await jfetch('/api/auth/logout', { method: 'POST', body: '{}' }); refreshMe(); };
