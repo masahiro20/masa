@@ -823,10 +823,11 @@ setInterval(() => {
   }
 }, 300);
 
-// 3 秒ごとに、往復時間と取りこぼしから回線の状態を判定する
+// 3 秒ごとに、往復時間・取りこぼし・送る映像の状態から「回線」か「パソコンの処理」かを見分ける
+const diag = { level: 0, cause: 'ok', out: null, inn: null, rtt: 0, loss: 0, relay: false, warnedCpu: 0 };
 setInterval(async () => {
   if (!inCall) return;
-  let worst = 0;
+  let worst = 0; let cpu = 0; let bw = 0; let outInfo = null; let inInfo = null; let rttMax = 0; let lossMax = 0; let relayAny = false;
   for (const p of peers.values()) {
     if (p.pc.connectionState !== 'connected') continue;
     try {
@@ -839,11 +840,21 @@ setInterval(async () => {
           const lc = byId.get(r.localCandidateId); if (lc && lc.candidateType === 'relay') relay = true;
         }
         if (r.type === 'inbound-rtp' && !r.isRemote) { lost += r.packetsLost || 0; recv += r.packetsReceived || 0; }
+        if (r.type === 'outbound-rtp' && r.kind === 'video' && r.frameWidth) {
+          if (r.qualityLimitationReason === 'cpu') cpu++;
+          if (r.qualityLimitationReason === 'bandwidth') bw++;
+          if (!outInfo || r.frameWidth > outInfo.w) outInfo = { w: r.frameWidth, h: r.frameHeight, fps: Math.round(r.framesPerSecond || 0), why: r.qualityLimitationReason || 'none' };
+        }
+        if (r.type === 'inbound-rtp' && r.kind === 'video' && r.frameWidth) {
+          const fps = Math.round(r.framesPerSecond || 0);
+          if (!inInfo || fps < inInfo.fps) inInfo = { w: r.frameWidth, h: r.frameHeight, fps, name: p.name };
+        }
       });
       const prev = p.stats;
       const dl = lost - (prev.lost || 0); const dr = recv - (prev.recv || 0);
       const lossRate = dr + dl > 0 ? dl / (dr + dl) : 0;
       p.stats = { lost, recv, rtt, lossRate, relay };
+      rttMax = Math.max(rttMax, rtt); lossMax = Math.max(lossMax, lossRate); relayAny = relayAny || relay;
       const level = rtt > 0.45 || lossRate > 0.08 ? 2 : rtt > 0.25 || lossRate > 0.03 ? 1 : 0;
       worst = Math.max(worst, level);
       const q = p.tile.querySelector('.q');
@@ -851,10 +862,43 @@ setInterval(async () => {
       q.title = `往復 ${Math.round(rtt * 1000)}ms・取りこぼし ${(lossRate * 100).toFixed(1)}%${relay ? '・中継サーバー経由' : ''}`;
     } catch (_) { /* 統計が取れないブラウザ */ }
   }
+  const cause = cpu ? 'cpu' : (worst || bw) ? 'net' : 'ok';
+  Object.assign(diag, { level: Math.max(worst, cpu ? 1 : 0), cause, out: outInfo, inn: inInfo, rtt: rttMax, loss: lossMax, relay: relayAny });
   const nb = $('netBadge');
-  nb.textContent = peers.size ? ['回線 良好', '回線 やや不安定', '回線 不安定'][worst] : '';
-  nb.className = `net l${worst}`;
+  nb.textContent = !peers.size ? '' : cause === 'cpu' ? 'パソコンの処理が重い' : ['回線 良好', '回線 やや不安定', '回線 不安定'][worst];
+  nb.className = `net l${diag.level}`;
+  // 処理が追いつかないときは、軽くする方法を一度だけ案内する
+  if (cause === 'cpu' && Date.now() - diag.warnedCpu > 120000) {
+    diag.warnedCpu = Date.now();
+    if (fx.active) toast('パソコンの処理が追いつかず、映像がカクついています。背景のぼかしをオフにすると滑らかになります', [['背景をオフにする', () => applyFx('none')]], 15000);
+    else toast('パソコンの処理が追いつかず、映像がカクついています。ほかのアプリやブラウザのタブを閉じると改善します', null, 8000);
+  }
 }, 3000);
+
+// 「回線」の表示を押すと、原因の見立てを出す
+function showDiag() {
+  const box = el('div', 'diag');
+  const verdict = diag.cause === 'cpu' ? 'パソコンの処理が追いついていません（回線ではありません）'
+    : diag.cause === 'net' ? '回線が不安定です（どちらかのインターネットの状態）' : '問題は見当たりません';
+  box.appendChild(el('p', 'diag-v', verdict));
+  const rows = [
+    ['あなたが送っている映像', diag.out ? `${diag.out.w}×${diag.out.h}・毎秒 ${diag.out.fps} コマ` : '—'],
+    ['届いている映像（いちばん悪い人）', diag.inn ? `${diag.inn.name} さん：毎秒 ${diag.inn.fps} コマ` : '—'],
+    ['往復時間', `${Math.round(diag.rtt * 1000)} ms`],
+    ['取りこぼし', `${(diag.loss * 100).toFixed(1)} %`],
+    ['背景の加工', fx.active ? 'オン' : 'オフ'],
+  ];
+  const dl = el('dl', 'diag-t');
+  for (const [k, v] of rows) { dl.appendChild(el('dt', '', k)); dl.appendChild(el('dd', '', v)); }
+  box.appendChild(dl);
+  const tips = el('ul', 'small');
+  if (diag.cause === 'cpu') ['背景のぼかし・背景画像をオフにする', 'ほかのアプリ（Zoom・Teams など）や使っていないタブを閉じる', 'ノートパソコンは電源につなぐ'].forEach((t) => tips.appendChild(el('li', '', t)));
+  else if (diag.cause === 'net') ['Wi-Fi のルーターに近づく、または有線でつなぐ', '同じ回線で動画や大きなファイルのやりとりをしていないか確かめる', '映像が止まる場合は、カメラをオフにすると声は安定します'].forEach((t) => tips.appendChild(el('li', '', t)));
+  if (tips.children.length) box.appendChild(tips);
+  const acts = [['閉じる', true, 'primary']];
+  if (fx.active) acts.unshift(['背景をオフにする', 'fx', 'ghost']);
+  modal('通話の状態', box, acts).then((v) => { if (v === 'fx') applyFx('none'); });
+}
 
 window.addEventListener('online', () => { if (!inCall) return; for (const id of peers.keys()) restartWith(id); toast('ネットワークが戻りました。つなぎ直しています'); });
 window.addEventListener('offline', () => { if (inCall) toast('ネットワークが切れました。戻ると自動でつなぎ直します', null, 6000); });
@@ -1727,6 +1771,7 @@ $('pMic').onclick = $('mic').onclick = () => { micOn = !micOn; refreshLocal(); r
 $('pCam').onclick = $('cam').onclick = () => { camOn = !camOn; refreshLocal(); };
 $('pSettings').onclick = deviceDialog;
 $('pFx').onclick = fxDialog;
+$('netBadge').onclick = showDiag;
 $('micChip').onclick = (e) => { e.stopPropagation(); openDevMenu('mic', e.currentTarget); };
 $('spkChip').onclick = (e) => { e.stopPropagation(); openDevMenu('speaker', e.currentTarget); };
 $('camChip').onclick = (e) => { e.stopPropagation(); openDevMenu('cam', e.currentTarget); };

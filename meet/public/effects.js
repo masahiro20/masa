@@ -5,6 +5,8 @@
 const BASE = '/static/vendor/mediapipe';
 const SEG_W = 256; const SEG_H = 144; // 見分けに使う大きさ（小さいほど軽い）
 const FPS = 24;
+// パソコンの速さに合わせて、出す映像の大きさと人の見分けの回数を自動で下げる（カクつき防止）
+const LEVELS = [{ w: 960, every: 1 }, { w: 800, every: 2 }, { w: 640, every: 2 }, { w: 512, every: 3 }];
 
 export const PRESETS = [
   { id: 'office', label: 'オフィス', src: '/static/bg/office.svg' },
@@ -68,6 +70,10 @@ export class Effects {
     this.sctx = this.small.getContext('2d', { willReadFrequently: false });
     this.mask = document.createElement('canvas'); this.mask.width = SEG_W; this.mask.height = SEG_H;
     this.mctx = this.mask.getContext('2d');
+    // 縁をやわらかくした形（小さいままぼかすので軽い）
+    this.soft = document.createElement('canvas'); this.soft.width = SEG_W; this.soft.height = SEG_H;
+    this.softCtx = this.soft.getContext('2d');
+    this.level = 0; this.cost = 0; this.n = 0;
     this.maskData = this.mctx.createImageData(SEG_W, SEG_H);
     this.prev = new Float32Array(SEG_W * SEG_H);
     this.blurC = document.createElement('canvas');
@@ -114,7 +120,7 @@ export class Effects {
     if (this.source && !this.video.srcObject) this.setSource(this.source);
     if (!this.track || this.track.readyState !== 'live') {
       const s = this.source && this.source.getSettings ? this.source.getSettings() : {};
-      this.out.width = Math.min(1280, s.width || 1280); this.out.height = Math.round(this.out.width * ((s.height || 720) / (s.width || 1280)));
+      this.out.width = Math.min(LEVELS[this.level].w, s.width || 1280); this.out.height = Math.round(this.out.width * ((s.height || 720) / (s.width || 1280)));
       this.stream = this.out.captureStream(FPS);
       this.track = this.stream.getVideoTracks()[0];
       if ('contentHint' in this.track) this.track.contentHint = 'motion';
@@ -134,11 +140,16 @@ export class Effects {
     const v = this.video;
     if (!v.videoWidth || v.readyState < 2) return;
     this.busy = true;
+    const t0 = performance.now();
     try {
-      const W = this.out.width; const H = Math.round(W * v.videoHeight / v.videoWidth);
+      const L = LEVELS[this.level];
+      const W = Math.min(L.w, v.videoWidth); const H = Math.round(W * v.videoHeight / v.videoWidth);
+      if (this.out.width !== W) this.out.width = W;
       if (this.out.height !== H) this.out.height = H;
-      this.sctx.drawImage(v, 0, 0, SEG_W, SEG_H);
-      if (this.seg.test) this.testMask();
+      this.n++;
+      const doSeg = this.n % L.every === 0 || this.n < 3;
+      if (doSeg) this.sctx.drawImage(v, 0, 0, SEG_W, SEG_H);
+      if (!doSeg) { /* 前の形を使い回す */ } else if (this.seg.test) this.testMask();
       else {
         let ts = performance.now(); if (ts <= this.lastTs) ts = this.lastTs + 1; this.lastTs = ts;
         this.seg.segmentForVideo(this.small, ts, (res) => {
@@ -149,7 +160,16 @@ export class Effects {
       this.compose(v, W, H);
     } catch (e) {
       console.error(e);
-    } finally { this.busy = false; }
+    } finally {
+      this.busy = false;
+      // 1 コマにかかった時間をならして見て、重ければ一段軽く、余裕があれば一段戻す
+      const dt = performance.now() - t0;
+      this.cost = this.cost ? this.cost * 0.9 + dt * 0.1 : dt;
+      if (this.n % 48 === 0) {
+        if (this.cost > 22 && this.level < LEVELS.length - 1) { this.level++; this.cost = 0; }
+        else if (this.cost < 8 && this.level > 0) { this.level--; this.cost = 0; }
+      }
+    }
   }
 
   testMask() {
@@ -165,15 +185,21 @@ export class Effects {
   applyMask(arr, w, h) {
     const d = this.maskData.data; const prev = this.prev; const n = SEG_W * SEG_H;
     const sx = w / SEG_W; const sy = h / SEG_H;
+    const same = w === SEG_W && h === SEG_H;
     for (let i = 0; i < n; i++) {
-      const x = i % SEG_W; const y = (i / SEG_W) | 0;
-      let c = (w === SEG_W && h === SEG_H) ? arr[i] : arr[((y * sy) | 0) * w + ((x * sx) | 0)];
+      let c;
+      if (same) c = arr[i]; else { const x = i % SEG_W; const y = (i / SEG_W) | 0; c = arr[((y * sy) | 0) * w + ((x * sx) | 0)]; }
       c = prev[i] * 0.35 + c * 0.65; prev[i] = c;
       // 0.35〜0.75 をなだらかにつなぐ
       let t = (c - 0.35) / 0.4; t = t < 0 ? 0 : t > 1 ? 1 : t; t = t * t * (3 - 2 * t);
       d[i * 4 + 3] = (t * 255) | 0;
     }
     this.mctx.putImageData(this.maskData, 0, 0);
+    const sc = this.softCtx;
+    sc.clearRect(0, 0, SEG_W, SEG_H);
+    if ('filter' in sc) sc.filter = 'blur(1px)';
+    sc.drawImage(this.mask, 0, 0);
+    if ('filter' in sc) sc.filter = 'none';
   }
 
   compose(v, W, H) {
@@ -185,9 +211,7 @@ export class Effects {
     c.drawImage(v, 0, 0, W, H);
     c.globalCompositeOperation = 'destination-in';
     c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
-    if (this.hasFilter) c.filter = 'blur(2px)';
-    c.drawImage(this.mask, 0, 0, W, H);
-    c.filter = 'none';
+    c.drawImage(this.soft, 0, 0, W, H);
     // 2) 背景：人の後ろに描く
     c.globalCompositeOperation = 'destination-over';
     if (this.mode === 'image' && this.image) this.drawCover(c, this.image, W, H);
