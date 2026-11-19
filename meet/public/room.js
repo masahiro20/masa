@@ -3,6 +3,7 @@
 // 各接続には最初から「音声・映像の枠」と「書き込み用のデータチャネル」を用意し、
 // カメラ⇔画面共有の切り替えは枠の中身を差し替えるだけにしている（つなぎ直しが要らない）。
 import { Board, COLORS, WIDTHS, fileToDataUrl, pdfToDataUrl } from './board.js';
+import { Effects, PRESETS, available as fxAvailable, prepareCustomImage } from './effects.js';
 
 const $ = (id) => document.getElementById(id);
 const roomId = location.pathname.split('/').pop();
@@ -25,6 +26,7 @@ const ICON = {
   notes: I('M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm2 16H8v-2h8v2Zm0-4H8v-2h8v2Zm-3-5V3.5L18.5 9H13Z'),
   more: I('M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z'),
   gear: I('M19.14 12.94a7.07 7.07 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54A.5.5 0 0 0 13.9 2h-3.84a.5.5 0 0 0-.49.42l-.36 2.54a7 7 0 0 0-1.62.94l-2.39-.96a.5.5 0 0 0-.61.22L2.67 8.48a.5.5 0 0 0 .12.64l2.03 1.58a7.07 7.07 0 0 0 0 1.88l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.3.61.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.25.42.49.42h3.84c.24 0 .44-.18.49-.42l.36-2.54a7 7 0 0 0 1.62-.94l2.39.96c.22.08.48 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z'),
+  sparkle: I('M12 2l1.9 5.1L19 9l-5.1 1.9L12 16l-1.9-5.1L5 9l5.1-1.9L12 2Zm7 12 .95 2.55L22.5 17.5l-2.55.95L19 21l-.95-2.55-2.55-.95 2.55-.95L19 14ZM5 15l.7 1.8 1.8.7-1.8.7L5 20l-.7-1.8-1.8-.7 1.8-.7L5 15Z'),
   hand: I('M21 7a2 2 0 0 0-4 0v4h-1V4a2 2 0 0 0-4 0v7h-1V5a2 2 0 0 0-4 0v8.5l-1.6-2.4a2 2 0 0 0-3.3 2.3l3.6 5.4A7 7 0 0 0 11.5 22H14a7 7 0 0 0 7-7V7Z'),
 };
 const REACT_LABEL = { like: 'いいね', clap: '拍手', ok: '了解', question: '質問' };
@@ -86,6 +88,8 @@ async function post(action, body) {
 
 const initial = (name) => (name || '?').trim().slice(0, 1).toUpperCase();
 const isHost = () => me.role === 'host';
+// 名前の横の札：社員の主催者は「担当」、役割を渡されたお客様は「主催者」
+const roleLabel = (role, staff) => (role === 'host' ? (staff ? '担当' : '主催者') : '');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
@@ -148,6 +152,9 @@ async function openDevices() {
   $('micChip').classList.toggle('ng', !a); $('camChip').classList.toggle('ng', !v);
   startMeter();
   refreshLocal();
+  // 前回の背景の設定を引き継ぐ
+  const saved = fxSaved();
+  if (saved.mode !== 'none' && !fx.active && camTrack() && await fxAvailable()) await applyFx(saved.mode, saved.imageId, true);
 }
 
 function startMeter() {
@@ -172,11 +179,17 @@ function startMeter() {
 
 const audioTrack = () => (camStream && camStream.getAudioTracks()[0]) || null;
 const camTrack = () => (camStream && camStream.getVideoTracks()[0]) || null;
-function outgoingVideo() { if (screenStream) return screenStream.getVideoTracks()[0] || null; return camOn ? camTrack() : null; }
+// 背景のぼかし・画像を使っているときは、加工した映像を送る
+const fx = new Effects();
+const sendCam = () => (fx.active ? fx.track : camTrack());
+const camView = () => (fx.active ? fx.stream : camStream);
+function outgoingVideo() { if (screenStream) return screenStream.getVideoTracks()[0] || null; return camOn ? sendCam() : null; }
 
 function refreshLocal() {
   const a = audioTrack(); if (a) a.enabled = micOn;
   const v = camTrack(); if (v) v.enabled = camOn;
+  fx.setSource(v); fx.setPaused(!camOn);
+  if ($('preview').srcObject !== camView()) $('preview').srcObject = camView();
   setRound($('pMic'), micOn, ICON.mic, ICON.micOff);
   setRound($('pCam'), camOn, ICON.cam, ICON.camOff);
   setRound($('mic'), micOn, ICON.mic, ICON.micOff);
@@ -249,7 +262,11 @@ async function openDevMenu(kind, anchor) {
     section('マイク', 'audioinput', 'mic');
     if ('setSinkId' in HTMLMediaElement.prototype) section('スピーカー', 'audiooutput', 'speaker');
     else m.appendChild(el('div', 'dm-empty', 'スピーカーは端末の設定で切り替えてください'));
-  } else section('カメラ', 'videoinput', 'cam');
+  } else {
+    section('カメラ', 'videoinput', 'cam');
+    const bg = el('button', 'menu-item dm-more', '背景とエフェクト'); bg.onclick = () => { m.classList.add('hidden'); fxDialog(); };
+    m.appendChild(bg);
+  }
   const more = el('button', 'menu-item dm-more', 'くわしい設定'); more.onclick = () => { m.classList.add('hidden'); deviceDialog(); };
   m.appendChild(more);
   const r = anchor.getBoundingClientRect();
@@ -285,7 +302,7 @@ function makeTile(id, name, role, isSelf) {
   tile.innerHTML = '<video autoplay playsinline></video><div class="avatar"><span></span></div><div class="name"><span class="mic"></span><span class="nm"></span><span class="role"></span><span class="hand hidden"></span></div><div class="q" title="回線"></div><div class="status hidden"></div>';
   tile.querySelector('.avatar span').textContent = initial(name);
   tile.querySelector('.nm').textContent = isSelf ? `${name}（あなた）` : name;
-  if (role === 'host') tile.querySelector('.role').textContent = '担当';
+  tile.querySelector('.role').textContent = roleLabel(role, isSelf ? me.staff : (rosterInfo.get(id) || {}).staff);
   tile.querySelector('.hand').innerHTML = ICON.hand;
   if (isSelf) tile.querySelector('video').muted = true;
   else if (devices.speaker && tile.querySelector('video').setSinkId) tile.querySelector('video').setSinkId(devices.speaker).catch(() => {});
@@ -313,7 +330,7 @@ let selfTile = null;
 function updateSelfTile() {
   if (!selfTile) return;
   const v = selfTile.querySelector('video');
-  const stream = screenStream || camStream;
+  const stream = screenStream || camView();
   if (v.srcObject !== stream) v.srcObject = stream;
   setTileState(selfTile, { mic: micOn, cam: camOn && !!camTrack(), screen: !!screenStream });
 }
@@ -791,8 +808,8 @@ const handlers = {
   kicked: () => { stopAll(); fatal('打ち合わせから退出しました', '担当者によって退出の操作がされました。'); },
   closed: (d) => endedScreen(d.reason),
   admitted: (d) => enterCall(d),
-  'peer-joined': ({ id, name, role }) => {
-    rosterInfo.set(id, { name, role });
+  'peer-joined': ({ id, name, role, staff: st }) => {
+    rosterInfo.set(id, { name, role, staff: st });
     toast(`${name} さんが参加しました`);
     if (!peers.has(id)) createPeer(id, name, role, false);
     waiting.delete(id);
@@ -835,6 +852,7 @@ const handlers = {
     if (t) t.querySelector('.hand').classList.toggle('hidden', !up);
     if (up && id !== me.peerId) toast(`${name} さんが手を挙げています`);
   },
+  role: ({ id, name, role, by }) => onRole(id, name, role, by),
   'share-request': ({ id, name }) => {
     toast(`${name} さんが画面共有を希望しています`, [['許可する', () => post('perms', { guestScreen: true }).then((r) => { room.perms = r.perms; renderPeople(); }).catch((e) => toast(e.message))]], 20000);
     beep();
@@ -876,7 +894,12 @@ async function listen() {
       if (j.state === 'ended') { endedScreen('ended'); break; }
       if (j.state === 'denied' || j.state === 'kicked') { handlers[j.state](); break; }
       if (j.roster) {
-        for (const x of j.roster) rosterInfo.set(x.id, { name: x.name, role: x.role });
+        for (const x of j.roster) {
+          rosterInfo.set(x.id, { name: x.name, role: x.role, staff: x.staff });
+          // 役割の知らせを取りこぼしても、一覧で追いつく
+          if (inCall && x.id === me.peerId && x.role !== me.role) onRole(x.id, x.name, x.role, '');
+          const pp = peers.get(x.id); if (inCall && pp && pp.role !== x.role) onRole(x.id, x.name, x.role, '');
+        }
         if (inCall) { const present = new Set(j.roster.map((x) => x.id)); for (const id of [...peers.keys()]) if (!present.has(id)) dropPeer(id); }
       }
       if (j.state === 'waiting' && typeof j.hostPresent === 'boolean') showWaiting(j.hostPresent);
@@ -893,7 +916,7 @@ async function enterCall({ you, peers: others, waiting: w, room: r }, resumed) {
   inCall = true;
   callStart = Date.now();
   document.body.classList.add('in-call');
-  if (you) Object.assign(me, { role: you.role, name: you.name });
+  if (you) Object.assign(me, { role: you.role, name: you.name, staff: !!you.staff || !!staff });
   if (r) room = { ...room, ...r };
   document.body.classList.toggle('is-host', isHost());
   $('waitBox').classList.add('hidden');
@@ -906,12 +929,13 @@ async function enterCall({ you, peers: others, waiting: w, room: r }, resumed) {
   updateSelfTile();
   for (const x of w || []) waiting.set(x.id, x);
   for (const o of others || []) {
-    rosterInfo.set(o.id, { name: o.name, role: o.role });
+    rosterInfo.set(o.id, { name: o.name, role: o.role, staff: o.staff });
     if (resumed) await post('signal', { to: o.id, data: { type: 'resync' } }).catch(() => {});
     createPeer(o.id, o.name, o.role, true);
   }
   refreshLocal(); renderPeople(); updateRec(); updateChatNote(); syncToolbar(); tick();
-  if (isHost()) loadNotes();
+  document.body.classList.toggle('is-staff', !!me.staff);
+  if (me.staff) loadNotes();
   renderKnockCards();
 }
 
@@ -928,6 +952,45 @@ function stopAll() {
   inCall = false;
   document.body.classList.remove('in-call');
   try { sessionStorage.removeItem(STORE_KEY); } catch (_) { /* 何もしない */ }
+}
+
+// 主催者が抜けるとき：ほかに主催者がいなければ、誰かに渡すか、全員の通話を終えるかを選んでもらう
+async function leaveClicked() {
+  const others = [...peers.entries()];
+  const otherHost = others.some(([, p]) => p.role === 'host');
+  if (!isHost() || !others.length || otherHost) return leave();
+  const box = el('div', '');
+  box.appendChild(el('p', '', '退出すると、この打ち合わせを管理する人（入室の許可・終了など）がいなくなります。誰に主催者を渡しますか？'));
+  const sel = document.createElement('select'); sel.id = 'handoverTo'; sel.className = 'handover';
+  // 社員を先に、次に入った順
+  const st = (id) => ((rosterInfo.get(id) || {}).staff ? 1 : 0);
+  others.sort(([a], [b]) => st(b) - st(a));
+  for (const [id, p] of others) { const o = document.createElement('option'); o.value = id; o.textContent = `${p.name} さん`; sel.appendChild(o); }
+  box.appendChild(sel);
+  const v = await modal('退出の前に', box, [['やめる', false, 'ghost'], ['全員の通話を終了', 'end', 'danger'], ['主催者を渡して退出', 'hand', 'primary']]);
+  if (!v) return;
+  if (v === 'end') return endForAll();
+  try { await post('make-host', { target: sel.value }); } catch (e) { return toast(e.message); }
+  leave();
+}
+
+function onRole(id, name, role, by) {
+  const info = rosterInfo.get(id) || {};
+  rosterInfo.set(id, { ...info, name, role });
+  if (id === me.peerId) {
+    const was = me.role; me.role = role;
+    try { const s = JSON.parse(sessionStorage.getItem(STORE_KEY) || 'null'); if (s) { s.role = role; sessionStorage.setItem(STORE_KEY, JSON.stringify(s)); } } catch (_) { /* 何もしない */ }
+    document.body.classList.toggle('is-host', isHost());
+    if (selfTile) selfTile.querySelector('.role').textContent = roleLabel(role, me.staff);
+    if (role === 'host' && was !== 'host') toast(by ? `${by} さんから主催者を引き継ぎました。入室の許可や終了ができます` : '主催者を引き継ぎました。入室の許可や終了ができます', null, 7000);
+    if (role !== 'host' && was === 'host') { waiting.clear(); toast('主催者の役割が外れました'); }
+    refreshLocal(); syncToolbar(); updateChatNote();
+  } else {
+    const p = peers.get(id);
+    if (p) { p.role = role; p.tile.querySelector('.role').textContent = roleLabel(role, info.staff); }
+    if (role === 'host' && by !== me.name) toast(`${name} さんが主催者になりました`);
+  }
+  renderPeople();
 }
 
 function leave() {
@@ -1001,13 +1064,13 @@ function renderPeople() {
       row.append(ok, ng); box.appendChild(row); pane.appendChild(box);
     }
   }
-  const list = [{ id: me.peerId, name: `${me.name}（あなた）`, role: me.role, mic: micOn, self: true }, ...[...peers.entries()].map(([id, p]) => ({ id, name: p.name, role: p.role, mic: p.state.mic !== false, screen: p.state.screen }))];
+  const list = [{ id: me.peerId, name: `${me.name}（あなた）`, role: me.role, staff: me.staff, mic: micOn, self: true }, ...[...peers.entries()].map(([id, p]) => ({ id, name: p.name, role: p.role, staff: (rosterInfo.get(id) || {}).staff, mic: p.state.mic !== false, screen: p.state.screen }))];
   pane.appendChild(el('div', 'sect', `参加中（${list.length}）`));
   for (const x of list) {
     const row = el('div', 'person');
     row.appendChild(el('div', 'dot', initial(x.name)));
     const nm = el('div', 'nm', x.name);
-    if (x.role === 'host') nm.appendChild(el('span', 'role', '担当'));
+    if (x.role === 'host') nm.appendChild(el('span', 'role', roleLabel(x.role, x.staff)));
     row.appendChild(nm);
     const m = el('div', 'm'); m.innerHTML = x.mic ? '' : ICON.micOff; row.appendChild(m);
     if (isHost() && !x.self && x.role !== 'host') {
@@ -1015,6 +1078,12 @@ function renderPeople() {
       const mute = el('button', 'btn sm ghost', 'ミュート'); mute.onclick = () => post('mute', { target: x.id }).catch((e) => toast(e.message));
       menu.appendChild(mute);
       if (x.screen) { const ss = el('button', 'btn sm ghost', '共有停止'); ss.onclick = () => post('stop-share', { target: x.id }).catch((e) => toast(e.message)); menu.appendChild(ss); }
+      const mk = el('button', 'btn sm ghost', '主催者にする'); mk.dataset.makeHost = x.id;
+      mk.onclick = async () => {
+        const ok = await modal('主催者にする', `${x.name} さんを主催者にしますか？入室の許可・退出・打ち合わせの終了などができるようになります（メモと記録は社員だけが見られます）。`, [['やめる', false, 'ghost'], ['主催者にする', true, 'primary']]);
+        if (ok) post('make-host', { target: x.id }).catch((e) => toast(e.message));
+      };
+      menu.appendChild(mk);
       const kick = el('button', 'btn sm ghost danger-text', '退出'); kick.dataset.kick = x.id;
       kick.onclick = async () => {
         const ok = await modal('退出させる', `${x.name} さんを打ち合わせから退出させますか？`, [['やめる', false, 'ghost'], ['退出させる', true, 'danger']]);
@@ -1022,6 +1091,10 @@ function renderPeople() {
       };
       menu.appendChild(kick);
       row.appendChild(menu);
+    } else if (isHost() && !x.self && x.role === 'host' && !x.staff) {
+      const menu = el('div', 'acts');
+      const un = el('button', 'btn sm ghost', '主催者を外す'); un.onclick = () => post('unhost', { target: x.id }).catch((e) => toast(e.message));
+      menu.appendChild(un); row.appendChild(menu);
     }
     pane.appendChild(row);
   }
@@ -1176,6 +1249,7 @@ function buildMoreMenu() {
     for (const k of config.reactions || Object.keys(REACT_LABEL)) add(`リアクション：${REACT_LABEL[k] || k}`, () => post('react', { kind: k }).catch((e) => toast(e.message)));
     add(handUp ? '手を下げる' : '手を挙げる', () => { handUp = !handUp; post('hand', { up: handUp }).catch((e) => toast(e.message)); });
   }
+  add('背景とエフェクト', fxDialog);
   add('カメラ・マイクの設定', deviceDialog);
   if (/Android|iPhone|iPad/.test(navigator.userAgent)) add('カメラを切り替える（前・後）', flipCamera);
   add('全画面表示', () => { const s = $('stagewrap'); if (document.fullscreenElement) document.exitFullscreen(); else if (s.requestFullscreen) s.requestFullscreen().catch(() => {}); });
@@ -1184,6 +1258,71 @@ function buildMoreMenu() {
     add(room.recording.state === 'off' ? '文字起こしを依頼する' : '文字起こしを止める', recToggle);
     add('全員の通話を終了', endForAll, 'danger-text');
   }
+}
+
+// ---------- 背景とエフェクト ----------
+const FX_KEY = 'meet.fx'; const FX_CUSTOM = 'meet.fx.custom';
+const fxSaved = () => { try { return JSON.parse(localStorage.getItem(FX_KEY) || 'null') || { mode: 'none' }; } catch (_) { return { mode: 'none' }; } };
+const fxCustom = () => { try { return localStorage.getItem(FX_CUSTOM) || ''; } catch (_) { return ''; } };
+
+async function applyFx(mode, imageId, quiet) {
+  try {
+    await fx.set(mode, imageId, imageId === 'custom' ? fxCustom() : '');
+    try { localStorage.setItem(FX_KEY, JSON.stringify({ mode, imageId: imageId || null })); } catch (_) { /* 保存できなくても続ける */ }
+  } catch (e) {
+    console.error(e);
+    await fx.set('none').catch(() => {});
+    if (!quiet) toast('この端末では背景の機能を使えませんでした', null, 5000);
+  }
+  refreshLocal();
+}
+
+async function fxDialog() {
+  $('moreMenu').classList.add('hidden'); $('devMenu').classList.add('hidden');
+  const ok = await fxAvailable();
+  if (!ok) return modal('背景とエフェクト', 'この端末（ブラウザ）では、背景のぼかし・背景画像を使えません。パソコンの Chrome・Edge でお試しください。', [['閉じる', true, 'primary']]);
+  if (!camTrack()) return modal('背景とエフェクト', 'カメラが使えないため、背景は変えられません。', [['閉じる', true, 'primary']]);
+  const wrap = el('div', 'fx');
+  const pv = document.createElement('video'); pv.autoplay = true; pv.muted = true; pv.playsInline = true; pv.className = 'fx-preview';
+  const setPv = () => { pv.srcObject = camView(); };
+  setPv(); wrap.appendChild(pv);
+  wrap.appendChild(el('p', 'muted small', '映像の加工は、この端末の中だけで行います。外部には送りません。'));
+  const grid = el('div', 'fx-grid'); wrap.appendChild(grid);
+  const cur = fxSaved();
+  const items = [
+    { mode: 'none', label: 'なし', cls: 'fx-none' },
+    { mode: 'blur-light', label: '少しぼかす', cls: 'fx-blur1' },
+    { mode: 'blur', label: 'ぼかす', cls: 'fx-blur2' },
+    ...PRESETS.map((p) => ({ mode: 'image', imageId: p.id, label: p.label, img: p.src })),
+  ];
+  if (fxCustom()) items.push({ mode: 'image', imageId: 'custom', label: '自分の画像', img: fxCustom() });
+  const buttons = [];
+  const mark = (b) => buttons.forEach((x) => x.classList.toggle('on', x === b));
+  for (const it of items) {
+    const b = el('button', `fx-item ${it.cls || ''}`); b.type = 'button'; b.dataset.mode = it.mode; if (it.imageId) b.dataset.image = it.imageId;
+    if (it.img) { const im = document.createElement('img'); im.src = it.img; im.alt = ''; b.appendChild(im); }
+    b.appendChild(el('span', '', it.label));
+    if (it.mode === cur.mode && (it.imageId || null) === (cur.imageId || null)) b.classList.add('on');
+    b.onclick = async () => { mark(b); b.classList.add('busy'); await applyFx(it.mode, it.imageId); b.classList.remove('busy'); setPv(); };
+    buttons.push(b); grid.appendChild(b);
+  }
+  const add = el('button', 'fx-item fx-add'); add.type = 'button'; add.appendChild(el('span', '', '＋ 画像を選ぶ'));
+  const file = document.createElement('input'); file.type = 'file'; file.accept = 'image/png,image/jpeg,image/webp'; file.hidden = true;
+  add.onclick = () => file.click();
+  file.onchange = async () => {
+    const f = file.files[0]; if (!f) return;
+    try {
+      const url = await prepareCustomImage(f);
+      try { localStorage.setItem(FX_CUSTOM, url); } catch (_) { toast('画像を保存できませんでした（今回だけ使います）'); }
+      await fx.set('image', 'custom', url);
+      try { localStorage.setItem(FX_KEY, JSON.stringify({ mode: 'image', imageId: 'custom' })); } catch (_) { /* 何もしない */ }
+      refreshLocal(); setPv(); mark(null);
+      toast('背景の画像を設定しました。次回も同じ画像を使います');
+    } catch (e) { toast(e.message || '画像を読み込めませんでした'); }
+  };
+  grid.append(add, file);
+  await modal('背景とエフェクト', wrap, [['閉じる', true, 'primary']]);
+  pv.srcObject = null;
 }
 
 async function flipCamera() {
@@ -1280,7 +1419,7 @@ async function boot() {
 
   if (!window.RTCPeerConnection || !navigator.mediaDevices) return fatal('このブラウザでは参加できません', 'Chrome・Safari・Edge の新しい版でお開きください。LINE などのアプリの中で開いた場合は、右上のメニューから「ブラウザで開く」を選んでください。');
 
-  for (const [id, icon] of [['screen', ICON.screen], ['annBtn', ICON.pen], ['wbBtn', ICON.board], ['reactBtn', ICON.smile], ['leave', ICON.leave], ['peopleBtn', ICON.people], ['chatBtn', ICON.chat], ['notesBtn', ICON.notes], ['moreBtn', ICON.more], ['pSettings', ICON.gear]]) $(id).innerHTML = icon;
+  for (const [id, icon] of [['screen', ICON.screen], ['annBtn', ICON.pen], ['wbBtn', ICON.board], ['reactBtn', ICON.smile], ['leave', ICON.leave], ['peopleBtn', ICON.people], ['chatBtn', ICON.chat], ['notesBtn', ICON.notes], ['moreBtn', ICON.more], ['pSettings', ICON.gear], ['pFx', ICON.sparkle]]) $(id).innerHTML = icon;
   for (const b of document.querySelectorAll('.round[aria-label]')) b.dataset.tip = b.getAttribute('aria-label');
   buildToolbar(); buildReactMenu(); syncToolbar();
   // 画面共有ができない端末（スマートフォンなど）では、共有のボタンを出さない
@@ -1336,6 +1475,7 @@ async function boot() {
 $('pMic').onclick = $('mic').onclick = () => { micOn = !micOn; refreshLocal(); renderPeople(); };
 $('pCam').onclick = $('cam').onclick = () => { camOn = !camOn; refreshLocal(); };
 $('pSettings').onclick = deviceDialog;
+$('pFx').onclick = fxDialog;
 $('micChip').onclick = deviceDialog;
 $('camChip').onclick = deviceDialog;
 $('aloneCopy').onclick = () => navigator.clipboard.writeText(`${location.origin}/r/${roomId}`).then(() => {
@@ -1348,7 +1488,7 @@ $('camCaret').onclick = (e) => { e.stopPropagation(); openDevMenu('cam', e.curre
 $('screen').onclick = toggleScreen;
 $('annBtn').onclick = () => setAnn(!annOn);
 $('wbBtn').onclick = () => setWb(!wbOpen);
-$('leave').onclick = leave;
+$('leave').onclick = leaveClicked;
 $('joinBtn').onclick = join;
 $('name').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) join(); });
 $('peopleBtn').onclick = () => openSide('people');
@@ -1370,6 +1510,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 // 試験から中の様子を確かめるための窓口（画面の動作には使わない）
-window.__meet = { annBoard, wbBoard, peers, me, room: () => room, annRect, wbRect };
+window.__meet = { annBoard, wbBoard, peers, me, room: () => room, annRect, wbRect, fx };
 
 boot();

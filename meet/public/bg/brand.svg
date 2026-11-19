@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <radialGradient id="g" cx="0.3" cy="0.25" r="1"><stop offset="0" stop-color="#1f3550"/><stop offset="1" stop-color="#0d1828"/></radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g)"/>
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.07" stroke-width="2">
+    <rect x="900" y="160" width="560" height="420"/><line x1="1120" y1="160" x2="1120" y2="580"/><line x1="900" y1="380" x2="1120" y2="380"/>
+    <line x1="1120" y1="300" x2="1460" y2="300"/><path d="M1120 470 a 90 90 0 0 1 90 -90"/><rect x="1300" y="420" width="160" height="160"/>
+  </g>
+  <g transform="translate(1340 690)" opacity="0.9">
+    <circle r="34" fill="none" stroke="#e8edf3" stroke-width="3"/>
+    <path d="M0 -24 7 0H-7Z" fill="#c63d2f"/><path d="M0 24 -7 0h14Z" fill="#e8edf3"/>
+    <text x="52" y="11" font-family="Inter, 'Noto Sans JP', sans-serif" font-size="32" font-weight="700" letter-spacing="2" fill="#e8edf3">COMPASS<tspan fill="#c63d2f">.</tspan></text>
+  </g>
+</svg>

@@ -42,6 +42,7 @@
         <div class="ctrls">
           <button class="round" id="pMic" aria-label="マイク"></button>
           <button class="round" id="pCam" aria-label="カメラ"></button>
+          <button class="round" id="pFx" aria-label="背景とエフェクト" data-tip="背景とエフェクト"></button>
           <button class="round" id="pSettings" aria-label="カメラ・マイクの設定"></button>
         </div>
       </div>
@@ -65,7 +66,7 @@
         <a class="btn ghost" href="/">戻る</a>
       </div>
       <div class="wait muted hidden" id="waitBox"><div class="spinner"></div><span id="waitText">担当者が入室を許可するまで、このままお待ちください。</span></div>
-      <p class="muted small privacy">映像と音声は参加者の端末どうしで直接やりとりされ、録画はされません。</p>
+      <p class="muted small privacy">映像と音声は参加者の端末どうしで直接やりとりされ、録画はされません。背景のぼかしも、お使いの端末の中だけで処理します。</p>
     </div>
   </div>
 </div>
@@ -116,7 +117,7 @@
         <div class="tabs" role="tablist">
           <button class="tab" data-tab="people" role="tab">参加者</button>
           <button class="tab" data-tab="chat" role="tab">チャット</button>
-          <button class="tab host-only" data-tab="notes" role="tab">メモ</button>
+          <button class="tab staff-only" data-tab="notes" role="tab">メモ</button>
         </div>
         <button class="x" id="sideClose" aria-label="閉じる">×</button>
       </header>
@@ -151,7 +152,7 @@
     <div class="right">
       <button class="round" id="peopleBtn" aria-label="参加者"></button>
       <button class="round" id="chatBtn" aria-label="チャット"></button>
-      <button class="round host-only" id="notesBtn" aria-label="メモ"></button>
+      <button class="round staff-only" id="notesBtn" aria-label="メモ"></button>
       <button class="round" id="moreBtn" aria-label="その他"></button>
     </div>
   </div>

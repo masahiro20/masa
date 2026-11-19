@@ -109,7 +109,28 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
     await store.pipeline(cmds);
   }
 
-  function publicPeer(p) { return { id: p.id, name: p.name, role: p.role }; }
+  function publicPeer(p) { return { id: p.id, name: p.name, role: p.role, staff: !!p.staffId }; }
+
+  // 主催者の役割を渡す（待合室の一覧も一緒に渡し、すぐに入室の許可ができるようにする）
+  async function setRole(room, peers, p, role, by) {
+    p.role = role;
+    await putPeer(room, p);
+    await push(room.id, joinedIds(peers), 'role', { id: p.id, name: p.name, role, by: by || '' });
+    if (role === 'host') {
+      const waiting = Object.values(peers).filter((x) => x.state === 'waiting').map(publicPeer);
+      for (const w of waiting) await push(room.id, [p.id], 'knock', w);
+    }
+    await logEvent(room, { kind: role === 'host' ? 'host-given' : 'host-removed', name: p.name, by: by || '' });
+  }
+
+  // 主催者が誰もいなくなったら、残っている人に自動で渡す（社員を優先し、次に早く入った人）
+  async function ensureHost(room, peers) {
+    if (room.ended) return;
+    const joined = Object.values(peers).filter((p) => p.state === 'joined');
+    if (!joined.length || joined.some((p) => p.role === 'host')) return;
+    joined.sort((a, b) => (b.staffId ? 1 : 0) - (a.staffId ? 1 : 0) || (a.joinedAt || 0) - (b.joinedAt || 0));
+    await setRole(room, peers, joined[0], 'host', '');
+  }
 
   function roomSecret(room) { return unseal(room.sealed, `room:${room.id}`) || {}; }
 
@@ -150,6 +171,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
       } else if (stale && p.state === 'waiting') {
         await push(room.id, hostIds(peers), 'knock-cancel', { id: p.id });
       }
+      if (stale && p.role === 'host') await ensureHost(room, peers);
     }
   }
 
@@ -319,6 +341,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
         await push(room.id, joinedIds(peers), 'peer-left', { id: me.id, reason: 'left' });
         await logEvent(room, { kind: 'left', name: me.name, role: me.role, reason: 'left' });
         await recOnLeave(room, peers, me.id);
+        if (me.role === 'host') await ensureHost(room, peers);
       } else if (me.state === 'waiting') {
         await push(room.id, hostIds(peers), 'knock-cancel', { id: me.id });
       }
@@ -330,7 +353,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
 
     if (action === 'signal') return signal(room, peers, me, req.body);
     if (['chat', 'chat-delete', 'state', 'react', 'hand', 'rec-consent', 'transcript', 'share-request'].includes(action)) return participantAction(action, room, peers, me, req.body);
-    if (['admit', 'deny', 'kick', 'mute', 'perms', 'lock', 'end', 'rec-request', 'rec-stop', 'stop-share'].includes(action)) {
+    if (['admit', 'deny', 'kick', 'mute', 'perms', 'lock', 'end', 'rec-request', 'rec-stop', 'stop-share', 'make-host', 'unhost'].includes(action)) {
       if (me.role !== 'host') return fail(403, '主催者だけができる操作です');
       const r = await limiter.hit('host_action', me.id);
       if (!r.ok) return tooMany(r);
@@ -707,6 +730,20 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
       await store.pipeline(locked ? [['SET', `lock:${room.id}`, 1, 'EX', roomTtl(room)]] : [['DEL', `lock:${room.id}`]]);
       await push(room.id, everyone, 'locked', { locked });
       return ok({ ok: true, locked });
+    }
+    if (action === 'make-host') {
+      if (!target || target.state !== 'joined' || target.id === me.id) return fail(404, '対象の方が見つかりません');
+      if (target.role === 'host') return ok({ ok: true });
+      await setRole(room, peers, target, 'host', me.name);
+      return ok({ ok: true });
+    }
+    if (action === 'unhost') {
+      // 社員として入った主催者（担当者本人・管理者）からは外せない
+      if (!target || target.state !== 'joined' || target.role !== 'host') return fail(404, '対象の方が見つかりません');
+      if (target.staffId) return fail(403, '担当者の主催者の役割は外せません');
+      await setRole(room, peers, target, 'guest', me.name);
+      await ensureHost(room, peers);
+      return ok({ ok: true });
     }
     if (action === 'end') {
       await endRoom(room, peers, 'ended');

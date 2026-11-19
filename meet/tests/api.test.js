@@ -368,6 +368,52 @@ test('画面共有の希望：許可のないお客様が押すと、主催者�
   assert.equal((await g.act('share-request')).body.allowed, true);
 });
 
+test('主催者を渡す：渡された人は主催者の操作ができ、社員の主催者は外せない。お客様は渡せない', async () => {
+  const { s, room } = await newRoom();
+  const host = await hostIn(room.id, s);
+  const { p: g } = await t.joinAs(room.id, '山田');
+  const { p: g2 } = await t.joinAs(room.id, '花子');
+  await host.act('admit', { target: g.peerId });
+  await host.act('admit', { target: g2.peerId });
+  await g.poll(); await g2.poll(); await host.poll();
+  assert.equal((await g.act('make-host', { target: g2.peerId })).status, 403, 'お客様は主催者を渡せない');
+  assert.equal((await host.act('make-host', { target: g.peerId })).status, 200);
+  const ev = (await g2.poll()).body.events.find((e) => e.type === 'role');
+  assert.deepEqual([ev.data.id, ev.data.role, ev.data.by], [g.peerId, 'host', '中谷 真弘']);
+  const roster = (await g.poll()).body.roster;
+  assert.equal(roster.find((x) => x.id === g.peerId).role, 'host');
+  assert.equal(roster.find((x) => x.id === host.peerId).staff, true);
+  assert.equal(roster.find((x) => x.id === g.peerId).staff, false);
+  // 渡された人は主催者の操作ができる。ただし社員の主催者は外せない・退出させられない
+  assert.equal((await g.act('lock', { locked: false })).status, 200);
+  assert.equal((await g.act('unhost', { target: host.peerId })).status, 403);
+  assert.equal((await g.act('kick', { target: host.peerId })).status, 403);
+  // 社員の主催者は、渡した役割を外せる
+  assert.equal((await host.act('unhost', { target: g.peerId })).status, 200);
+  assert.equal((await g.act('lock', { locked: false })).status, 403);
+  // メモ・記録は社員だけ（主催者を渡されても見られない）
+  assert.equal((await t.call('GET', `/api/meetings/${room.id}`)).status, 401);
+});
+
+test('主催者が抜けると、残っている人に自動で主催者が渡り、待合室の人も引き継がれる', async () => {
+  const { s, room } = await newRoom();
+  const host = await hostIn(room.id, s);
+  const { p: g } = await t.joinAs(room.id, '山田');
+  await host.act('admit', { target: g.peerId });
+  await g.poll(); await host.poll();
+  const { p: g3 } = await t.joinAs(room.id, '後から来た人');
+  assert.equal((await host.act('leave')).status, 200);
+  const r = await g.poll();
+  const role = r.body.events.find((e) => e.type === 'role');
+  assert.equal(role.data.id, g.peerId);
+  assert.equal(role.data.role, 'host');
+  assert.ok(r.body.events.some((e) => e.type === 'knock' && e.data.id === g3.peerId), '待合室の人が新しい主催者に届く');
+  assert.equal((await g.act('admit', { target: g3.peerId })).status, 200);
+  // 担当者が戻ってくれば、また主催者として入れる
+  const back = await hostIn(room.id, s);
+  assert.ok(back.peerId);
+});
+
 test('チャットの保存は主催者が決め、保存したものは記録で見られる。他人のメッセージは消せない', async () => {
   const { s, room } = await newRoom();
   const host = await hostIn(room.id, s);

@@ -711,3 +711,28 @@ body.in-call .modal .muted { color: #a7adb7; }
 .stage.abs { display: block; position: relative; }
 .stage.abs .tile { position: absolute; aspect-ratio: auto; margin: 0; grid-row: auto; }
 .stage.abs .tile.featured { aspect-ratio: auto; }
+
+/* ---- 社員だけ（メモ・記録） ---- */
+.staff-only { display: none !important; }
+body.is-staff .staff-only { display: revert !important; }
+body.is-staff .round.staff-only { display: grid !important; }
+.modal select.handover { width: 100%; margin-top: 4px; padding: 10px 12px; border-radius: 10px; font: inherit; }
+
+/* ---- 背景とエフェクト ---- */
+.sheet-modal:has(.fx) { width: min(640px, 100%); }
+.fx { width: 100%; }
+.fx-preview { max-height: 38vh; }
+.fx-preview { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px; background: #0b0f15; transform: scaleX(-1); display: block; }
+.fx-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+.fx-item { position: relative; aspect-ratio: 16 / 10; border-radius: 10px; border: 2px solid transparent; overflow: hidden; cursor: pointer; padding: 0; background: #1c2532; color: #e8edf3; font: inherit; font-size: 12px; display: grid; place-items: end start; }
+.fx-item img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.fx-item span { position: relative; margin: 6px; padding: 2px 7px; border-radius: 6px; background: rgba(8, 12, 18, .62); }
+.fx-item:hover { border-color: rgba(255, 255, 255, .35); }
+.fx-item.on { border-color: #4f8cff; box-shadow: 0 0 0 2px rgba(79, 140, 255, .35); }
+.fx-item.busy::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, .35); }
+.fx-none { background: repeating-linear-gradient(45deg, #1c2532 0 8px, #222c3a 8px 16px); }
+.fx-blur1 { background: radial-gradient(circle at 50% 45%, #8fa3b8 0 18%, transparent 19%), linear-gradient(135deg, #6f8399, #3c4d61); filter: saturate(.9); }
+.fx-blur2 { background: radial-gradient(circle at 50% 45%, #8fa3b8 0 18%, transparent 30%), linear-gradient(135deg, #8696a8, #4b5b6e); }
+.fx-add { place-items: center; border: 2px dashed rgba(255, 255, 255, .25); background: transparent; }
+.fx-add span { background: none; }
+@media (max-width: 560px) { .fx-grid { grid-template-columns: repeat(3, 1fr); } }

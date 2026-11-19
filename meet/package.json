@@ -4,9 +4,15 @@
   "private": true,
   "description": "COMPASS のカレンダーから使うオンライン通話（WebRTC）",
   "main": "server.js",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node server.js",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/vendor.js"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.14"
   }
 }

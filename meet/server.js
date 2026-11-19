@@ -18,6 +18,10 @@ const MIME = {
   '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.svg': 'image/svg+xml',
+  '.json': 'application/json',
+  '.wasm': 'application/wasm',
+  '.jpg': 'image/jpeg',
+  '.png': 'image/png',
 };
 
 function serveFile(res, file) {
