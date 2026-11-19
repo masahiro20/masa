@@ -11,7 +11,8 @@ test('保存データの暗号化：用途（aad）が違えば読めない・�
   const s = sec.seal(key, { title: '山田様' }, 'room:a');
   assert.deepEqual(sec.open(key, s, 'room:a'), { title: '山田様' });
   assert.equal(sec.open(key, s, 'room:b'), null);
-  const broken = s.slice(0, -2) + (s.endsWith('A') ? 'B' : 'A') + s.slice(-1);
+  const c = s.at(-2); // 改ざん：必ず別の文字に置き換える（同じ文字に戻すと改ざんにならない）
+  const broken = s.slice(0, -2) + (c === 'A' ? 'B' : 'A') + s.slice(-1);
   assert.equal(sec.open(key, broken, 'room:a'), null);
   assert.equal(sec.open(Buffer.alloc(32, 8), s, 'room:a'), null);
 });

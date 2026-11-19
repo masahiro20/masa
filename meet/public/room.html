@@ -47,8 +47,9 @@
         </div>
       </div>
       <div class="devchips">
-        <button class="devchip" id="micChip" type="button"><span class="dot-ok"></span><span class="lbl">マイク</span><span class="val" id="micName">確認中</span></button>
-        <button class="devchip" id="camChip" type="button"><span class="dot-ok"></span><span class="lbl">カメラ</span><span class="val" id="camName">確認中</span></button>
+        <button class="devchip" id="micChip" type="button" aria-haspopup="menu" aria-label="マイクを選ぶ"><svg class="ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2Z"/></svg><span class="val" id="micName">確認中</span><svg class="chev" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <button class="devchip" id="spkChip" type="button" aria-haspopup="menu" aria-label="スピーカーを選ぶ"><svg class="ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3Zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.47 4.47 0 0 0 16.5 12ZM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54Z"/></svg><span class="val" id="spkName">既定のスピーカー</span><svg class="chev" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
+        <button class="devchip" id="camChip" type="button" aria-haspopup="menu" aria-label="カメラを選ぶ"><svg class="ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4Z"/></svg><span class="val" id="camName">確認中</span><svg class="chev" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg></button>
       </div>
       <p class="muted center small" id="deviceHint">話すと、映像の左下の線が動きます。</p>
     </div>
@@ -141,8 +142,8 @@
   <div class="bar">
     <div class="left"><span class="elapsed" id="elapsed">0:00</span><span class="sep"></span><span id="cTitle"></span></div>
     <div class="center">
-      <div class="split"><button class="round" id="mic" aria-label="マイク"></button><button class="caret" id="micCaret" aria-label="マイク・スピーカーを選ぶ" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 14l5-5 5 5z"/></svg></button></div>
-      <div class="split"><button class="round" id="cam" aria-label="カメラ"></button><button class="caret" id="camCaret" aria-label="カメラを選ぶ" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 14l5-5 5 5z"/></svg></button></div>
+      <div class="split"><button class="round" id="mic" aria-label="マイク"></button><button class="caret" id="micCaret" aria-label="マイク・スピーカーを選ぶ" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.4 15.4 12 10.8l4.6 4.6L18 14l-6-6-6 6z"/></svg></button></div>
+      <div class="split"><button class="round" id="cam" aria-label="カメラ"></button><button class="caret" id="camCaret" aria-label="カメラを選ぶ" aria-haspopup="menu"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.4 15.4 12 10.8l4.6 4.6L18 14l-6-6-6 6z"/></svg></button></div>
       <button class="round" id="screen" aria-label="画面を共有"></button>
       <button class="round hidden" id="annBtn" aria-label="共有画面に書き込む"></button>
       <button class="round" id="wbBtn" aria-label="ホワイトボード"></button>
@@ -158,8 +159,9 @@
   </div>
   <div class="popover hidden" id="reactMenu" role="menu"></div>
   <div class="popover hidden" id="moreMenu" role="menu"></div>
-  <div class="popover devmenu hidden" id="devMenu" role="menu"></div>
 </div>
+<div class="devmenu hidden" id="devMenu" role="menu"></div>
+<div id="audios" hidden></div>
 
 <!-- 汎用の確認ダイアログ -->
 <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">

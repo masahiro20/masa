@@ -45,7 +45,10 @@ let wbOpen = false; let annOn = false; let sharerId = null;
 let audioCtx = null;
 const peers = new Map();
 const waiting = new Map();
-const devices = { mic: '', cam: '', speaker: '' };
+// 選んだ機器は次回も使う（無くなっていれば既定の機器にする）
+const DEV_KEY = 'meet.devices';
+const devices = (() => { try { return { mic: '', cam: '', speaker: '', ns: true, ...JSON.parse(localStorage.getItem(DEV_KEY) || '{}') }; } catch (_) { return { mic: '', cam: '', speaker: '', ns: true }; } })();
+const saveDevices = () => { try { localStorage.setItem(DEV_KEY, JSON.stringify(devices)); } catch (_) { /* 保存できなくても続ける */ } };
 const rosterInfo = new Map();
 
 // ---------- 小物 ----------
@@ -117,15 +120,16 @@ function modal(title, bodyNode, actions) {
       box.appendChild(b);
     }
     $('modal').classList.remove('hidden');
-    if (box.lastChild) box.lastChild.focus();
+    if (box.lastChild) box.lastChild.focus({ preventScroll: true });
+    document.querySelector('#modal .sheet-modal').scrollTop = 0;
   });
 }
 
 // ---------- 端末（カメラ・マイク・スピーカー） ----------
 async function openDevices() {
   const notice = $('mediaNotice');
-  const audio = { echoCancellation: true, noiseSuppression: true, autoGainControl: true, ...(devices.mic ? { deviceId: { exact: devices.mic } } : {}) };
-  const video = { width: { ideal: 1280 }, height: { ideal: 720 }, ...(devices.cam ? { deviceId: { exact: devices.cam } } : { facingMode: 'user' }) };
+  const audio = audioConstraints(devices.mic, 'ideal');
+  const video = videoConstraints(devices.cam, 'ideal');
   const old = camStream;
   try {
     camStream = await navigator.mediaDevices.getUserMedia({ audio, video });
@@ -146,12 +150,11 @@ async function openDevices() {
   }
   if (old) old.getTracks().forEach((t) => t.stop());
   $('preview').srcObject = camStream;
-  const a = audioTrack(); const v = camTrack();
-  $('micName').textContent = a ? (a.label || '使用できます').replace(/\s*\(.*?\)\s*$/, '') : '使えません';
-  $('camName').textContent = v ? (v.label || '使用できます').replace(/\s*\(.*?\)\s*$/, '') : '使えません';
-  $('micChip').classList.toggle('ng', !a); $('camChip').classList.toggle('ng', !v);
+  updateChips();
   startMeter();
   refreshLocal();
+  watchTracks();
+  rememberInputs();
   // 前回の背景の設定を引き継ぐ
   const saved = fxSaved();
   if (saved.mode !== 'none' && !fx.active && camTrack() && await fxAvailable()) await applyFx(saved.mode, saved.imageId, true);
@@ -210,89 +213,304 @@ function refreshLocal() {
       if (kind === 'audio') t.sender.replaceTrack(audioTrack()).catch(() => {});
     }
   }
+  setTimeout(tuneSenders, 300);
   updateSelfTile();
   post('state', { mic: micOn, cam: camOn && !!v, screen: !!screenStream }).catch(() => {});
 }
 
-async function deviceDialog() {
-  const list = await navigator.mediaDevices.enumerateDevices().catch(() => []);
-  const wrap = el('div');
-  const mk = (label, kind, key) => {
-    const f = el('div', 'field');
-    const s = document.createElement('select'); s.dataset.key = key;
-    const opts = list.filter((d) => d.kind === kind);
-    if (!opts.length) { s.appendChild(el('option', '', '見つかりません')); s.disabled = true; }
-    opts.forEach((d, i) => { const o = el('option', '', d.label || `${label} ${i + 1}`); o.value = d.deviceId; if (d.deviceId === devices[key]) o.selected = true; s.appendChild(o); });
-    f.append(el('label', '', label), s); wrap.appendChild(f);
-  };
-  mk('マイク', 'audioinput', 'mic');
-  mk('カメラ', 'videoinput', 'cam');
-  const canSink = 'setSinkId' in HTMLMediaElement.prototype;
-  if (canSink) mk('スピーカー', 'audiooutput', 'speaker');
-  else wrap.appendChild(el('p', 'muted small', 'この端末では、スピーカーは端末の設定で切り替えてください。'));
-  const ok = await modal('カメラ・マイクの設定', wrap, [['やめる', false, 'ghost'], ['反映する', true, 'primary']]);
-  if (!ok) return;
-  for (const s of wrap.querySelectorAll('select')) if (!s.disabled) devices[s.dataset.key] = s.value;
-  await openDevices();
-  if (canSink && devices.speaker) for (const v of document.querySelectorAll('.tile video')) v.setSinkId(devices.speaker).catch(() => {});
+// ---- 機器の名前と一覧 ----
+// 末尾の「(046d:0825)」のような製品番号だけ外す（「マイク (Realtek Audio)」の括弧は残す。外すと全部「マイク」になって見分けられない）
+const cleanLabel = (l) => String(l || '').replace(/^(既定|通信|Default|Communications)\s*-\s*/i, '').replace(/\s*\([0-9a-f]{4}:[0-9a-f]{4}\)\s*$/i, '').trim();
+const KIND = { mic: 'audioinput', cam: 'videoinput', speaker: 'audiooutput' };
+const KIND_JA = { mic: 'マイク', cam: 'カメラ', speaker: 'スピーカー' };
+
+function audioConstraints(id, mode = 'exact') {
+  return { echoCancellation: true, noiseSuppression: devices.ns !== false, autoGainControl: true, channelCount: 1, ...(id ? { deviceId: { [mode]: id } } : {}) };
+}
+function videoConstraints(id, mode = 'exact') {
+  return { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 }, ...(id ? { deviceId: { [mode]: id } } : { facingMode: 'user' }) };
 }
 
-// マイク・カメラ・スピーカーをその場で切り替える（ボタン横の矢印から）
+// Chrome は「既定」「通信」を別の行として出すので、実際の機器だけにまとめ、既定の機器に印を付ける
+function devOptions(list, key) {
+  const all = list.filter((d) => d.kind === KIND[key] && d.deviceId);
+  const def = all.find((d) => d.deviceId === 'default');
+  let items = all.filter((d) => d.deviceId !== 'default' && d.deviceId !== 'communications');
+  if (!items.length && def) items = [def];
+  const isDefault = (d) => !!def && (d.deviceId === 'default' || (def.groupId && d.groupId === def.groupId));
+  return items.map((d, i) => ({ id: d.deviceId, label: cleanLabel(d.label) || `${KIND_JA[key]} ${i + 1}`, isDefault: isDefault(d) }));
+}
+
+// いま使っている機器（「既定」を使っているときは、既定にあたる実際の機器を返す）
+function currentId(key, opts) {
+  let id = key === 'speaker' ? devices.speaker : ((key === 'mic' ? audioTrack() : camTrack()) || { getSettings: () => ({}) }).getSettings().deviceId || devices[key];
+  if (!id || id === 'default' || id === 'communications') { const d = opts.find((o) => o.isDefault) || opts[0]; id = d && d.id; }
+  return id;
+}
+
+function updateChips() {
+  const a = audioTrack(); const v = camTrack();
+  $('micName').textContent = a ? cleanLabel(a.label) || '使用できます' : '使えません';
+  $('camName').textContent = v ? cleanLabel(v.label) || '使用できます' : '使えません';
+  $('micChip').classList.toggle('ng', !a); $('camChip').classList.toggle('ng', !v);
+  const canSink = 'setSinkId' in HTMLMediaElement.prototype;
+  $('spkChip').classList.toggle('hidden', !canSink);
+  if (canSink) {
+    navigator.mediaDevices.enumerateDevices().then((list) => {
+      const opts = devOptions(list, 'speaker'); const id = currentId('speaker', opts);
+      const o = opts.find((x) => x.id === id);
+      $('spkName').textContent = o ? o.label : '既定のスピーカー';
+    }).catch(() => {});
+  }
+}
+
+// ---- スピーカー ----
+function applySpeaker(id) {
+  devices.speaker = id || ''; saveDevices();
+  const els = [...document.querySelectorAll('audio.remote')];
+  return Promise.all(els.map((a) => (a.setSinkId ? a.setSinkId(devices.speaker).catch(() => {}) : null)));
+}
+
+// テスト音（短い 3 音のチャイム）を、その場で作る
+let chimeUrl = null;
+function chime() {
+  if (chimeUrl) return chimeUrl;
+  const sr = 44100; const n = Math.floor(sr * 1.2);
+  const buf = new ArrayBuffer(44 + n * 2); const v = new DataView(buf);
+  const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+  const notes = [[0, 784], [0.16, 988], [0.32, 1175]];
+  for (let i = 0; i < n; i++) {
+    const t = i / sr; let x = 0;
+    for (const [st, f] of notes) if (t >= st) { const u = t - st; x += (Math.sin(2 * Math.PI * f * u) + 0.3 * Math.sin(4 * Math.PI * f * u)) * Math.exp(-u * 4.5) * Math.min(1, u * 200) * 0.22; }
+    v.setInt16(44 + i * 2, Math.max(-1, Math.min(1, x)) * 32767, true);
+  }
+  chimeUrl = URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+  return chimeUrl;
+}
+async function testSpeaker(btn) {
+  const a = new Audio(chime());
+  if (devices.speaker && a.setSinkId) await a.setSinkId(devices.speaker).catch(() => {});
+  if (btn) { btn.classList.add('playing'); a.onended = () => btn.classList.remove('playing'); }
+  a.play().catch(() => toast('テスト音を鳴らせませんでした'));
+}
+
+// ---- 入力レベル（話すと動く棒） ----
+function levelMeter(bar) {
+  const a = audioTrack(); if (!a || !bar) return;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+    const src = audioCtx.createMediaStreamSource(new MediaStream([a]));
+    const an = audioCtx.createAnalyser(); an.fftSize = 512; src.connect(an);
+    const buf = new Uint8Array(an.fftSize); let lv = 0;
+    const loop = () => {
+      if (!bar.isConnected || audioTrack() !== a) { src.disconnect(); if (bar.isConnected) levelMeter(bar); return; }
+      an.getByteTimeDomainData(buf);
+      let peak = 0; for (let i = 0; i < buf.length; i++) peak = Math.max(peak, Math.abs(buf[i] - 128));
+      lv = Math.max(peak / 64, lv * 0.85);
+      bar.style.setProperty('--lv', micOn ? Math.min(1, lv).toFixed(3) : 0);
+      requestAnimationFrame(loop);
+    };
+    loop();
+  } catch (_) { /* 表示できなくても動く */ }
+}
+
+// ---- 切り替え ----
+// 失敗したら、いまの機器を一度止めてからもう一度試す（同じ機器を二重に開けない端末があるため）
+async function switchDevice(key, id, quiet) {
+  if (key === 'speaker') {
+    await applySpeaker(id); updateChips();
+    if (!quiet) toast('スピーカーを切り替えました');
+    return true;
+  }
+  const isMic = key === 'mic';
+  const old = isMic ? audioTrack() : camTrack();
+  const want = isMic ? { audio: audioConstraints(id) } : { video: videoConstraints(id) };
+  let s = null;
+  try { s = await navigator.mediaDevices.getUserMedia(want); } catch (_) {
+    if (old) { camStream.removeTrack(old); old.stop(); }
+    try { s = await navigator.mediaDevices.getUserMedia(want); } catch (e2) {
+      // 選んだ機器が使えないときは、既定の機器に戻す
+      try { s = await navigator.mediaDevices.getUserMedia(isMic ? { audio: audioConstraints('') } : { video: videoConstraints('') }); } catch (_) { s = null; }
+      if (!quiet) toast(`${KIND_JA[key]}を切り替えられませんでした。ほかのアプリ（Zoom・Teams など）が使っていないかご確認ください`, null, 6000);
+    }
+  }
+  if (!s) { refreshLocal(); updateChips(); return false; }
+  const nt = isMic ? s.getAudioTracks()[0] : s.getVideoTracks()[0];
+  const prev = isMic ? audioTrack() : camTrack();
+  if (prev) { camStream.removeTrack(prev); prev.stop(); }
+  camStream.addTrack(nt);
+  devices[key] = (nt.getSettings && nt.getSettings().deviceId) || id || ''; saveDevices();
+  if (!isMic) camOn = true;
+  refreshLocal(); updateChips(); watchTracks();
+  if (isMic && !$('lobby').classList.contains('hidden')) startMeter();
+  if (!quiet) toast(`${KIND_JA[key]}を「${cleanLabel(nt.label) || '新しい機器'}」に切り替えました`);
+  return true;
+}
+
+// 使っている機器が外れた（ヘッドセットを抜いた等）ら、自動で既定の機器に切り替える
+function watchTracks() {
+  for (const [key, t] of [['mic', audioTrack()], ['cam', camTrack()]]) {
+    if (!t || t.__watched) continue;
+    t.__watched = true;
+    t.addEventListener('ended', async () => {
+      if ((key === 'mic' ? audioTrack() : camTrack()) !== t) return; // 自分で切り替えた古いもの
+      const name = cleanLabel(t.label) || KIND_JA[key];
+      const ok = await switchDevice(key, '', true);
+      const now = key === 'mic' ? audioTrack() : camTrack();
+      toast(ok ? `「${name}」が外れたため、${KIND_JA[key]}を「${cleanLabel(now && now.label) || '既定の機器'}」に切り替えました` : `「${name}」が外れました。${KIND_JA[key]}をつなぎ直してください`, null, 7000);
+    });
+  }
+}
+
+// 新しいマイク（ヘッドセットなど）をつないだら、切り替えるか聞く
+let knownInputs = null;
+async function rememberInputs() {
+  const list = await navigator.mediaDevices.enumerateDevices().catch(() => []);
+  knownInputs = new Set(devOptions(list, 'mic').map((o) => o.id));
+}
+if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+  navigator.mediaDevices.addEventListener('devicechange', async () => {
+    const list = await navigator.mediaDevices.enumerateDevices().catch(() => []);
+    const mics = devOptions(list, 'mic');
+    if (knownInputs && audioTrack()) {
+      const added = mics.find((o) => !knownInputs.has(o.id));
+      if (added) toast(`新しいマイクが見つかりました：${added.label}`, [['切り替える', () => switchDevice('mic', added.id)]], 12000);
+    }
+    knownInputs = new Set(mics.map((o) => o.id));
+    if (devices.speaker && !list.some((d) => d.kind === 'audiooutput' && d.deviceId === devices.speaker)) {
+      await applySpeaker('');
+      toast('選んでいたスピーカーが外れたため、既定のスピーカーに戻しました', null, 6000);
+    }
+    updateChips();
+    const m = $('devMenu');
+    if (!m.classList.contains('hidden') && m.__anchor) renderDevMenu(m.dataset.kind, m.__anchor);
+  });
+}
+
+// ---- ボタン横の矢印・入室前の機器ボタンから開く一覧 ----
+const DM_ICON = {
+  mic: ICON.mic,
+  cam: ICON.cam,
+  speaker: I('M3 9v6h4l5 5V4L7 9H3Zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05A4.47 4.47 0 0 0 16.5 12ZM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54Z'),
+  gear: ICON.gear,
+  play: I('M8 5v14l11-7z'),
+};
+
 async function openDevMenu(kind, anchor) {
   const m = $('devMenu');
-  if (!m.classList.contains('hidden') && m.dataset.kind === kind) { m.classList.add('hidden'); return; }
+  if (!m.classList.contains('hidden') && m.dataset.kind === kind && m.__anchor === anchor) { closeDevMenu(); return; }
   $('reactMenu').classList.add('hidden'); $('moreMenu').classList.add('hidden');
-  m.dataset.kind = kind; m.textContent = '';
+  await renderDevMenu(kind, anchor);
+}
+function closeDevMenu() { const m = $('devMenu'); m.classList.add('hidden'); m.__anchor = null; document.querySelectorAll('.caret.open, .devchip.open').forEach((b) => b.classList.remove('open')); }
+
+async function renderDevMenu(kind, anchor) {
+  const m = $('devMenu');
+  m.dataset.kind = kind; m.__anchor = anchor; m.textContent = '';
   const list = await navigator.mediaDevices.enumerateDevices().catch(() => []);
-  const cur = { mic: (audioTrack() && audioTrack().getSettings().deviceId) || devices.mic, cam: (camTrack() && camTrack().getSettings().deviceId) || devices.cam, speaker: devices.speaker || 'default' };
-  const section = (title, devKind, key) => {
-    const opts = list.filter((d) => d.kind === devKind && d.deviceId);
-    m.appendChild(el('div', 'dm-title', title));
+  const canSink = 'setSinkId' in HTMLMediaElement.prototype;
+  const section = (key) => {
+    const opts = devOptions(list, key);
+    const cur = currentId(key, opts);
+    const head = el('div', 'dm-head');
+    const ic = el('span', 'dm-ic'); ic.innerHTML = DM_ICON[key]; head.appendChild(ic);
+    head.appendChild(el('span', 'dm-title', KIND_JA[key]));
+    if (key === 'speaker') {
+      const t = el('button', 'dm-test'); t.type = 'button'; t.innerHTML = `${DM_ICON.play}<span>テスト</span>`;
+      t.onclick = (e) => { e.stopPropagation(); testSpeaker(t); };
+      head.appendChild(t);
+    }
+    m.appendChild(head);
+    if (key === 'speaker' && !canSink) { m.appendChild(el('div', 'dm-empty', 'この端末では、スピーカーは端末（OS）の設定で切り替えます')); return; }
     if (!opts.length) { m.appendChild(el('div', 'dm-empty', '見つかりません')); return; }
-    opts.forEach((d, i) => {
-      const b = el('button', 'menu-item dm-item');
-      const on = d.deviceId === cur[key] || (!cur[key] && i === 0);
-      b.appendChild(el('span', 'dm-check', on ? '✓' : ''));
-      b.appendChild(el('span', 'dm-label', (d.label || `${title} ${i + 1}`).replace(/\s*\(.*?\)\s*$/, '')));
-      b.onclick = async () => { m.classList.add('hidden'); await switchDevice(key, d.deviceId); };
+    for (const o of opts) {
+      const b = el('button', 'dm-item'); b.type = 'button'; b.setAttribute('role', 'menuitemradio');
+      const on = o.id === cur; b.classList.toggle('on', on); b.setAttribute('aria-checked', String(on));
+      b.appendChild(el('span', 'dm-radio'));
+      const lab = el('span', 'dm-label', o.label); lab.title = o.label; b.appendChild(lab);
+      if (o.isDefault) b.appendChild(el('span', 'dm-tag', '既定'));
+      b.onclick = async () => {
+        if (on) return;
+        m.querySelectorAll('.dm-item').forEach((x) => x.classList.toggle('busy', x === b));
+        await switchDevice(key, o.id);
+        if (!m.classList.contains('hidden')) renderDevMenu(kind, anchor);
+      };
       m.appendChild(b);
-    });
+    }
+    if (key === 'mic') {
+      const lv = el('div', 'dm-level'); lv.appendChild(el('span', 'dm-level-lbl', micOn ? '入力レベル' : 'マイクはオフです'));
+      const bar = el('div', 'meterbar'); bar.appendChild(el('i')); lv.appendChild(bar); m.appendChild(lv);
+      levelMeter(bar);
+    }
   };
-  if (kind === 'mic') {
-    section('マイク', 'audioinput', 'mic');
-    if ('setSinkId' in HTMLMediaElement.prototype) section('スピーカー', 'audiooutput', 'speaker');
-    else m.appendChild(el('div', 'dm-empty', 'スピーカーは端末の設定で切り替えてください'));
-  } else {
-    section('カメラ', 'videoinput', 'cam');
-    const bg = el('button', 'menu-item dm-more', '背景とエフェクト'); bg.onclick = () => { m.classList.add('hidden'); fxDialog(); };
-    m.appendChild(bg);
+  const keys = kind === 'mic' ? ['mic', 'speaker'] : kind === 'speaker' ? ['speaker'] : ['cam'];
+  keys.forEach((k, i) => { if (i) m.appendChild(el('div', 'dm-sep')); section(k); });
+  const foot = el('div', 'dm-foot');
+  const more = el('button', 'dm-link'); more.type = 'button'; more.innerHTML = `${DM_ICON.gear}<span>すべての設定</span>`;
+  more.onclick = () => { closeDevMenu(); deviceDialog(); };
+  foot.appendChild(more);
+  if (kind === 'cam') {
+    const bg = el('button', 'dm-link'); bg.type = 'button'; bg.innerHTML = `${ICON.sparkle}<span>背景とエフェクト</span>`;
+    bg.onclick = () => { closeDevMenu(); fxDialog(); };
+    foot.appendChild(bg);
   }
-  const more = el('button', 'menu-item dm-more', 'くわしい設定'); more.onclick = () => { m.classList.add('hidden'); deviceDialog(); };
-  m.appendChild(more);
-  const r = anchor.getBoundingClientRect();
-  m.style.left = `${Math.max(8, Math.min(window.innerWidth - 300, r.left - 120))}px`;
+  m.appendChild(foot);
+  // 位置：ボタンが画面の下半分なら上に、上半分なら下に出す
+  document.querySelectorAll('.caret.open, .devchip.open').forEach((b) => b.classList.remove('open'));
+  anchor.classList.add('open');
+  m.style.left = m.style.top = m.style.bottom = m.style.right = '';
   m.classList.remove('hidden');
+  const r = anchor.getBoundingClientRect(); const mw = m.offsetWidth; const mh = m.offsetHeight;
+  m.style.left = `${Math.max(8, Math.min(window.innerWidth - mw - 8, r.left + r.width / 2 - mw / 2))}px`;
+  if (r.top > window.innerHeight / 2) m.style.bottom = `${Math.max(8, window.innerHeight - r.top + 10)}px`;
+  else m.style.top = `${Math.min(window.innerHeight - mh - 8, r.bottom + 10)}px`;
 }
 
-async function switchDevice(key, id) {
-  devices[key] = id;
-  if (key === 'speaker') {
-    for (const v of document.querySelectorAll('.tile video')) if (v.setSinkId) v.setSinkId(id).catch(() => {});
-    return toast('スピーカーを切り替えました');
-  }
-  try {
-    const s = await navigator.mediaDevices.getUserMedia(key === 'mic'
-      ? { audio: { deviceId: { exact: id }, echoCancellation: true, noiseSuppression: true, autoGainControl: true } }
-      : { video: { deviceId: { exact: id }, width: { ideal: 1280 }, height: { ideal: 720 } } });
-    const nt = key === 'mic' ? s.getAudioTracks()[0] : s.getVideoTracks()[0];
-    const old = key === 'mic' ? audioTrack() : camTrack();
-    if (old) { camStream.removeTrack(old); old.stop(); }
-    camStream.addTrack(nt);
-    if (key === 'cam') camOn = true;
-    $('preview').srcObject = camStream;
-    refreshLocal();
-    toast(key === 'mic' ? 'マイクを切り替えました' : 'カメラを切り替えました');
-  } catch (_) { toast('切り替えられませんでした。ほかのアプリが使っていないかご確認ください', null, 5000); }
+// ---- すべての設定（その場で反映） ----
+async function deviceDialog() {
+  closeDevMenu();
+  const list = await navigator.mediaDevices.enumerateDevices().catch(() => []);
+  const canSink = 'setSinkId' in HTMLMediaElement.prototype;
+  const wrap = el('div', 'devset');
+  const row = (key, extra) => {
+    const sec = el('section', 'ds-sec');
+    const h = el('div', 'ds-head'); const ic = el('span', 'dm-ic'); ic.innerHTML = DM_ICON[key]; h.append(ic, el('span', '', KIND_JA[key]));
+    sec.appendChild(h);
+    const opts = devOptions(list, key);
+    const sel = document.createElement('select'); sel.className = 'ds-select'; sel.dataset.key = key;
+    if (key === 'speaker' && !canSink) { sec.appendChild(el('p', 'muted small', 'この端末では、スピーカーは端末（OS）の設定で切り替えます。')); wrap.appendChild(sec); return sec; }
+    if (!opts.length) { sel.appendChild(el('option', '', '見つかりません')); sel.disabled = true; }
+    const cur = currentId(key, opts);
+    for (const o of opts) { const op = el('option', '', o.isDefault ? `${o.label}（既定）` : o.label); op.value = o.id; op.selected = o.id === cur; sel.appendChild(op); }
+    sel.onchange = async () => { sel.disabled = true; await switchDevice(key, sel.value); sel.disabled = false; if (key === 'cam') pv.srcObject = camView(); };
+    const line = el('div', 'ds-line'); line.appendChild(sel); if (extra) line.appendChild(extra); sec.appendChild(line);
+    wrap.appendChild(sec);
+    return sec;
+  };
+  // カメラ
+  const pv = document.createElement('video'); pv.autoplay = true; pv.muted = true; pv.playsInline = true; pv.className = 'ds-preview'; pv.srcObject = camView();
+  const camSec = row('cam'); camSec.insertBefore(pv, camSec.children[1]);
+  // マイク
+  const micSec = row('mic');
+  const bar = el('div', 'meterbar'); bar.appendChild(el('i'));
+  const lvl = el('div', 'ds-level'); lvl.append(el('span', 'muted small', '話すと動きます'), bar); micSec.appendChild(lvl);
+  levelMeter(bar);
+  const ns = el('label', 'switch ds-switch'); const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = devices.ns !== false;
+  const t = el('span', 'lbl', 'まわりの雑音を抑える'); t.appendChild(el('small', '', 'キーボードの音や空調の音を小さくします'));
+  ns.append(cb, el('span', 'knob'), t); micSec.appendChild(ns);
+  cb.onchange = async () => {
+    devices.ns = cb.checked; saveDevices();
+    const a = audioTrack();
+    if (a) { try { await a.applyConstraints(audioConstraints(a.getSettings().deviceId)); } catch (_) { await switchDevice('mic', a.getSettings().deviceId, true); } }
+  };
+  // スピーカー
+  const test = el('button', 'btn sm ds-test'); test.type = 'button'; test.innerHTML = `${DM_ICON.play}<span>テスト音</span>`; test.onclick = () => testSpeaker(test);
+  row('speaker', test);
+  await modal('カメラ・マイク・スピーカー', wrap, [['完了', true, 'primary']]);
+  pv.srcObject = null;
 }
 
 // ---------- 画面の並び ----------
@@ -304,8 +522,8 @@ function makeTile(id, name, role, isSelf) {
   tile.querySelector('.nm').textContent = isSelf ? `${name}（あなた）` : name;
   tile.querySelector('.role').textContent = roleLabel(role, isSelf ? me.staff : (rosterInfo.get(id) || {}).staff);
   tile.querySelector('.hand').innerHTML = ICON.hand;
-  if (isSelf) tile.querySelector('video').muted = true;
-  else if (devices.speaker && tile.querySelector('video').setSinkId) tile.querySelector('video').setSinkId(devices.speaker).catch(() => {});
+  // 映像の枠は常に消音。相手の声は、動かさない専用の audio 要素で鳴らす（並べ替えで途切れないように）
+  tile.querySelector('video').muted = true;
   tile.addEventListener('dblclick', () => togglePin(tile));
   $('stage').appendChild(tile);
   layout();
@@ -431,12 +649,43 @@ function updateAlone() {
 }
 
 // ---------- 接続（WebRTC） ----------
+// 声を最優先にする。全員接続では人数分の映像を同時に送るので、人数に応じて映像の量を抑え、回線の詰まりで声が途切れないようにする
+function tuneSenders() {
+  const n = peers.size;
+  const camMax = n <= 1 ? 1500000 : n === 2 ? 1000000 : n === 3 ? 700000 : 500000;
+  for (const p of peers.values()) {
+    for (const snd of p.pc.getSenders()) {
+      if (!snd.track || !snd.getParameters) continue;
+      try {
+        const prm = snd.getParameters();
+        if (!prm.encodings || !prm.encodings.length) continue;
+        const e = prm.encodings[0];
+        if (snd.track.kind === 'audio') { e.priority = 'high'; e.networkPriority = 'high'; }
+        else { e.maxBitrate = screenStream ? 2000000 : camMax; e.priority = 'low'; e.networkPriority = 'low'; e.maxFramerate = screenStream ? 15 : 30; }
+        snd.setParameters(prm).catch(() => {});
+      } catch (_) { /* 対応していないブラウザ */ }
+    }
+  }
+}
+
+// 相手の声を鳴らす。ブラウザに止められたら、押せば鳴るように案内する
+function playRemote(a) {
+  a.play().catch(() => {
+    if (playRemote.warned) return;
+    playRemote.warned = true;
+    toast('相手の声を聞くには「音声を出す」を押してください', [['音声を出す', () => { document.querySelectorAll('audio.remote').forEach((x) => x.play().catch(() => {})); if (audioCtx) audioCtx.resume().catch(() => {}); playRemote.warned = false; }]], 30000);
+  });
+}
+
 function createPeer(id, name, role, initiator) {
   const pc = new RTCPeerConnection({ iceServers, iceCandidatePoolSize: 2 });
   const stream = new MediaStream();
   const tile = makeTile(id, name, role, false);
   tile.querySelector('video').srcObject = stream;
-  const peer = { pc, name, role, stream, tile, pending: [], state: { mic: true, cam: true, screen: false }, initiator, queue: [], stats: {} };
+  const audio = document.createElement('audio'); audio.className = 'remote'; audio.autoplay = true; audio.dataset.peer = id;
+  if (devices.speaker && audio.setSinkId) audio.setSinkId(devices.speaker).catch(() => {});
+  $('audios').appendChild(audio);
+  const peer = { pc, name, role, stream, tile, audio, pending: [], state: { mic: true, cam: true, screen: false }, initiator, queue: [], stats: {} };
   peers.set(id, peer);
 
   // 書き込み用のデータチャネル（両者が同じ番号で作るので、待ち合わせが要らない）
@@ -464,13 +713,14 @@ function createPeer(id, name, role, initiator) {
     stream.getTracks().filter((t) => t.kind === e.track.kind).forEach((t) => stream.removeTrack(t));
     stream.addTrack(e.track);
     const v = tile.querySelector('video'); v.srcObject = stream; v.play().catch(() => {});
-    if (e.track.kind === 'audio') watchSpeaking(peer, e.track);
+    if (e.track.kind === 'audio') { audio.srcObject = new MediaStream([e.track]); playRemote(audio); watchSpeaking(peer, e.track); }
   };
   pc.onconnectionstatechange = () => {
     const st = tile.querySelector('.status');
     const s = pc.connectionState;
     st.classList.toggle('hidden', s === 'connected');
     st.textContent = s === 'failed' ? 'つなぎ直しています' : s === 'disconnected' ? '回線が不安定です' : '接続中';
+    if (s === 'connected') tuneSenders();
     if (s === 'failed') restartWith(id);
     if (s === 'disconnected') setTimeout(() => { if (pc.connectionState === 'disconnected') restartWith(id); }, 4000);
   };
@@ -539,7 +789,8 @@ async function flushIce(p) { for (const c of p.pending.splice(0)) await p.pc.add
 function dropPeer(id, quiet) {
   const p = peers.get(id); if (!p) return;
   try { if (p.dc) p.dc.close(); } catch (_) { /* 既に閉じている */ }
-  p.pc.close(); p.tile.remove(); peers.delete(id);
+  p.pc.close(); p.tile.remove(); if (p.audio) { p.audio.srcObject = null; p.audio.remove(); } peers.delete(id);
+  tuneSenders();
   layout();
   if (!quiet) renderPeople();
 }
@@ -1278,7 +1529,7 @@ async function applyFx(mode, imageId, quiet) {
 }
 
 async function fxDialog() {
-  $('moreMenu').classList.add('hidden'); $('devMenu').classList.add('hidden');
+  $('moreMenu').classList.add('hidden'); closeDevMenu();
   const ok = await fxAvailable();
   if (!ok) return modal('背景とエフェクト', 'この端末（ブラウザ）では、背景のぼかし・背景画像を使えません。パソコンの Chrome・Edge でお試しください。', [['閉じる', true, 'primary']]);
   if (!camTrack()) return modal('背景とエフェクト', 'カメラが使えないため、背景は変えられません。', [['閉じる', true, 'primary']]);
@@ -1476,8 +1727,9 @@ $('pMic').onclick = $('mic').onclick = () => { micOn = !micOn; refreshLocal(); r
 $('pCam').onclick = $('cam').onclick = () => { camOn = !camOn; refreshLocal(); };
 $('pSettings').onclick = deviceDialog;
 $('pFx').onclick = fxDialog;
-$('micChip').onclick = deviceDialog;
-$('camChip').onclick = deviceDialog;
+$('micChip').onclick = (e) => { e.stopPropagation(); openDevMenu('mic', e.currentTarget); };
+$('spkChip').onclick = (e) => { e.stopPropagation(); openDevMenu('speaker', e.currentTarget); };
+$('camChip').onclick = (e) => { e.stopPropagation(); openDevMenu('cam', e.currentTarget); };
 $('aloneCopy').onclick = () => navigator.clipboard.writeText(`${location.origin}/r/${roomId}`).then(() => {
   toast('お客様用のリンクをコピーしました（もう一度コピーするときは「︙」のメニューから）');
   aloneDismissed = true; updateAlone();
@@ -1501,8 +1753,8 @@ $('chatInput').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.
 for (const id of ['nCustomer', 'nProject', 'nBody', 'nDecisions', 'nPending', 'nTodos']) $(id).addEventListener('input', scheduleNotes);
 $('reactBtn').onclick = (e) => { e.stopPropagation(); $('moreMenu').classList.add('hidden'); $('reactMenu').classList.toggle('hidden'); };
 $('moreBtn').onclick = (e) => { e.stopPropagation(); $('reactMenu').classList.add('hidden'); buildMoreMenu(); $('moreMenu').classList.toggle('hidden'); };
-document.addEventListener('click', (e) => { if (!e.target.closest('.popover')) { $('reactMenu').classList.add('hidden'); $('moreMenu').classList.add('hidden'); $('devMenu').classList.add('hidden'); } });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') for (const id of ['reactMenu', 'moreMenu', 'devMenu']) $(id).classList.add('hidden'); });
+document.addEventListener('click', (e) => { if (!e.target.closest('.popover, .devmenu')) { $('reactMenu').classList.add('hidden'); $('moreMenu').classList.add('hidden'); closeDevMenu(); } });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { for (const id of ['reactMenu', 'moreMenu']) $(id).classList.add('hidden'); closeDevMenu(); } });
 document.addEventListener('keydown', (e) => {
   if (!inCall || !(e.ctrlKey || e.metaKey)) return;
   if (e.key === 'd') { e.preventDefault(); $('mic').click(); }
