@@ -15,12 +15,15 @@ const MODELS = [
 ];
 
 function copyLib() {
-  let dir;
-  try { dir = path.dirname(require.resolve('@mediapipe/tasks-vision/package.json')); } catch (_) { return false; }
+  // package.json は exports で隠されていることがあるので、node_modules の場所を直接見る
+  const dir = path.join(__dirname, '..', 'node_modules', '@mediapipe', 'tasks-vision');
+  if (!fs.existsSync(path.join(dir, 'wasm'))) { console.log(`[vendor] ${dir} が見つかりません`); return false; }
+  console.log(`[vendor] 中身: ${fs.readdirSync(dir).join(', ')} / wasm: ${fs.readdirSync(path.join(dir, 'wasm')).join(', ')}`);
   fs.mkdirSync(path.join(OUT, 'wasm'), { recursive: true });
   for (const f of fs.readdirSync(dir)) if (f.endsWith('.mjs')) fs.copyFileSync(path.join(dir, f), path.join(OUT, f));
   for (const f of fs.readdirSync(path.join(dir, 'wasm'))) fs.copyFileSync(path.join(dir, 'wasm', f), path.join(OUT, 'wasm', f));
-  fs.copyFileSync(path.join(dir, 'LICENSE'), path.join(OUT, 'LICENSE')); // 使用許諾の表示
+  for (const f of ['LICENSE', 'LICENSE.md']) if (fs.existsSync(path.join(dir, f))) fs.copyFileSync(path.join(dir, f), path.join(OUT, 'LICENSE')); // 使用許諾の表示
+  if (!fs.existsSync(path.join(OUT, 'vision_bundle.mjs'))) { console.log('[vendor] vision_bundle.mjs がありません'); return false; }
   const v = JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8')).version;
   console.log(`[vendor] @mediapipe/tasks-vision ${v} を写しました`);
   return true;
