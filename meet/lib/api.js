@@ -329,7 +329,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
     if (me.state !== 'joined') return fail(403, '入室が許可されていません');
 
     if (action === 'signal') return signal(room, peers, me, req.body);
-    if (['chat', 'chat-delete', 'state', 'react', 'hand', 'rec-consent', 'transcript'].includes(action)) return participantAction(action, room, peers, me, req.body);
+    if (['chat', 'chat-delete', 'state', 'react', 'hand', 'rec-consent', 'transcript', 'share-request'].includes(action)) return participantAction(action, room, peers, me, req.body);
     if (['admit', 'deny', 'kick', 'mute', 'perms', 'lock', 'end', 'rec-request', 'rec-stop', 'stop-share'].includes(action)) {
       if (me.role !== 'host') return fail(403, '主催者だけができる操作です');
       const r = await limiter.hit('host_action', me.id);
@@ -600,6 +600,12 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
       if (!REACTIONS.includes(b.kind)) return fail(400, '使えないリアクションです');
       await push(room.id, everyone, 'react', { id: me.id, name: me.name, kind: b.kind });
       return ok({ ok: true });
+    }
+    if (action === 'share-request') {
+      // お客様が画面共有を希望したことを、主催者に知らせる（許可するかは主催者が決める）
+      if (me.role === 'host' || room.perms.guestScreen) return ok({ ok: true, allowed: true });
+      await push(room.id, hostIds(peers), 'share-request', { id: me.id, name: me.name });
+      return ok({ ok: true, allowed: false });
     }
     if (action === 'hand') {
       await push(room.id, everyone, 'hand', { id: me.id, name: me.name, up: bool(b.up) });

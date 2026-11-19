@@ -185,8 +185,10 @@ function refreshLocal() {
   $('pCam').disabled = $('cam').disabled = !v;
   $('previewOff').classList.toggle('hidden', camOn && !!v);
   $('screen').classList.toggle('on', !!screenStream);
-  $('screen').disabled = !isHost() && !room.perms.guestScreen;
-  $('screen').title = $('screen').disabled ? '画面共有は担当者の許可が必要です' : '画面を共有';
+  // 許可がないときも押せるようにしておき、押したら理由を伝えて担当者に希望を届ける
+  const shareLocked = !isHost() && !room.perms.guestScreen;
+  $('screen').classList.toggle('locked', shareLocked);
+  $('screen').dataset.tip = shareLocked ? '画面共有（担当者の許可が必要）' : (screenStream ? '画面共有を止める' : '画面を共有');
   if (!inCall) return;
   for (const p of peers.values()) {
     for (const t of p.pc.getTransceivers()) {
@@ -762,6 +764,7 @@ const handlers = {
   },
   'knock-cancel': ({ id }) => { waiting.delete(id); renderPeople(); },
   perms: ({ perms, saveChat }) => {
+    if (!isHost() && perms.guestScreen && !room.perms.guestScreen) toast('担当者が画面共有を許可しました。画面共有のボタンから始められます', null, 5000);
     room.perms = perms; room.saveChat = saveChat;
     if (!isHost() && !perms.guestScreen && screenStream) stopScreen();
     if (!isHost() && !perms.guestAnnotate && annOn) setAnn(false);
@@ -776,6 +779,10 @@ const handlers = {
     const t = id === me.peerId ? selfTile : (peers.get(id) || {}).tile;
     if (t) t.querySelector('.hand').classList.toggle('hidden', !up);
     if (up && id !== me.peerId) toast(`${name} さんが手を挙げています`);
+  },
+  'share-request': ({ id, name }) => {
+    toast(`${name} さんが画面共有を希望しています`, [['許可する', () => post('perms', { guestScreen: true }).then((r) => { room.perms = r.perms; renderPeople(); }).catch((e) => toast(e.message))]], 20000);
+    beep();
   },
   'rec-request': ({ by }) => askConsent(by),
   'rec-state': (r) => { room.recording = r; updateRec(); if (r.declinedBy) toast(`${r.declinedBy} さんが同意されなかったため、文字起こしは行いません`, null, 6000); },
@@ -892,7 +899,12 @@ async function endForAll() {
 // ---------- 画面共有 ----------
 async function toggleScreen() {
   if (screenStream) return stopScreen();
-  if (!isHost() && !room.perms.guestScreen) return toast('画面共有は担当者の許可が必要です');
+  if (!isHost() && !room.perms.guestScreen) {
+    if (Date.now() - (toggleScreen.asked || 0) < 15000) return toast('担当者に画面共有の希望を伝えました。許可されるまでお待ちください');
+    toggleScreen.asked = Date.now();
+    post('share-request', {}).catch(() => {});
+    return toast('画面共有には担当者の許可が必要です。担当者に希望を伝えました', null, 5000);
+  }
   if (!navigator.mediaDevices.getDisplayMedia) return toast('この端末のブラウザでは画面を共有できません。パソコンの Chrome・Edge・Safari をお使いください。', null, 6000);
   try {
     screenStream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 15 }, audio: false });

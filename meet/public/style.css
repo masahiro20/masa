@@ -703,3 +703,6 @@ body.in-call .modal select { background: #0f1216; color: #eceef1; border-color: 
 body.in-call .modal select option { background: #161a20; color: #eceef1; }
 body.in-call .modal .field label { color: #a7adb7; }
 body.in-call .modal .muted { color: #a7adb7; }
+
+.round.locked { opacity: .55; }
+.round.locked:hover { opacity: .8; }

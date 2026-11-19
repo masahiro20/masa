@@ -353,6 +353,21 @@ test('画面共有は許可されたときだけ。チャットは主催者が�
   assert.equal((await host.act('chat', { text: '主催者は書ける' })).status, 200);
 });
 
+test('画面共有の希望：許可のないお客様が押すと、主催者にだけ知らせが届く', async () => {
+  const { s, room } = await newRoom();
+  const host = await hostIn(room.id, s);
+  const { p: g } = await t.joinAs(room.id, '山田');
+  await host.act('admit', { target: g.peerId });
+  await g.poll(); await host.poll();
+  const r = await g.act('share-request');
+  assert.equal(r.body.allowed, false);
+  const ev = (await host.poll()).body.events.find((e) => e.type === 'share-request');
+  assert.equal(ev.data.name, '山田');
+  assert.ok(!(await g.poll()).body.events.some((e) => e.type === 'share-request'), 'お客様自身には届かない');
+  await host.act('perms', { guestScreen: true });
+  assert.equal((await g.act('share-request')).body.allowed, true);
+});
+
 test('チャットの保存は主催者が決め、保存したものは記録で見られる。他人のメッセージは消せない', async () => {
   const { s, room } = await newRoom();
   const host = await hostIn(room.id, s);
