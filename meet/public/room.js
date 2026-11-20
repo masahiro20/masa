@@ -3,8 +3,8 @@
 // 各接続には最初から「音声・映像の枠」と「書き込み用のデータチャネル」を用意し、
 // カメラ⇔画面共有の切り替えは枠の中身を差し替えるだけにしている（つなぎ直しが要らない）。
 import { Board, COLORS, WIDTHS, fileToDataUrl, pdfToDataUrl } from './board.js';
-import { Effects, PRESETS, available as fxAvailable, prepareCustomImage } from './effects.js';
-import { drawCard, cardThumb } from './brand.js';
+import { Effects, available as fxAvailable, prepareCustomImage } from './effects.js';
+import { drawCard, cardThumb, PRESETS, drawPreset, thumb } from './brand.js';
 
 const $ = (id) => document.getElementById(id);
 const roomId = location.pathname.split('/').pop();
@@ -201,7 +201,7 @@ function refreshLocal() {
   const v = camTrack(); if (v) v.enabled = camOn;
   fx.setSource(v); fx.setPaused(!camOn);
   // 文字の入った背景は、自分の画面でも左右反転せずに見せる（相手にはもともと正しく見えている）
-  document.body.classList.toggle('fx-text', fx.active && fx.mode === 'image' && (fx.imageId === 'card' || fx.imageId === 'brand'));
+  document.body.classList.toggle('fx-text', fx.active && fx.mode === 'image' && /^card/.test(fx.imageId || ''));
   if ($('preview').srcObject !== camView()) $('preview').srcObject = camView();
   setRound($('pMic'), micOn, ICON.mic, ICON.micOff);
   setRound($('pCam'), camOn, ICON.cam, ICON.camOff);
@@ -662,7 +662,8 @@ function updateAlone() {
 // 声を最優先にする。全員接続では人数分の映像を同時に送るので、人数に応じて映像の量を抑え、回線の詰まりで声が途切れないようにする
 function tuneSenders() {
   const n = peers.size;
-  const camMax = n <= 1 ? 1500000 : n === 2 ? 1000000 : n === 3 ? 700000 : 500000;
+  // 1 対 1 なら十分な画質（720p）。人数が増えるほど 1 人あたりを抑える（全員接続で上りが詰まらないように）
+  const camMax = n <= 1 ? 2500000 : n === 2 ? 1600000 : n === 3 ? 1100000 : 800000;
   for (const p of peers.values()) {
     for (const snd of p.pc.getSenders()) {
       if (!snd.track || !snd.getParameters) continue;
@@ -671,7 +672,7 @@ function tuneSenders() {
         if (!prm.encodings || !prm.encodings.length) continue;
         const e = prm.encodings[0];
         if (snd.track.kind === 'audio') { e.priority = 'high'; e.networkPriority = 'high'; }
-        else { e.maxBitrate = screenStream ? 2000000 : camMax; e.priority = 'low'; e.networkPriority = 'low'; e.maxFramerate = screenStream ? 15 : 30; }
+        else { e.maxBitrate = screenStream ? (n <= 2 ? 3000000 : 2000000) : camMax; e.priority = 'low'; e.networkPriority = 'low'; e.maxFramerate = screenStream ? 15 : 30; }
         snd.setParameters(prm).catch(() => {});
       } catch (_) { /* 対応していないブラウザ */ }
     }
@@ -1572,14 +1573,18 @@ const fxCustom = () => { try { return localStorage.getItem(FX_CUSTOM) || ''; } c
 
 const CARD_KEY = 'meet.card';
 const cardTitle = () => { try { return localStorage.getItem(CARD_KEY) || ''; } catch (_) { return ''; } };
-const cardInfo = () => ({ name: (myStaff && myStaff.name) || me.name || '', title: cardTitle() });
+const cardInfo = (theme = 'dark') => ({ name: (myStaff && myStaff.name) || me.name || '', title: cardTitle(), theme });
 
 async function applyFx(mode, imageId, quiet) {
   fx.overloaded = false; fx.level = 0; fx.cost = 0;
   try {
-    if (imageId === 'card') {
+    if (imageId === 'card' || imageId === 'card-light') {
       if (!myStaff) throw new Error('staff only');
-      await fx.set('image', 'card', '', await drawCard(cardInfo()));
+      await fx.set('image', imageId, '', await drawCard(cardInfo(imageId === 'card' ? 'dark' : 'light')));
+    } else if (mode === 'image' && imageId !== 'custom') {
+      const cv = drawPreset(imageId);
+      if (!cv) { mode = 'none'; imageId = null; } // 以前の背景（いまは無いもの）を選んでいた場合
+      await fx.set(mode, imageId, '', cv || undefined);
     } else await fx.set(mode, imageId, imageId === 'custom' ? fxCustom() : '');
     try { localStorage.setItem(FX_KEY, JSON.stringify({ mode, imageId: imageId || null })); } catch (_) { /* 保存できなくても続ける */ }
   } catch (e) {
@@ -1603,11 +1608,14 @@ async function fxDialog() {
   const grid = el('div', 'fx-grid'); wrap.appendChild(grid);
   const cur = fx.active ? { mode: fx.mode, imageId: fx.imageId } : { mode: 'none' };
   const items = [
-    ...(myStaff ? [{ mode: 'image', imageId: 'card', label: '会社の名刺', img: await cardThumb(cardInfo()).catch(() => '') }] : []),
+    ...(myStaff ? [
+      { mode: 'image', imageId: 'card', label: '名刺・ダーク', img: await cardThumb(cardInfo('dark')).catch(() => '') },
+      { mode: 'image', imageId: 'card-light', label: '名刺・ライト', img: await cardThumb(cardInfo('light')).catch(() => '') },
+    ] : []),
     { mode: 'none', label: 'なし', cls: 'fx-none' },
     { mode: 'blur-light', label: '少しぼかす', cls: 'fx-blur1' },
     { mode: 'blur', label: 'ぼかす', cls: 'fx-blur2' },
-    ...PRESETS.map((p) => ({ mode: 'image', imageId: p.id, label: p.label, img: p.src })),
+    ...PRESETS.map((p) => ({ mode: 'image', imageId: p.id, label: p.label, img: thumb(drawPreset(p.id)) })),
   ];
   if (fxCustom()) items.push({ mode: 'image', imageId: 'custom', label: '自分の画像', img: fxCustom() });
   const buttons = [];
@@ -1646,9 +1654,10 @@ async function fxDialog() {
       clearTimeout(tmr);
       tmr = setTimeout(async () => {
         try { localStorage.setItem(CARD_KEY, inp.value.trim()); } catch (_) { /* 何もしない */ }
-        const cardBtn = grid.querySelector('[data-image="card"]');
-        if (cardBtn) { const im = cardBtn.querySelector('img'); if (im) im.src = await cardThumb(cardInfo()); }
-        if (fx.active && fx.imageId === 'card') { await applyFx('image', 'card', true); setPv(); }
+        for (const [id, theme] of [['card', 'dark'], ['card-light', 'light']]) {
+          const im = grid.querySelector(`[data-image="${id}"] img`); if (im) im.src = await cardThumb(cardInfo(theme));
+        }
+        if (fx.active && /^card/.test(fx.imageId || '')) { await applyFx('image', fx.imageId, true); setPv(); }
       }, 400);
     };
     wrap.appendChild(f);

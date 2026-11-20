@@ -712,8 +712,10 @@ body.is-staff .round.staff-only { display: grid !important; }
 .fx-item.on { border-color: #4f8cff; box-shadow: 0 0 0 2px rgba(79, 140, 255, .35); }
 .fx-item.busy::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, .35); }
 .fx-none { background: repeating-linear-gradient(45deg, #1c2532 0 8px, #222c3a 8px 16px); }
-.fx-blur1 { background: radial-gradient(circle at 50% 45%, #8fa3b8 0 18%, transparent 19%), linear-gradient(135deg, #6f8399, #3c4d61); filter: saturate(.9); }
-.fx-blur2 { background: radial-gradient(circle at 50% 45%, #8fa3b8 0 18%, transparent 30%), linear-gradient(135deg, #8696a8, #4b5b6e); }
+.fx-blur1 { background: radial-gradient(circle at 50% 62%, rgba(255,255,255,.55) 0 14%, transparent 15%), radial-gradient(circle at 50% 120%, rgba(255,255,255,.5) 0 30%, transparent 31%), radial-gradient(circle at 20% 30%, #b8c2cc, transparent 45%), radial-gradient(circle at 85% 25%, #8b97a3, transparent 50%), #6d7884; }
+.fx-blur2 { background: radial-gradient(circle at 50% 62%, rgba(255,255,255,.55) 0 14%, transparent 15%), radial-gradient(circle at 50% 120%, rgba(255,255,255,.5) 0 30%, transparent 31%), radial-gradient(circle at 20% 30%, rgba(184,194,204,.7), transparent 60%), radial-gradient(circle at 85% 25%, rgba(139,151,163,.7), transparent 65%), #75808b; }
+.fx-blur1::before, .fx-blur2::before { content: ''; position: absolute; inset: 0; backdrop-filter: blur(2px); }
+.fx-blur2::before { backdrop-filter: blur(5px); }
 .fx-add { place-items: center; border: 2px dashed rgba(255, 255, 255, .25); background: transparent; }
 .fx-add span { background: none; }
 @media (max-width: 560px) { .fx-grid { grid-template-columns: repeat(3, 1fr); } }

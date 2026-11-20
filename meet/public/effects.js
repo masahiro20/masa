@@ -6,14 +6,8 @@ const BASE = '/static/vendor/mediapipe';
 const SEG_W = 256; const SEG_H = 144; // 見分けに使う大きさ（小さいほど軽い）
 const FPS = 24;
 // パソコンの速さに合わせて、出す映像の大きさと人の見分けの回数を自動で下げる（カクつき防止）
-const LEVELS = [{ w: 960, every: 1 }, { w: 800, every: 2 }, { w: 640, every: 2 }, { w: 512, every: 3 }];
+const LEVELS = [{ w: 1280, every: 1 }, { w: 960, every: 1 }, { w: 800, every: 2 }, { w: 640, every: 2 }, { w: 512, every: 3 }];
 
-export const PRESETS = [
-  { id: 'office', label: 'オフィス', src: '/static/bg/office.svg' },
-  { id: 'living', label: 'リビング', src: '/static/bg/living.svg' },
-  { id: 'wood', label: '木の壁', src: '/static/bg/wood.svg' },
-  { id: 'brand', label: 'COMPASS', src: '/static/bg/brand.svg' },
-];
 
 let readyPromise = null;
 // 使えるかどうか（部品がそろっているか・この端末で動くか）
@@ -88,8 +82,7 @@ export class Effects {
   // 設定を変える（画像は id か、自分で選んだ画像の data URL）
   async set(mode, imageId, customUrl, canvas) {
     if (mode === 'image' && canvas) { this.image = canvas; this.imageId = imageId; } else if (mode === 'image') {
-      const pre = PRESETS.find((p) => p.id === imageId);
-      const src = pre ? pre.src : customUrl;
+      const src = customUrl;
       if (!src) mode = 'none';
       else {
         // 毎回描き直すと重い（特に SVG）ので、一度だけ 1280×720 の絵にしておく
@@ -124,7 +117,6 @@ export class Effects {
       this.out.width = Math.min(LEVELS[this.level].w, s.width || 1280); this.out.height = Math.round(this.out.width * ((s.height || 720) / (s.width || 1280)));
       this.stream = this.out.captureStream(FPS);
       this.track = this.stream.getVideoTracks()[0];
-      if ('contentHint' in this.track) this.track.contentHint = 'motion';
     }
     if (!this.stop) this.stop = makeTicker(() => this.frame());
   }
