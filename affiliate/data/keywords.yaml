@@ -2,22 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 生成ai スクール 安い
-  intent: commercial
-  category: school
-  program: school-general
-  score: 60000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: webデザインスクール 社会人 おすすめ
-  intent: commercial
-  category: school
-  program: school-webdesign
-  score: 12000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: フリーランス エンジニア 30代
   intent: informational
   category: career
@@ -974,6 +958,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-shakaijin-muryo
+- keyword: webデザインスクール 社会人 おすすめ
+  intent: commercial
+  category: school
+  program: school-webdesign
+  score: 12000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: webdesign-school-shakaijin
 - keyword: プログラミング 習い事 何歳から
   intent: commercial
   category: learning
@@ -1454,6 +1447,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複
+- keyword: 生成ai スクール 安い
+  intent: commercial
+  category: school
+  program: school-general
+  score: 60000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事seisei-ai-school-hikaku・seisei-ai-school-hojokinと検索意図が重複
 - keyword: キャリアコーチング 高い
   intent: commercial
   category: career
