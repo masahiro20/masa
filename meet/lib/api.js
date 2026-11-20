@@ -138,7 +138,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
     const s = roomSecret(room);
     return {
       title: s.title || '', start: room.start, end: room.end, ownerName: room.ownerName,
-      perms: room.perms, locked: room.locked, saveChat: room.saveChat, recording: recPublic(room), transcription,
+      perms: room.perms, locked: room.locked, saveChat: room.saveChat, recording: recPublic(room), transcription, audioRec: audioRecPublic(room),
     };
   }
 
@@ -198,7 +198,20 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
     }
   }
 
+  // 録音（主催者のパソコンに保存する）の状態。参加者全員に「録音中」を表示するために持つ
+  function audioRecPublic(room) {
+    const a = room.audioRec;
+    return a && a.on ? { on: true, by: a.by, at: a.at } : { on: false };
+  }
+
   async function recOnLeave(room, peers, leftId) {
+    // 録音していた主催者が抜けたら、録音中の表示を消す（録音はその人のパソコンで止まる）
+    if (room.audioRec && room.audioRec.on && room.audioRec.byId === leftId) {
+      room.audioRec = { on: false };
+      await saveRoom(room);
+      await push(room.id, joinedIds(peers), 'audio-rec', audioRecPublic(room));
+      await logEvent(room, { kind: 'audio-rec-stop', name: '' });
+    }
     const r = room.recording;
     if (!r || r.state === 'off') return;
     if (r.consents) delete r.consents[leftId];
@@ -353,7 +366,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
 
     if (action === 'signal') return signal(room, peers, me, req.body);
     if (['chat', 'chat-delete', 'state', 'react', 'hand', 'rec-consent', 'transcript', 'share-request'].includes(action)) return participantAction(action, room, peers, me, req.body);
-    if (['admit', 'deny', 'kick', 'mute', 'perms', 'lock', 'end', 'rec-request', 'rec-stop', 'stop-share', 'make-host', 'unhost'].includes(action)) {
+    if (['admit', 'deny', 'kick', 'mute', 'perms', 'lock', 'end', 'rec-request', 'rec-stop', 'stop-share', 'make-host', 'unhost', 'audio-rec'].includes(action)) {
       if (me.role !== 'host') return fail(403, '主催者だけができる操作です');
       const r = await limiter.hit('host_action', me.id);
       if (!r.ok) return tooMany(r);
@@ -731,6 +744,18 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
       await push(room.id, everyone, 'locked', { locked });
       return ok({ ok: true, locked });
     }
+    if (action === 'audio-rec') {
+      // 主催者は参加者の許可なしに録音できる（運用で決めた方針）。ただし録音中であることは全員に表示する
+      const on = bool(b.on);
+      // 止める操作は、録音している本人のときだけ効く（ほかの主催者の録音中の表示を消さない）
+      if (!on && room.audioRec && room.audioRec.on && room.audioRec.byId !== me.id && peers[room.audioRec.byId]) return ok({ ok: true, audioRec: audioRecPublic(room) });
+      if (on && room.audioRec && room.audioRec.on && room.audioRec.byId !== me.id && peers[room.audioRec.byId]) return fail(409, `${room.audioRec.by} さんが録音中です`);
+      room.audioRec = on ? { on: true, by: me.name, byId: me.id, at: Date.now() } : { on: false };
+      await saveRoom(room);
+      await push(room.id, everyone, 'audio-rec', audioRecPublic(room));
+      await logEvent(room, { kind: on ? 'audio-rec-start' : 'audio-rec-stop', name: me.name });
+      return ok({ ok: true, audioRec: audioRecPublic(room) });
+    }
     if (action === 'make-host') {
       if (!target || target.state !== 'joined' || target.id === me.id) return fail(404, '対象の方が見つかりません');
       if (target.role === 'host') return ok({ ok: true });
@@ -782,7 +807,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
     const flat = Object.entries(tomb).flat();
     if (flat.length) cmds.push(['HSET', `peers:${room.id}`, ...flat], ['EXPIRE', `peers:${room.id}`, 120]);
     await store.pipeline(cmds);
-    room.recording = { state: 'off', consents: {} };
+    room.recording = { state: 'off', consents: {} }; room.audioRec = { on: false };
     await saveRoom(room);
     await logEvent(room, { kind: 'ended', reason });
   }

@@ -810,3 +810,9 @@ body.fx-text .tile.self video, body.fx-text .preview video, body.fx-text .fx-pre
 body.fx-text .preview .pv-name { display: none; }
 .fx-add { color: inherit; }
 .fx-add span { opacity: .75; }
+
+/* 録音 */
+.round.rec-btn { color: #ff8a7d; }
+.round.rec-btn.recording { background: #d64536; color: #fff; animation: recPulse 1.6s ease-in-out infinite; }
+@keyframes recPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(214, 69, 54, .5); } 50% { box-shadow: 0 0 0 6px rgba(214, 69, 54, 0); } }
+.topstrip #audioRecBadge { color: #fff; background: rgba(214, 69, 54, .88); border-color: transparent; font-variant-numeric: tabular-nums; }

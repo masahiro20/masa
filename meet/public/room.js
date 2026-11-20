@@ -5,6 +5,7 @@
 import { Board, COLORS, WIDTHS, fileToDataUrl, pdfToDataUrl } from './board.js';
 import { Effects, available as fxAvailable, prepareCustomImage } from './effects.js';
 import { drawCard, cardThumb, PRESETS, drawPreset, thumb } from './brand.js';
+import { Recorder, recSupported, leftovers, saveFile, fileName } from './recorder.js';
 
 const $ = (id) => document.getElementById(id);
 const roomId = location.pathname.split('/').pop();
@@ -27,6 +28,7 @@ const ICON = {
   notes: I('M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Zm2 16H8v-2h8v2Zm0-4H8v-2h8v2Zm-3-5V3.5L18.5 9H13Z'),
   more: I('M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z'),
   gear: I('M19.14 12.94a7.07 7.07 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7 7 0 0 0-1.62-.94l-.36-2.54A.5.5 0 0 0 13.9 2h-3.84a.5.5 0 0 0-.49.42l-.36 2.54a7 7 0 0 0-1.62.94l-2.39-.96a.5.5 0 0 0-.61.22L2.67 8.48a.5.5 0 0 0 .12.64l2.03 1.58a7.07 7.07 0 0 0 0 1.88l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.3.61.22l2.39-.96c.5.38 1.04.7 1.62.94l.36 2.54c.05.24.25.42.49.42h3.84c.24 0 .44-.18.49-.42l.36-2.54a7 7 0 0 0 1.62-.94l2.39.96c.22.08.48 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z'),
+  rec: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.5" fill="currentColor"/></svg>',
   sparkle: I('M12 2l1.9 5.1L19 9l-5.1 1.9L12 16l-1.9-5.1L5 9l5.1-1.9L12 2Zm7 12 .95 2.55L22.5 17.5l-2.55.95L19 21l-.95-2.55-2.55-.95 2.55-.95L19 14ZM5 15l.7 1.8 1.8.7-1.8.7L5 20l-.7-1.8-1.8-.7 1.8-.7L5 15Z'),
   hand: I('M21 7a2 2 0 0 0-4 0v4h-1V4a2 2 0 0 0-4 0v7h-1V5a2 2 0 0 0-4 0v8.5l-1.6-2.4a2 2 0 0 0-3.3 2.3l3.6 5.4A7 7 0 0 0 11.5 22H14a7 7 0 0 0 7-7V7Z'),
 };
@@ -186,6 +188,9 @@ function startMeter() {
 const audioTrack = () => (camStream && camStream.getAudioTracks()[0]) || null;
 const camTrack = () => (camStream && camStream.getVideoTracks()[0]) || null;
 // 背景のぼかし・画像を使っているときは、加工した映像を送る
+// 録音（主催者のパソコンに保存）
+const rec = new Recorder(() => { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; });
+let recTimer = null;
 const fx = new Effects();
 fx.onOverload = () => {
   if (!fx.active) return;
@@ -200,6 +205,7 @@ function refreshLocal() {
   const a = audioTrack(); if (a) a.enabled = micOn;
   const v = camTrack(); if (v) v.enabled = camOn;
   fx.setSource(v); fx.setPaused(!camOn);
+  if (rec.active) rec.setLocal(a);
   // 文字の入った背景は、自分の画面でも左右反転せずに見せる（相手にはもともと正しく見えている）
   document.body.classList.toggle('fx-text', fx.active && fx.mode === 'image' && /^card/.test(fx.imageId || ''));
   if ($('preview').srcObject !== camView()) $('preview').srcObject = camView();
@@ -724,7 +730,7 @@ function createPeer(id, name, role, initiator) {
     stream.getTracks().filter((t) => t.kind === e.track.kind).forEach((t) => stream.removeTrack(t));
     stream.addTrack(e.track);
     const v = tile.querySelector('video'); v.srcObject = stream; v.play().catch(() => {});
-    if (e.track.kind === 'audio') { audio.srcObject = new MediaStream([e.track]); playRemote(audio); watchSpeaking(peer, e.track); }
+    if (e.track.kind === 'audio') { audio.srcObject = new MediaStream([e.track]); playRemote(audio); watchSpeaking(peer, e.track); if (rec.active) rec.addTrack(id, e.track); }
   };
   pc.onconnectionstatechange = () => {
     const st = tile.querySelector('.status');
@@ -801,6 +807,7 @@ function dropPeer(id, quiet) {
   const p = peers.get(id); if (!p) return;
   try { if (p.dc) p.dc.close(); } catch (_) { /* 既に閉じている */ }
   p.pc.close(); p.tile.remove(); if (p.audio) { p.audio.srcObject = null; p.audio.remove(); } peers.delete(id);
+  rec.removeTrack(id);
   tuneSenders();
   layout();
   if (!quiet) renderPeople();
@@ -1164,6 +1171,7 @@ const handlers = {
     beep();
   },
   'rec-request': ({ by }) => askConsent(by),
+  'audio-rec': (a) => { room.audioRec = a; updateAudioRec(); },
   'rec-state': (r) => { room.recording = r; updateRec(); if (r.declinedBy) toast(`${r.declinedBy} さんが同意されなかったため、文字起こしは行いません`, null, 6000); },
 };
 
@@ -1241,6 +1249,10 @@ async function enterCall({ you, peers: others, waiting: w, room: r }, resumed) {
   }
   refreshLocal(); renderPeople(); updateRec(); updateChatNote(); syncToolbar(); tick();
   document.body.classList.toggle('is-staff', !!me.staff);
+  updateAudioRec();
+  // 開き直したとき：自分が録音中のままになっていたら表示を戻す（録音そのものはブラウザ内の控えから保存できる）
+  if (resumed && isHost() && !rec.active) post('audio-rec', { on: false }).catch(() => {});
+  if (isHost()) offerLeftovers();
   if (me.staff) loadNotes();
   renderKnockCards();
 }
@@ -1251,6 +1263,7 @@ async function decide(id, ok) {
 }
 
 function stopAll() {
+  if (rec.active) stopRecording(true);
   polling = false;
   for (const id of [...peers.keys()]) dropPeer(id, true);
   for (const s of [camStream, screenStream]) if (s) s.getTracks().forEach((t) => t.stop());
@@ -1299,7 +1312,67 @@ function onRole(id, name, role, by) {
   renderPeople();
 }
 
-function leave() {
+// ---------- 録音 ----------
+function updateAudioRec() {
+  const a = room.audioRec || { on: false };
+  const mine = rec.active;
+  $('audioRecBadge').classList.toggle('hidden', !a.on && !mine);
+  if (!mine) $('audioRecBadge').textContent = a.on ? '● 録音中' : '';
+  $('recBtn').classList.toggle('recording', mine);
+  $('recBtn').dataset.tip = mine ? '録音を止めて保存' : '録音（このパソコンに保存）';
+  $('recBtn').setAttribute('aria-label', $('recBtn').dataset.tip);
+}
+
+const fmtDur = (ms) => { const t = Math.floor(ms / 1000); const h = Math.floor(t / 3600); const m = Math.floor((t % 3600) / 60); const s2 = t % 60; return `${h ? `${h}:` : ''}${h ? String(m).padStart(2, '0') : m}:${String(s2).padStart(2, '0')}`; };
+
+async function startRecording() {
+  if (!isHost()) return;
+  if (!recSupported()) return toast('このブラウザでは録音できません。パソコンの Chrome・Edge をお使いください', null, 6000);
+  try { await post('audio-rec', { on: true }); } catch (e) { return toast(e.message); }
+  const remotes = [];
+  for (const [id, p] of peers) { const t = p.audio && p.audio.srcObject && p.audio.srcObject.getAudioTracks()[0]; if (t) remotes.push([id, t]); }
+  try {
+    await rec.start({ title: room.title, local: audioTrack(), remotes });
+  } catch (e) {
+    console.error(e);
+    post('audio-rec', { on: false }).catch(() => {});
+    return toast('録音を始められませんでした', null, 5000);
+  }
+  clearInterval(recTimer);
+  recTimer = setInterval(() => { if (rec.active) $('audioRecBadge').textContent = `● 録音中 ${fmtDur(rec.elapsed)}`; }, 1000);
+  $('audioRecBadge').textContent = '● 録音中 0:00';
+  updateAudioRec();
+  toast('録音を始めました。止めると、このパソコンに保存されます', null, 5000);
+}
+
+// 止めて保存する（退出・終了のときも呼ぶ）
+async function stopRecording(quiet) {
+  if (!rec.active || stopRecording.busy) return;
+  stopRecording.busy = true;
+  clearInterval(recTimer);
+  let r;
+  try { r = await rec.stop(); } finally { stopRecording.busy = false; }
+  if (me.peerId) post('audio-rec', { on: false }).catch(() => {});
+  updateAudioRec();
+  if (!r || !r.blob.size) return;
+  saveFile(r.blob, fileName(r.title, r.startedAt, r.mime, roomId));
+  await rec.discardBackup(r.id);
+  if (!quiet) toast(`録音を保存しました（${fmtDur(Date.now() - r.startedAt)}）。ブラウザの「ダウンロード」に入っています`, null, 7000);
+}
+
+async function toggleRecording() { if (rec.active) await stopRecording(); else await startRecording(); }
+
+// 前回、保存しきれなかった録音があれば知らせる
+async function offerLeftovers() {
+  const list = await leftovers();
+  for (const r of list) {
+    toast(`保存されていない録音があります（${new Date(r.startedAt).toLocaleString('ja-JP')}）`, [['保存する', async () => { saveFile(r.blob, fileName(r.title, r.startedAt, r.mime, roomId)); await rec.discardBackup(r.id); }], ['捨てる', () => rec.discardBackup(r.id)]], 30000);
+  }
+}
+window.addEventListener('beforeunload', (e) => { if (rec.active) { e.preventDefault(); e.returnValue = '録音が保存されていません'; } });
+
+async function leave() {
+  if (rec.active) await stopRecording(true);
   if (me.peerId) navigator.sendBeacon(api('/leave'), new Blob([JSON.stringify({ peerId: me.peerId, secret: me.secret })], { type: 'application/json' }));
   const host = isHost();
   stopAll();
@@ -1308,6 +1381,7 @@ function leave() {
 }
 
 function endedScreen(reason) {
+  if (rec.active) stopRecording(true);
   const host = isHost();
   stopAll();
   fatal('打ち合わせは終了しました', reason === 'deleted' ? 'この打ち合わせは担当者によって取り消されました。' : 'ご参加ありがとうございました。', host ? [['打ち合わせ記録を開く', `/records#${roomId}`, true]] : []);
@@ -1316,6 +1390,7 @@ function endedScreen(reason) {
 async function endForAll() {
   const ok = await modal('打ち合わせを終了', '全員の通話を終了し、このリンクを使えなくします。よろしいですか？', [['やめる', false, 'ghost'], ['全員の通話を終了', true, 'danger']]);
   if (!ok) return;
+  if (rec.active) await stopRecording(true);
   try { await post('end', {}); } catch (e) { return toast(e.message); }
   endedScreen('ended');
 }
@@ -1561,7 +1636,8 @@ function buildMoreMenu() {
   add('全画面表示', () => { const s = $('stagewrap'); if (document.fullscreenElement) document.exitFullscreen(); else if (s.requestFullscreen) s.requestFullscreen().catch(() => {}); });
   if (isHost()) {
     add('お客様用のリンクをコピー', () => navigator.clipboard.writeText(`${location.origin}/r/${roomId}`).then(() => toast('お客様用のリンクをコピーしました')).catch(() => {}));
-    add(room.recording.state === 'off' ? '文字起こしを依頼する' : '文字起こしを止める', recToggle);
+    add(rec.active ? '録音を止めて保存' : '録音する（このパソコンに保存）', toggleRecording);
+    if (config.transcription !== 'none') add(room.recording.state === 'off' ? '文字起こしを依頼する' : '文字起こしを止める', recToggle);
     add('全員の通話を終了', endForAll, 'danger-text');
   }
 }
@@ -1762,7 +1838,7 @@ async function boot() {
 
   if (!window.RTCPeerConnection || !navigator.mediaDevices) return fatal('このブラウザでは参加できません', 'Chrome・Safari・Edge の新しい版でお開きください。LINE などのアプリの中で開いた場合は、右上のメニューから「ブラウザで開く」を選んでください。');
 
-  for (const [id, icon] of [['screen', ICON.screen], ['annBtn', ICON.pen], ['wbBtn', ICON.board], ['reactBtn', ICON.smile], ['leave', ICON.leave], ['peopleBtn', ICON.people], ['chatBtn', ICON.chat], ['notesBtn', ICON.notes], ['moreBtn', ICON.more], ['pSettings', ICON.gear], ['pFx', ICON.sparkle]]) $(id).innerHTML = icon;
+  for (const [id, icon] of [['screen', ICON.screen], ['annBtn', ICON.pen], ['wbBtn', ICON.board], ['reactBtn', ICON.smile], ['recBtn', ICON.rec], ['leave', ICON.leave], ['peopleBtn', ICON.people], ['chatBtn', ICON.chat], ['notesBtn', ICON.notes], ['moreBtn', ICON.more], ['pSettings', ICON.gear], ['pFx', ICON.sparkle]]) $(id).innerHTML = icon;
   for (const b of document.querySelectorAll('.round[aria-label]')) b.dataset.tip = b.getAttribute('aria-label');
   buildToolbar(); buildReactMenu(); syncToolbar();
   // 画面共有ができない端末（スマートフォンなど）では、共有のボタンを出さない
@@ -1820,6 +1896,7 @@ $('pCam').onclick = $('cam').onclick = () => { camOn = !camOn; refreshLocal(); }
 $('pSettings').onclick = deviceDialog;
 $('pFx').onclick = fxDialog;
 $('netBadge').onclick = showDiag;
+$('recBtn').onclick = toggleRecording;
 $('micChip').onclick = (e) => { e.stopPropagation(); openDevMenu('mic', e.currentTarget); };
 $('spkChip').onclick = (e) => { e.stopPropagation(); openDevMenu('speaker', e.currentTarget); };
 $('camChip').onclick = (e) => { e.stopPropagation(); openDevMenu('cam', e.currentTarget); };

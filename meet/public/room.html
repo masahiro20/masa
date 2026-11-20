@@ -67,7 +67,7 @@
         <a class="btn ghost" href="/">戻る</a>
       </div>
       <div class="wait muted hidden" id="waitBox"><div class="spinner"></div><span id="waitText">担当者が入室を許可するまで、このままお待ちください。</span></div>
-      <p class="muted small privacy">映像と音声は参加者の端末どうしで直接やりとりされ、録画はされません。背景のぼかしも、お使いの端末の中だけで処理します。</p>
+      <p class="muted small privacy">映像と音声は参加者の端末どうしで直接やりとりされます。担当者が録音する場合は、画面に「録音中」と表示されます。背景のぼかしは、お使いの端末の中だけで処理します。</p>
     </div>
   </div>
 </div>
@@ -75,6 +75,7 @@
 <!-- 通話中 -->
 <div class="call hidden" id="call">
   <div class="topstrip" id="topstrip">
+    <span class="rec hidden" id="audioRecBadge" role="status">● 録音中</span>
     <span class="rec hidden" id="recBadge">● 文字起こし中</span>
     <span class="lockb hidden" id="lockBadge">入室締切中</span>
     <button class="net" id="netBadge" type="button" title="押すと通話の状態を確認できます"></button>
@@ -148,6 +149,7 @@
       <button class="round hidden" id="annBtn" aria-label="共有画面に書き込む"></button>
       <button class="round" id="wbBtn" aria-label="ホワイトボード"></button>
       <button class="round" id="reactBtn" aria-label="リアクション"></button>
+      <button class="round host-only rec-btn" id="recBtn" aria-label="録音（このパソコンに保存）"></button>
       <button class="round leave" id="leave" aria-label="退出"></button>
     </div>
     <div class="right">

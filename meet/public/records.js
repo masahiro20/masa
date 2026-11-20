@@ -77,7 +77,7 @@ async function open(id) {
     d.appendChild(s);
   }
   const lg = section('出入りの記録');
-  const kinds = { joined: '入室', left: '退出', kicked: '退出（担当者の操作）', ended: '打ち合わせ終了', 'rec-request': '文字起こしを依頼', 'rec-consent': '文字起こしに同意', 'rec-declined': '文字起こしに同意せず', 'rec-stop': '文字起こしを停止' };
+  const kinds = { joined: '入室', left: '退出', kicked: '退出（担当者の操作）', ended: '打ち合わせ終了', 'rec-request': '文字起こしを依頼', 'rec-consent': '文字起こしに同意', 'rec-declined': '文字起こしに同意せず', 'rec-stop': '文字起こしを停止', 'audio-rec-start': '録音を開始', 'audio-rec-stop': '録音を停止', 'host-given': '主催者になった', 'host-removed': '主催者を外れた' };
   for (const e of m.log) lg.appendChild(el('p', 'tline small', `${new Date(e.at).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })} ${e.name || ''} ${kinds[e.kind] || e.kind}`));
   d.appendChild(lg);
 }

@@ -395,6 +395,33 @@ test('主催者を渡す：渡された人は主催者の操作ができ、社�
   assert.equal((await t.call('GET', `/api/meetings/${room.id}`)).status, 401);
 });
 
+test('録音：主催者は許可なしで録音でき、全員に「録音中」が届く。お客様は録音できない。録音した主催者が抜けると表示が消える', async () => {
+  const { s, room } = await newRoom('tanaka');
+  const host = await hostIn(room.id, s);
+  const { p: g } = await t.joinAs(room.id, '山田');
+  await host.act('admit', { target: g.peerId });
+  await g.poll(); await host.poll();
+  assert.equal((await g.act('audio-rec', { on: true })).status, 403, 'お客様は録音できない');
+  const r = await host.act('audio-rec', { on: true });
+  assert.equal(r.status, 200);
+  assert.equal(r.body.audioRec.on, true);
+  const ev = (await g.poll()).body.events.find((e) => e.type === 'audio-rec');
+  assert.equal(ev.data.on, true);
+  assert.equal(ev.data.by, '田中 一郎');
+  // 後から入った人にも、録音中であることが伝わる
+  const { p: g2 } = await t.joinAs(room.id, '花子');
+  await host.act('admit', { target: g2.peerId });
+  const adm = (await g2.poll()).body.events.find((e) => e.type === 'admitted');
+  assert.equal(adm.data.room.audioRec.on, true);
+  // 録音していた主催者が抜けると、表示が消える
+  await host.act('leave');
+  const off = (await g.poll()).body.events.find((e) => e.type === 'audio-rec');
+  assert.equal(off.data.on, false);
+  // 記録に残る
+  const m = await s.as('GET', `/api/meetings/${room.id}`);
+  assert.ok(m.body.meeting.log.some((e) => e.kind === 'audio-rec-start'));
+});
+
 test('主催者が抜けると、残っている人に自動で主催者が渡り、待合室の人も引き継がれる', async () => {
   const { s, room } = await newRoom();
   const host = await hostIn(room.id, s);
