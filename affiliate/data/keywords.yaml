@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: レンタルサーバー 使い方 初心者
-  intent: informational
-  category: tools
-  program: tools-rental-server
-  score: 24000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: webデザインスクール 社会人 おすすめ
   intent: commercial
   category: school
@@ -805,6 +797,15 @@ keywords:
   score: 30000.0
   status: published
   slug: 30dai-mikeiken-engineer-tenshoku-genjitsu
+- keyword: レンタルサーバー 使い方 初心者
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 24000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: rental-server-tsukaikata-shoshinsha
 - keyword: 副業 ブログ 稼げない
   intent: informational
   category: fukugyo
