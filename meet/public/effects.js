@@ -37,7 +37,8 @@ async function loadSegmenter() {
     const mod = await import(`${BASE}/vision_bundle.mjs`);
     const fileset = await mod.FilesetResolver.forVisionTasks(`${BASE}/wasm`);
     const opts = (delegate) => ({ baseOptions: { modelAssetPath: `${BASE}/segmenter.tflite`, delegate }, runningMode: 'VIDEO', outputCategoryMask: false, outputConfidenceMasks: true });
-    try { return await mod.ImageSegmenter.createFromOptions(fileset, opts('GPU')); } catch (_) { return mod.ImageSegmenter.createFromOptions(fileset, opts('CPU')); }
+    // 小さなモデルなので CPU（WebAssembly）で十分速い。GPU だと結果の読み戻しで画面全体が引っかかることがある
+    try { return await mod.ImageSegmenter.createFromOptions(fileset, opts('CPU')); } catch (_) { return mod.ImageSegmenter.createFromOptions(fileset, opts('GPU')); }
   })();
   segPromise.catch(() => { segPromise = null; });
   return segPromise;
@@ -67,13 +68,13 @@ export class Effects {
     this.out = document.createElement('canvas');
     this.ctx = this.out.getContext('2d');
     this.small = document.createElement('canvas'); this.small.width = SEG_W; this.small.height = SEG_H;
-    this.sctx = this.small.getContext('2d', { willReadFrequently: false });
+    this.sctx = this.small.getContext('2d', { willReadFrequently: true });
     this.mask = document.createElement('canvas'); this.mask.width = SEG_W; this.mask.height = SEG_H;
     this.mctx = this.mask.getContext('2d');
     // 縁をやわらかくした形（小さいままぼかすので軽い）
     this.soft = document.createElement('canvas'); this.soft.width = SEG_W; this.soft.height = SEG_H;
     this.softCtx = this.soft.getContext('2d');
-    this.level = 0; this.cost = 0; this.n = 0;
+    this.level = 0; this.cost = 0; this.n = 0; this.onOverload = null; this.overloaded = false;
     this.maskData = this.mctx.createImageData(SEG_W, SEG_H);
     this.prev = new Float32Array(SEG_W * SEG_H);
     this.blurC = document.createElement('canvas');
@@ -166,6 +167,8 @@ export class Effects {
       const dt = performance.now() - t0;
       this.cost = this.cost ? this.cost * 0.9 + dt * 0.1 : dt;
       if (this.n % 48 === 0) {
+        // いちばん軽くしても追いつかないパソコンでは、背景の処理をやめてもらう（映像のカクつきを優先して防ぐ）
+        if (this.cost > 30 && this.level === LEVELS.length - 1 && !this.overloaded) { this.overloaded = true; if (this.onOverload) setTimeout(this.onOverload, 0); }
         if (this.cost > 22 && this.level < LEVELS.length - 1) { this.level++; this.cost = 0; }
         else if (this.cost < 8 && this.level > 0) { this.level--; this.cost = 0; }
       }

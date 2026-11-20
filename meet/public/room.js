@@ -187,6 +187,11 @@ const audioTrack = () => (camStream && camStream.getAudioTracks()[0]) || null;
 const camTrack = () => (camStream && camStream.getVideoTracks()[0]) || null;
 // 背景のぼかし・画像を使っているときは、加工した映像を送る
 const fx = new Effects();
+fx.onOverload = () => {
+  if (!fx.active) return;
+  applyFx('none', null, true);
+  toast('このパソコンでは背景の処理が追いつかず映像がカクつくため、背景をオフにしました。✨ からいつでも戻せます', null, 9000);
+};
 const sendCam = () => (fx.active ? fx.track : camTrack());
 const camView = () => (fx.active ? fx.stream : camStream);
 function outgoingVideo() { if (screenStream) return screenStream.getVideoTracks()[0] || null; return camOn ? sendCam() : null; }
@@ -1570,6 +1575,7 @@ const cardTitle = () => { try { return localStorage.getItem(CARD_KEY) || ''; } c
 const cardInfo = () => ({ name: (myStaff && myStaff.name) || me.name || '', title: cardTitle() });
 
 async function applyFx(mode, imageId, quiet) {
+  fx.overloaded = false; fx.level = 0; fx.cost = 0;
   try {
     if (imageId === 'card') {
       if (!myStaff) throw new Error('staff only');
