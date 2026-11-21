@@ -26,14 +26,6 @@ keywords:
   status: queued
   boost: 2.0
   source: google-suggest
-- keyword: kredo it留学 評判
-  intent: transactional
-  category: school
-  program: school-kredo-ryugaku
-  score: 75000.0
-  status: queued
-  boost: 3.0
-  source: google-suggest
 - keyword: キャリア相談 ai
   intent: informational
   category: career
@@ -321,6 +313,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: mikeiken-engineer-yametoke
+- keyword: kredo it留学 評判
+  intent: transactional
+  category: school
+  program: school-kredo-ryugaku
+  score: 75000.0
+  status: published
+  boost: 3.0
+  source: google-suggest
+  slug: kredo-it-ryugaku-hyouban
 - keyword: kredo 評判
   intent: transactional
   category: school
