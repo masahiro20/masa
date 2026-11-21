@@ -182,3 +182,7 @@
 {"ts": "2026-11-20T09:49:03+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["生成ai スクール 安い"], "errors": ["既存記事seisei-ai-school-hikaku・seisei-ai-school-hojokinと検索意図が重複"]}
 {"ts": "2026-11-20T09:50:46+00:00", "source": "routine", "published": ["webdesign-school-shakaijin"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-20T21:50:34+00:00", "source": "routine", "published": ["freelance-engineer-30dai"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-21T03:48:28+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["webデザイン 教育訓練給付金 条件"], "errors": ["既存記事webdesign-school-shakaijin・web-designer-mikeiken-school-hitsuyou・kyufukin-partと検索意図が重複"]}
+{"ts": "2026-11-21T03:48:39+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["35歳 未経験 エンジニア転職"], "errors": ["既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複"]}
+{"ts": "2026-11-21T03:48:51+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["conoha wing やめとけ"], "errors": ["既存記事conoha-wing-hyoubanと検索意図が重複"]}
+{"ts": "2026-11-21T03:50:24+00:00", "source": "routine", "published": ["shanai-se-tenshoku-muzukashii"], "refreshed": [], "rejected": [], "errors": []}
