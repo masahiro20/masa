@@ -1,29 +1,95 @@
 {
- "imported": "2026-11-01",
+ "imported": "2026-11-21",
  "rows": {
   "スキルコンパス": {
-   "clicks": 13.0,
-   "impressions": 49.0,
-   "ctr": 0.26530000000000004,
-   "position": 7.47
+   "clicks": 18.0,
+   "impressions": 71.0,
+   "ctr": 0.2535,
+   "position": 6.65
+  },
+  "リスキリング 補助金 いつもらえる": {
+   "clicks": 3.0,
+   "impressions": 19.0,
+   "ctr": 0.15789999999999998,
+   "position": 1.95
+  },
+  "転職相談 チャット": {
+   "clicks": 3.0,
+   "impressions": 15.0,
+   "ctr": 0.2,
+   "position": 19.33
+  },
+  "教育訓練給付金及び教育訓練支援給付金受給資格確認票": {
+   "clicks": 1.0,
+   "impressions": 55.0,
+   "ctr": 0.0182,
+   "position": 6.91
   },
   "プログラミングスクール 費用相場": {
    "clicks": 1.0,
-   "impressions": 15.0,
-   "ctr": 0.0667,
-   "position": 21.6
+   "impressions": 18.0,
+   "ctr": 0.0556,
+   "position": 20.28
   },
-  "リスキリング 補助金 いつもらえる": {
+  "教育訓練給付金 電子申請 やり方": {
+   "clicks": 1.0,
+   "impressions": 13.0,
+   "ctr": 0.07690000000000001,
+   "position": 9.46
+  },
+  "教育訓練給付金受給資格確認票 どこで もらえる": {
    "clicks": 1.0,
    "impressions": 12.0,
    "ctr": 0.0833,
-   "position": 2.25
+   "position": 5.25
+  },
+  "教育訓練給付制度": {
+   "clicks": 1.0,
+   "impressions": 7.0,
+   "ctr": 0.1429,
+   "position": 4.43
   },
   "aiコーディング おすすめ 無料": {
    "clicks": 1.0,
+   "impressions": 7.0,
+   "ctr": 0.1429,
+   "position": 11.0
+  },
+  "ローカライズエンジニア 40代": {
+   "clicks": 1.0,
+   "impressions": 5.0,
+   "ctr": 0.2,
+   "position": 10.0
+  },
+  "教育訓練給付金 二回目": {
+   "clicks": 1.0,
    "impressions": 4.0,
    "ctr": 0.25,
-   "position": 10.25
+   "position": 7.75
+  },
+  "linux 参考書": {
+   "clicks": 1.0,
+   "impressions": 3.0,
+   "ctr": 0.3333,
+   "position": 11.67
+  },
+  "リスキリング補助金 主婦": {
+   "clicks": 1.0,
+   "impressions": 3.0,
+   "ctr": 0.3333,
+   "position": 31.67
+  },
+  "php 独学": {
+   "clicks": 1.0,
+   "impressions": 2.0,
+   "ctr": 0.5,
+   "position": 11.0
+  },
+  "営業 その他it 40代": {
+   "clicks": 1.0,
+   "impressions": 1.0,
+   "ctr": 1.0,
+   "position": 5.0
   },
   "ai コーディング 無料": {
    "clicks": 1.0,
@@ -33,93 +99,291 @@
   },
   "プログラミングスクール 費用 相場": {
    "clicks": 0.0,
-   "impressions": 27.0,
+   "impressions": 67.0,
    "ctr": 0.0,
-   "position": 34.93
+   "position": 36.99
   },
   "プログラミングスクール 対面 オンライン 違い": {
    "clicks": 0.0,
-   "impressions": 24.0,
+   "impressions": 66.0,
    "ctr": 0.0,
-   "position": 35.17
-  },
-  "プログラミングスクール 料金": {
-   "clicks": 0.0,
-   "impressions": 23.0,
-   "ctr": 0.0,
-   "position": 65.09
-  },
-  "webデザイナー 未経験 30代 無理": {
-   "clicks": 0.0,
-   "impressions": 22.0,
-   "ctr": 0.0,
-   "position": 8.73
+   "position": 30.27
   },
   "プログラミングスクール オンライン": {
    "clicks": 0.0,
-   "impressions": 22.0,
+   "impressions": 54.0,
    "ctr": 0.0,
-   "position": 39.55
+   "position": 32.11
   },
-  "プログラミングスクール やめとけ": {
+  "webデザイナー 未経験 30代 無理": {
    "clicks": 0.0,
-   "impressions": 20.0,
+   "impressions": 45.0,
    "ctr": 0.0,
-   "position": 65.1
+   "position": 8.73
   },
-  "転職エージェント 複数登録": {
+  "プログラミングスクール 料金": {
    "clicks": 0.0,
-   "impressions": 15.0,
+   "impressions": 45.0,
    "ctr": 0.0,
-   "position": 79.07
-  },
-  "転職サイト いくつ登録": {
-   "clicks": 0.0,
-   "impressions": 15.0,
-   "ctr": 0.0,
-   "position": 83.93
+   "position": 54.56
   },
   "プログラミング 独学": {
    "clicks": 0.0,
-   "impressions": 13.0,
+   "impressions": 39.0,
    "ctr": 0.0,
-   "position": 53.31
+   "position": 56.95
   },
-  "キャリアコーチング 無料": {
+  "リスキリング リカレント 違い": {
    "clicks": 0.0,
-   "impressions": 12.0,
+   "impressions": 35.0,
    "ctr": 0.0,
-   "position": 47.42
+   "position": 49.17
   },
-  "skill compass": {
+  "プログラミング 副業 未経験": {
    "clicks": 0.0,
-   "impressions": 11.0,
+   "impressions": 33.0,
    "ctr": 0.0,
-   "position": 6.09
+   "position": 56.42
+  },
+  "転職 相談 無料": {
+   "clicks": 0.0,
+   "impressions": 26.0,
+   "ctr": 0.0,
+   "position": 11.0
   },
   "プログラミングスクール 通い放題": {
    "clicks": 0.0,
-   "impressions": 11.0,
+   "impressions": 24.0,
    "ctr": 0.0,
-   "position": 11.27
+   "position": 25.42
+  },
+  "転職相談 無料": {
+   "clicks": 0.0,
+   "impressions": 23.0,
+   "ctr": 0.0,
+   "position": 10.52
+  },
+  "プログラミングスクール やめとけ": {
+   "clicks": 0.0,
+   "impressions": 23.0,
+   "ctr": 0.0,
+   "position": 66.39
+  },
+  "教育訓練給付金受給資格確認票": {
+   "clicks": 0.0,
+   "impressions": 22.0,
+   "ctr": 0.0,
+   "position": 8.18
+  },
+  "転職エージェント 高卒": {
+   "clicks": 0.0,
+   "impressions": 22.0,
+   "ctr": 0.0,
+   "position": 64.91
+  },
+  "skill compass": {
+   "clicks": 0.0,
+   "impressions": 20.0,
+   "ctr": 0.0,
+   "position": 5.5
   },
   "プログラミングスクール ローン": {
    "clicks": 0.0,
-   "impressions": 11.0,
+   "impressions": 18.0,
    "ctr": 0.0,
-   "position": 14.73
+   "position": 17.39
   },
-  "転職サイト複数登録": {
+  "独学 react": {
    "clicks": 0.0,
-   "impressions": 11.0,
+   "impressions": 18.0,
    "ctr": 0.0,
-   "position": 87.73
+   "position": 18.39
+  },
+  "転職サイト いくつ登録": {
+   "clicks": 0.0,
+   "impressions": 18.0,
+   "ctr": 0.0,
+   "position": 84.28
+  },
+  "web制作 副業": {
+   "clicks": 0.0,
+   "impressions": 17.0,
+   "ctr": 0.0,
+   "position": 47.24
   },
   "教育訓練給付制度 必要書類": {
    "clicks": 0.0,
-   "impressions": 10.0,
+   "impressions": 16.0,
    "ctr": 0.0,
-   "position": 6.2
+   "position": 6.06
+  },
+  "転職エージェント line交換": {
+   "clicks": 0.0,
+   "impressions": 16.0,
+   "ctr": 0.0,
+   "position": 14.62
+  },
+  "転職エージェント 複数登録": {
+   "clicks": 0.0,
+   "impressions": 16.0,
+   "ctr": 0.0,
+   "position": 77.88
+  },
+  "プログラミングオンラインスクール": {
+   "clicks": 0.0,
+   "impressions": 15.0,
+   "ctr": 0.0,
+   "position": 26.93
+  },
+  "webデザインスクール 未経験": {
+   "clicks": 0.0,
+   "impressions": 15.0,
+   "ctr": 0.0,
+   "position": 27.2
+  },
+  "プログラミング スクール オンライン": {
+   "clicks": 0.0,
+   "impressions": 15.0,
+   "ctr": 0.0,
+   "position": 33.47
+  },
+  "プログラミングスクール 独学": {
+   "clicks": 0.0,
+   "impressions": 15.0,
+   "ctr": 0.0,
+   "position": 73.47
+  },
+  "conoha wing": {
+   "clicks": 0.0,
+   "impressions": 14.0,
+   "ctr": 0.0,
+   "position": 17.21
+  },
+  "プログラミングスクール 月額制": {
+   "clicks": 0.0,
+   "impressions": 14.0,
+   "ctr": 0.0,
+   "position": 60.79
+  },
+  "pm 副業 土日": {
+   "clicks": 0.0,
+   "impressions": 14.0,
+   "ctr": 0.0,
+   "position": 72.57
+  },
+  "教育訓練給付金 郵送申請": {
+   "clicks": 0.0,
+   "impressions": 13.0,
+   "ctr": 0.0,
+   "position": 8.38
+  },
+  "プログラミング 副業 未経験 難しい": {
+   "clicks": 0.0,
+   "impressions": 13.0,
+   "ctr": 0.0,
+   "position": 9.92
+  },
+  "独学 react railsapi": {
+   "clicks": 0.0,
+   "impressions": 13.0,
+   "ctr": 0.0,
+   "position": 15.62
+  },
+  "プログラミング スクール オンライン 注意": {
+   "clicks": 0.0,
+   "impressions": 13.0,
+   "ctr": 0.0,
+   "position": 16.23
+  },
+  "プログラミングスクール サブスク": {
+   "clicks": 0.0,
+   "impressions": 13.0,
+   "ctr": 0.0,
+   "position": 19.31
+  },
+  "キャリアコーチング 無料": {
+   "clicks": 0.0,
+   "impressions": 13.0,
+   "ctr": 0.0,
+   "position": 51.15
+  },
+  "プログラミング独学": {
+   "clicks": 0.0,
+   "impressions": 13.0,
+   "ctr": 0.0,
+   "position": 63.08
+  },
+  "プログラミングスクール やめとけ 知恵袋": {
+   "clicks": 0.0,
+   "impressions": 12.0,
+   "ctr": 0.0,
+   "position": 10.67
+  },
+  "学び直し リスキリング": {
+   "clicks": 0.0,
+   "impressions": 12.0,
+   "ctr": 0.0,
+   "position": 24.17
+  },
+  "転職サイト複数登録": {
+   "clicks": 0.0,
+   "impressions": 12.0,
+   "ctr": 0.0,
+   "position": 87.42
+  },
+  "javascript 難しい": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 9.45
+  },
+  "ハローワーク 教育訓練給付金 申請": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 10.09
+  },
+  "it 40代 リスト": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 16.09
+  },
+  "独学 railsapi react": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 19.45
+  },
+  "転職エージェント 面談 服装 オンライン": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 35.36
+  },
+  "リスキリング 補助 金": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 45.09
+  },
+  "it 副業": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 84.09
+  },
+  "プログラミング 独学 ロード マップ": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 89.64
+  },
+  "転職サイト 複数利用": {
+   "clicks": 0.0,
+   "impressions": 11.0,
+   "ctr": 0.0,
+   "position": 96.64
   },
   "転職エージェント複数 注意": {
    "clicks": 0.0,
@@ -133,11 +397,11 @@
    "ctr": 0.0,
    "position": 9.6
   },
-  "転職 相談 無料": {
+  "専門実践教育訓練給付金 2 回目": {
    "clicks": 0.0,
    "impressions": 10.0,
    "ctr": 0.0,
-   "position": 12.9
+   "position": 10.0
   },
   "python 独学": {
    "clicks": 0.0,
@@ -145,35 +409,113 @@
    "ctr": 0.0,
    "position": 30.7
   },
-  "転職サイト 複数利用": {
+  "プログラミング 独学 何から": {
    "clicks": 0.0,
    "impressions": 10.0,
    "ctr": 0.0,
-   "position": 97.1
+   "position": 30.9
   },
-  "web制作 副業": {
+  "ai コーディング": {
+   "clicks": 0.0,
+   "impressions": 10.0,
+   "ctr": 0.0,
+   "position": 43.8
+  },
+  "転職エージェント 面談 服装": {
+   "clicks": 0.0,
+   "impressions": 10.0,
+   "ctr": 0.0,
+   "position": 65.6
+  },
+  "教育訓練給付金 電子申請 スマホ": {
    "clicks": 0.0,
    "impressions": 9.0,
    "ctr": 0.0,
-   "position": 41.56
+   "position": 5.44
   },
-  "プログラミング 独学 ロード マップ": {
+  "専門実践教育訓練給付金 申請 必要書類": {
    "clicks": 0.0,
    "impressions": 9.0,
    "ctr": 0.0,
-   "position": 88.89
+   "position": 9.11
   },
-  "conoha wing": {
+  "教育訓練給付金 申請方法": {
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 11.67
+  },
+  "転職 内定 迷う 30代": {
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 30.67
+  },
+  "wordpress ポートフォリオ": {
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 34.67
+  },
+  "転職 迷う 相談": {
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 46.0
+  },
+  "転職エージェント 服装": {
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 46.22
+  },
+  "webデザイナー 在宅 難しい": {
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 47.67
+  },
+  "リスキリング 補助金": {
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 59.22
+  },
+  "エンジニア 英語": {
+   "clicks": 0.0,
+   "impressions": 9.0,
+   "ctr": 0.0,
+   "position": 63.56
+  },
+  "教育訓練給付金 申請": {
    "clicks": 0.0,
    "impressions": 8.0,
    "ctr": 0.0,
-   "position": 4.75
+   "position": 10.75
   },
-  "プログラミング 独学 何から": {
+  "コーディング ai おすすめ 無料": {
    "clicks": 0.0,
    "impressions": 8.0,
    "ctr": 0.0,
-   "position": 23.75
+   "position": 11.0
+  },
+  "it 40代 研修": {
+   "clicks": 0.0,
+   "impressions": 8.0,
+   "ctr": 0.0,
+   "position": 14.62
+  },
+  "転職相談チャット": {
+   "clicks": 0.0,
+   "impressions": 8.0,
+   "ctr": 0.0,
+   "position": 18.25
+  },
+  "プログラミングスクール分割払い": {
+   "clicks": 0.0,
+   "impressions": 8.0,
+   "ctr": 0.0,
+   "position": 28.62
   },
   "フリー ランス エンジニア やめ とけ": {
    "clicks": 0.0,
@@ -181,35 +523,95 @@
    "ctr": 0.0,
    "position": 45.62
   },
+  "社内se 志望動機": {
+   "clicks": 0.0,
+   "impressions": 8.0,
+   "ctr": 0.0,
+   "position": 56.0
+  },
+  "向いてる仕事 わからない 20代": {
+   "clicks": 0.0,
+   "impressions": 8.0,
+   "ctr": 0.0,
+   "position": 74.88
+  },
+  "python 独学 ロードマップ": {
+   "clicks": 0.0,
+   "impressions": 8.0,
+   "ctr": 0.0,
+   "position": 78.25
+  },
   "エンジニア 種類": {
    "clicks": 0.0,
    "impressions": 8.0,
    "ctr": 0.0,
    "position": 90.75
   },
-  "javascript 難しい": {
+  "教育訓練給付制度 2回目": {
    "clicks": 0.0,
    "impressions": 7.0,
    "ctr": 0.0,
-   "position": 9.43
+   "position": 5.14
   },
-  "コーディング ai おすすめ 無料": {
+  "e-gov 教育訓練給付金": {
    "clicks": 0.0,
    "impressions": 7.0,
    "ctr": 0.0,
-   "position": 11.0
+   "position": 7.0
   },
-  "プログラミングスクール 月額制": {
+  "転職エージェント zoom 服装": {
    "clicks": 0.0,
    "impressions": 7.0,
    "ctr": 0.0,
-   "position": 28.86
+   "position": 8.57
   },
-  "プログラミング スクール オンライン": {
+  "教育訓練給付制度 手続き": {
    "clicks": 0.0,
    "impressions": 7.0,
    "ctr": 0.0,
-   "position": 37.14
+   "position": 9.29
+  },
+  "専門実践教育訓練給付金 2回目": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "専門実践教育訓練給付金 必要書類": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "転職エージェント line": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 17.29
+  },
+  "it 40代 リテラシー": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 17.86
+  },
+  "webデザイナー 育成": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 21.29
+  },
+  "dx 独学": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 30.14
+  },
+  "プログラミングスクール 相場": {
+   "clicks": 0.0,
+   "impressions": 7.0,
+   "ctr": 0.0,
+   "position": 44.86
   },
   "ウォーターサーバー 勘定科目": {
    "clicks": 0.0,
@@ -217,41 +619,101 @@
    "ctr": 0.0,
    "position": 51.29
   },
-  "python 独学 ロードマップ": {
+  "コード生成ai 無料 おすすめ": {
    "clicks": 0.0,
    "impressions": 7.0,
    "ctr": 0.0,
-   "position": 82.86
+   "position": 78.0
   },
-  "プログラミングスクール やめとけ 知恵袋": {
+  "月額定額で通い放題のプログラミングスクールはありますか": {
    "clicks": 0.0,
    "impressions": 6.0,
    "ctr": 0.0,
-   "position": 11.33
+   "position": 7.67
   },
-  "wordpress ポートフォリオ": {
+  "転職エージェント line 交換": {
    "clicks": 0.0,
    "impressions": 6.0,
    "ctr": 0.0,
-   "position": 15.5
+   "position": 8.67
   },
-  "webデザインスクール 未経験": {
+  "教育訓練給付金 大学院 一覧": {
    "clicks": 0.0,
    "impressions": 6.0,
    "ctr": 0.0,
-   "position": 26.0
+   "position": 10.0
   },
-  "webデザイナー 在宅 難しい": {
+  "itパスポート参考書 初心者": {
    "clicks": 0.0,
    "impressions": 6.0,
    "ctr": 0.0,
-   "position": 35.83
+   "position": 10.83
   },
-  "転職 迷う 相談": {
+  "プログラミングスクール 選び方": {
    "clicks": 0.0,
    "impressions": 6.0,
    "ctr": 0.0,
-   "position": 45.17
+   "position": 19.33
+  },
+  "claude skills 研修": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 23.33
+  },
+  "転職相談 30代": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 23.67
+  },
+  "it 土方 40代": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 24.33
+  },
+  "エンジニア 副業 土日": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 24.33
+  },
+  "転職エージェント it 独学": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 28.0
+  },
+  "プログラミングスクール 専門学校 違い": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 28.67
+  },
+  "web制作 スクール 未経験 キャリアパス": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 30.0
+  },
+  "エンジニア 副業 土日のみ": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 31.67
+  },
+  "ドメイン 初心者": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 40.0
+  },
+  "プログラミングスクール 費用": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 43.17
   },
   "フリーランス 週3日": {
    "clicks": 0.0,
@@ -265,23 +727,23 @@
    "ctr": 0.0,
    "position": 67.17
   },
+  "プログラミングスクール料金": {
+   "clicks": 0.0,
+   "impressions": 6.0,
+   "ctr": 0.0,
+   "position": 74.67
+  },
   "it エンジニア 種類": {
    "clicks": 0.0,
    "impressions": 6.0,
    "ctr": 0.0,
    "position": 75.67
   },
-  "コード生成ai 無料 おすすめ": {
+  "教育訓練給付金 電子申請 できない": {
    "clicks": 0.0,
-   "impressions": 6.0,
+   "impressions": 5.0,
    "ctr": 0.0,
-   "position": 88.17
-  },
-  "プログラミングスクール 独学": {
-   "clicks": 0.0,
-   "impressions": 6.0,
-   "ctr": 0.0,
-   "position": 91.0
+   "position": 1.0
   },
   "中卒向けの、lineで気軽にやり取りできる転職エージェントはありますか？": {
    "clicks": 0.0,
@@ -289,11 +751,83 @@
    "ctr": 0.0,
    "position": 4.2
   },
-  "プログラミングスクール 選び方": {
+  "就活 伴走 コーチング 無料 比較": {
    "clicks": 0.0,
    "impressions": 5.0,
    "ctr": 0.0,
-   "position": 20.0
+   "position": 6.4
+  },
+  "画像系ソフト開発 40代": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 7.8
+  },
+  "教育訓練給付金 電子申請": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  "教育訓練給付金 申請 郵送": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "itパスポート 初心者 参考書": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 10.6
+  },
+  "教育訓練給付金 電子申請 添付書類": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 10.8
+  },
+  "転職エージェント ライン": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 12.4
+  },
+  "プログラミング サブスク": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 14.6
+  },
+  "プログラミングスクール 研修 違い": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 18.0
+  },
+  "キャリア 相談 オンライン 質問": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 19.2
+  },
+  "仕事 何がしたいか分からない 20代": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 19.6
+  },
+  "it 40代 スクール": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 22.8
+  },
+  "リスキリング補助金": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 23.0
   },
   "組み込みエンジニア 転職エージェント": {
    "clicks": 0.0,
@@ -301,17 +835,23 @@
    "ctr": 0.0,
    "position": 23.8
   },
+  "コノハウイング 評判": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 27.4
+  },
   "webデザイナー 未経験 スクール": {
    "clicks": 0.0,
    "impressions": 5.0,
    "ctr": 0.0,
    "position": 28.8
   },
-  "プログラミングスクール分割払い": {
+  "プログラミングスクール 値段": {
    "clicks": 0.0,
    "impressions": 5.0,
    "ctr": 0.0,
-   "position": 32.8
+   "position": 32.4
   },
   "レンタルウォーターサーバー 勘定科目": {
    "clicks": 0.0,
@@ -319,59 +859,215 @@
    "ctr": 0.0,
    "position": 33.4
   },
-  "プログラミング独学": {
+  "キャリアコーチング 安い": {
    "clicks": 0.0,
    "impressions": 5.0,
    "ctr": 0.0,
-   "position": 59.6
+   "position": 43.6
   },
-  "プログラミングスクール サブスク": {
+  "wordpress 難しい": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 49.8
+  },
+  "転職エージェント 断り方 line": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 57.6
+  },
+  "社内se 資格": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 65.8
+  },
+  "転職サイト 20代高卒": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 67.2
+  },
+  "web 制作 副業": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 71.4
+  },
+  "転職エージェント 断り方": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 72.2
+  },
+  "it 転職 40 代": {
+   "clicks": 0.0,
+   "impressions": 5.0,
+   "ctr": 0.0,
+   "position": 94.4
+  },
+  "教育訓練給付金 大学院": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 1.25
+  },
+  "ai駆動開発協会 怪しい": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 3.75
+  },
+  "信頼できるプログラミングスクールを見分けるには？": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 5.0
+  },
+  "転職エージェント ラインでやり取り": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 6.75
+  },
+  "教育訓練給付金 郵送": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 7.5
+  },
+  "プログラミング副業 未経験 難しい": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 8.25
+  },
+  "itアーキテクト 40代": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 8.5
+  },
+  "専門実践教育訓練給付金 手続き 必要 な もの": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 9.25
+  },
+  "特定一般教育訓練給付金 手続き": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 9.25
+  },
+  "教育訓練給付金 手続き": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 9.5
+  },
+  "転職エージェント 複数 注意": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
    "position": 10.0
   },
-  "転職相談 チャット": {
+  "リスキリング補助金 cadスクール": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 10.75
+  },
+  "教育訓練給付 申請": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "レンタルブログ": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
    "position": 15.25
   },
-  "学び直し リスキリング": {
+  "プログラミング 副業 レベル": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
-   "position": 20.25
+   "position": 16.0
   },
-  "転職エージェント it 独学": {
+  "web制作 副業 稼げない": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
-   "position": 26.5
+   "position": 16.25
   },
-  "キャリアコーチング 安い": {
+  "wordpress 独学": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
-   "position": 30.5
+   "position": 19.75
   },
-  "プログラミングスクール 値段": {
+  "人材紹介 複数登録 メリット デメリット": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
-   "position": 34.5
+   "position": 23.25
   },
-  "web制作 スクール 未経験 キャリアパス": {
+  "コーディング 稼げない": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
-   "position": 38.25
+   "position": 25.25
+  },
+  "キャリアコーチング 有料": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 27.25
+  },
+  "20代 転職 相談": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 28.0
+  },
+  "プログラミングスクール 返金": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 32.0
+  },
+  "40代 転職 it 未経験": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 32.5
+  },
+  "エンジニア 英語 勉強法": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 33.0
   },
   "python 勉強時間": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
    "position": 42.75
+  },
+  "コーチング 無料": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 44.25
+  },
+  "40代 未経験 it 転職 在宅": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 49.25
   },
   "it転職 未経験 20代": {
    "clicks": 0.0,
@@ -391,17 +1087,41 @@
    "ctr": 0.0,
    "position": 51.0
   },
-  "プログラミングスクール料金": {
+  "プログラミング スクール オンライン メリット": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
-   "position": 75.5
+   "position": 52.0
   },
-  "リスキリング リカレント 違い": {
+  "リカレントとは": {
    "clicks": 0.0,
    "impressions": 4.0,
    "ctr": 0.0,
-   "position": 80.25
+   "position": 55.5
+  },
+  "プログラミング スクール やめとけ": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 63.5
+  },
+  "転職サイト 高卒 おすすめ": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 73.25
+  },
+  "itパスポート 勉強時間 1ヶ月": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 77.0
+  },
+  "転職エージェントとの面談 服装": {
+   "clicks": 0.0,
+   "impressions": 4.0,
+   "ctr": 0.0,
+   "position": 81.0
   },
   "システムエンジニア種類": {
    "clicks": 0.0,
@@ -415,17 +1135,23 @@
    "ctr": 0.0,
    "position": 88.25
   },
+  "大学院 教育訓練給付金": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 1.0
+  },
   "itパスポート シラバス案": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
    "position": 2.0
   },
-  "信頼できるプログラミングスクールを見分けるには？": {
+  "高卒向けの、lineで気軽にやり取りできる転職エージェントはありますか？": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 3.33
+   "position": 5.0
   },
   "リスキリング 転職 しない": {
    "clicks": 0.0,
@@ -433,17 +1159,59 @@
    "ctr": 0.0,
    "position": 6.0
   },
-  "月額定額で通い放題のプログラミングスクールはありますか": {
+  "e-gov 電子申請 教育訓練給付金": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 6.33
+  },
+  "転職エージェント ライン 返信": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
    "position": 7.0
   },
-  "就活 伴走 コーチング 無料 比較": {
+  "キャリアコーチング コンサル 直接指導 転職 メリット": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 7.67
+   "position": 9.0
+  },
+  "教育訓練給付金 e-gov": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 9.0
+  },
+  "特定一般教育訓練給付金 流れ": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 9.0
+  },
+  "教育訓練給付金支給申請書 電子申請": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 9.33
+  },
+  "職業訓練給付金 申請": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "java 難しい": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 12.33
+  },
+  "javascript 独学": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 12.67
   },
   "社内se 未経験 やめとけ": {
    "clicks": 0.0,
@@ -451,23 +1219,35 @@
    "ctr": 0.0,
    "position": 13.33
   },
-  "it 40代 リスト": {
+  "it 副業 土日": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
    "position": 13.67
   },
-  "プログラミング サブスク": {
+  "プログラミング 学習 働きながら": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
    "position": 15.0
   },
-  "プログラミングスクール 研修 違い": {
+  "itパスポート 参考書 いらない": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 19.67
+   "position": 15.33
+  },
+  "プログラミングスクール オンライン 比較": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 16.0
+  },
+  "40代 it 未経験": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 21.0
   },
   "webデザイナー 受託 30代": {
    "clicks": 0.0,
@@ -475,35 +1255,107 @@
    "ctr": 0.0,
    "position": 21.33
   },
+  "it 40代 おすすめ": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 21.67
+  },
+  "aiコーディング 無料": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 22.0
+  },
+  "プログラミング オンラインスクール": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 22.33
+  },
   "プログラミングスクール 給付金": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
    "position": 24.33
   },
-  "人材紹介 複数登録 メリット デメリット": {
+  "教育訓練給付金支給申請書": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 26.0
+   "position": 24.67
   },
-  "プログラミング スクール オンライン 注意": {
+  "キャリア コーチング 有料": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 27.33
+   "position": 28.33
   },
-  "プログラミングスクール 費用": {
+  "リスキリング リカレント教育 違い": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 35.0
+   "position": 29.67
   },
-  "プログラミングスクール 相場": {
+  "ai プログラミング 初心者": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 46.0
+   "position": 30.0
+  },
+  "aiコーディング やり方": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 30.33
+  },
+  "転職 挨拶状 返信": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 31.0
+  },
+  "派遣 エンジニア 副業": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 31.67
+  },
+  "web制作 スクール 未経験": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 34.33
+  },
+  "無料 転職相談": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 36.0
+  },
+  "wordpress レンタルサーバー 初心者": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 37.0
+  },
+  "生成ai資格 スクール どっち": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 41.33
+  },
+  "30代 転職 相談": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 42.33
+  },
+  "教育訓練給付金 必要なもの": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 42.67
   },
   "キャリア相談 20代": {
    "clicks": 0.0,
@@ -511,11 +1363,17 @@
    "ctr": 0.0,
    "position": 47.33
   },
-  "40代 未経験 it 転職 在宅": {
+  "itパスポート 何ヶ月": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 49.33
+   "position": 57.0
+  },
+  "コノハウイング": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 59.33
   },
   "プログラミングスクール 安い": {
    "clicks": 0.0,
@@ -523,17 +1381,41 @@
    "ctr": 0.0,
    "position": 60.0
   },
-  "プログラミング スクール オンライン メリット": {
+  "リスキリング 給付金": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 61.67
+   "position": 64.33
   },
-  "プログラミング スクール やめとけ": {
+  "itパスポート 勉強時間": {
    "clicks": 0.0,
    "impressions": 3.0,
    "ctr": 0.0,
-   "position": 69.67
+   "position": 78.33
+  },
+  "itパスポート 勉強時間 初心者": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 82.33
+  },
+  "転職サイト断り方": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 85.67
+  },
+  "ai コーディング ツール": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 90.0
+  },
+  "webデザイナー 30代": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 90.0
   },
   "フリーランス エージェント 複数登録": {
    "clicks": 0.0,
@@ -541,11 +1423,41 @@
    "ctr": 0.0,
    "position": 90.0
   },
-  "高卒向けの、lineで気軽にやり取りできる転職エージェントはありますか？": {
+  "ccna独学": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 92.0
+  },
+  "itパスポート勉強時間": {
+   "clicks": 0.0,
+   "impressions": 3.0,
+   "ctr": 0.0,
+   "position": 94.0
+  },
+  "システムエンジニア 独学": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 5.0
+  },
+  "山梨の高卒にお勧めの転職エージェントは？": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 5.5
+  },
+  "教育訓練給付制度 電子申請 スマホ": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 5.5
+  },
+  "教育訓練給付金 必要書類": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 5.5
   },
   "既卒向けの、lineで気軽にやり取りできる転職エージェントはありますか？": {
    "clicks": 0.0,
@@ -559,17 +1471,77 @@
    "ctr": 0.0,
    "position": 6.0
   },
+  "教育訓練経費等確認書 どこで もらえる": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 7.0
+  },
+  "教育訓練給付金受給資格者証 いつ 届く": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 7.0
+  },
+  "やりたい仕事 わからない 20代": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 7.5
+  },
+  "教育訓練給付 電子申請 やり方": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 7.5
+  },
+  "教育給付金 申請 オンライン": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  "教育給付金 電子申請": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  "教育訓練給付制度 申請": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 8.5
+  },
+  "教育訓練給付金 申請 必要書類": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 8.5
+  },
+  "教育訓練給付金 郵送 宛先": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 8.5
+  },
   "経済産業省 リスキリングを通じたキャリアアップ支援事業": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 9.0
   },
-  "転職エージェント 複数 注意": {
+  "教育訓練給付金 2回目": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
-   "position": 9.0
+   "position": 9.5
+  },
+  "教育訓練給付金 受給資格確認": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 9.5
   },
   "教育訓練給付金 申請 書類": {
    "clicks": 0.0,
@@ -577,47 +1549,137 @@
    "ctr": 0.0,
    "position": 9.5
   },
-  "教育訓練給付金受給資格確認票 どこで もらえる": {
+  "itエンジニア 未経験 資格": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 10.0
   },
-  "javascript 独学": {
+  "専門実践教育訓練給付金 大学院 一覧": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "専門実践教育訓練給付金 法科 大学院 一覧": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "専門実践教育訓練給付金 申請書類": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "教育訓練給付金申請": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "転職 lineでやりとり": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "教育訓練給付制度 申請期限": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 10.5
+  },
+  "it 40代 ランキング": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "react 勉強方法": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "ハローワーク 給付金申請": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "教育訓練給付制度 申し込み方法": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "専門実践教育訓練給付金 手続き 流れ": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 11.5
+  },
+  "転職エージェント エンジニア 在職中": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 11.5
+  },
+  "専門実践教育訓練給付金 申請方法": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 12.0
   },
-  "java 難しい": {
+  "エンジニア副業土日": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
-   "position": 13.0
+   "position": 14.0
   },
-  "転職相談 無料": {
+  "itアーキテクト 転職 40代": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
-   "position": 14.5
+   "position": 16.0
   },
-  "教育訓練給付金 電子申請 添付書類": {
+  "高卒 転職エージェント": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
-   "position": 15.0
+   "position": 16.0
   },
-  "転職相談チャット": {
-   "clicks": 0.0,
-   "impressions": 2.0,
-   "ctr": 0.0,
-   "position": 15.5
-  },
-  "itパスポート 参考書 いらない": {
+  "itコンサルタント 副業": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 16.5
+  },
+  "プログラミング 中高年 独学": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 16.5
+  },
+  "教育訓練給付制度 申請方法": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 17.0
+  },
+  "itコンサル副業": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 18.5
+  },
+  "webデザイナー 職業訓練": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 18.5
   },
   "転職相談無料": {
    "clicks": 0.0,
@@ -625,11 +1687,59 @@
    "ctr": 0.0,
    "position": 19.5
   },
-  "it 40代 スクール": {
+  "無料ブログ wordpress 違い": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 20.5
+  },
+  "it 40代 スキル": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 22.5
+  },
+  "コーディングai 無料": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 23.5
+  },
+  "プログラミング教室 料金相場": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 24.0
+  },
+  "40代 エンジニア キャリア": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 24.5
+  },
+  "webデザイナー 資格 費用": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 25.0
+  },
+  "英語 プログラミング": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 25.5
+  },
+  "html 独学": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 26.0
+  },
+  "プログラミングスクール 教育訓練給付金": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 26.5
   },
   "組み込みエンジニア転職エージェント": {
    "clicks": 0.0,
@@ -637,13 +1747,37 @@
    "ctr": 0.0,
    "position": 26.5
   },
+  "プログラミング 年齢": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 27.0
+  },
+  "転職 チャット": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 27.0
+  },
+  "学び直しとは": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 27.5
+  },
   "コーディング aiおすすめ 無料": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 28.0
   },
-  "プログラミングスクール 専門学校 違い": {
+  "+プログラミング +学び +方": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 29.0
+  },
+  "プログラミング 40代 リスト": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
@@ -654,6 +1788,42 @@
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 29.5
+  },
+  "独学 react rails": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 29.5
+  },
+  "エンジニア 英語 勉強": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 30.0
+  },
+  "転職 連絡 返信": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 31.0
+  },
+  "プログラミングスクールオンライン": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 32.5
+  },
+  "転職エージェント 面接 服装": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 32.5
+  },
+  "人材紹介 複数利用 メリット デメリット": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 34.0
   },
   "サーバー代 勘定科目": {
    "clicks": 0.0,
@@ -673,11 +1843,35 @@
    "ctr": 0.0,
    "position": 37.0
   },
+  "無料プログラミングスクール やめとけ": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 38.0
+  },
   "生成ai 親の役割": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 38.0
+  },
+  "エックスサーバー conoha wing 比較": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 41.0
+  },
+  "プログラミング 独学 おすすめ": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 41.0
+  },
+  "aiコーディング": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 41.5
   },
   "キャリア 相談 30代": {
    "clicks": 0.0,
@@ -685,25 +1879,31 @@
    "ctr": 0.0,
    "position": 41.5
   },
-  "ドメイン 初心者": {
+  "プログラミング 副業 始め方 注意": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
-   "position": 41.5
+   "position": 45.5
   },
-  "コーチング 無料": {
+  "無料 プログラミングスクール やめとけ": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
-   "position": 43.0
+   "position": 45.5
+  },
+  "プログラミングスクール 補助金": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 46.0
+  },
+  "オンライン プログラミング教室 違い": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 49.5
   },
   "it転職20代": {
-   "clicks": 0.0,
-   "impressions": 2.0,
-   "ctr": 0.0,
-   "position": 51.0
-  },
-  "リスキリング 補助金": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
@@ -715,17 +1915,59 @@
    "ctr": 0.0,
    "position": 52.5
   },
+  "キャリア相談 30代": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 53.0
+  },
   "python 無料": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
    "position": 53.5
   },
-  "web 制作 副業": {
+  "コーディング 独学": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
-   "position": 56.0
+   "position": 58.5
+  },
+  "エンジニア転職40代": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 59.0
+  },
+  "リスキリング 補助金 条件": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 62.0
+  },
+  "webデザイナー 未経験 30代": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 63.0
+  },
+  "40代 転職サイト 未経験": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 65.0
+  },
+  "キャリアコーチング 料金": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 65.5
+  },
+  "40 代 エンジニア キャリア": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 66.5
   },
   "プログラミングスクール 選ぶ基準": {
    "clicks": 0.0,
@@ -745,11 +1987,71 @@
    "ctr": 0.0,
    "position": 70.5
   },
-  "向いてる仕事 わからない 20代": {
+  "リスキリング 働きながら": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
-   "position": 84.0
+   "position": 71.0
+  },
+  "教育訓練給付制度 プログラミング": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 76.5
+  },
+  "教育訓練給付金 受給資格": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 77.5
+  },
+  "リスキリングリカレント違い": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 80.0
+  },
+  "プログラミング 副業 始め方": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 82.5
+  },
+  "リスキリング 補助金 対象者": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 82.5
+  },
+  "リスキリング 資格 補助金": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 83.0
+  },
+  "リスキリング 補助金 いつから": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 83.5
+  },
+  "キャリア相談 オンライン": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 86.5
+  },
+  "キャリア 相談 オンライン": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 87.5
+  },
+  "エンジニア 副業 探し方": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 88.5
   },
   "エンジニア 未経験 志望動機": {
    "clicks": 0.0,
@@ -757,7 +2059,37 @@
    "ctr": 0.0,
    "position": 88.5
   },
-  "it 転職 40 代": {
+  "リスキリング 補助金 いつまで": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 88.5
+  },
+  "転職エージェント 途中で断る": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 88.5
+  },
+  "エックスサーバー conoha": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 89.0
+  },
+  "プログラミングスクール 詐欺": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 89.0
+  },
+  "learn react": {
+   "clicks": 0.0,
+   "impressions": 2.0,
+   "ctr": 0.0,
+   "position": 90.0
+  },
+  "転職エージェント 辞退": {
    "clicks": 0.0,
    "impressions": 2.0,
    "ctr": 0.0,
@@ -775,7 +2107,25 @@
    "ctr": 0.0,
    "position": 1.0
   },
+  "教育訓練給付制度 二回目": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 1.0
+  },
   "sniff japan": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 2.0
+  },
+  "キャリア 相談 30代 両立": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 2.0
+  },
+  "セキュリティエンジニア ネットワークセキュリティ 40代": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -787,13 +2137,49 @@
    "ctr": 0.0,
    "position": 2.0
   },
+  "資格取得支援制度": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 2.0
+  },
+  "転職 40代 エンジニア": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 2.0
+  },
+  "html css javascript": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 3.0
+  },
   "skillcompass": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 3.0
   },
+  "教育訓練給付金": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 3.0
+  },
+  "リスキリング助成金 いつまで": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 4.0
+  },
   "学び直し": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 4.0
+  },
+  "教育訓練給付金 ハローワーク": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -805,17 +2191,17 @@
    "ctr": 0.0,
    "position": 4.0
   },
-  "転職の支援を受けるのは無料だと聞きましたが、料金の仕組みはどうなっているのですか？": {
+  "一般教育訓練給付金 申請": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 5.0
   },
-  "20代 転職 相談": {
+  "転職の支援を受けるのは無料だと聞きましたが、料金の仕組みはどうなっているのですか？": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
-   "position": 6.0
+   "position": 5.0
   },
   "ハロートレーニング 評判": {
    "clicks": 0.0,
@@ -823,23 +2209,41 @@
    "ctr": 0.0,
    "position": 6.0
   },
-  "プログラミング副業 未経験 難しい": {
+  "夜間": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 6.0
   },
-  "教育訓練給付金 必要書類": {
+  "教育訓練修了証明書": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 6.0
   },
-  "it 40代 ランキング": {
+  "教育訓練給付制度 電子申請": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
-   "position": 7.0
+   "position": 6.0
+  },
+  "教育訓練給付制度 電子申請 やり方": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 6.0
+  },
+  "教育訓練給付金受給資格者証": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 6.0
+  },
+  "高卒向けの、無料で使える転職エージェントを教えてください。": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 6.0
   },
   "このはうぃんぐ": {
    "clicks": 0.0,
@@ -847,17 +2251,71 @@
    "ctr": 0.0,
    "position": 7.0
   },
-  "itアーキテクト 40代": {
+  "厚生労働省 自己診断ツール": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 7.0
+  },
+  "越谷": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 7.0
+  },
+  "データサイエンティスト 未経験 30代": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 8.0
   },
-  "itパスポート参考書 初心者": {
+  "ネットワークエンジニア 40代": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  "日本のit業界で女性エンジニアが転職を考えるとき、どんな企業や職種が狙い目か教えてください。": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  "高知の高卒にお勧めの転職エージェントは？": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 8.0
+  },
+  "ai駆動開発検定": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 9.0
+  },
+  "プログラミング 副業 独学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 9.0
+  },
+  "仕事 何がしたいかわからない 20代": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 9.0
+  },
+  "北海道の高卒にお勧めの転職エージェントは？": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 9.0
+  },
+  "c言語 難しい": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 10.0
   },
   "itパスポート シラバス": {
    "clicks": 0.0,
@@ -865,7 +2323,13 @@
    "ctr": 0.0,
    "position": 10.0
   },
-  "プログラミングスクール 補助金": {
+  "webマスター 40代": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "ハロートレーニング": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -877,7 +2341,13 @@
    "ctr": 0.0,
    "position": 10.0
   },
-  "教育訓練給付金 手続き": {
+  "教育訓練給付金 手続き 流れ": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 10.0
+  },
+  "教育訓練給付金 提出先": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -889,7 +2359,7 @@
    "ctr": 0.0,
    "position": 10.0
   },
-  "画像系ソフト開発 40代": {
+  "転職エージェント面談 服装": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -901,7 +2371,49 @@
    "ctr": 0.0,
    "position": 11.0
   },
-  "教育訓練給付金 申請": {
+  "php 難易度": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "wordpress 副業 稼げない": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "キャリアアドバイザー it": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "システムエンジニア独学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "リスキリング 主婦": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "一般教育訓練給付金 郵送": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "専門実践教育訓練給付金 受給資格者証": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
+  "教育訓練給付金 オンライン申請": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -919,19 +2431,61 @@
    "ctr": 0.0,
    "position": 11.0
   },
+  "転職エージェント 返信 例文": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 11.0
+  },
   "プログラミングスクール 分割払い": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 12.0
   },
-  "無料 転職相談": {
+  "it人材 キャリア": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
-   "position": 12.0
+   "position": 13.0
+  },
+  "オンライン プログラミングスクール": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 13.0
+  },
+  "教育訓練給付制度 ハローワーク 申請": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 13.0
+  },
+  "独学エンジニア": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 13.0
+  },
+  "スマホアプリ系エンジニア 40代": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 14.0
+  },
+  "ハローワーク 専門実践教育訓練給付金 手続き": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 14.0
   },
   "レンタルサーバー ブログ": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 14.0
+  },
+  "転職エージェント メール返信": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -943,17 +2497,35 @@
    "ctr": 0.0,
    "position": 15.0
   },
-  "webデザイナー 職業訓練": {
+  "教育訓練給付金 ハローワーク 手続き": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 15.0
+  },
+  "プログラマー 副業 土日": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 16.0
+  },
+  "主婦 プログラミング 現実": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 16.0
+  },
+  "専門実践教育訓練給付金 手続き": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 16.0
+  },
+  "itパスポート 問題集 いらない": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 17.0
-  },
-  "40代 it 未経験": {
-   "clicks": 0.0,
-   "impressions": 1.0,
-   "ctr": 0.0,
-   "position": 18.0
   },
   "it 40代 教室": {
    "clicks": 0.0,
@@ -961,7 +2533,19 @@
    "ctr": 0.0,
    "position": 19.0
   },
-  "教育訓練給付 申請": {
+  "専門実践教育訓練給付金 電子申請": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 19.0
+  },
+  "教育訓練給付金 申請書": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 19.0
+  },
+  "無料 コーディング ai": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -979,17 +2563,53 @@
    "ctr": 0.0,
    "position": 20.0
   },
-  "プログラミング教室 料金相場": {
+  "リスキリング 個人": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 20.0
+  },
+  "副業エンジニア 土日": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 20.0
+  },
+  "it派遣 40代": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 21.0
+  },
+  "linux 独学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 21.0
   },
   "キャリアコーチング 意味ない": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 21.0
+  },
+  "教育訓練給付金支給申請書 どこで もらえる": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 21.0
+  },
+  "資格取得 補助金": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 22.0
+  },
+  "転職エージェント エンジニア 面接対策": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 22.0
   },
   "適職わからない": {
    "clicks": 0.0,
@@ -1003,47 +2623,77 @@
    "ctr": 0.0,
    "position": 23.0
   },
+  "リスキリング補助金 延長": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 23.0
+  },
   "転職 line相談": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 23.0
   },
-  "it 40代 おすすめ": {
+  "プログラミング 独学 何から コツ": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 24.0
   },
-  "webデザイナー 資格 費用": {
+  "副業 エンジニア 土日": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 24.0
   },
-  "html 独学": {
+  "教育給付金 申請": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 24.0
+  },
+  "エンジニア 転職 40代": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 25.0
   },
-  "webデザイナー 育成": {
+  "パソコンスキル 独学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 25.0
+  },
+  "プログラミングスクール 通学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 25.0
+  },
+  "kredoオンラインキャンプ 評判": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 26.0
   },
-  "プログラミング 独学 おすすめ": {
+  "it エンジニア 40 代 未経験": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
-   "position": 26.0
+   "position": 27.0
   },
-  "レンタルブログ": {
+  "java 独学": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
-   "position": 26.0
+   "position": 27.0
+  },
+  "プログラミング スクール 転職 保証": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 27.0
   },
   "40代 未経験 プログラマー 転職": {
    "clicks": 0.0,
@@ -1051,25 +2701,7 @@
    "ctr": 0.0,
    "position": 28.0
   },
-  "it 40代 研修": {
-   "clicks": 0.0,
-   "impressions": 1.0,
-   "ctr": 0.0,
-   "position": 28.0
-  },
-  "キャリア コーチング 有料": {
-   "clicks": 0.0,
-   "impressions": 1.0,
-   "ctr": 0.0,
-   "position": 28.0
-  },
-  "コーディングai 無料": {
-   "clicks": 0.0,
-   "impressions": 1.0,
-   "ctr": 0.0,
-   "position": 28.0
-  },
-  "プログラミングオンラインスクール": {
+  "リスキリング リカレント": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1081,11 +2713,35 @@
    "ctr": 0.0,
    "position": 28.0
   },
-  "教育訓練給付金 電子申請 やり方": {
+  "転職エージェント スーツ": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 28.0
+  },
+  "react 勉強": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 29.0
+  },
+  "プログラミング 学習 方法": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 29.0
+  },
+  "メーカーズジョブ 評判": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 29.0
+  },
+  "リカレントリスキリングとの違い": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 29.0
   },
   "半導体 エンジニア 未経験": {
    "clicks": 0.0,
@@ -1105,31 +2761,37 @@
    "ctr": 0.0,
    "position": 29.0
   },
-  "転職相談 30代": {
+  "転職 女性 30代 エンジニア": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 29.0
   },
-  "aiコーディング 無料": {
+  "エンジニア 転職 面接 服装": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
-   "position": 30.0
+   "position": 31.0
   },
-  "プログラミングスクール 教育訓練給付金": {
+  "プログラミングスクール月額": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
-   "position": 30.0
-  },
-  "教育訓練給付金 必要なもの": {
-   "clicks": 0.0,
-   "impressions": 1.0,
-   "ctr": 0.0,
-   "position": 30.0
+   "position": 31.0
   },
   "ai駆動開発 学習": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 32.0
+  },
+  "ワード プレス 難しい": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 32.0
+  },
+  "転職 迷う エージェント": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1153,13 +2815,19 @@
    "ctr": 0.0,
    "position": 36.0
   },
-  "ai プログラミング 初心者": {
+  "プログラミング 独学 何から 対策": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 37.0
   },
-  "オンライン プログラミング教室 違い": {
+  "リスキリング 補助金 対象講座": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 37.0
+  },
+  "専門実践教育訓練給付金 合格後 手続き": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1171,7 +2839,25 @@
    "ctr": 0.0,
    "position": 38.0
   },
+  "webデザインスクール独学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 38.0
+  },
+  "副業": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 38.0
+  },
   "webデザイン スクール 就職支援": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 39.0
+  },
+  "アビバ 職業訓練 eラーニング 口コミ": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1183,11 +2869,35 @@
    "ctr": 0.0,
    "position": 39.0
   },
+  "リスキリング・リカレント": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 40.0
+  },
   "機械設計 転職エージェント": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 40.0
+  },
+  "機械設計 転職サイト おすすめ": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 40.0
+  },
+  "高卒 転職エージェント おすすめ": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 40.0
+  },
+  "キャリア 相談 オンライン メリット": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 41.0
   },
   "プログラミングスクール選び方": {
    "clicks": 0.0,
@@ -1196,6 +2906,12 @@
    "position": 41.0
   },
   "web 制作 独学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 42.0
+  },
+  "転職エージェント 登録数": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1213,7 +2929,25 @@
    "ctr": 0.0,
    "position": 44.0
   },
+  "30歳 転職ケーススタディ": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 46.0
+  },
   "半導体エンジニア未経験転職": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 46.0
+  },
+  "転職 サイト おすすめ 高卒": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 46.0
+  },
+  "転職エージェント web面談 服装": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1225,7 +2959,25 @@
    "ctr": 0.0,
    "position": 47.0
   },
+  "転職 相談 電話 無料": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 47.0
+  },
+  "プログラミングスクール独学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 48.0
+  },
   "ai プログラミング 無料": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 49.0
+  },
+  "転職サイト高卒": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1236,6 +2988,30 @@
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 50.0
+  },
+  "40代転職サイト 未経験": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 51.0
+  },
+  "株式会社compass 職業訓練": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 51.0
+  },
+  "組み込み c言語": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 51.0
+  },
+  "エンジニア 英語 できない": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 52.0
   },
   "プログラミングスクール 後悔": {
    "clicks": 0.0,
@@ -1255,11 +3031,35 @@
    "ctr": 0.0,
    "position": 54.0
   },
+  "英語 技術者": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 54.0
+  },
+  "ブログ 副業 稼げない": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 55.0
+  },
+  "プログラミング教室 料金": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 55.0
+  },
   "webデザインスクール 就職支援": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 56.0
+  },
+  "エンジニア 英語スキル": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 57.0
   },
   "web開発 独学": {
    "clicks": 0.0,
@@ -1267,7 +3067,7 @@
    "ctr": 0.0,
    "position": 58.0
   },
-  "無料プログラミングスクール やめとけ": {
+  "独学 プログラミング": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1279,17 +3079,35 @@
    "ctr": 0.0,
    "position": 59.0
   },
+  "webデザインスクール就職支援": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 59.0
+  },
+  "英語 技術 者": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 59.0
+  },
+  "キャリア 相談 20代 悩み": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 60.0
+  },
   "無料プログラミングスクール": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 60.0
   },
-  "webデザイナー 未経験 30代": {
+  "コノハウィング": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
-   "position": 61.0
+   "position": 62.0
   },
   "無料 プログラミング スクール": {
    "clicks": 0.0,
@@ -1297,13 +3115,13 @@
    "ctr": 0.0,
    "position": 62.0
   },
-  "リスキリング 無料 転職": {
+  "スキトラ": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 63.0
   },
-  "無料 プログラミングスクール やめとけ": {
+  "リスキリング 無料 転職": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1314,6 +3132,36 @@
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 64.0
+  },
+  "オンライン面接 スーツ ない": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 65.0
+  },
+  "リスキリング補助金とは": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 65.0
+  },
+  "転職エージェント it 未経験": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 66.0
+  },
+  "エンジニア 副業": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 67.0
+  },
+  "エンジニア 面接": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 67.0
   },
   "フリーランスエンジニア デメリット": {
    "clicks": 0.0,
@@ -1333,7 +3181,7 @@
    "ctr": 0.0,
    "position": 67.0
   },
-  "リスキリング 給付金": {
+  "社内seになるには": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1351,19 +3199,43 @@
    "ctr": 0.0,
    "position": 68.0
   },
+  "it 副業 初心者": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 69.0
+  },
+  "sql 独学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 69.0
+  },
+  "プログラミング教室 月謝": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 69.0
+  },
+  "組み込み c 言語": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 69.0
+  },
   "ウォーターサーバー経費": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 70.0
   },
-  "コーディング 独学": {
+  "在宅webデザイナー難しい": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 71.0
   },
-  "在宅webデザイナー難しい": {
+  "転職エージェント断る": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1381,7 +3253,31 @@
    "ctr": 0.0,
    "position": 72.0
   },
+  "コーチング 費用": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 73.0
+  },
+  "教育 補助 金": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 73.0
+  },
+  "プログラミングスクール通学": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 74.0
+  },
   "it転職40代": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 76.0
+  },
+  "教育 訓練 給付 制度 プログラミング": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1394,6 +3290,12 @@
    "position": 76.0
   },
   "claude 使用量": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 78.0
+  },
+  "se 資格": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1423,11 +3325,41 @@
    "ctr": 0.0,
    "position": 80.0
   },
+  "教育訓練給付金 条件": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 80.0
+  },
   "お名前.com sd rs wordpress 引越し": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 82.0
+  },
+  "ai 未経験": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 83.0
+  },
+  "conoha wing エックスサーバー 比較": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 84.0
+  },
+  "リスキリング 在宅勤務": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 84.0
+  },
+  "独自ドメイン取得": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 84.0
   },
   "30代 未経験 エンジニア 無理": {
    "clicks": 0.0,
@@ -1435,13 +3367,37 @@
    "ctr": 0.0,
    "position": 85.0
   },
-  "リスキリング 補助金 いつまで": {
+  "コード生成ai 無料": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 85.0
+  },
+  "aiエージェント 無料 コーディング": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 86.0
+  },
+  "it パスポート 勉強時間": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 86.0
+  },
+  "エックスサーバー コノハウイング 比較": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 86.0
   },
   "エンジニア 未経験 30代": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 87.0
+  },
+  "生成aiスクール 給付金": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1459,13 +3415,13 @@
    "ctr": 0.0,
    "position": 88.0
   },
-  "リスキリング補助金 主婦": {
+  "高卒 転職 サイト": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 88.0
   },
-  "ai コーディング ツール": {
+  "コーチング 料金": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
@@ -1483,6 +3439,42 @@
    "ctr": 0.0,
    "position": 92.0
   },
+  "line 返信 例文": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 93.0
+  },
+  "web制作 フリー ランス 稼げない": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 93.0
+  },
+  "コーディング ai": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 93.0
+  },
+  "転職エージェント 面談 zoom 服装": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 94.0
+  },
+  "it副業": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 95.0
+  },
+  "プログラミングスクール給付金": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 95.0
+  },
   "格安レンタルサーバー": {
    "clicks": 0.0,
    "impressions": 1.0,
@@ -1495,11 +3487,35 @@
    "ctr": 0.0,
    "position": 96.0
   },
+  "プログラミング教室 月謝 相場": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 96.0
+  },
+  "リスキリング 学び直し 違い": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 96.0
+  },
   "レンタルサーバー vps 移行": {
    "clicks": 0.0,
    "impressions": 1.0,
    "ctr": 0.0,
    "position": 97.0
+  },
+  "育休 リスキリング 補助金": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 97.0
+  },
+  "リカレント": {
+   "clicks": 0.0,
+   "impressions": 1.0,
+   "ctr": 0.0,
+   "position": 99.0
   },
   "リスキリング 助成金 個人": {
    "clicks": 0.0,

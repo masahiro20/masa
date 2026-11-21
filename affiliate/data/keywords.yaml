@@ -34,6 +34,14 @@ keywords:
   status: queued
   boost: 2.0
   source: google-suggest
+- keyword: kredo it留学 評判
+  intent: transactional
+  category: school
+  program: school-kredo-ryugaku
+  score: 75000.0
+  status: queued
+  boost: 3.0
+  source: google-suggest
 - keyword: キャリア相談 ai
   intent: informational
   category: career
@@ -62,6 +70,14 @@ keywords:
   intent: commercial
   category: school
   program: school-kredo
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: it留学 社会人
+  intent: commercial
+  category: school
+  program: school-kredo-ryugaku
   score: 30000.0
   status: queued
   boost: 1.5

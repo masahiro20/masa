@@ -38,9 +38,20 @@ programs:
     category: school
     asp: ""
     url: ""
+    replaced_by: school-kredo   # 給付金・補助金の記事の広告枠は、補助金の対象スクールの Kredo を1つ出す（kredo.jp/reskilling で対象と案内）
     est_reward_jpy: 12000
     keywords: ["給付金", "リスキリング", "教育訓練給付", "専門実践教育訓練"]
     cta: "給付金対象講座の条件を確認する"
+
+  - id: school-kredo-ryugaku
+    name: "Kredo IT留学（ITと英語を学ぶ留学・無料カウンセリング）"
+    category: school
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5888813&p_id=7831&pc_id=22714&pl_id=97565"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5888813&p_id=7831&pc_id=22714&pl_id=97565"
+    est_reward_jpy: 5000
+    keywords: ["IT留学", "IT留学 社会人", "英語 プログラミング 留学"]
+    cta: "無料カウンセリングの内容を確認する"
 
   - id: career-it-agent
     name: "ユニゾンキャリア（エンジニア専門の転職エージェント）"
@@ -67,17 +78,19 @@ programs:
     cta: "無料カウンセリングで学習プランを相談する"
 
   - id: school-kredo
-    name: "Kredo Online（英語とITをオンラインで学べるスクール）"
+    name: "Kredo Online（経済産業省のリスキリング補助金の対象スクール）"
     category: school
     asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5867032&p_id=7781&pc_id=22548&pl_id=97341"
+    url: "https://af.moshimo.com/af/c/click?a_id=5867032&p_id=7781&pc_id=22548&pl_id=96891"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5867032&p_id=7781&pc_id=22548&pl_id=97341"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5867032&p_id=7781&pc_id=22548&pl_id=97341"
     banner_height: 500
     banner_width: 500
     banner: "https://image.moshimo.com/af-img/7553/000000097341.png"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5867032&p_id=7781&pc_id=22548&pl_id=97341"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5867032&p_id=7781&pc_id=22548&pl_id=96891"
     est_reward_jpy: 5000
     keywords: ["英語 プログラミング", "エンジニア 英語", "IT 英語", "英語 IT スクール"]
-    cta: "無料カウンセリングの内容を確認する"
+    cta: "補助金の条件と無料カウンセリングの内容を確認する"
 
   - id: side-crowdsourcing
     name: "クラウドソーシング（副業の案件探し）"
@@ -134,11 +147,13 @@ programs:
     name: "オンライン動画講座（生成AI・IT・資格をスマホで学べる）"
     category: learning
     asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5849852&p_id=7682&pc_id=22239&pl_id=95906"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849852&p_id=7682&pc_id=22239&pl_id=95810"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5849852&p_id=7682&pc_id=22239&pl_id=95906"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5849852&p_id=7682&pc_id=22239&pl_id=95906"
     banner_height: 180
     banner_width: 294
     banner: "https://image.moshimo.com/af-img/7457/000000095906.png"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849852&p_id=7682&pc_id=22239&pl_id=95906"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849852&p_id=7682&pc_id=22239&pl_id=95810"
     est_reward_jpy: 500
     keywords: ["独学", "動画講座", "オンライン講座", "Python 学習"]
     cta: "講座の内容とレビューを見てみる"
@@ -160,11 +175,13 @@ programs:
     name: "メーカーズジョブ（製造業・メーカー専門の転職エージェント）"
     category: career
     asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5849848&p_id=7759&pc_id=22488&pl_id=97191"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849848&p_id=7759&pc_id=22488&pl_id=96712"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5849848&p_id=7759&pc_id=22488&pl_id=97191"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5849848&p_id=7759&pc_id=22488&pl_id=97191"
     banner_height: 301
     banner_width: 301
     banner: "https://image.moshimo.com/af-img/5666/000000097191.png"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849848&p_id=7759&pc_id=22488&pl_id=97191"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849848&p_id=7759&pc_id=22488&pl_id=96712"
     est_reward_jpy: 6000
     keywords: ["機械設計 転職", "回路設計 転職", "組み込み エンジニア 転職", "半導体 転職", "製造業 転職", "メーカー 転職"]
     cta: "製造業・メーカー専門の転職相談を見てみる"
