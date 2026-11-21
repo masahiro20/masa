@@ -57,3 +57,12 @@ def test_unlinked_cta_routes_to_related_article():
     assert out.count("next-step") >= 1 and out.count('class="next-step"') == 1
     assert "{{aff:a}}" in out and "{{aff:b|詳細}}" in out and "{{aff:b}}" not in out
     assert "{{aff:b}}" not in route_unlinked_ctas(body, PROGRAMS, None)
+
+
+def test_ended_program_box_is_replaced_once():
+    from engine.links import route_unlinked_ctas
+    progs = {"old": {"id": "old", "name": "終了", "url": "", "replaced_by": "a"}, **PROGRAMS}
+    out = route_unlinked_ctas("{{aff:old|旧名}}\n\n{{aff:old}}\n\n{{aff:old}}", progs, None)
+    assert out.count("{{aff:a}}") == 1 and "{{aff:old}}" not in out and "{{aff:old|旧名}}" in out
+    # 代わりの案件がすでに本文にあるときは置き換えない
+    assert "{{aff:a}}\n\n" + "" == route_unlinked_ctas("{{aff:a}}\n\n{{aff:old}}", progs, None)

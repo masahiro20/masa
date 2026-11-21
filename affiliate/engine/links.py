@@ -34,13 +34,21 @@ def route_unlinked_ctas(body: str, programs: dict[str, dict], target: dict | Non
     target は {"title", "url", "audience", "thumb"}。None なら何も出さない。文中リンク（{{aff:ID|文言}}）はそのまま。
     """
     live = {pid for pid, p in programs.items() if (p.get("url") or "").strip()}
+    # 掲載が終わった案件に replaced_by があれば、CTA ボックスを1つだけ代わりの案件にする
+    # （文中リンクは案件名を含むので置き換えない。代わりの案件がすでに本文にあるときも置き換えない）
+    in_body = {m.group(1) for m in SHORTCODE_RE.finditer(body) if not m.group(2)}
     shown = False
+    replaced = False
 
     def replace(m: re.Match) -> str:
-        nonlocal shown
+        nonlocal shown, replaced
         pid, label = m.group(1), m.group(2)
         if label or pid in live or pid not in programs:
             return m.group(0)
+        rep = programs[pid].get("replaced_by")
+        if rep in live and rep not in in_body and not replaced:
+            replaced = True
+            return "{{aff:%s}}" % rep
         if shown or not target:
             return ""
         shown = True

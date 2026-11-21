@@ -2,19 +2,59 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
+- keyword: claude code スクール おすすめ
+  intent: transactional
+  category: school
+  program: school-general
+  score: 125000.0
+  status: queued
+  boost: 2.5
+  source: google-suggest
+- keyword: ai プログラミングスクール おすすめ
+  intent: transactional
+  category: school
+  program: school-general
+  score: 125000.0
+  status: queued
+  boost: 2.5
+  source: google-suggest
+- keyword: ai駆動開発 スクール
+  intent: transactional
+  category: school
+  program: school-general
+  score: 100000.0
+  status: queued
+  boost: 2.0
+  source: google-suggest
+- keyword: 生成ai スクール 社会人
+  intent: commercial
+  category: school
+  program: school-general
+  score: 80000.0
+  status: queued
+  boost: 2.0
+  source: google-suggest
+- keyword: キャリア相談 ai
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: claude code 無料研修
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
+  score: 40000.0
+  status: queued
+  boost: 2.0
+  source: google-suggest
 - keyword: メーカー 転職 未経験
   intent: commercial
   category: career
   program: career-maker-agent
   score: 36000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: キャリア相談 ai
-  intent: informational
-  category: career
-  program: career-coaching
-  score: 30000.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -299,24 +339,6 @@ keywords:
   status: published
   source: gsc-question（表示5回・4.2位）
   slug: chusotsu-tenshoku-agent-line
-- keyword: it 転職 未経験 30代 女性
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 60000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: it-tenshoku-mikeiken-30dai-josei
-- keyword: 20代 高卒 転職エージェント
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 60000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: 20dai-kousotsu-tenshoku-agent
 - keyword: プログラミングスクール 怪しい
   intent: commercial
   category: school
@@ -326,15 +348,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-ayashii
-- keyword: リスキリング 補助金 50代
-  intent: commercial
-  category: school
-  program: career-coaching
-  score: 60000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: reskilling-hojokin-50dai
 - keyword: 教育訓練給付金 対象講座 it
   intent: commercial
   category: school
@@ -380,15 +393,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-fukugyo-mikeiken-muzukashii
-- keyword: 転職 相談 無料 チャット
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 60000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: tenshoku-soudan-muryo-chat
 - keyword: webデザイン 独学 働きながら
   intent: commercial
   category: school
@@ -585,41 +589,6 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: engineer-tenshoku-mikeiken-shiboudouki
-- keyword: 30代 転職 迷う 相談 どこ
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 40000.0
-  status: published
-  slug: 30dai-tenshoku-mayou-soudan
-- keyword: キャリアコーチング 意味ない 後悔 選び方
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 40000.0
-  status: published
-  slug: career-coaching-imi-nai-koukai
-- keyword: やりたいことがわからない 転職 20代 相談先
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 40000.0
-  status: published
-  slug: yaritaikoto-wakaranai-tenshoku-20dai
-- keyword: 転職エージェント キャリアコーチング 違い 使い分け
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 40000.0
-  status: published
-  slug: tenshoku-agent-career-coaching-chigai
-- keyword: キャリアコーチング 無料 有料 違い
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 40000.0
-  status: published
-  slug: career-coaching-muryo-yuryo-chigai
 - keyword: レンタルサーバー 乗り換え 移行 手順 注意点
   intent: transactional
   category: tools
@@ -685,78 +654,6 @@ keywords:
   score: 32000.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
-- keyword: キャリアコーチング とは
-  intent: informational
-  category: career
-  program: career-coaching
-  score: 30000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: career-coaching-towa
-- keyword: 教育訓練給付金 大学院 条件
-  intent: informational
-  category: school
-  program: career-coaching
-  score: 30000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: kyufukin-daigakuin-jouken
-- keyword: 教育訓練給付金 2回目 条件
-  intent: informational
-  category: school
-  program: career-coaching
-  score: 30000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: kyufukin-2kaime-jouken
-- keyword: 転職エージェント line 返信
-  intent: informational
-  category: career
-  program: career-coaching
-  score: 30000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: tenshoku-agent-line-henshin
-- keyword: 転職エージェント 断り方 例文
-  intent: informational
-  category: career
-  program: career-coaching
-  score: 30000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: tenshoku-agent-kotowarikata
-- keyword: 教育訓練給付金 退職後
-  intent: informational
-  category: school
-  program: career-coaching
-  score: 30000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: kyufukin-taishokugo
-- keyword: 教育訓練給付金 電子申請 やり方
-  intent: informational
-  category: school
-  program: career-coaching
-  score: 30000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: kyufukin-denshi-shinsei-yarikata
-- keyword: 教育訓練給付金 受給資格確認票 どこでもらえる
-  intent: informational
-  category: school
-  program: career-coaching
-  score: 30000.0
-  status: published
-  boost: 1.5
-  source: google-suggest
-  slug: kyufukin-jukyu-shikaku-kakuninhyo
 - keyword: aiコーディング おすすめ 無料
   intent: commercial
   category: learning
@@ -925,13 +822,6 @@ keywords:
   score: 20000.0
   status: published
   slug: eigo-programming-douji-manabu
-- keyword: 未経験 職種 向いている仕事 わからない 診断
-  intent: informational
-  category: career
-  program: career-coaching
-  score: 20000.0
-  status: published
-  slug: mukiteiru-shigoto-wakaranai-shindan
 - keyword: フリーランスエンジニア 案件 獲得 方法
   intent: commercial
   category: career
@@ -1007,6 +897,42 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-shakaijin-muryo
+- keyword: it 転職 未経験 30代 女性
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 12000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: it-tenshoku-mikeiken-30dai-josei
+- keyword: 20代 高卒 転職エージェント
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 12000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: 20dai-kousotsu-tenshoku-agent
+- keyword: リスキリング 補助金 50代
+  intent: commercial
+  category: school
+  program: career-coaching
+  score: 12000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: reskilling-hojokin-50dai
+- keyword: 転職 相談 無料 チャット
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 12000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: tenshoku-soudan-muryo-chat
 - keyword: フリーランス エンジニア 30代
   intent: informational
   category: career
@@ -1087,6 +1013,41 @@ keywords:
   score: 9600.0
   status: published
   slug: programming-school-kyufukin-heiyo-agent
+- keyword: 30代 転職 迷う 相談 どこ
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 8000.0
+  status: published
+  slug: 30dai-tenshoku-mayou-soudan
+- keyword: キャリアコーチング 意味ない 後悔 選び方
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 8000.0
+  status: published
+  slug: career-coaching-imi-nai-koukai
+- keyword: やりたいことがわからない 転職 20代 相談先
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 8000.0
+  status: published
+  slug: yaritaikoto-wakaranai-tenshoku-20dai
+- keyword: 転職エージェント キャリアコーチング 違い 使い分け
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 8000.0
+  status: published
+  slug: tenshoku-agent-career-coaching-chigai
+- keyword: キャリアコーチング 無料 有料 違い
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 8000.0
+  status: published
+  slug: career-coaching-muryo-yuryo-chigai
 - keyword: 生成AI 学び方 初心者 社会人
   intent: commercial
   category: learning
@@ -1137,6 +1098,78 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: reskilling-hojokin-tenshoku-shinai
+- keyword: キャリアコーチング とは
+  intent: informational
+  category: career
+  program: career-coaching
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: career-coaching-towa
+- keyword: 教育訓練給付金 大学院 条件
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: kyufukin-daigakuin-jouken
+- keyword: 教育訓練給付金 2回目 条件
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: kyufukin-2kaime-jouken
+- keyword: 転職エージェント line 返信
+  intent: informational
+  category: career
+  program: career-coaching
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: tenshoku-agent-line-henshin
+- keyword: 転職エージェント 断り方 例文
+  intent: informational
+  category: career
+  program: career-coaching
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: tenshoku-agent-kotowarikata
+- keyword: 教育訓練給付金 退職後
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: kyufukin-taishokugo
+- keyword: 教育訓練給付金 電子申請 やり方
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: kyufukin-denshi-shinsei-yarikata
+- keyword: 教育訓練給付金 受給資格確認票 どこでもらえる
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 6000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: kyufukin-jukyu-shikaku-kakuninhyo
 - keyword: 教育訓練給付金 申請 流れ 必要書類
   intent: informational
   category: school
@@ -1144,6 +1177,13 @@ keywords:
   score: 4800.0
   status: published
   slug: kyoiku-kunren-kyufukin-shinsei-nagare
+- keyword: 未経験 職種 向いている仕事 わからない 診断
+  intent: informational
+  category: career
+  program: career-coaching
+  score: 4000.0
+  status: published
+  slug: mukiteiru-shigoto-wakaranai-shindan
 - keyword: webデザイナー 主婦 未経験
   intent: commercial
   category: fukugyo
@@ -1525,36 +1565,6 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事seisei-ai-school-hikaku・seisei-ai-school-hojokinと検索意図が重複
-- keyword: キャリアコーチング 高い
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 60000.0
-  status: rejected
-  boost: 1.5
-  source: google-suggest
-  issues:
-  - 既存記事career-coaching-muryo-yuryo-chigaiと検索意図が重複
-- keyword: キャリアコーチング 選び方
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 60000.0
-  status: rejected
-  boost: 1.5
-  source: google-suggest
-  issues:
-  - 既存記事career-coaching-imi-nai-koukai・career-coaching-muryo-yuryo-chigaiと検索意図が重複
-- keyword: キャリアコーチング 怪しい
-  intent: commercial
-  category: career
-  program: career-coaching
-  score: 60000.0
-  status: rejected
-  boost: 1.5
-  source: google-suggest
-  issues:
-  - 既存記事career-coaching-imi-nai-koukaiと検索意図が重複
 - keyword: conoha wing やめとけ
   intent: commercial
   category: tools
@@ -1597,16 +1607,6 @@ keywords:
   - 図解ブロックが過多。ルールは合計3〜6個だが、point×4・warning×3・merit/demerit・check・steps で10個超。セクションごとにブロックが並び、地の文が痩せて『装飾で埋めた』印象になっている。効果の高い4〜6個（給付金のwarning、契約前check、stepsなど）に絞り、残りは本文の文章に戻す。
   - フロントマターの programs に career-it-agent が含まれていないのに本文で {{aff:career-it-agent}} を使用しており、メタ情報と本文が不整合。programs を実際の使用IDに合わせるか、CTAを差し替える。
   - 出典表記が『データサイエンスコラム』『教育訓練給付金.JP』『ライフィ保険ニュース解説』など媒体名の略記にとどまり、読者が一次情報にたどり着けない。特に給付率・上限額（80%・年間64万円）や2024年10月改正は、厚生労働省／政府広報オンラインという公的出所と『◯年◯月時点』の時点表記を本文に明記すべき。民間スクール公式ページ由来の数値（最大80%・64万円・192万円）は『民間スクールの公式説明による』と出所の性質を明示すること。
-- keyword: リスキリング 補助金 いつまで
-  intent: informational
-  category: school
-  program: career-coaching
-  score: 30000.0
-  status: rejected
-  boost: 1.5
-  source: google-suggest
-  issues:
-  - 既存記事reskilling-hojokin-itsu-moraeruと検索意図が重複（いつまで申し込めるかを同記事で扱っている）
 - keyword: 副業 プログラミング 現実
   intent: informational
   category: fukugyo
@@ -1637,6 +1637,36 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事wordpress-blog-start-server-domain-stepsと検索意図が重複
+- keyword: キャリアコーチング 高い
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 12000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事career-coaching-muryo-yuryo-chigaiと検索意図が重複
+- keyword: キャリアコーチング 選び方
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 12000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事career-coaching-imi-nai-koukai・career-coaching-muryo-yuryo-chigaiと検索意図が重複
+- keyword: キャリアコーチング 怪しい
+  intent: commercial
+  category: career
+  program: career-coaching
+  score: 12000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事career-coaching-imi-nai-koukaiと検索意図が重複
 - keyword: 機械設計 転職 難しい
   intent: informational
   category: career
@@ -1666,6 +1696,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事programming-school-kyufukin-conditionsと検索意図が重複
+- keyword: リスキリング 補助金 いつまで
+  intent: informational
+  category: school
+  program: career-coaching
+  score: 6000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事reskilling-hojokin-itsu-moraeruと検索意図が重複（いつまで申し込めるかを同記事で扱っている）
 - keyword: 子ども 生成AI 使わせ方 注意点
   intent: informational
   category: learning
