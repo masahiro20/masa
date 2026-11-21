@@ -2,11 +2,59 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: webデザイン 教育訓練給付金 条件
+- keyword: メーカー 転職 未経験
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: キャリア相談 ai
   intent: informational
+  category: career
+  program: career-coaching
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 英語 プログラミング スクール
+  intent: commercial
   category: school
-  program: school-kyufukin
-  score: 7200.0
+  program: school-kredo
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: conoha wing 解約
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 24000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: メーカー 転職 難しい
+  intent: informational
+  category: career
+  program: career-maker-agent
+  score: 18000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: claude code 使い方
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: claude code 何ができる
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
   status: queued
   boost: 1.5
   source: google-suggest
@@ -456,6 +504,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: rental-server-yasui-erabikata
+- keyword: 社内se 転職 難しい
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: shanai-se-tenshoku-muzukashii
 - keyword: 転職エージェント 面談 服装 オンライン
   intent: informational
   category: career
@@ -1428,6 +1485,16 @@ keywords:
   source: search-console
   issues:
   - 既存記事programming-school-taimen-online-chigaiと検索意図が重複
+- keyword: 35歳 未経験 エンジニア転職
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 90000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複
 - keyword: プログラマー 30代 未経験 無理
   intent: commercial
   category: career
@@ -1488,6 +1555,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事career-coaching-imi-nai-koukaiと検索意図が重複
+- keyword: conoha wing やめとけ
+  intent: commercial
+  category: tools
+  program: tools-rental-server
+  score: 48000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事conoha-wing-hyoubanと検索意図が重複
 - keyword: レンタルサーバー wordpress 比較
   intent: commercial
   category: tools
@@ -1569,6 +1646,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事kikai-sekkei-tenshoku-agentと検索意図が重複
+- keyword: webデザイン 教育訓練給付金 条件
+  intent: informational
+  category: school
+  program: school-kyufukin
+  score: 7200.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事webdesign-school-shakaijin・web-designer-mikeiken-school-hitsuyou・kyufukin-partと検索意図が重複
 - keyword: 教育訓練給付金 働きながら
   intent: informational
   category: school
