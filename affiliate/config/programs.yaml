@@ -101,13 +101,9 @@ programs:
     name: "キャリナビ（無料のキャリアコーチング＋転職支援）"
     category: career
     asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96718"
-    banner_height: 500
-    banner_width: 600
-    banner: "https://image.moshimo.com/af-img/6249/000000096720.jpg"
-    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96720"
-    banner_url: "https://af.moshimo.com/af/c/click?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96720"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5833896&p_id=7760&pc_id=22494&pl_id=96718"
+    # もしもの掲載期間が 2026/10/01〜2026/11/06 で終了（11/21 の成果レポートで確認）。再開したら set-ad で広告コードを入れ直す
+    url: ""
+    replaced_by: career-it-agent   # CTAボックスは1つだけ、代わりにユニゾンキャリアを出す
     est_reward_jpy: 10000
     keywords: ["キャリアコーチング", "キャリア相談", "やりたいこと", "自己分析", "転職 迷う", "向いている仕事"]
     cta: "無料のオンライン面談で方向性を相談する"
