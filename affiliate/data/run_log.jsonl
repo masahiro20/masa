@@ -186,3 +186,4 @@
 {"ts": "2026-11-21T03:48:39+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["35歳 未経験 エンジニア転職"], "errors": ["既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複"]}
 {"ts": "2026-11-21T03:48:51+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["conoha wing やめとけ"], "errors": ["既存記事conoha-wing-hyoubanと検索意図が重複"]}
 {"ts": "2026-11-21T03:50:24+00:00", "source": "routine", "published": ["shanai-se-tenshoku-muzukashii"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-21T09:50:01+00:00", "source": "routine", "published": ["claude-code-school-osusume"], "refreshed": [], "rejected": [], "errors": []}
