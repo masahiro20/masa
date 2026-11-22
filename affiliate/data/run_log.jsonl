@@ -189,3 +189,6 @@
 {"ts": "2026-11-21T09:50:01+00:00", "source": "routine", "published": ["claude-code-school-osusume"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-21T21:49:09+00:00", "source": "routine", "published": ["kredo-it-ryugaku-hyouban"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-22T03:49:27+00:00", "source": "routine", "published": ["ai-programming-school-osusume"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-22T09:48:14+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["ai駆動開発 スクール"], "errors": ["既存記事claude-code-school-osusume・ai-programming-school-osusume・ai-kudou-kaihatsu-manabikata-engineerと検索意図が重複"]}
+{"ts": "2026-11-22T09:48:22+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["claude code 無料研修"], "errors": ["既存記事claude-code-kenshu-kojin-osusumeと検索意図が重複"]}
+{"ts": "2026-11-22T09:50:00+00:00", "source": "routine", "published": ["maker-tenshoku-mikeiken"], "refreshed": [], "rejected": [], "errors": []}
