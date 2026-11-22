@@ -60,24 +60,39 @@ python -m engine post-x --dry-run --slugs …  # X投稿の文面確認（X自�
 - `templates/tools/`：無料ツール（教育訓練給付金シミュレーター、IT職種診断）
 - `promo/sns-posts.md`：SNS投稿の下書き（手動用）
 
-## 6. 広告案件の状態
+## 6. 広告案件の状態（2026-11-22時点）
 
-**提携済み（LIVE）**
+**提携済み（LIVE・もしも）**
 - byTech（school-general）
 - ユニゾンキャリア（career-it-agent）
-- Kredo Online（school-kredo）
-- キャリナビ（career-coaching）
+- Kredo Online（school-kredo）：給付金・補助金の記事の枠に代わりに入る
+- Kredo IT留学（school-kredo-ryugaku）
 - ConoHa WING（tools-rental-server）
 - オンライン動画講座（learning-online-course）
 - Claude Code研修（learning-ai-coding）
 - メーカーズジョブ（career-maker-agent）
 - 家族でスタートAI（learning-family-ai）
+- マネーフォワード クラウド確定申告（tools-accounting）：11/22 追加。勘定科目の記事2本に掲載
+- 弥生のクラウド確定申告（tools-accounting-yayoi）：11/22 追加
 - 楽天の技術書（learning-books）
 
-キャリナビと楽天の技術書以外は**バナーだけ**の広告で、本文中の文字のリンクにならない。
+楽天以外は、テキスト広告とバナーの両方が入っている（バナーは記事内の最初の枠だけ）。
+
+**掲載終了**：キャリナビ（career-coaching）。枠はユニゾンキャリアに置き換わる。
+
+**もしもで審査中（11/22 申請）**：承認されたらコードを受け取り、programs.yaml に足す
+- インターネット・アカデミー（給付金の記載ページあり：internetacademy.jp/entry/benefit.html）
+- デジタルハリウッドSTUDIO（リスキリングの記載ページあり：school.dhw.co.jp/prospectus/careerup_reskilling.html）
+- テックエリート（「経済産業省」の記載は未確認）
+- ウズカレエージェント、デジハク、WEBCOACH、レバテックフリーランス、Re:WORK
+- 前から審査中：RareTECH、キカガク、RUNTEQ、Tech Mentor、techmeets、SiiD、生成AIスクール
+- 給付金・補助金の対象スクールが承認されたら、公式ページで対象かを確かめてから school-kyufukin に入れる
+
+**もしもで見直したい案件（運営者が判断）**
+- 失業保険給付金増額サポート（提携中）、退職給付金申請サポート（申請中）、Wakablog College（申請中）：給付金の申請代行や補助金を前に出す訴求。サイトの方針に合わないので取り下げを勧める
 
 **未提携**
-- school-kyufukin（給付金対象講座）
+- school-kyufukin（給付金対象講座。今は Kredo Online に置き換え）
 - school-webdesign
 - side-crowdsourcing
 - career-freelance
@@ -90,7 +105,7 @@ python -m engine post-x --dry-run --slugs …  # X投稿の文面確認（X自�
 
 ## 7. 残っている作業（ここから）
 
-1. **ユニゾンキャリアと byTech のテキスト広告コードを取る**：もしもの「提携中プロモーション」→「広告リンク作成」→「テキスト」。取れたら `python -m engine set-ad career-it-agent <コード> --keep-text` のように反映する。`--keep-text` はバナーをCTA用に残すときに付ける。今の url がバナー用なので、テキストのコードで url を置き換え、バナーは banner_url に移す形にする。反映したら `engine build` で、文中のリンクが出ることを確かめる。
+1. （済）**ユニゾンキャリアと byTech のテキスト広告コードを取る**：もしもの「提携中プロモーション」→「広告リンク作成」→「テキスト」。取れたら `python -m engine set-ad career-it-agent <コード> --keep-text` のように反映する。`--keep-text` はバナーをCTA用に残すときに付ける。今の url がバナー用なので、テキストのコードで url を置き換え、バナーは banner_url に移す形にする。反映したら `engine build` で、文中のリンクが出ることを確かめる。
 2. **申込単価の高い案件への提携申請**：もしもで「プログラミングスクール」「リスキリング」「給付金」「転職エージェント」「IT転職」を検索する。給付金・リスキリング補助金の対象講座、IT・エンジニア専門の転職支援を優先する。承認されたら programs.yaml に案件を足し、サービス名の評判テーマ（「〇〇 評判」など）を在庫に入れる。
 3. **Search Console の自動取得**：Google Cloud でサービスアカウントを作り、Search Console API を有効にして JSON キーを作る。Search Console にそのアカウントを「制限付き」で追加する。GitHub の Secrets に `GSC_SERVICE_ACCOUNT_JSON`、Variables に `GSC_SITE_URL` を登録する。最後に Actions の affiliate-gsc を手で1回実行する。**JSON キーの中身は会話に書き出さない。**
 4. 11/16（月）の改善ルーチンの初めての本番の結果を確かめる。見るのは、`claude/articles-20261116-growth` が公開されたかと、growth_log.md の追記。
