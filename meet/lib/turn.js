@@ -30,7 +30,10 @@ function createTurn(env, fetchImpl = fetch) {
       });
       if (!r.ok) throw new Error('TURN の資格情報を取得できませんでした');
       const j = await r.json();
-      const cf = (Array.isArray(j.iceServers) ? j.iceServers : [j.iceServers]).filter(Boolean);
+      // 53 番ポートの宛先はブラウザが使わない（止められる）ことがあるので外し、ほかのポート（3478・80・443）を使う
+      const cf = (Array.isArray(j.iceServers) ? j.iceServers : [j.iceServers]).filter(Boolean)
+        .map((sv) => ({ ...sv, urls: (Array.isArray(sv.urls) ? sv.urls : [sv.urls]).filter((u) => typeof u === 'string' && !/:53(\?|$)/.test(u)) }))
+        .filter((sv) => sv.urls.length);
       return { iceServers: [...STUN, ...cf], ttl, provider };
     }
     return { iceServers: STUN, ttl: 0, provider: 'none' };

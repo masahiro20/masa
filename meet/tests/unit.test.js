@@ -121,3 +121,24 @@ test('議事録の入力を整える：余計なキーを落とし、長さを�
   assert.deepEqual(c.todos, []);
   assert.equal(sanitizeMinutes('x'), null);
 });
+
+test('TURN（Cloudflare）：キーで短期の資格情報を取り、53 番ポートの宛先は外す。失敗したら例外', async () => {
+  const { createTurn } = require('../lib/turn');
+  let seen = null;
+  const fetchOk = async (url, opts) => {
+    seen = { url, auth: opts.headers.Authorization, body: JSON.parse(opts.body) };
+    return { ok: true, json: async () => ({ iceServers: [{ urls: ['stun:stun.cloudflare.com:3478', 'turn:turn.cloudflare.com:3478?transport=udp', 'turn:turn.cloudflare.com:53?transport=udp', 'turns:turn.cloudflare.com:443?transport=tcp'], username: 'u', credential: 'c' }] }) };
+  };
+  const t = createTurn({ CF_TURN_KEY_ID: 'kid', CF_TURN_API_TOKEN: 'tok', TURN_TTL_SEC: '3600' }, fetchOk);
+  assert.equal(t.provider, 'cloudflare');
+  const r = await t.iceServersFor('peer-1');
+  assert.match(seen.url, /\/v1\/turn\/keys\/kid\/credentials\/generate-ice-servers$/);
+  assert.equal(seen.auth, 'Bearer tok');
+  assert.equal(seen.body.ttl, 3600);
+  const cf = r.iceServers.find((s) => s.username === 'u');
+  assert.ok(cf.urls.includes('turns:turn.cloudflare.com:443?transport=tcp'));
+  assert.ok(!cf.urls.some((u) => /:53\?/.test(u)), '53 番ポートは外す');
+  const bad = createTurn({ CF_TURN_KEY_ID: 'kid', CF_TURN_API_TOKEN: 'x' }, async () => ({ ok: false }));
+  await assert.rejects(bad.iceServersFor('p'));
+  assert.equal(createTurn({}).provider, 'none');
+});
