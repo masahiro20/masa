@@ -72,7 +72,7 @@ python -m engine post-x --dry-run --slugs …  # X投稿の文面確認（X自�
 - Claude Code研修（learning-ai-coding）
 - メーカーズジョブ（career-maker-agent）
 - 家族でスタートAI（learning-family-ai）
-- マネーフォワード クラウド確定申告（tools-accounting）：11/22 追加。勘定科目の記事2本に掲載
+- マネーフォワード クラウド確定申告（tools-accounting）：11/22 追加。A8.net のテキスト広告（1,500円）。勘定科目の記事2本に掲載
 - 弥生のクラウド確定申告（tools-accounting-yayoi）：11/22 追加
 - 楽天の技術書（learning-books）
 
@@ -87,6 +87,13 @@ python -m engine post-x --dry-run --slugs …  # X投稿の文面確認（X自�
 - ウズカレエージェント、デジハク、WEBCOACH、レバテックフリーランス、Re:WORK
 - 前から審査中：RareTECH、キカガク、RUNTEQ、Tech Mentor、techmeets、SiiD、生成AIスクール
 - 給付金・補助金の対象スクールが承認されたら、公式ページで対象かを確かめてから school-kyufukin に入れる
+
+**A8.netで審査中（11/22 申請）**
+- ギークスジョブ → career-freelance の枠へ
+- ウズウズIT、第二新卒エージェントneo、＠PRO人、就職カレッジ → 既卒・第二新卒・高卒の転職記事へ
+- 東京デザインプレックス研究所、デジタルハリウッドSTUDIO by LIG → Webデザイナーの記事へ（給付金の対象かは公式ページで確かめる）
+- スクール比較ナビ → スクール選びの記事へ
+- 申請候補：ポテパンフリーランス、SHElikes（アピールサイトに webdesigner-shufu-mikeiken の記事URLを使う）
 
 **もしもで見直したい案件（運営者が判断）**
 - 失業保険給付金増額サポート（提携中）、退職給付金申請サポート（申請中）、Wakablog College（申請中）：給付金の申請代行や補助金を前に出す訴求。サイトの方針に合わないので取り下げを勧める

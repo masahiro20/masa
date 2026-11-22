@@ -148,15 +148,12 @@ programs:
   - id: tools-accounting
     name: "マネーフォワード クラウド確定申告（個人事業主・副業の会計ソフト）"
     category: tools
-    asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5916630&p_id=888&pc_id=1087&pl_id=11374"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5916630&p_id=888&pc_id=1087&pl_id=11374"
-    banner_url: "https://af.moshimo.com/af/c/click?a_id=5916630&p_id=888&pc_id=1087&pl_id=64816"
-    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5916630&p_id=888&pc_id=1087&pl_id=64816"
-    banner_height: 250
-    banner_width: 300
-    banner: "https://image.moshimo.com/af-img/0253/000000064816.png"
-    est_reward_jpy: 500
+    asp: "a8"
+    # A8.net（無料登録 1,500円）。もしも（500円）より報酬が高いので A8 を使う。
+    # A8 のバナーは未取得。もしものコード（テキスト pl_id=11374／バナー pl_id=64816）は ASP の管理画面にある
+    url: "https://px.a8.net/svt/ejp?a8mat=4BGR93+D44RHU+4JGQ+BWVTE"
+    pixel: "https://www13.a8.net/0.gif?a8mat=4BGR93+D44RHU+4JGQ+BWVTE"
+    est_reward_jpy: 1500
     keywords: ["確定申告 ソフト", "会計ソフト 個人事業主", "副業 確定申告", "青色申告", "勘定科目", "経費 記帳", "仕訳"]
     cta: "マネーフォワード クラウド確定申告の料金と機能を見る"
 
