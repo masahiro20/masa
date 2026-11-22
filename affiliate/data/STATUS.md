@@ -1,8 +1,8 @@
 # 運用ステータス（自動更新）
 
-- 最終更新: 2026-11-22 09:50 UTC
-- 公開記事数: 163
-- キーワード在庫: 22件（見送り 32件）
+- 最終更新: 2026-11-22 21:49 UTC
+- 公開記事数: 164
+- キーワード在庫: 21件（見送り 32件）
 - 今月のAPI費用（概算）: $0.00 / 上限 $50
 - 提携済み案件: 16 / 22
 
@@ -22,8 +22,8 @@
 - reskilling-hojokin-itsu-moraeru（平均13.3位・表示269回）
 - rental-server-hiyou-kanjoukamoku（平均10.3位・表示158回）
 - mukiteiru-shigoto-wakaranai-shindan（平均10.7位・表示105回）
-- javascript-dokugaku-muzukashii（平均9.1位・表示26回）
 - programming-school-taimen-online-chigai（平均5.4位・表示22回）
+- programming-school-kyufukin-conditions（平均12.1位・表示22回）
 
 ## 最近の改善（毎週の改善ルーチン）
 
@@ -55,6 +55,7 @@ ASPで提携したら `config/programs.yaml` の `url` に広告リンクを貼�
 
 | 日時 | 公開 | 改善 | 見送り | エラー |
 |---|---|---|---|---|
+| 2026-11-22T21:49:32+00:00 | 1 | 0 | 0 |  |
 | 2026-11-22T09:50:00+00:00 | 1 | 0 | 0 |  |
 | 2026-11-22T09:48:22+00:00 | 0 | 0 | 1 | 既存記事claude-code-kenshu-kojin-osusumeと検索意図が重複 |
 | 2026-11-22T09:48:14+00:00 | 0 | 0 | 1 | 既存記事claude-code-school-osusume・ai-programming-school-osusume・ai-kudou-kaihatsu-manabikata-engineerと検索意図が重複 |
@@ -64,4 +65,3 @@ ASPで提携したら `config/programs.yaml` の `url` に広告リンクを貼�
 | 2026-11-21T03:50:24+00:00 | 1 | 0 | 0 |  |
 | 2026-11-21T03:48:51+00:00 | 0 | 0 | 1 | 既存記事conoha-wing-hyoubanと検索意図が重複 |
 | 2026-11-21T03:48:39+00:00 | 0 | 0 | 1 | 既存記事30dai-mikeiken-engineer-tenshoku-genjitsuと検索意図が重複 |
-| 2026-11-21T03:48:28+00:00 | 0 | 0 | 1 | 既存記事webdesign-school-shakaijin・web-designer-mikeiken-school-hitsuyou・kyufukin-partと検索意図が重複 |
