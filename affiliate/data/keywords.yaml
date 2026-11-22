@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: ai プログラミングスクール おすすめ
-  intent: transactional
-  category: school
-  program: school-general
-  score: 125000.0
-  status: queued
-  boost: 2.5
-  source: google-suggest
 - keyword: ai駆動開発 スクール
   intent: transactional
   category: school
@@ -196,6 +188,15 @@ keywords:
   boost: 4.0
   source: search-console
   slug: programming-school-kayoi-houdai
+- keyword: ai プログラミングスクール おすすめ
+  intent: transactional
+  category: school
+  program: school-general
+  score: 125000.0
+  status: published
+  boost: 2.5
+  source: google-suggest
+  slug: ai-programming-school-osusume
 - keyword: claude code スクール おすすめ
   intent: transactional
   category: school
