@@ -90,6 +90,54 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
+- keyword: 弥生 マネーフォワード 比較 個人事業主
+  intent: transactional
+  category: tools
+  program: tools-accounting
+  score: 7500.0
+  status: queued
+  boost: 3.0
+  source: google-suggest
+- keyword: 会計ソフト 個人事業主 初心者 おすすめ
+  intent: transactional
+  category: tools
+  program: tools-accounting
+  score: 5000.0
+  status: queued
+  boost: 2.0
+  source: google-suggest
+- keyword: 副業 確定申告 ソフト 無料
+  intent: transactional
+  category: fukugyo
+  program: tools-accounting-yayoi
+  score: 3000.0
+  status: queued
+  boost: 2.0
+  source: google-suggest
+- keyword: ブログ 確定申告 いくらから
+  intent: informational
+  category: fukugyo
+  program: tools-accounting
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ブログ 確定申告 経費
+  intent: informational
+  category: fukugyo
+  program: tools-accounting
+  score: 1500.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 副業 20万以下 確定申告 したら どうなる
+  intent: informational
+  category: fukugyo
+  program: tools-accounting-yayoi
+  score: 900.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: 基本情報技術者 勉強時間 itパスポート合格者
   intent: informational
   category: learning

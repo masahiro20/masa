@@ -125,11 +125,13 @@ programs:
     name: "ConoHa WING（レンタルサーバー）"
     category: tools
     asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5838782&p_id=2312&pc_id=4967&pl_id=38395"
+    url: "https://af.moshimo.com/af/c/click?a_id=5838782&p_id=2312&pc_id=4967&pl_id=80070"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5838782&p_id=2312&pc_id=4967&pl_id=80070"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5838782&p_id=2312&pc_id=4967&pl_id=38395"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5838782&p_id=2312&pc_id=4967&pl_id=38395"
     banner_height: 250
     banner_width: 300
     banner: "https://image.moshimo.com/af-img/1762/000000038395.png"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5838782&p_id=2312&pc_id=4967&pl_id=38395"
     est_reward_jpy: 8000
     keywords: ["レンタルサーバー", "WordPress", "ブログ 始め方", "サーバー 比較"]
     cta: "ConoHa WINGの料金プランを見る"
@@ -142,6 +144,36 @@ programs:
     est_reward_jpy: 300
     keywords: ["ドメイン 取得", "独自ドメイン"]
     cta: "使いたいドメインが空いているか調べる"
+
+  - id: tools-accounting
+    name: "マネーフォワード クラウド確定申告（個人事業主・副業の会計ソフト）"
+    category: tools
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5916630&p_id=888&pc_id=1087&pl_id=11374"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5916630&p_id=888&pc_id=1087&pl_id=11374"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5916630&p_id=888&pc_id=1087&pl_id=64816"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5916630&p_id=888&pc_id=1087&pl_id=64816"
+    banner_height: 250
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/0253/000000064816.png"
+    est_reward_jpy: 500
+    keywords: ["確定申告 ソフト", "会計ソフト 個人事業主", "副業 確定申告", "青色申告", "勘定科目", "経費 記帳", "仕訳"]
+    cta: "マネーフォワード クラウド確定申告の料金と機能を見る"
+
+  - id: tools-accounting-yayoi
+    name: "弥生のクラウド確定申告ソフト（やよいの青色申告・白色申告 オンライン）"
+    category: tools
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5916631&p_id=914&pc_id=1138&pl_id=21342"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5916631&p_id=914&pc_id=1138&pl_id=21342"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5916631&p_id=914&pc_id=1138&pl_id=32450"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5916631&p_id=914&pc_id=1138&pl_id=32450"
+    banner_height: 250
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/0275/000000032450.png"
+    est_reward_jpy: 300
+    keywords: ["白色申告", "青色申告 ソフト", "確定申告 初めて", "副業 確定申告 やり方", "開業届"]
+    cta: "弥生のクラウド確定申告ソフトのプランを見る"
 
   - id: learning-online-course
     name: "オンライン動画講座（生成AI・IT・資格をスマホで学べる）"
@@ -162,11 +194,13 @@ programs:
     name: "Claude Code研修（AI駆動開発協会）"
     category: learning
     asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5849853&p_id=7640&pc_id=22095&pl_id=95452"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849853&p_id=7640&pc_id=22095&pl_id=95356"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849853&p_id=7640&pc_id=22095&pl_id=95356"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5849853&p_id=7640&pc_id=22095&pl_id=95452"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5849853&p_id=7640&pc_id=22095&pl_id=95452"
     banner_height: 280
     banner_width: 336
     banner: "https://image.moshimo.com/af-img/7398/000000095452.png"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849853&p_id=7640&pc_id=22095&pl_id=95452"
     est_reward_jpy: 5000
     keywords: ["Claude Code", "AI駆動開発", "AIコーディング", "生成AI 開発", "エンジニア 研修", "リスキリング AI"]
     cta: "Claude Code研修の内容を確認する"
@@ -190,11 +224,13 @@ programs:
     name: "家族でスタートAI（親子で学べる生成AI講座）"
     category: learning
     asp: "moshimo"
-    url: "https://af.moshimo.com/af/c/click?a_id=5849858&p_id=7471&pc_id=21589&pl_id=94670"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849858&p_id=7471&pc_id=21589&pl_id=93775"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849858&p_id=7471&pc_id=21589&pl_id=93775"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5849858&p_id=7471&pc_id=21589&pl_id=94670"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5849858&p_id=7471&pc_id=21589&pl_id=94670"
     banner_height: 144
     banner_width: 300
     banner: "https://image.moshimo.com/af-img/4198/000000094670.png"
-    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849858&p_id=7471&pc_id=21589&pl_id=94670"
     est_reward_jpy: 2000
     keywords: ["生成AI 親子", "子ども 生成AI", "生成AI 学び方 初心者", "ChatGPT 子ども 使わせ方", "生成AI 家庭", "AI 習い事"]
     cta: "14日間の無料体験の内容を確認する"
