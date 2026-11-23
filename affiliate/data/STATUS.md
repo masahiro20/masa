@@ -1,6 +1,6 @@
 # 運用ステータス（自動更新）
 
-- 最終更新: 2026-11-22 21:49 UTC
+- 最終更新: 2026-11-23 00:22 UTC
 - 公開記事数: 164
 - キーワード在庫: 21件（見送り 32件）
 - 今月のAPI費用（概算）: $0.00 / 上限 $50
@@ -22,8 +22,8 @@
 - reskilling-hojokin-itsu-moraeru（平均13.3位・表示269回）
 - rental-server-hiyou-kanjoukamoku（平均10.3位・表示158回）
 - mukiteiru-shigoto-wakaranai-shindan（平均10.7位・表示105回）
-- programming-school-taimen-online-chigai（平均5.4位・表示22回）
-- programming-school-kyufukin-conditions（平均12.1位・表示22回）
+- wordpress-portfolio-tsukurikata-mikeiken（平均15.6位・表示44回）
+- reskilling-hojokin-tenshoku-shinai（平均7.9位・表示37回）
 
 ## 最近の改善（毎週の改善ルーチン）
 
