@@ -195,3 +195,5 @@
 {"ts": "2026-11-22T21:49:32+00:00", "source": "routine", "published": ["career-soudan-ai"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-23T03:49:47+00:00", "source": "routine", "published": ["shanai-se-tenshoku-navi-mikeiken"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-23T09:50:08+00:00", "source": "routine", "published": ["techgo-hyouban"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-23T21:48:21+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["生成ai スクール 社会人"], "errors": ["既存記事seisei-ai-school-hikaku・seisei-ai-manabikata-shoshinsha-shakaijinと検索意図が重複"]}
+{"ts": "2026-11-23T21:50:21+00:00", "source": "routine", "published": ["runteq-claude-code-course"], "refreshed": [], "rejected": [], "errors": []}
