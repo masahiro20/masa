@@ -147,6 +147,10 @@ AIを使った開発スキルを転職や副業に活かしたい人は、Claude
 
 {{aff:learning-ai-coding}}
 
+Claude Codeを使った開発を、スクールで相談しながら学びたい人は、{{aff:school-runteq-claude|RUNTEQのClaude Codeコース}}の無料キャリア相談会で、学ぶ内容や費用、自分の目的に合うかを確かめる方法もあります。
+
+{{aff:school-runteq-claude}}
+
 研修を受けない、という選び方もあります。まず公式ドキュメントで触ってみて、必要を感じたときに考えれば間に合います。
 
 ## よくある質問

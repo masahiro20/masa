@@ -23,13 +23,13 @@ programs:
     category: school
     asp: "moshimo"
     url: "https://af.moshimo.com/af/c/click?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95251"
-    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95323"
-    banner_url: "https://af.moshimo.com/af/c/click?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95323"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95324"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95324"
     banner_height: 250
-    banner_width: 250
-    banner: "https://image.moshimo.com/af-img/5991/000000095323.png"
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/5991/000000095324.png"
     pixel: "https://i.moshimo.com/af/i/impression?a_id=5849855&p_id=7629&pc_id=22069&pl_id=95251"
-    est_reward_jpy: 10000
+    est_reward_jpy: 15000
     keywords: ["プログラミングスクール", "おすすめ", "比較", "評判", "無料カウンセリング", "AIエンジニア"]
     cta: "無料カウンセリングの内容を確認する"
 
@@ -301,3 +301,125 @@ programs:
     est_reward_jpy: 100
     keywords: ["本", "参考書", "入門書"]
     cta: "楽天市場で技術書を探す"
+
+  - id: career-techgo
+    name: "テックゴー（実務経験2年以上のITエンジニア向け転職エージェント）"
+    category: career
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5915195&p_id=6722&pc_id=19209&pl_id=85793"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5915195&p_id=6722&pc_id=19209&pl_id=85793"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5915195&p_id=6722&pc_id=19209&pl_id=90844"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5915195&p_id=6722&pc_id=19209&pl_id=90844"
+    banner_height: 250
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/5666/000000090844.png"
+    est_reward_jpy: 14000
+    keywords: ["エンジニア 年収アップ 転職", "経験者 エンジニア 転職", "フリーランス 正社員 迷う", "社内SE 転職", "PM 転職"]
+    cta: "実務経験2年以上向けの無料相談の内容を見る"
+    # 成果は申込後30日以内の面談。実務経験2年以上が対象。MyVision社の他サービスで面談済みの人は対象外
+
+  - id: career-shanai-se
+    name: "社内SE転職ナビ（社内SE専門の転職エージェント）"
+    category: career
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5829889&p_id=5937&pc_id=16538&pl_id=75892"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5829889&p_id=5937&pc_id=16538&pl_id=75892"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5829889&p_id=5937&pc_id=16538&pl_id=78725"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5829889&p_id=5937&pc_id=16538&pl_id=78725"
+    banner_height: 250
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/4555/000000078725.png"
+    est_reward_jpy: 15384
+    keywords: ["社内SE 転職", "社内SE 求人", "社内SE 年収", "社内SE 経験者"]
+    cta: "社内SEの求人と待遇を確認する"
+    # 成果は新規会員登録。勤務地希望が首都圏・関西・北海道のみ。45歳以上・未経験は否認。SNS・YouTube掲載NG（このサイトはOK）
+
+  - id: school-runteq-claude
+    name: "RUNTEQ（Claude Codeコース）"
+    category: school
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5849857&p_id=7595&pc_id=21956&pl_id=94990"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5849857&p_id=7595&pc_id=21956&pl_id=94990"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5849857&p_id=7595&pc_id=21956&pl_id=95026"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5849857&p_id=7595&pc_id=21956&pl_id=95026"
+    banner_height: 250
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/2161/000000095026.png"
+    est_reward_jpy: 7000
+    keywords: ["Claude Code スクール", "Claude Code 学び方", "AI駆動開発 スクール", "RUNTEQ"]
+    cta: "無料キャリア相談会の内容を確認する"
+    # 成果は無料キャリア相談会への参加。SNS・YouTube掲載NG（このサイトはOK）
+
+  - id: career-myvision
+    name: "MyVision（AIキャリア診断）"
+    category: career
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5872420&p_id=7660&pc_id=22149&pl_id=95658"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5872420&p_id=7660&pc_id=22149&pl_id=95658"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5872420&p_id=7660&pc_id=22149&pl_id=95750"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5872420&p_id=7660&pc_id=22149&pl_id=95750"
+    banner_height: 500
+    banner_width: 600
+    banner: "https://image.moshimo.com/af-img/5666/000000095750.png"
+    est_reward_jpy: 4000
+    keywords: ["適職診断", "向いている仕事 診断", "キャリア診断", "自己分析 転職"]
+    cta: "AIキャリア診断の内容を確認する"
+    # 成果はアプリ（またはWEB）登録後7日以内のAIキャリア診断完了。4,000円は11/30までの報酬アップ
+
+  - id: school-carievo
+    name: "キャリエボ"
+    category: school
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5915193&p_id=7893&pc_id=22872&pl_id=98174"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5915193&p_id=7893&pc_id=22872&pl_id=98174"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5915193&p_id=7893&pc_id=22872&pl_id=98304"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5915193&p_id=7893&pc_id=22872&pl_id=98304"
+    banner_height: 250
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/5991/000000098304.png"
+    est_reward_jpy: 13000
+    keywords: []
+    cta: "無料カウンセリングの内容を確認する"
+    hold: true
+    # サービス内容をまだ確かめていない（想定20〜40代・AI未経験）。公式サイトで確かめたら hold を外す
+
+  - id: tools-komattasan
+    name: "コマッタサン"
+    category: tools
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5876730&p_id=7568&pc_id=21873&pl_id=94773"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5876730&p_id=7568&pc_id=21873&pl_id=94773"
+    est_reward_jpy: 6000
+    keywords: []
+    cta: "公式サイトを見る"
+    hold: true
+    # サービス内容をまだ確かめていない。成果は年払いプランの契約
+
+  - id: biz-ai-onikanri
+    name: "AI鬼管理（法人・個人事業主向けの業務効率化診断）"
+    category: tools
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5915192&p_id=7494&pc_id=21647&pl_id=93970"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5915192&p_id=7494&pc_id=21647&pl_id=93970"
+    est_reward_jpy: 15000
+    keywords: []
+    cta: "無料の業務効率化診断を見る"
+    hold: true
+    # 法人・個人事業主のみ（想定は年商1億円以上）。このサイトの読者とは別の層
+
+  - id: side-moshimo-asp
+    name: "もしもアフィリエイト（無料会員登録）"
+    category: fukugyo
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5890969&p_id=1&pc_id=1&pl_id=82635"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5890969&p_id=1&pc_id=1&pl_id=82635"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5890969&p_id=1&pc_id=1&pl_id=19213"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5890969&p_id=1&pc_id=1&pl_id=19213"
+    banner_height: 250
+    banner_width: 300
+    banner: "https://image.moshimo.com/af-img/0001/000000019213.jpg"
+    est_reward_jpy: 500
+    keywords: []
+    cta: "もしもアフィリエイトに無料で登録する"
+    hold: true
+    # 報酬500円。ブログ副業の記事で使うか検討中
