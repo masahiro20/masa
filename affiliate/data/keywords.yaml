@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 社内se転職ナビ 未経験
-  intent: transactional
-  category: career
-  program: career-shanai-se
-  score: 230760.0
-  status: queued
-  boost: 3.0
-  source: google-suggest
 - keyword: テックゴー 評判
   intent: transactional
   category: career
@@ -314,6 +306,15 @@ keywords:
   boost: 4.0
   source: search-console
   slug: programming-school-kayoi-houdai
+- keyword: 社内se転職ナビ 未経験
+  intent: transactional
+  category: career
+  program: career-shanai-se
+  score: 230760.0
+  status: published
+  boost: 3.0
+  source: google-suggest
+  slug: shanai-se-tenshoku-navi-mikeiken
 - keyword: ユニゾンキャリア 口コミ
   intent: transactional
   category: career
