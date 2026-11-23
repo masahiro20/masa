@@ -10,22 +10,6 @@ keywords:
   status: queued
   boost: 2.0
   source: google-suggest
-- keyword: 生成ai スクール 社会人
-  intent: commercial
-  category: school
-  program: school-general
-  score: 120000.0
-  status: queued
-  boost: 2.0
-  source: google-suggest
-- keyword: runteq claude code コース
-  intent: transactional
-  category: school
-  program: school-runteq-claude
-  score: 105000.0
-  status: queued
-  boost: 3.0
-  source: google-suggest
 - keyword: 高卒 転職エージェント line
   intent: commercial
   category: career
@@ -352,6 +336,15 @@ keywords:
   boost: 3.0
   source: google-suggest
   slug: conoha-wing-xserver-hikaku
+- keyword: runteq claude code コース
+  intent: transactional
+  category: school
+  program: school-runteq-claude
+  score: 105000.0
+  status: published
+  boost: 3.0
+  source: google-suggest
+  slug: runteq-claude-code-course
 - keyword: 転職エージェント おすすめ 30代 未経験
   intent: commercial
   category: career
@@ -1709,6 +1702,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事claude-code-school-osusume・ai-programming-school-osusume・ai-kudou-kaihatsu-manabikata-engineerと検索意図が重複
+- keyword: 生成ai スクール 社会人
+  intent: commercial
+  category: school
+  program: school-general
+  score: 120000.0
+  status: rejected
+  boost: 2.0
+  source: google-suggest
+  issues:
+  - 既存記事seisei-ai-school-hikaku・seisei-ai-manabikata-shoshinsha-shakaijinと検索意図が重複
 - keyword: 35歳 未経験 エンジニア転職
   intent: commercial
   category: career
