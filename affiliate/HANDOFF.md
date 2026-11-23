@@ -75,6 +75,10 @@ python -m engine post-x --dry-run --slugs …  # X投稿の文面確認（X自�
 - マネーフォワード クラウド確定申告（tools-accounting）：11/22 追加。A8.net のテキスト広告（1,500円）。勘定科目の記事2本に掲載
 - 弥生のクラウド確定申告（tools-accounting-yayoi）：11/22 追加
 - 楽天の技術書（learning-books）
+- テックゴー（career-techgo）：11/23 追加。実務経験2年以上向け。フリーランスの記事3本
+- 社内SE転職ナビ（career-shanai-se）：11/23 追加。社内SEの記事2本
+- RUNTEQ Claude Codeコース（school-runteq-claude）：11/23 追加。Claude Codeの記事2本
+- MyVision AIキャリア診断（career-myvision）：11/23 追加。職種の記事1本
 
 楽天以外は、テキスト広告とバナーの両方が入っている（バナーは記事内の最初の枠だけ）。
 
@@ -109,6 +113,7 @@ python -m engine post-x --dry-run --slugs …  # X投稿の文面確認（X自�
 
 **保管のみ（hold）**
 - 工場求人、失業保険給付金サポート、FPの保険相談、ソウガク
+- キャリエボ、コマッタサン（サービス内容を確かめてから使う）、AI鬼管理（法人向け）、もしもアフィリエイト無料会員登録（報酬500円）
 
 ## 7. 残っている作業（ここから）
 
