@@ -14,3 +14,7 @@
 - 2026-11-21: テキスト広告を3件追加（Kredo Online、メーカーズジョブ、オンライン動画講座）。新案件 Kredo IT留学を登録し、評判テーマを在庫へ
 - 2026-11-21: 給付金・補助金の記事（表示の大半を占める）の広告枠に、経産省リスキリング補助金の対象スクール Kredo を出すようにした（32記事）
 - 2026-11-21: CTR改善 kyoiku-kunren-kyufukin-shinsei-nagare（表示812回・9.4位・CTR1.6％）と kyufukin-jukyu-shikaku-kakuninhyo（236回・7.5位・1.7％）のタイトルと説明文。表示が多いため21日条件の前に実施
+- 2026-11-23: 新テーマ11件を追加（例：教育訓練給付金 郵送 申請、機械設計 転職 未経験、claude code と cursor 違い、リスキリング 補助金 70%）。サジェストで確かめた語に boost 1.5、高卒 転職エージェント line は Search Console の質問語から boost なしで追加
+- 2026-11-23: CTR改善は見送り（順位10位以内・表示30回以上・CTRが目安未満の候補は、いずれも直近21日以内に更新済み。最古は hello-training-hyouban の11-04）
+- 2026-11-23: 内部リンク3本（→ kyufukin-denshi-shinsei-yarikata〈表示180回・リンク0本〉、tenshoku-agent-line-henshin〈表示176回・リンク2本〉、reskilling-hojokin-itsu-moraeru〈表示269回・リンク3本〉）
+- 2026-11-23: テーマ別ガイドの振り分けを調整（スクール・コーチング・Claude Code／AI駆動の記事など約30本が、どのガイドにも入っていなかったため既存ガイドに振り分け）
