@@ -10,6 +10,45 @@ keywords:
   status: queued
   boost: 2.0
   source: google-suggest
+- keyword: 高卒 転職エージェント line
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 60000.0
+  status: queued
+  source: gsc-question（表示3回・5.0位）
+- keyword: 機械設計 転職 未経験
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 設備保全 未経験 転職
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 工場 エンジニア 転職
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ものづくり 転職 エージェント
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: 英語 プログラミング スクール
   intent: commercial
   category: school
@@ -22,6 +61,30 @@ keywords:
   intent: commercial
   category: school
   program: school-kredo-ryugaku
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 教育訓練給付金 郵送 申請
+  intent: informational
+  category: school
+  program: school-general
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: リスキリング 補助金 70%
+  intent: commercial
+  category: school
+  program: school-kredo
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: claude code 副業
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
   score: 30000.0
   status: queued
   boost: 1.5
@@ -74,6 +137,22 @@ keywords:
   status: queued
   boost: 2.0
   source: google-suggest
+- keyword: claude code と cursor 違い
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: claude code と chatgpt 違い
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: ブログ 確定申告 いくらから
   intent: informational
   category: fukugyo
@@ -97,6 +176,14 @@ keywords:
   score: 3000.0
   status: queued
   boost: 2.0
+  source: google-suggest
+- keyword: 弥生 青色申告 初心者
+  intent: commercial
+  category: tools
+  program: tools-accounting-yayoi
+  score: 1800.0
+  status: queued
+  boost: 1.5
   source: google-suggest
 - keyword: 副業 20万以下 確定申告 したら どうなる
   intent: informational
