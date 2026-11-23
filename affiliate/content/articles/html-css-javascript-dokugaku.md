@@ -16,9 +16,10 @@ programs:
 - learning-online-course
 - learning-books
 published: '2026-10-27'
-updated: '2026-10-27'
+updated: '2026-11-23'
 origin: ai
 editor_score: null
+voice: 2
 sources:
 - title: JavaScript とは｜MDN Web Docs
   url: https://developer.mozilla.org/ja/docs/Learn_web_development/Core/Scripting/What_is_JavaScript
@@ -28,6 +29,8 @@ sources:
 Webサイトを作れるようになりたいと思って調べ始めたら、HTML、CSS、JavaScriptと名前がいくつも出てきて、どれから手をつければいいのか分からなくなった。そんな場面を想定して書きました。最初にここで迷うのは、ごく自然なことです。
 
 HTML・CSS・JavaScriptを独学するなら、**HTML → CSS → JavaScriptの順番**で学ぶのが基本です。HTMLでページの骨組みを作り、CSSで見た目を整え、JavaScriptで動きを加える、という役割の順番に沿って学ぶと、それぞれが何のためにあるのかを理解しやすくなります。
+
+この記事では、焦らず進められるように、順番と範囲を一つずつ整理します。
 
 MDN Web Docsでも、JavaScriptを学ぶ前提知識として、HTMLおよびCSSの基礎を理解していることが挙げられています。**3つを同時に学ぶより、一つずつ「小さく作れる」状態にしてから次へ進む**ほうが、独学でも挫折しにくくなります。
 
