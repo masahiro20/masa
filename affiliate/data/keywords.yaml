@@ -18,14 +18,6 @@ keywords:
   status: queued
   boost: 3.0
   source: google-suggest
-- keyword: ai駆動開発 スクール
-  intent: transactional
-  category: school
-  program: school-general
-  score: 150000.0
-  status: queued
-  boost: 2.0
-  source: google-suggest
 - keyword: テックゴー 未経験
   intent: transactional
   category: career
@@ -50,23 +42,46 @@ keywords:
   status: queued
   boost: 3.0
   source: google-suggest
-- keyword: キャリア相談 ai
-  intent: informational
+- keyword: 高卒 転職エージェント line
+  intent: commercial
   category: career
   program: career-it-agent
+  score: 60000.0
+  status: queued
+  source: gsc-question（表示3回・5.0位）
+- keyword: 教育訓練給付金 郵送 申請
+  intent: informational
+  category: school
+  program: school-general
   score: 45000.0
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: claude code 無料研修
+- keyword: 機械設計 転職 未経験
   intent: commercial
-  category: learning
-  program: learning-ai-coding
-  score: 40000.0
+  category: career
+  program: career-maker-agent
+  score: 36000.0
   status: queued
-  boost: 2.0
+  boost: 1.5
   source: google-suggest
-- keyword: メーカー 転職 未経験
+- keyword: 設備保全 未経験 転職
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: 工場 エンジニア 転職
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: ものづくり 転職 エージェント
   intent: commercial
   category: career
   program: career-maker-agent
@@ -86,6 +101,22 @@ keywords:
   intent: commercial
   category: school
   program: school-kredo-ryugaku
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: リスキリング 補助金 70%
+  intent: commercial
+  category: school
+  program: school-kredo
+  score: 30000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: claude code 副業
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
   score: 30000.0
   status: queued
   boost: 1.5
@@ -138,6 +169,22 @@ keywords:
   status: queued
   boost: 2.0
   source: google-suggest
+- keyword: claude code と cursor 違い
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
+- keyword: claude code と chatgpt 違い
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: ブログ 確定申告 いくらから
   intent: informational
   category: fukugyo
@@ -161,6 +208,14 @@ keywords:
   score: 3000.0
   status: queued
   boost: 2.0
+  source: google-suggest
+- keyword: 弥生 青色申告 初心者
+  intent: commercial
+  category: tools
+  program: tools-accounting-yayoi
+  score: 1800.0
+  status: queued
+  boost: 1.5
   source: google-suggest
 - keyword: 副業 20万以下 確定申告 したら どうなる
   intent: informational
@@ -635,6 +690,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: rental-server-yasui-erabikata
+- keyword: キャリア相談 ai
+  intent: informational
+  category: career
+  program: career-it-agent
+  score: 45000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: career-soudan-ai
 - keyword: 社内se 転職 難しい
   intent: informational
   category: career
@@ -757,6 +821,15 @@ keywords:
   score: 40000.0
   status: published
   slug: wordpress-blog-start-server-domain-steps
+- keyword: メーカー 転職 未経験
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: maker-tenshoku-mikeiken
 - keyword: c言語 組み込み 難しい
   intent: commercial
   category: career
@@ -1624,6 +1697,16 @@ keywords:
   source: google-suggest
   issues:
   - 公式サイトに接続できず未経験向け支援の内容を確認できない。既存記事unison-career-kuchikomi・mikeiken-engineer-tenshoku-agent-how-to-useと意図も近い
+- keyword: ai駆動開発 スクール
+  intent: transactional
+  category: school
+  program: school-general
+  score: 150000.0
+  status: rejected
+  boost: 2.0
+  source: google-suggest
+  issues:
+  - 既存記事claude-code-school-osusume・ai-programming-school-osusume・ai-kudou-kaihatsu-manabikata-engineerと検索意図が重複
 - keyword: 35歳 未経験 エンジニア転職
   intent: commercial
   category: career
@@ -1716,6 +1799,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事programming-fukugyo-mikeiken-muzukashiiと検索意図が重複
+- keyword: claude code 無料研修
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
+  score: 40000.0
+  status: rejected
+  boost: 2.0
+  source: google-suggest
+  issues:
+  - 既存記事claude-code-kenshu-kojin-osusumeと検索意図が重複
 - keyword: ドメイン代 勘定科目
   intent: informational
   category: fukugyo
