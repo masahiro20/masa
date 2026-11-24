@@ -1,8 +1,8 @@
 # 運用ステータス（自動更新）
 
-- 最終更新: 2026-11-23 21:50 UTC
-- 公開記事数: 167
-- キーワード在庫: 32件（見送り 33件）
+- 最終更新: 2026-11-24 03:50 UTC
+- 公開記事数: 168
+- キーワード在庫: 27件（見送り 37件）
 - 今月のAPI費用（概算）: $0.00 / 上限 $50
 - 提携済み案件: 24 / 30
 
@@ -22,8 +22,8 @@
 - reskilling-hojokin-itsu-moraeru（平均13.3位・表示269回）
 - rental-server-hiyou-kanjoukamoku（平均10.3位・表示158回）
 - mukiteiru-shigoto-wakaranai-shindan（平均10.7位・表示105回）
+- webdesigner-mikeiken-30dai-muri（平均17.3位・表示62回）
 - wordpress-portfolio-tsukurikata-mikeiken（平均15.6位・表示44回）
-- reskilling-hojokin-tenshoku-shinai（平均7.9位・表示37回）
 
 ## 最近の改善（毎週の改善ルーチン）
 
@@ -55,13 +55,13 @@ ASPで提携したら `config/programs.yaml` の `url` に広告リンクを貼�
 
 | 日時 | 公開 | 改善 | 見送り | エラー |
 |---|---|---|---|---|
+| 2026-11-24T03:50:47+00:00 | 1 | 0 | 0 |  |
+| 2026-11-24T03:49:11+00:00 | 0 | 0 | 1 | 既存記事kikai-sekkei-tenshoku-agent（未経験の節を含む）と検索意図が重複 |
+| 2026-11-24T03:48:57+00:00 | 0 | 0 | 1 | 既存記事kyoiku-kunren-kyufukin-shinsei-nagare（郵送の流れを含む）と検索意図が重複 |
+| 2026-11-24T03:48:42+00:00 | 0 | 0 | 1 | 既存記事techgo-hyoubanと検索意図が重複 |
+| 2026-11-24T03:48:34+00:00 | 0 | 0 | 1 | 既存記事20dai-kousotsu-tenshoku-agent・chusotsu-tenshoku-agent-lineと検索意図が重複 |
 | 2026-11-23T21:50:21+00:00 | 1 | 0 | 0 |  |
 | 2026-11-23T21:48:21+00:00 | 0 | 0 | 1 | 既存記事seisei-ai-school-hikaku・seisei-ai-manabikata-shoshinsha-shakaijinと検索意図が重複 |
 | 2026-11-23T09:50:08+00:00 | 1 | 0 | 0 |  |
 | 2026-11-23T03:49:47+00:00 | 1 | 0 | 0 |  |
 | 2026-11-22T21:49:32+00:00 | 1 | 0 | 0 |  |
-| 2026-11-22T09:50:00+00:00 | 1 | 0 | 0 |  |
-| 2026-11-22T09:48:22+00:00 | 0 | 0 | 1 | 既存記事claude-code-kenshu-kojin-osusumeと検索意図が重複 |
-| 2026-11-22T09:48:14+00:00 | 0 | 0 | 1 | 既存記事claude-code-school-osusume・ai-programming-school-osusume・ai-kudou-kaihatsu-manabikata-engineerと検索意図が重複 |
-| 2026-11-22T03:49:27+00:00 | 1 | 0 | 0 |  |
-| 2026-11-21T21:49:09+00:00 | 1 | 0 | 0 |  |
