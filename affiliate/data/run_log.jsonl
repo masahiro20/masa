@@ -203,3 +203,5 @@
 {"ts": "2026-11-24T03:49:11+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["機械設計 転職 未経験"], "errors": ["既存記事kikai-sekkei-tenshoku-agent（未経験の節を含む）と検索意図が重複"]}
 {"ts": "2026-11-24T03:50:47+00:00", "source": "routine", "published": ["setsubi-hozen-mikeiken-tenshoku"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-24T21:49:23+00:00", "source": "routine", "published": ["eigo-programming-school"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-24T21:51:25+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["it留学 社会人"], "errors": ["既存記事kredo-it-ryugaku-hyouban・eigo-programming-schoolと検索意図が重複"]}
+{"ts": "2026-11-24T21:52:57+00:00", "source": "routine", "published": ["claude-code-fukugyo"], "refreshed": [], "rejected": [], "errors": []}

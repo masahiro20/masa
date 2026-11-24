@@ -18,26 +18,10 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: it留学 社会人
-  intent: commercial
-  category: school
-  program: school-kredo-ryugaku
-  score: 30000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: リスキリング 補助金 70%
   intent: commercial
   category: school
   program: school-kredo
-  score: 30000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: claude code 副業
-  intent: commercial
-  category: learning
-  program: learning-ai-coding
   score: 30000.0
   status: queued
   boost: 1.5
@@ -810,6 +794,15 @@ keywords:
   score: 32000.0
   status: published
   slug: rental-server-erabikata-shoshinsha-wordpress
+- keyword: claude code 副業
+  intent: commercial
+  category: learning
+  program: learning-ai-coding
+  score: 30000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: claude-code-fukugyo
 - keyword: 英語 プログラミング スクール
   intent: commercial
   category: school
@@ -1824,6 +1817,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事kikai-sekkei-tenshoku-agent（未経験の節を含む）と検索意図が重複
+- keyword: it留学 社会人
+  intent: commercial
+  category: school
+  program: school-kredo-ryugaku
+  score: 30000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事kredo-it-ryugaku-hyouban・eigo-programming-schoolと検索意図が重複
 - keyword: ドメイン代 勘定科目
   intent: informational
   category: fukugyo
