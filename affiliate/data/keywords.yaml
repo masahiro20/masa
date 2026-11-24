@@ -2,45 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: テックゴー 未経験
-  intent: transactional
-  category: career
-  program: career-techgo
-  score: 140000.0
-  status: queued
-  boost: 2.0
-  source: google-suggest
-- keyword: 高卒 転職エージェント line
-  intent: commercial
-  category: career
-  program: career-it-agent
-  score: 60000.0
-  status: queued
-  source: gsc-question（表示3回・5.0位）
-- keyword: 教育訓練給付金 郵送 申請
-  intent: informational
-  category: school
-  program: school-general
-  score: 45000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: 機械設計 転職 未経験
-  intent: commercial
-  category: career
-  program: career-maker-agent
-  score: 36000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: 設備保全 未経験 転職
-  intent: commercial
-  category: career
-  program: career-maker-agent
-  score: 36000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 工場 エンジニア 転職
   intent: commercial
   category: career
@@ -816,6 +777,15 @@ keywords:
   score: 40000.0
   status: published
   slug: wordpress-blog-start-server-domain-steps
+- keyword: 設備保全 未経験 転職
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: setsubi-hozen-mikeiken-tenshoku
 - keyword: メーカー 転職 未経験
   intent: commercial
   category: career
@@ -1702,6 +1672,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事claude-code-school-osusume・ai-programming-school-osusume・ai-kudou-kaihatsu-manabikata-engineerと検索意図が重複
+- keyword: テックゴー 未経験
+  intent: transactional
+  category: career
+  program: career-techgo
+  score: 140000.0
+  status: rejected
+  boost: 2.0
+  source: google-suggest
+  issues:
+  - 既存記事techgo-hyoubanと検索意図が重複
 - keyword: 生成ai スクール 社会人
   intent: commercial
   category: school
@@ -1752,6 +1732,15 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事seisei-ai-school-hikaku・seisei-ai-school-hojokinと検索意図が重複
+- keyword: 高卒 転職エージェント line
+  intent: commercial
+  category: career
+  program: career-it-agent
+  score: 60000.0
+  status: rejected
+  source: gsc-question（表示3回・5.0位）
+  issues:
+  - 既存記事20dai-kousotsu-tenshoku-agent・chusotsu-tenshoku-agent-lineと検索意図が重複
 - keyword: プログラミングスクール 後悔 理由 対策
   intent: commercial
   category: school
@@ -1794,6 +1783,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事blog-rental-server-hitsuyouと検索意図が重複
+- keyword: 教育訓練給付金 郵送 申請
+  intent: informational
+  category: school
+  program: school-general
+  score: 45000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事kyoiku-kunren-kyufukin-shinsei-nagare（郵送の流れを含む）と検索意図が重複
 - keyword: 副業 プログラミング 現実
   intent: informational
   category: fukugyo
@@ -1814,6 +1813,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事claude-code-kenshu-kojin-osusumeと検索意図が重複
+- keyword: 機械設計 転職 未経験
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事kikai-sekkei-tenshoku-agent（未経験の節を含む）と検索意図が重複
 - keyword: ドメイン代 勘定科目
   intent: informational
   category: fukugyo
