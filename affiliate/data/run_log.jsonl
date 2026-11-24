@@ -202,3 +202,4 @@
 {"ts": "2026-11-24T03:48:57+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["教育訓練給付金 郵送 申請"], "errors": ["既存記事kyoiku-kunren-kyufukin-shinsei-nagare（郵送の流れを含む）と検索意図が重複"]}
 {"ts": "2026-11-24T03:49:11+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["機械設計 転職 未経験"], "errors": ["既存記事kikai-sekkei-tenshoku-agent（未経験の節を含む）と検索意図が重複"]}
 {"ts": "2026-11-24T03:50:47+00:00", "source": "routine", "published": ["setsubi-hozen-mikeiken-tenshoku"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-24T21:49:23+00:00", "source": "routine", "published": ["eigo-programming-school"], "refreshed": [], "rejected": [], "errors": []}
