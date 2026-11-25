@@ -6,7 +6,7 @@ import { Recorder, recSupported, leftovers, saveFile } from './recorder.js';
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 const KINDS = ['初回接客', '打ち合わせ', '現地調査', '契約', 'その他'];
-const FLUSH_BYTES = 360 * 1024;   // これだけ溜まったら送る
+const FLUSH_BYTES = 256 * 1024;   // これだけ溜まったら送る（保管先の 1 件の上限に余裕を持たせる）
 const FLUSH_MS = 20000;           // または 20 秒ごと
 
 let audioCtx = null;
