@@ -208,3 +208,4 @@
 {"ts": "2026-11-25T03:48:34+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["conoha wing 解約"], "errors": ["既存記事conoha-wing-hyouban（解約の節を含む）と検索意図が重複"]}
 {"ts": "2026-11-25T03:50:46+00:00", "source": "routine", "published": ["yayoi-moneyforward-hikaku"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-25T09:49:18+00:00", "source": "routine", "published": ["koujou-engineer-tenshoku"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-25T21:49:22+00:00", "source": "routine", "published": ["claude-code-tsukaikata"], "refreshed": [], "rejected": [], "errors": []}
