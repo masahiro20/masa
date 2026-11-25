@@ -69,6 +69,16 @@ python -c "from engine.site import build_guides; from engine.articles import loa
 
 明らかに入るべきガイドがあるのに外れている記事があれば、config/site.yaml の guides の match / steps を調整する。新しいガイドは作らない。
 
+## 5.5 施策E：給付金・補助金が使えるスクール一覧の点検
+
+config/schools.yaml（/tools/kyufukin-school/ に表示）を点検する。
+- `checked` が100日以上前の制度があれば、その `source`（公式ページ）を開いて、まだ「対象」と書かれているか確かめる。
+  書かれていれば `checked` を今日の日付に、消えていれば、その制度（制度が1つもなくなればスクールごと）を消す。1回の実行で3校まで。
+- config/programs.yaml に新しく広告が入った案件があり、そのスクールが一覧にあれば `program` に案件の id を入れる。
+  申込先が対象講座でない案件（例：対象外のコースの広告）は入れない。
+- 一覧を変えたら、config/site.yaml の kyufukin-school の `updated` を今日の日付にする。
+- 公式ページに書かれていないこと（口コミサイト・比較サイトの情報）は載せない。
+
 ## 6. 確かめる
 
 ```bash
@@ -96,5 +106,5 @@ git add -A && git commit -m "growth: <日付> 毎週の改善" && git push -u or
 - 事実・数字・料金・日付・出典を変える、体験談や読者の声を作る
 - 広告ショートコード（`{{aff:…}}`）を足す・消す、`hold: true` の案件を使う
 - engine/ のコード、ワークフロー、テンプレートを変える（気づいた改善案は growth_log に「提案：」として書く）
-- 新しいツール・ガイドページを作る
+- 新しいツール・ガイドページを作る（スクール一覧への追加・点検は施策Eの範囲で行ってよい）
 - Web検索を何度も使う（サジェストの確認だけにする。利用枠を節約するため）

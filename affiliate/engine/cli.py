@@ -220,6 +220,10 @@ def cmd_check(cfg: Config, args) -> int:
             print(f"NG {a.slug}: " + " / ".join(report.issues))
         else:
             print(f"OK {a.slug} ({report.char_count}字)")
+    from .schools import load_schools, validate as validate_schools
+    for issue in validate_schools(load_schools(), cfg.programs_by_id):
+        failed += 1
+        print(f"NG schools.yaml: {issue}")
     return 1 if failed else 0
 
 

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="wrap">
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>/</span>無料ツール</nav>
+  <header class="cat-header guide-header">
+    <p class="guide-kicker">無料ツール・データ</p>
+    <h1>{{ tool.title }}</h1>
+    <p>{{ tool.intro }}</p>
+    <p class="school-meta">掲載 {{ tool.schools|length }}校・最終確認 <time datetime="{{ tool.updated }}">{{ tool.updated | replace('-', '.') }}</time>・<a href="#criteria">載せる基準</a></p>
+  </header>
+  <p class="pr-notice"><span class="pr-tag">PR</span>一部のスクールには、申込で当サイトに報酬が入る広告リンクがあります（「PR」と表示）。並び順と掲載の有無は、報酬とは関係なく決めています。</p>
+
+  <section class="tool-section">
+    <h2>まず結論：使える制度は2種類</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>制度</th><th>対象になる人</th><th>戻る・安くなる額</th><th>受け取り方</th></tr></thead>
+      <tbody>
+        <tr><td>教育訓練給付金（厚生労働省）<br><small>一般・特定一般・専門実践の3種類</small></td><td>雇用保険に一定期間入っている人（離職から1年以内の人も含む）</td><td>受講費の20%（上限10万円）〜最大80%（専門実践は年間上限64万円）</td><td>本人がハローワークに申請して受け取る（一般・特定一般は修了後、専門実践は受講中から6か月ごと）</td></tr>
+        <tr><td>リスキリングを通じたキャリアアップ支援事業（経済産業省）</td><td>今働いていて（雇用契約がある）、転職を目指す人</td><td>修了で受講費（税抜）の1/2（上限40万円）、転職して1年続けばさらに1/5（上限16万円）。最大56万円</td><td>国からスクール（補助事業者）に支払われ、受講料の値引きや還元の形で負担が軽くなる（形はスクールごと）</td></tr>
+      </tbody>
+    </table></div>
+    <p class="tool-hint">出典：厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/jinzaikaihatsu/kyouiku.html" target="_blank" rel="noopener">教育訓練給付金</a>」、経済産業省 リスキリングを通じたキャリアアップ支援事業「<a href="https://careerup.reskilling.go.jp/worker/" target="_blank" rel="noopener">転職をご検討の方</a>」。経済産業省の事業は、2026年10月に事業期間の1年延長が発表されています（<a href="https://careerup.reskilling.go.jp/assets/files/business/202610_news.pdf" target="_blank" rel="noopener">お知らせ</a>）。受付や修了の期限はスクールごとに違います。</p>
+  </section>
+
+  <form class="tool-form school-filter" id="filter" onsubmit="return false" aria-label="スクールを絞り込む">
+    <fieldset>
+      <legend>制度で絞り込む</legend>
+      <div class="chips">{% for key, s in systems.items() %}{% if key in tool.avail.systems %}
+        <label class="chip"><input type="checkbox" name="system" value="{{ key }}"> {{ s.short }}</label>{% endif %}{% endfor %}</div>
+    </fieldset>
+    <fieldset>
+      <legend>学びたい分野</legend>
+      <div class="chips">{% for key, name in fields.items() %}{% if key in tool.avail.fields %}
+        <label class="chip"><input type="checkbox" name="field" value="{{ key }}"> {{ name }}</label>{% endif %}{% endfor %}</div>
+    </fieldset>
+    <fieldset>
+      <legend>受講の形</legend>
+      <div class="chips">{% for key, name in formats.items() %}{% if key in tool.avail.format %}
+        <label class="chip"><input type="checkbox" name="format" value="{{ key }}"> {{ name }}</label>{% endif %}{% endfor %}</div>
+    </fieldset>
+    <fieldset>
+      <legend>受講料を入れると、戻る額の目安がわかります（任意）</legend>
+      <label class="tool-yen"><input type="number" id="cost" min="0" step="10000" placeholder="例：600000" inputmode="numeric"> 円（税込）</label>
+      <p class="tool-hint">各スクールの制度ごとに、条件をすべて満たした場合の目安を出します。専門実践は1年分で計算します。</p>
+    </fieldset>
+  </form>
+
+  <p class="school-count" id="count" aria-live="polite"></p>
+  <div class="school-list" id="list">
+  {% for sc in tool.schools %}
+    <article class="school-card" data-systems="{{ sc.systems | join(' ') }}" data-fields="{{ sc.fields | join(' ') }}" data-format="{{ sc.format | join(' ') }}">
+      <header>
+        <h2 class="school-name">{{ sc.name }}</h2>
+        <p class="school-tags">{% for f in sc.field_names %}<span>{{ f }}</span>{% endfor %}{% for f in sc.format_names %}<span class="is-format">{{ f }}</span>{% endfor %}</p>
+        {% if sc.summary %}<p class="school-summary">{{ sc.summary }}</p>{% endif %}
+      </header>
+      <ul class="school-subs">{% for sub in sc.subsidies %}
+        <li data-system="{{ sub.system }}">
+          <p class="school-sys"><span class="sys-badge sys-{{ sub.system }}">{{ sub.info.short }}</span><span class="sys-org">{{ sub.info.org }}</span></p>
+          <p class="school-course">{{ sub.course }}</p>
+          {% if sub.note %}<p class="school-note">{{ sub.note }}</p>{% endif %}
+          <p class="school-est" hidden></p>
+          <p class="school-src">{% if sub.stale %}<span class="is-stale">再確認中</span>{% endif %}<a href="{{ sub.source }}" target="_blank" rel="noopener nofollow">公式ページの記載を見る</a>（{{ sub.checked | replace('-', '.') }} 確認）</p>
+        </li>{% endfor %}
+      </ul>
+      <div class="school-cta">{% if sc.ad %}
+        <span class="cta-label">PR</span><a class="cta-button" href="{{ sc.ad.url }}" rel="sponsored noopener" referrerpolicy="no-referrer-when-downgrade" target="_blank">{{ sc.ad.cta }}</a>{% if sc.ad.pixel %}<img class="aff-pixel" src="{{ sc.ad.pixel }}" width="1" height="1" alt="">{% endif %}
+      {% else %}
+        <a class="school-official" href="{{ sc.official }}" target="_blank" rel="noopener">公式サイトを見る</a>
+      {% endif %}</div>
+    </article>
+  {% endfor %}
+  </div>
+  <p class="school-empty" id="empty" hidden>条件に合うスクールがありません。絞り込みを減らしてみてください。</p>
+
+  <section class="tool-section" id="criteria">
+    <h2>このリストに載せる基準</h2>
+    <ul class="tool-notes">
+      <li>スクールの<strong>公式ページ</strong>に「教育訓練給付金の対象」または「経済産業省のリスキリングを通じたキャリアアップ支援事業の対象」と書かれているものだけを載せています。口コミサイトや比較サイトの情報は使っていません。</li>
+      <li>各制度の横に、記載を確かめた公式ページと確認日を載せています。確認から120日を過ぎたものは「再確認中」と表示します。</li>
+      <li>対象かどうかは講座ごとに決まります。同じスクールでも、対象でないコースがあります。</li>
+      <li>公式ページで確かめられなかったスクールは載せていません（給付金の記載がない、個人の申込は対象外と書かれている、など）。</li>
+      <li>載せてほしいスクールや、情報の誤りに気づいたときは、<a href="{{ base_url }}/contact/">お問い合わせページ</a>からご連絡ください。</li>
+    </ul>
+  </section>
+
+  {% if tool.faq %}<section class="tool-section">
+    <h2>よくある質問</h2>
+    <dl class="faq-list">{% for q in tool.faq %}<dt>{{ q.q }}</dt><dd>{{ q.a }}</dd>{% endfor %}</dl>
+  </section>{% endif %}
+
+  <section class="tool-section">
+    <h2>給付金がいくらになるか、くわしく計算する</h2>
+    <p>講座の種類（一般・特定一般・専門実践）や、資格取得・賃金上昇による追加分まで計算したいときは、<a href="{{ base_url }}/tools/kyufukin-keisan/">教育訓練給付金シミュレーター</a>を使ってください。</p>
+  </section>
+
+  {% if tool.links %}<section class="tool-section">
+    <h2>次に読みたい記事</h2>
+    <ul class="guide-list">{% for a in tool.links %}<li>
+      <a href="{{ base_url }}/{{ a.url_path }}"><img src="{{ thumb_url(a) }}" alt="" width="640" height="336" loading="lazy" decoding="async"><span class="guide-item-text"><span class="guide-item-title">{{ a.title }}</span>{% if a.audience %}<span class="guide-item-aud">{{ a.audience }}</span>{% endif %}</span></a>
+    </li>{% endfor %}</ul>
+  </section>{% endif %}
+</div>
+
+<script>
+(function () {
+  var f = document.getElementById('filter'), cards = [].slice.call(document.querySelectorAll('.school-card'));
+  var yen = function (n) { return Math.round(n).toLocaleString('ja-JP') + '円'; };
+  // 条件をすべて満たした場合の目安（専門実践は1年分）。根拠は「まず結論」の表と出典
+  function estimate(sys, cost) {
+    if (sys === 'ippan') { var a = Math.min(cost * 0.2, 100000); return a > 4000 ? '最大 ' + yen(a) + '（受講費の20%・上限10万円）' : '計算した額が4,000円以下のため支給されません'; }
+    if (sys === 'tokutei') { return '最大 ' + yen(Math.min(cost * 0.4, 200000) + Math.min(cost * 0.1, 50000)) + '（40%＋資格取得・就職で10%）'; }
+    if (sys === 'senmon') { return '1年で最大 ' + yen(Math.min(cost * 0.5, 400000) + Math.min(cost * 0.2, 160000) + Math.min(cost * 0.1, 80000)) + '（50%＋資格取得・就職で20%＋賃金上昇で10%）'; }
+    if (sys === 'reskilling') { var ex = cost / 1.1, b = Math.min(ex / 2, 400000), c = Math.min(ex / 5, 160000); return '修了で ' + yen(b) + '、転職して1年続けばさらに ' + yen(c) + '（税抜の受講費で計算）'; }
+    return '';
+  }
+  function checked(name) { return [].slice.call(f.querySelectorAll('input[name=' + name + ']:checked')).map(function (i) { return i.value; }); }
+  function hit(card, attr, want) {
+    if (!want.length) { return true; }
+    var have = (card.getAttribute(attr) || '').split(' ');
+    return want.some(function (w) { return have.indexOf(w) >= 0; });
+  }
+  function render() {
+    var sys = checked('system'), fld = checked('field'), fmt = checked('format');
+    var cost = Math.max(0, Number(document.getElementById('cost').value) || 0), shown = 0;
+    cards.forEach(function (c) {
+      var ok = hit(c, 'data-systems', sys) && hit(c, 'data-fields', fld) && hit(c, 'data-format', fmt);
+      c.hidden = !ok; if (ok) { shown++; }
+      [].slice.call(c.querySelectorAll('.school-subs li')).forEach(function (li) {
+        var p = li.querySelector('.school-est');
+        if (cost > 0) { p.textContent = '受講料 ' + yen(cost) + ' の場合：' + estimate(li.getAttribute('data-system'), cost); p.hidden = false; }
+        else { p.hidden = true; }
+      });
+    });
+    document.getElementById('count').textContent = cards.length + '校中 ' + shown + '校を表示しています';
+    document.getElementById('empty').hidden = shown > 0;
+  }
+  f.addEventListener('input', render); f.addEventListener('change', render); render();
+})();
+</script>
+{% endblock %}

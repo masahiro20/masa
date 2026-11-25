@@ -377,3 +377,42 @@ video.slide-media.ready { opacity: 1; }
 .tool-card li { display: flex; justify-content: space-between; gap: 8px; border-top: 1px dotted var(--rule); padding: 6px 0; }
 .tool-section { margin: 48px 0; }
 .tool-notes { font-size: 14px; line-height: 1.9; padding-left: 1.2em; }
+
+/* 給付金・補助金が使えるスクール一覧（/tools/kyufukin-school/） */
+.school-meta { font-size: 13px; color: var(--ink-3); margin: 8px 0 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.tool-form label.chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border: 1px solid var(--ink-3); background: var(--white); font-size: 14px; border-radius: 999px; }
+.tool-form label.chip input { margin-top: 0; }
+.tool-form label.chip:has(input:checked) { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.school-count { font-size: 13.5px; color: var(--ink-2); margin: 8px 0 12px; }
+.school-list { display: grid; gap: 18px; }
+.school-card { border: 1px solid var(--ink); background: var(--white); padding: 20px 20px 16px; }
+.school-card[hidden], .school-empty[hidden], .school-est[hidden] { display: none; }
+.school-name { font-family: var(--serif); font-size: 19px; line-height: 1.5; margin: 0 0 6px; }
+.school-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+.school-tags span { font-size: 12px; padding: 1px 8px; background: var(--paper-2); color: var(--ink-2); }
+.school-tags span.is-format { background: none; border: 1px solid var(--rule); }
+.school-summary { font-size: 14.5px; line-height: 1.8; margin: 0 0 10px; color: var(--ink-2); }
+.school-subs { list-style: none; margin: 0; padding: 0; }
+.school-subs li { border-top: 1px dotted var(--rule); padding: 10px 0; }
+.school-sys { margin: 0 0 4px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.sys-badge { font-size: 12.5px; font-weight: 700; padding: 2px 10px; color: #fff; background: var(--good); }
+.sys-badge.sys-reskilling { background: #2a4d7a; }
+.sys-badge.sys-ippan, .sys-badge.sys-tokutei { background: #5b6b2f; }
+.sys-org { font-size: 12px; color: var(--ink-3); }
+.school-course { font-size: 14.5px; line-height: 1.8; margin: 0; }
+.school-note { font-size: 13px; line-height: 1.8; color: var(--ink-2); margin: 4px 0 0; }
+.school-est { font-size: 14px; font-weight: 700; color: var(--accent); margin: 6px 0 0; line-height: 1.7; }
+.school-src { font-size: 12.5px; color: var(--ink-3); margin: 6px 0 0; }
+.school-src .is-stale { color: var(--bad); font-weight: 700; margin-right: 6px; }
+.school-cta { margin-top: 12px; text-align: center; position: relative; }
+.school-cta .cta-label { position: static; display: block; font-size: 11px; color: var(--ink-3); letter-spacing: .14em; margin-bottom: 4px; }
+.school-cta .cta-button { padding: 12px 22px; font-size: 14.5px; }
+.school-official { display: inline-block; font-size: 14px; padding: 10px 22px; border: 1px solid var(--ink); text-decoration: none; }
+.school-empty { padding: 20px; text-align: center; color: var(--ink-2); }
+.faq-list dt { font-weight: 700; margin-top: 18px; line-height: 1.7; }
+.faq-list dt::before { content: "Q. "; color: var(--accent); }
+.faq-list dd { margin: 6px 0 0; font-size: 15px; line-height: 1.9; }
+.tool-strip { display: flex; flex-direction: column; gap: 8px; margin: 0 0 20px; }
+.tool-strip a { display: flex; gap: 10px; align-items: baseline; padding: 10px 14px; border: 1px solid var(--accent); background: var(--white); text-decoration: none; font-size: 14.5px; line-height: 1.6; }
+.tool-strip .tool-link-label { flex: none; }
