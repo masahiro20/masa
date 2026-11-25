@@ -26,22 +26,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: conoha wing 解約
-  intent: informational
-  category: tools
-  program: tools-rental-server
-  score: 24000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: 弥生 マネーフォワード 比較 個人事業主
-  intent: transactional
-  category: tools
-  program: tools-accounting
-  score: 22500.0
-  status: queued
-  boost: 3.0
-  source: google-suggest
 - keyword: メーカー 転職 難しい
   intent: informational
   category: career
@@ -946,6 +930,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: rental-server-hiyou-kanjoukamoku
+- keyword: 弥生 マネーフォワード 比較 個人事業主
+  intent: transactional
+  category: tools
+  program: tools-accounting
+  score: 22500.0
+  status: published
+  boost: 3.0
+  source: google-suggest
+  slug: yayoi-moneyforward-hikaku
 - keyword: 英語 プログラミング 同時に学ぶ
   intent: commercial
   category: school
@@ -1827,6 +1820,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事kredo-it-ryugaku-hyouban・eigo-programming-schoolと検索意図が重複
+- keyword: conoha wing 解約
+  intent: informational
+  category: tools
+  program: tools-rental-server
+  score: 24000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事conoha-wing-hyouban（解約の節を含む）と検索意図が重複
 - keyword: ドメイン代 勘定科目
   intent: informational
   category: fukugyo
