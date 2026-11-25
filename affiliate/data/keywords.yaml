@@ -26,14 +26,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: claude code 使い方
-  intent: informational
-  category: learning
-  program: learning-ai-coding
-  score: 15000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: claude code 何ができる
   intent: informational
   category: learning
@@ -968,6 +960,15 @@ keywords:
   score: 16000.0
   status: published
   slug: wordpress-portfolio-tsukurikata-mikeiken
+- keyword: claude code 使い方
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: claude-code-tsukaikata
 - keyword: ai駆動開発 仕様駆動開発 違い
   intent: informational
   category: learning
