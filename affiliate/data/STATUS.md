@@ -1,8 +1,8 @@
 # 運用ステータス（自動更新）
 
-- 最終更新: 2026-11-24 21:52 UTC
-- 公開記事数: 170
-- キーワード在庫: 24件（見送り 38件）
+- 最終更新: 2026-11-25 03:50 UTC
+- 公開記事数: 171
+- キーワード在庫: 22件（見送り 39件）
 - 今月のAPI費用（概算）: $0.00 / 上限 $50
 - 提携済み案件: 24 / 30
 
@@ -22,8 +22,8 @@
 - reskilling-hojokin-itsu-moraeru（平均13.3位・表示269回）
 - rental-server-hiyou-kanjoukamoku（平均10.3位・表示158回）
 - mukiteiru-shigoto-wakaranai-shindan（平均10.7位・表示105回）
+- hello-training-hyouban（平均9.1位・表示68回）
 - webdesigner-mikeiken-30dai-muri（平均17.3位・表示62回）
-- wordpress-portfolio-tsukurikata-mikeiken（平均15.6位・表示44回）
 
 ## 最近の改善（毎週の改善ルーチン）
 
@@ -55,6 +55,8 @@ ASPで提携したら `config/programs.yaml` の `url` に広告リンクを貼�
 
 | 日時 | 公開 | 改善 | 見送り | エラー |
 |---|---|---|---|---|
+| 2026-11-25T03:50:46+00:00 | 1 | 0 | 0 |  |
+| 2026-11-25T03:48:34+00:00 | 0 | 0 | 1 | 既存記事conoha-wing-hyouban（解約の節を含む）と検索意図が重複 |
 | 2026-11-24T21:52:57+00:00 | 1 | 0 | 0 |  |
 | 2026-11-24T21:51:25+00:00 | 0 | 0 | 1 | 既存記事kredo-it-ryugaku-hyouban・eigo-programming-schoolと検索意図が重複 |
 | 2026-11-24T21:49:23+00:00 | 1 | 0 | 0 |  |
@@ -63,5 +65,3 @@ ASPで提携したら `config/programs.yaml` の `url` に広告リンクを貼�
 | 2026-11-24T03:48:57+00:00 | 0 | 0 | 1 | 既存記事kyoiku-kunren-kyufukin-shinsei-nagare（郵送の流れを含む）と検索意図が重複 |
 | 2026-11-24T03:48:42+00:00 | 0 | 0 | 1 | 既存記事techgo-hyoubanと検索意図が重複 |
 | 2026-11-24T03:48:34+00:00 | 0 | 0 | 1 | 既存記事20dai-kousotsu-tenshoku-agent・chusotsu-tenshoku-agent-lineと検索意図が重複 |
-| 2026-11-23T21:50:21+00:00 | 1 | 0 | 0 |  |
-| 2026-11-23T21:48:21+00:00 | 0 | 0 | 1 | 既存記事seisei-ai-school-hikaku・seisei-ai-manabikata-shoshinsha-shakaijinと検索意図が重複 |
