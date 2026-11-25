@@ -17,12 +17,13 @@
       </p>
     </header>
     {% if guide %}<a class="guide-link" href="{{ base_url }}/guide/{{ guide.slug }}/"><span class="guide-link-label">このテーマのまとめ</span><span class="guide-link-title">{{ guide.title }}</span></a>{% endif %}
+    {% if guide and guide.tools %}<nav class="tool-strip" aria-label="このテーマの無料ツール">{% for t in guide.tools %}<a href="{{ base_url }}/tools/{{ t.slug }}/"><span class="tool-link-label">無料ツール</span><span>{{ t.cta }}</span></a>{% endfor %}</nav>{% endif %}
     <p class="pr-notice"><span class="pr-tag">PR</span>本記事にはアフィリエイト広告が含まれています。</p>
     <img class="cover" src="{{ cover_webp(article) }}" alt="{{ article.title }}" width="1200" height="630" fetchpriority="high">
     {% if toc %}<nav class="toc" aria-label="目次"><p class="toc-title">目次</p>{{ toc | safe }}</nav>{% endif %}
     <div class="body">{{ body | safe }}</div>
 
-    {% if guide and guide.tool %}<a class="tool-link" href="{{ base_url }}/tools/{{ guide.tool.slug }}/"><span class="tool-link-label">無料ツール</span><span class="tool-link-title">{{ guide.tool.cta }}</span></a>{% endif %}
+    {% if guide and guide.tools %}{% for t in guide.tools %}<a class="tool-link" href="{{ base_url }}/tools/{{ t.slug }}/"><span class="tool-link-label">無料ツール</span><span class="tool-link-title">{{ t.cta }}</span></a>{% endfor %}{% endif %}
 
     <div class="share" aria-label="この記事をシェア">
       <span class="share-label">この記事をシェア</span>

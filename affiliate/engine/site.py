@@ -19,6 +19,7 @@ from .blocks import expand_links, extract_faq, render_blocks
 from .config import PAGES_DIR, PUBLIC_DIR, STATIC_DIR, TEMPLATES_DIR, Config
 from .gsc import load_pages as gsc_pages
 from .links import expand_shortcodes, route_unlinked_ctas, with_early_cta
+from .schools import SYSTEMS as SCHOOL_SYSTEMS, FIELDS as SCHOOL_FIELDS, FORMATS as SCHOOL_FORMATS, enrich as enrich_schools, load_schools
 from .visuals import logo_png, logo_svg, save_cover, site_cover
 
 COVER_NAME = "cover.png"
@@ -178,6 +179,28 @@ def _dump_ld(data) -> str:
     return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 
 
+def _llms_txt(cfg: Config, base: str, guides: list[dict], tools: list[dict], pillars) -> str:
+    """AI の検索・回答サービスに、サイトの中身と主なページを伝える llms.txt（https://llmstxt.org/ の形式）。"""
+    lines = [f"# {cfg.site['name']}", "", f"> {cfg.site.get('tagline', '')}", "",
+             f"運営：{cfg.site['operator_name']}。記事は公的機関・公式サイトの情報を出典として確かめ、出典を各記事の末尾に載せています。"
+             "一部の記事・ページにはアフィリエイト広告を含みます。", ""]
+    if tools:
+        lines += ["## 無料ツール・データ", ""]
+        lines += [f"- [{t['title']}]({base}/tools/{t['slug']}/): {t['description']}" for t in tools]
+        lines.append("")
+    if guides:
+        lines += ["## テーマ別ガイド", ""]
+        lines += [f"- [{g['title']}]({base}/guide/{g['slug']}/): {g.get('description', '')}" for g in guides]
+        lines.append("")
+    if pillars:
+        lines += ["## よく読まれている記事", ""]
+        lines += [f"- [{a.title}]({base}/{a.url_path}): {a.description}" for a in pillars]
+        lines.append("")
+    lines += ["## サイトについて", "", f"- [運営者情報]({base}/about/)", f"- [広告掲載ポリシー]({base}/ad-policy/)",
+              f"- [お問い合わせ]({base}/contact/)", f"- [サイトマップ]({base}/sitemap.xml)", ""]
+    return "\n".join(lines)
+
+
 def _organization(cfg: Config, base: str) -> dict:
     return {
         "@type": "Organization",
@@ -282,15 +305,27 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
     guides, guide_of = build_guides(articles, cfg.niche.get("guides", []))
     by_slug = {a.slug: a for a in articles}
     tools = []
+    schools = enrich_schools(load_schools(), cfg.programs_by_id)
     for t in cfg.niche.get("tools", []):
         if not (TEMPLATES_DIR / "tools" / f"{t['slug']}.html").exists():
             continue
+        t = dict(t)
+        if t.get("data") == "schools":
+            if not schools:
+                continue
+            # タイトルなどの {n} は掲載校数にする（スクールを足すたびに書き換えなくてよいように）
+            for k in ("title", "description", "intro", "cta"):
+                if isinstance(t.get(k), str):
+                    t[k] = t[k].replace("{n}", str(len(schools)))
+            t["schools"] = schools
+            t["avail"] = {k: sorted({v for sc in schools for v in sc[k]}) for k in ("systems", "fields", "format")}
         tools.append({**t, "links": [by_slug[s] for s in t.get("links", []) if s in by_slug],
                       "jobtag": by_slug.get(t.get("jobtag", "")), "guide_slug": t.get("guide"),
                       "guide": next((g for g in guides if g["slug"] == t.get("guide")), None)})
     for g in guides:
-        # ガイドに入っている記事の末尾から、そのテーマの無料ツールへ案内する
-        g["tool"] = next((t for t in tools if t["guide_slug"] == g["slug"]), None)
+        # ガイドに入っている記事の冒頭と末尾から、そのテーマの無料ツールへ案内する（site.yaml の並び順で最大2つ）
+        g["tools"] = [t for t in tools if t["guide_slug"] == g["slug"]][:2]
+        g["tool"] = g["tools"][0] if g["tools"] else None
     common["guides"] = guides
     common["tools"] = tools
     targets = money_targets(articles, live_ad_articles(articles, cfg.programs_by_id))
@@ -368,9 +403,19 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
             "description": t["description"], "applicationCategory": t.get("category", "UtilitiesApplication"),
             "operatingSystem": "Any", "inLanguage": "ja",
             "offers": {"@type": "Offer", "price": "0", "priceCurrency": "JPY"},
-        }])
+        }] + ([{
+            "@context": "https://schema.org", "@type": "ItemList", "name": t["title"],
+            "numberOfItems": len(t["schools"]),
+            "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": sc["name"], "url": sc["official"]}
+                                for i, sc in enumerate(t["schools"])],
+        }] if t.get("schools") else []) + ([{
+            "@context": "https://schema.org", "@type": "FAQPage",
+            "mainEntity": [{"@type": "Question", "name": q["q"], "acceptedAnswer": {"@type": "Answer", "text": q["a"]}}
+                           for q in t["faq"]],
+        }] if t.get("faq") else []))
         write(f"tools/{t['slug']}/index.html", env.get_template(f"tools/{t['slug']}.html").render(
             **common, tool={**t, "articles_json": articles_json}, url=url,
+            systems=SCHOOL_SYSTEMS, fields=SCHOOL_FIELDS, formats=SCHOOL_FORMATS,
             page_title=t["title"], page_description=t["description"], json_ld=ld, bare_title=True,
         ))
         urls.append((url, str(t.get("updated") or date.today().isoformat())))
@@ -396,6 +441,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
     write("sitemap.xml", _sitemap(urls))
     write("feed.xml", _feed(cfg, base, articles[:20]))
     write("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {base}/sitemap.xml\n")
+    write("llms.txt", _llms_txt(cfg, base, guides, tools, common["pillars"]))
     key = indexnow_key(base)
     write(f"{key}.txt", key)
     write(".nojekyll", "")

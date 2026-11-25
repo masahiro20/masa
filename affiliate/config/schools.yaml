@@ -1,0 +1,144 @@
+# 給付金・補助金が使えるIT・AI・Webデザインのスクール一覧（/tools/kyufukin-school/ に表示）
+#
+# ■ 載せる基準
+#   スクールの公式ページに「教育訓練給付金の対象」か「経済産業省のリスキリングを通じたキャリアアップ支援事業の対象」と
+#   書かれているものだけを載せる。口コミサイトや比較サイトは根拠にしない。
+#   subsidies の source には、その記載がある公式ページのURLを、checked には確かめた日を書く（ページにそのまま出る）。
+#   checked から120日を過ぎると、ページに「再確認中」と出る。
+#
+# ■ program
+#   広告が入っている案件（config/programs.yaml の id）。申込先がこの制度の対象講座の案件だけにする。
+#   空なら、公式サイトへの普通のリンクになる（広告ではない）。
+#
+# ■ 分野 fields: programming / ai / webdesign / marketing / data
+# ■ 受講形式 format: online / school（通学） / abroad（海外留学）。公式ページで確かめられないときは空にする
+#
+# 2026-11-25 時点で公式ページから確かめられず、載せていないもの：
+#   byTech（給付金・補助金の記載なし）、デジハク（個人の申込は給付金・助成金の対象外と記載）、
+#   WEBCOACH・テックエリート・DMM WEBCAMP（公式ページを開けず未確認）
+
+schools:
+  - id: kredo
+    name: Kredo（オンラインキャンプ・セブ島IT留学）
+    program: school-kredo
+    official: https://kredo.jp/
+    fields: [programming, ai]
+    format: [online, abroad]
+    summary: 英語とITを一緒に学べるスクール。オンラインのキャンプと、フィリピン・セブ島でのIT留学がある。
+    subsidies:
+      - system: reskilling
+        course: Kredo オンラインキャンプ（848,000円）、セブ島IT留学の Web Basic・Web Develop・AI留学コース など
+        source: https://kredo.jp/reskilling
+        checked: '2026-11-25'
+        note: 雇用契約がある人（正社員・契約・派遣・パートなど）で、転職を目指す人が対象。専門実践教育訓練給付金との併用はできない。
+      - system: senmon
+        course: Kredo オンラインキャンプ
+        source: https://kredo.jp/
+        checked: '2026-11-25'
+
+  - id: techcamp
+    name: テックキャンプ（エンジニアコース）
+    official: https://tech-camp.in/expert
+    fields: [programming, ai]
+    format: [online, school]
+    summary: 未経験からエンジニアを目指すコース。生成AIを使ったアプリ開発も学ぶ。通学は東京渋谷校。
+    subsidies:
+      - system: senmon
+        course: エンジニアコース（オンライン 短期集中 657,800円／夜間・休日 877,800円）
+        source: https://tech-camp.in/expert/grant
+        checked: '2026-11-25'
+        note: 初めて給付金を使う在職者は、雇用保険の加入期間が2年以上。離職中の人は離職から1年以内。
+
+  - id: runteq
+    name: RUNTEQ（Web開発スタンダードコース）
+    official: https://runteq.jp/
+    fields: [programming]
+    format: [online]
+    summary: Webアプリ開発を中心に、AI・インフラ・セキュリティも学ぶオンラインスクール。
+    subsidies:
+      - system: senmon
+        course: Web開発スタンダードコース（スキルアップ向け 577,000円／転職向け 657,000円）
+        source: https://runteq.jp/benefits_01
+        checked: '2026-11-25'
+        note: Python×AIコースは対象外。受講開始の2週間前までにハローワークで手続きが必要。
+
+  - id: raretech
+    name: RareTECH
+    official: https://raretech.site/
+    fields: [programming, ai]
+    format: []
+    summary: 1〜2年かけてエンジニアを育てるスクール。入会試験があり、合格した人だけが入れる。
+    subsidies:
+      - system: senmon
+        course: 完全希少型コース（2年・1,320,000円）、基本希少型コース（1年・960,000円）
+        source: https://raretech.site/benefit-payments
+        checked: '2026-11-25'
+        note: 受講開始の2週間前までにハローワークで手続きが必要。
+
+  - id: kikagaku
+    name: キカガク（AI・データサイエンス人材育成コース）
+    official: https://kikagaku.co.jp/personal
+    fields: [ai, data]
+    format: [online]
+    summary: AI・データサイエンスを学ぶ社会人向けのオンラインスクール。
+    subsidies:
+      - system: senmon
+        course: AI・データサイエンス人材育成コース（生成AIビジネス実践コース・Claude実践コースは記載なし）
+        source: https://kikagaku.co.jp/personal
+        checked: '2026-11-25'
+
+  - id: tokyo-designplex
+    name: 東京デザインプレックス研究所
+    official: https://www.tokyo-designplex.com/
+    fields: [webdesign]
+    format: [school]
+    summary: グラフィック・Web・UX/UIなどのデザインを学ぶスクール。
+    subsidies:
+      - system: senmon
+        course: 対象コースは学校案内書で確認
+        source: https://www.tokyo-designplex.com/benefit/
+        checked: '2026-11-25'
+        note: 受講開始の1か月前までに、訓練対応キャリアコンサルティングを受けてジョブカードを作る必要がある。
+      - system: ippan
+        course: 対象コースは学校案内書で確認
+        source: https://www.tokyo-designplex.com/benefit/
+        checked: '2026-11-25'
+
+  - id: internet-academy
+    name: インターネット・アカデミー
+    official: https://www.internetacademy.jp/
+    fields: [webdesign, marketing, programming, ai]
+    format: []
+    summary: Webデザイン・Webマーケティング・プログラミング・AIを学べるスクール。
+    subsidies:
+      - system: ippan
+        course: Webデザイナー総合コース＋Webマーケティング、プログラマー入門コース＋PHP、AIエンジニア育成コース＋PHP など15コース（約44万〜126万円）
+        source: https://www.internetacademy.jp/entry/benefit.html
+        checked: '2026-11-25'
+        note: 受講を始める前に申し出が必要。始めたあとのコース変更はできない。
+
+  - id: dhw-studio
+    name: デジタルハリウッドSTUDIO
+    official: https://school.dhw.co.jp/
+    fields: [webdesign]
+    format: [school]
+    summary: Webデザイン・グラフィック・動画・UI/UXなどを学ぶスクール。
+    subsidies:
+      - system: reskilling
+        course: Webデザイナー専攻（572,000円）、動画クリエイター専攻、グラフィックデザインマスター講座、本科UI/UXデザイン専攻 など
+        source: https://school.dhw.co.jp/prospectus/careerup_reskilling.html
+        checked: '2026-11-25'
+        note: 使える校舎は関東・関西の一部。2027年3月31日までに修了する場合に限られ、コースごとに開始の期限がある。
+
+  - id: shelikes
+    name: SHElikes（レギュラープラン）
+    official: https://shelikes.jp/
+    fields: [webdesign, marketing]
+    format: []
+    summary: Webデザイン・マーケティングなどの多くのコースを、定額で受けられるキャリアスクール。
+    subsidies:
+      - system: reskilling
+        course: レギュラープラン（対象コースを15時間以上受講するなどの条件あり）
+        source: https://docs.channel.io/shelikes/ja/articles/%E3%83%AA%E3%82%B9%E3%82%AD%E3%83%AA%E3%83%B3%E3%82%B0%E3%82%92%E9%80%9A%E3%81%98%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%82%A2%E3%83%83%E3%83%97%E6%94%AF%E6%8F%B4%E4%BA%8B%E6%A5%AD%E8%B2%BB%E8%A3%9C%E5%8A%A9%E9%87%91%E3%81%A8%E3%81%AF-fff9d8f9
+        checked: '2026-11-25'
+        note: 雇用契約がある人で、転職を目指す人が対象。無職・専業主婦・フリーランスは対象外。修了条件を満たさないと、先に受けた還元の返金が必要。
