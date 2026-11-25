@@ -2,14 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: 工場 エンジニア 転職
-  intent: commercial
-  category: career
-  program: career-maker-agent
-  score: 36000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: ものづくり 転職 エージェント
   intent: commercial
   category: career
@@ -737,6 +729,15 @@ keywords:
   score: 40000.0
   status: published
   slug: wordpress-blog-start-server-domain-steps
+- keyword: 工場 エンジニア 転職
+  intent: commercial
+  category: career
+  program: career-maker-agent
+  score: 36000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: koujou-engineer-tenshoku
 - keyword: 設備保全 未経験 転職
   intent: commercial
   category: career
