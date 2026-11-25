@@ -65,6 +65,7 @@ async function refreshMe() {
   $('createBox').classList.toggle('hidden', !signed);
   $('listBox').classList.toggle('hidden', !signed);
   $('whoBox').classList.toggle('hidden', !signed);
+  $('modesNav').classList.toggle('hidden', !signed);
   if (signed) { $('whoName').textContent = `${r.body.staff.name} さん`; loadList(); }
 }
 

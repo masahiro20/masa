@@ -27,6 +27,7 @@ function createMemoryStore() {
         data.set(k, { v: String(v), exp: exI >= 0 ? now() + Number(opt[exI + 1]) * 1000 : 0 });
         return 'OK';
       }
+      case 'EXISTS': { let n = 0; for (const k of a) if (live(k)) n++; return n; }
       case 'DEL': { let n = 0; for (const k of a) if (live(k)) { data.delete(k); n++; } return n; }
       case 'INCR': { const e = ensure(a[0], () => '0'); e.v = String(Number(e.v) + 1); return Number(e.v); }
       case 'EXPIRE': { const e = live(a[0]); if (!e) return 0; e.exp = now() + Number(a[1]) * 1000; return 1; }

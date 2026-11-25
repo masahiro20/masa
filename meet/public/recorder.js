@@ -21,7 +21,7 @@ export class Recorder {
     this.getCtx = getCtx; this.active = false; this.sources = new Map(); this.startedAt = 0; this.mime = '';
   }
 
-  async start({ title, local, remotes }) {
+  async start({ title, local, remotes, bitrate = 64000, onChunk = null, meta = {} }) {
     const ctx = this.getCtx();
     if (ctx.state === 'suspended') await ctx.resume().catch(() => {});
     this.dest = ctx.createMediaStreamDestination();
@@ -32,14 +32,16 @@ export class Recorder {
     this.setLocal(local);
     for (const [id, tr] of remotes) this.addTrack(id, tr);
     this.mime = MIMES.find((m) => MediaRecorder.isTypeSupported(m)) || '';
-    this.mr = new MediaRecorder(this.dest.stream, { ...(this.mime ? { mimeType: this.mime } : {}), audioBitsPerSecond: 64000 });
+    this.mr = new MediaRecorder(this.dest.stream, { ...(this.mime ? { mimeType: this.mime } : {}), audioBitsPerSecond: bitrate });
+    this.onChunk = onChunk; this.pausedMs = 0; this.pausedAt = 0;
     this.mime = this.mr.mimeType || this.mime || 'audio/webm';
     this.chunks = []; this.seq = 0;
     this.id = `rec-${Date.now()}`; this.title = title || '打ち合わせ'; this.startedAt = Date.now();
-    try { this.db = await openDb(); await tx(this.db, ['recs'], 'readwrite', (t) => t.objectStore('recs').put({ id: this.id, title: this.title, mime: this.mime, startedAt: this.startedAt })); } catch (_) { this.db = null; }
+    try { this.db = await openDb(); await tx(this.db, ['recs'], 'readwrite', (t) => t.objectStore('recs').put({ id: this.id, title: this.title, mime: this.mime, startedAt: this.startedAt, meta })); } catch (_) { this.db = null; }
     this.mr.ondataavailable = (e) => {
       if (!e.data || !e.data.size) return;
       this.chunks.push(e.data);
+      if (this.onChunk) { try { this.onChunk(e.data); } catch (_) { /* 送れなくても録音は続ける */ } }
       const seq = this.seq++;
       if (this.db) tx(this.db, ['chunks'], 'readwrite', (t) => t.objectStore('chunks').put({ rec: this.id, seq, blob: e.data })).catch(() => {});
     };
@@ -73,18 +75,23 @@ export class Recorder {
     if (cur) { try { cur.src.disconnect(); } catch (_) { /* 既に外れている */ } this.sources.delete(id); }
   }
 
-  get elapsed() { return this.active ? Date.now() - this.startedAt : 0; }
+  get elapsed() { return this.active ? (this.pausedAt || Date.now()) - this.startedAt - this.pausedMs : 0; }
+  get paused() { return !!this.pausedAt; }
+  pause() { if (this.active && !this.pausedAt && this.mr.state === 'recording') { this.mr.pause(); this.pausedAt = Date.now(); } }
+  resume() { if (this.active && this.pausedAt) { this.mr.resume(); this.pausedMs += Date.now() - this.pausedAt; this.pausedAt = 0; } }
 
   // 止めて、1 つのファイルにまとめる
   stop() {
     if (this.stopping) return this.stopping; // 二重に止めても、同じ結果を返す
     this.stopping = new Promise((resolve) => {
       if (!this.active) return resolve(null);
+      if (this.pausedAt) this.resume(); // 一時停止中に止めた場合も、録れた長さを正しく数える
+      const durationMs = this.elapsed;
       this.mr.onstop = async () => {
         const blob = new Blob(this.chunks, { type: this.mime });
         for (const id of [...this.sources.keys()]) this.removeTrack(id);
         this.active = false; try { this.bus.disconnect(); } catch (_) { /* 何もしない */ } this.dest = null; this.bus = null; this.localTrack = null;
-        const meta = { id: this.id, title: this.title, mime: this.mime, startedAt: this.startedAt };
+        const meta = { id: this.id, title: this.title, mime: this.mime, startedAt: this.startedAt, durationMs };
         resolve({ blob, ...meta });
       };
       try { this.mr.requestData(); } catch (_) { /* 何もしない */ }

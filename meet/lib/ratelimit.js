@@ -22,6 +22,8 @@ const RULES = {
   action_peer: [60, 60],
   host_action: [120, 60],
   api_ip: [600, 60],
+  visit_create: [60, 3600],
+  visit_chunk: [900, 3600],   // 対面の録音の受け渡し（約 20 秒ごとに 1 回）
 };
 
 function createLimiter(store) {

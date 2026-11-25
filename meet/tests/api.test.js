@@ -603,3 +603,48 @@ test('安全用ヘッダーが付く', async () => {
   assert.equal(r.headers.get('x-frame-options'), 'DENY');
   assert.equal(r.headers.get('referrer-policy'), 'no-referrer');
 });
+
+// ---------- 対面の録音（受け渡し箱） ----------
+test('対面の録音：小分けに送り、そろったら締め切り。受け渡し箱はキーでだけ読め、置き終わったら音声は消える', async () => {
+  const s = await t.login('tanaka');
+  assert.equal((await t.call('POST', '/api/visits', { customerName: '山田 太郎' })).status, 401, 'ログインなしでは作れない');
+  const c = await s.as('POST', '/api/visits', { customerName: '山田 太郎', title: '初回接客' });
+  assert.equal(c.status, 201);
+  const id = c.body.visit.id;
+  const a = Buffer.from('first-part').toString('base64');
+  const b = Buffer.from('second-part').toString('base64');
+  assert.equal((await s.as('POST', `/api/visits/${id}/chunk`, { seq: 0, data: a })).status, 200);
+  assert.equal((await s.as('POST', `/api/visits/${id}/chunk`, { seq: 1, data: '<script>' })).status, 400, '形の違う中身は断る');
+  // 1 番が足りないと締め切れず、足りない番号が返る
+  const f1 = await s.as('POST', `/api/visits/${id}/finish`, { chunks: 2, mime: 'audio/mp4', durationMs: 5000, bytes: 21 });
+  assert.equal(f1.status, 409); assert.deepEqual(f1.body.missing, [1]);
+  await s.as('POST', `/api/visits/${id}/chunk`, { seq: 1, data: b });
+  const f2 = await s.as('POST', `/api/visits/${id}/finish`, { chunks: 2, mime: 'audio/mp4', durationMs: 5000, bytes: 21 });
+  assert.equal(f2.status, 200); assert.equal(f2.body.visit.status, 'ready');
+  // ほかのスタッフには見えない
+  const other = await t.login('nakatani');
+  assert.equal((await other.as('GET', `/api/visits/${id}`)).status, 404);
+  assert.ok(!(await other.as('GET', '/api/visits')).body.visits.some((v) => v.id === id));
+  // 受け渡し箱：ログインの合札では読めない。サーバー間のキーでだけ読める
+  assert.equal((await s.as('GET', '/api/visits/inbox')).status, 401);
+  const key = { Authorization: `Bearer ${'k'.repeat(40)}`, 'X-Staff-Id': 'claude-sorter' };
+  const inbox = await t.call('GET', '/api/visits/inbox', undefined, key);
+  const item = inbox.body.visits.find((v) => v.id === id);
+  assert.equal(item.customerName, '山田 太郎'); assert.equal(item.chunks, 2);
+  const c0 = await t.call('GET', `/api/visits/inbox/${id}/chunk/0`, undefined, key);
+  const c1 = await t.call('GET', `/api/visits/inbox/${id}/chunk/1`, undefined, key);
+  assert.equal(Buffer.concat([Buffer.from(c0.body.data, 'base64'), Buffer.from(c1.body.data, 'base64')]).toString(), 'first-partsecond-part');
+  // 保管データに音声もお客様名も平文で残らない
+  const dump = JSON.stringify([...t.store._data.entries()].filter(([k]) => k.startsWith('visit')).map(([k, v]) => [k, v.v instanceof Map ? [...v.v] : v.v]));
+  assert.ok(dump.includes(`visit:${id}`), '確かめる対象が保管されている');
+  assert.ok(!dump.includes(a) && !dump.includes('山田 太郎'), '音声・お客様名が平文で保存されている');
+  // ドライブに置けた・COMPASS はまだ → 受け渡し箱に残る。COMPASS も済めば音声は消え、一覧から外れる
+  await t.call('POST', `/api/visits/inbox/${id}/filed`, { drive: { fileId: 'abc', name: 'x.m4a', folder: 'マイドライブ/録音' } }, key);
+  assert.equal((await t.call('GET', `/api/visits/inbox/${id}/chunk/0`, undefined, key)).status, 410, 'ドライブに置けたら、ここの音声は消える');
+  const waiting = (await t.call('GET', '/api/visits/inbox', undefined, key)).body.visits.find((v) => v.id === id);
+  assert.equal(waiting.drive.fileId, 'abc', 'COMPASS 待ちとして残り、ドライブのファイルが分かる');
+  const done = await t.call('POST', `/api/visits/inbox/${id}/filed`, { compass: 'done' }, key);
+  assert.equal(done.body.visit.status, 'filed');
+  assert.ok(!(await t.call('GET', '/api/visits/inbox', undefined, key)).body.visits.some((v) => v.id === id));
+  assert.equal((await s.as('GET', `/api/visits/${id}`)).body.visit.status, 'filed', '本人の一覧では「置き終わり」と見える');
+});

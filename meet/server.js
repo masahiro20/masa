@@ -66,6 +66,7 @@ function start(port = Number(process.env.PORT || 8080), { store = storeFromEnv()
     try {
       if (req.method === 'GET' && p === '/') return serveFile(res, 'index.html');
       if (req.method === 'GET' && p === '/records') return serveFile(res, 'records.html');
+      if (req.method === 'GET' && p === '/visit') return serveFile(res, 'visit.html');
       if (req.method === 'GET' && /^\/r\/[^/]+$/.test(p)) {
         if (!ROOM_ID_RE.test(p.slice(3))) { res.writeHead(404, SECURITY_HEADERS); return res.end('not found'); }
         return serveFile(res, 'room.html');

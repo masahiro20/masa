@@ -16,6 +16,7 @@ const { createAuth } = require('./auth');
 const { createTurn } = require('./turn');
 const { createAi } = require('./ai');
 const { createGoogle } = require('./google');
+const { createVisits } = require('./visits');
 
 const ROOM_ID_RE = /^[a-z]{3}-[a-z]{4}-[a-z]{3}$/;
 const ALPHA = 'abcdefghijkmnpqrstuvwxyz';
@@ -59,6 +60,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
   const ok = (body, status = 200, headers) => ({ status, body, headers });
   const fail = (status, error, headers) => ({ status, body: { error }, headers });
   const tooMany = (r) => fail(429, '操作が多すぎます。少し時間をおいてお試しください。', { 'Retry-After': String(Math.max(1, r.retryAfter || 30)) });
+  const visits = createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, clean });
 
   // ---------- ルーム ----------
   function newRoomId() {
@@ -284,6 +286,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
 
     if (p1 === 'auth') return handleAuth(req, parts);
     if (p1 === 'meetings') return handleMeetings(req, parts);
+    if (p1 === 'visits') return visits.handle(req, parts);
     if (p1 !== 'rooms') return fail(404, '見つかりません');
 
     // ルームの作成・一覧（スタッフだけ）

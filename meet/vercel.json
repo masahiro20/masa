@@ -18,6 +18,10 @@
       "destination": "/records.html"
     },
     {
+      "source": "/visit",
+      "destination": "/visit.html"
+    },
+    {
       "source": "/static/:path*",
       "destination": "/:path*"
     }
