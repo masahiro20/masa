@@ -9,7 +9,7 @@ const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 const KINDS = ['初回接客', '打ち合わせ', '現地調査', '契約', 'その他'];
 const FLUSH_BYTES = 256 * 1024;   // これだけ溜まったら送る（保管先の 1 件の上限に余裕を持たせる）
-const FLUSH_MS = 20000;           // または 20 秒ごと
+const FLUSH_MS = 10000;           // または 10 秒ごと（電池が切れても、失うのは最後の 10 秒ほど）
 
 let audioCtx = null;
 const ctx = () => { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; };
@@ -22,6 +22,8 @@ const parts = new Map(); // seq → { bytes, sent }
 let sending = Promise.resolve();
 // 文字起こし・ドライブ
 let capSupport = 'unavailable'; let cap = null; let driveSt = { enabled: false, connected: false };
+// 途中で止まったときの続き録音
+let segNo = 1; let segments = []; let restarting = false; let lastSentText = '';
 const wave = []; let waveAt = 0;
 
 function toast(msg, ms = 4000) {
@@ -49,6 +51,7 @@ async function openMic(id) {
   if (stream) stream.getTracks().forEach((t) => t.stop());
   stream = s;
   const t = s.getAudioTracks()[0];
+  t.addEventListener('ended', () => { if (rec.active && document.visibilityState === 'visible') healMic(); });
   micId = (t.getSettings && t.getSettings().deviceId) || id || '';
   $('vMicName').textContent = (t.label || 'マイク').replace(/^(既定|Default)\s*-\s*/i, '').replace(/\s*\([0-9a-f]{4}:[0-9a-f]{4}\)\s*$/i, '');
   if (rec.active) rec.setLocal(t);
@@ -119,7 +122,11 @@ async function sendPart(n, tries = 3) {
   const p = parts.get(n); if (!p || p.sent) return true;
   for (let i = 0; i < tries; i++) {
     try {
-      await api(`/api/visits/${visit.id}/chunk`, { method: 'POST', body: JSON.stringify({ seq: n, data: b64(p.bytes) }) });
+      const extra = { mime: rec.mime || '', elapsedMs: rec.elapsed || 0 };
+      const text = cap ? cap.text() : '';
+      if (text && text !== lastSentText) { extra.text = text; }
+      await api(`/api/visits/${visit.id}/chunk`, { method: 'POST', body: JSON.stringify({ seq: n, data: b64(p.bytes), ...extra }) });
+      if (extra.text) lastSentText = extra.text;
       p.sent = true; return true;
     } catch (e) {
       if (e.status && e.status < 500 && e.status !== 429) break;
@@ -135,28 +142,30 @@ function updateSync() {
 }
 
 // ---------- 録音 ----------
-async function start() {
-  const customer = $('vCustomer').value.trim();
+async function start(opt = {}) {
+  const customer = opt.customer || $('vCustomer').value.trim();
+  const title = opt.title || kind;
+  if (!opt.customer) { segNo = 1; segments = []; }
   if (!customer) { $('vCustomer').focus(); return toast('お客様のお名前を入れてください'); }
   if (!recSupported() || !stream) return toast('この端末では録音できません');
   $('vStart').disabled = true;
   // 文字起こしの初回準備は、ボタンを押した流れの中で始める
   const capReady = capSupport === 'downloadable' ? prepareCaption() : Promise.resolve(capSupport === 'available' || capSupport === 'downloading');
   try {
-    const r = await api('/api/visits', { method: 'POST', body: JSON.stringify({ customerName: customer, title: kind }) });
+    const r = await api('/api/visits', { method: 'POST', body: JSON.stringify({ customerName: customer, title }) });
     visit = r.visit;
   } catch (e) { $('vStart').disabled = false; return toast(e.message); }
-  buf = []; bufBytes = 0; lastFlush = Date.now(); seq = 0; parts.clear(); sending = Promise.resolve();
+  buf = []; bufBytes = 0; lastFlush = Date.now(); seq = 0; parts.clear(); sending = Promise.resolve(); lastSentText = '';
   try {
     await rec.start({ title: `${customer} ${kind}`, local: stream.getAudioTracks()[0], remotes: [], bitrate: 48000, onChunk, meta: { visitId: visit.id, customer, kind } });
   } catch (e) { console.error(e); $('vStart').disabled = false; return toast('録音を始められませんでした'); }
-  startCaption(capReady);
+  if (opt.customer && cap) { cap.lines = []; cap.offset = 0; cap.t0 = Date.now(); cap.start(stream && stream.getAudioTracks()[0]); } else startCaption(capReady);
   $('vWho').textContent = `${customer}`; $('vKindLabel').textContent = kind;
   $('vPause').textContent = '一時停止'; $('vState').classList.remove('paused');
   show('live'); $('history').classList.add('hidden');
   updateSync();
   keepAwake();
-  clearInterval(tick); tick = setInterval(() => { $('vTimer').textContent = fmt(rec.elapsed); if (Date.now() - lastFlush >= FLUSH_MS) flush(); }, 500);
+  clearInterval(tick); tick = setInterval(() => { $('vTimer').textContent = fmt(rec.elapsed); $('dimTimer').textContent = fmt(rec.elapsed); if (Date.now() - lastFlush >= FLUSH_MS) flush(); watchdog(); }, 500);
 }
 
 function togglePause() {
@@ -164,10 +173,10 @@ function togglePause() {
   else { rec.pause(); if (cap) cap.pause(); $('vPause').textContent = '再開'; $('vState').classList.add('paused'); $('vState').lastChild.textContent = '一時停止中'; }
 }
 
-async function stop() {
-  $('vStop').disabled = true; $('vPause').disabled = true;
+// 録音を締めて、受け渡し箱・この端末・ドライブへ保存する（画面の切り替えはしない）
+async function closeOut({ quiet = false } = {}) {
   clearInterval(tick);
-  if (cap) cap.stop();
+  if (cap && !quiet) cap.stop();
   const text = cap ? cap.text() : '';
   const r = await rec.stop();
   flush();
@@ -194,6 +203,13 @@ async function stop() {
     if (dr.visit) finished = dr.visit;
     if (dr.need === 'connect') { driveSt.connected = false; renderDrive(); }
   }
+  return { r, text, name, sentOk, finished, dr, visit };
+}
+
+async function stop() {
+  $('vStop').disabled = true; $('vPause').disabled = true;
+  dim(false);
+  const { r, text, name, sentOk, dr, finished } = await closeOut();
   releaseWake();
   const list = $('vDoneList'); list.textContent = '';
   const item = (cls, text, sub, state) => { const li = el('li', cls); const t = el('div', 'dl-t'); t.appendChild(el('b', '', text)); if (sub) t.appendChild(el('small', '', sub)); li.appendChild(t); if (state) li.appendChild(el('span', 'dl-s', state)); list.appendChild(li); };
@@ -207,6 +223,7 @@ async function stop() {
   else if (!driveSt.connected) item('pend', 'ドライブ', '「ドライブにつなぐ」を押すと、この録音も自動で置きます', '未接続');
   else item('ng', 'ドライブ', `${(dr && dr.error) || '置けませんでした'}。次にこの画面を開いたとき、自動で置き直します`, '再送待ち');
   if (text) item(fv.drive && fv.hasText ? 'ok' : 'pend', '文字起こし', `${text.split('\n').length} 行（この端末の中だけで作成）`, fv.drive && fv.hasText ? '済' : '一緒に置きます');
+  if (segments.length) item('ok', '分けて保存した分', `途中で録音が止まったため、ほかに ${segments.length} 本に分けて保存しました（${segments.map((x) => fmt(x.r.durationMs)).join('・')}）`, '済');
   item('pend', 'COMPASS', 'お客様の録音の置き場所（局長のパソコンの Chrome 経由）', '仕分け待ち');
   $('vStop').disabled = false; $('vPause').disabled = false; $('vStart').disabled = false;
   visit = finished || visit;
@@ -224,9 +241,55 @@ function fileName(_customer, _kind, startedAt, mime) {
 // 画面が消えると録音が止まる端末があるので、録音中は画面をつけたままにする
 async function keepAwake() { try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (_) { /* 対応していない */ } }
 function releaseWake() { try { if (wakeLock) wakeLock.release(); } catch (_) { /* 何もしない */ } wakeLock = null; }
+// ---------- 落ちても・画面が消えても、録った分を残す ----------
+// 画面が隠れる直前に、手元の分をすぐ送る（スリープ・アプリの切り替え・電池切れの手前）
+function sendNow() {
+  if (!rec.active) return;
+  try { if (rec.mr && rec.mr.state === 'recording') rec.mr.requestData(); } catch (_) { /* 何もしない */ }
+  setTimeout(() => flush(), 120);
+}
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && rec.active) { keepAwake(); if (rec.mr && rec.mr.state === 'inactive') toast('画面が閉じている間に録音が止まった可能性があります。止まっていたら、いったん終了して保存してください', 8000); }
+  if (!rec.active) return;
+  if (document.visibilityState === 'hidden') { sendNow(); return; }
+  keepAwake();
+  watchdog(true);
 });
+window.addEventListener('pagehide', sendNow);
+// マイクが切れていたら付け直す（録音そのものは止めずに続ける）
+let healing = false;
+async function healMic() {
+  if (healing || !rec.active) return; healing = true;
+  try { await openMic(micId); toast('マイクがいったん切れたので、付け直しました。録音は続いています', 6000); } catch (_) { toast('マイクを付け直せませんでした。いったん終了して保存してください', 8000); }
+  healing = false;
+}
+// 見回り：止まっていたら直す。録音自体が止まっていたら、ここまでを保存して続きを新しく録る
+function watchdog(fromWake) {
+  if (!rec.active || restarting || document.visibilityState !== 'visible') return;
+  try { const c = ctx(); if (c.state !== 'running' && !rec.paused) c.resume().catch(() => {}); } catch (_) { /* 何もしない */ }
+  const t = stream && stream.getAudioTracks()[0];
+  if (!t || t.readyState === 'ended') { healMic(); }
+  if (rec.mr && rec.mr.state === 'inactive') restartSegment();
+  else if (fromWake && !rec.paused && rec.mr && rec.mr.state === 'paused') { try { rec.mr.resume(); } catch (_) { restartSegment(); } }
+}
+async function restartSegment() {
+  if (restarting || !visit) return; restarting = true;
+  const customer = visit.customerName; const title = `${kind}（続き${segNo + 1}）`;
+  toast('画面が消えている間に録音が止まっていました。ここまでを保存して、続きを録音します', 8000);
+  try {
+    const done = await closeOut({ quiet: true });
+    segments.push(done);
+    segNo++;
+    try { await openMic(micId); } catch (_) { /* 前のマイクのまま */ }
+    await start({ customer, title });
+  } catch (_) { toast('続きの録音を始められませんでした。録れた分は保存してあります', 8000); }
+  restarting = false;
+}
+// 画面を暗くする（画面はついたままなので録音は続く。電池の減りを抑える）
+function dim(on) {
+  $('dimLayer').classList.toggle('hidden', !on);
+  if (on) { keepAwake(); try { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(() => {}); } catch (_) { /* 何もしない */ } }
+  else if (document.fullscreenElement) { document.exitFullscreen().catch(() => {}); }
+}
 window.addEventListener('beforeunload', (e) => { if (rec.active) { e.preventDefault(); e.returnValue = '録音が保存されていません'; } });
 
 // ---------- 最近の録音 ----------
@@ -267,21 +330,33 @@ async function loadHistory() {
 // 前回、送り切れなかった録音（ブラウザが落ちた等）
 async function offerLeftovers() {
   for (const r of await leftovers()) {
+    if (rec.active) break;
     const meta = r.meta || {};
-    if (!meta.visitId) continue;
+    if (!meta.visitId) {
+      // オンラインの打ち合わせの録音（パソコンが落ちた等）
+      const box = el('p', '', `オンラインの打ち合わせ「${r.title || ''}」（${new Date(r.startedAt).toLocaleString('ja-JP')}）の録音が、保存されないまま残っています。`);
+      const ans = await modalAsk('保存されていない録音があります', box, [['捨てる', 'drop', 'ghost'], ['この端末に保存する', 'save', 'primary']]);
+      if (ans === 'save') saveFile(r.blob, `COMPASS-Meet_recovered_${new Date(r.startedAt).toISOString().slice(0, 16).replace(/[-:T]/g, '')}.${/mp4/.test(r.mime) ? 'm4a' : 'webm'}`);
+      await rec.discardBackup(r.id);
+      continue;
+    }
     const box = el('div');
-    box.appendChild(el('p', '', `${meta.customer || ''}（${new Date(r.startedAt).toLocaleString('ja-JP')}）の録音が、送り切れずに残っています。`));
-    const ans = await modalAsk('送り切れなかった録音があります', box, [['捨てる', 'drop', 'ghost'], ['この端末に保存だけ', 'save', ''], ['保存して送る', 'send', 'primary']]);
+    box.appendChild(el('p', '', `${meta.customer || ''}（${new Date(r.startedAt).toLocaleString('ja-JP')}）の録音が、途中で止まったまま残っています。受け渡し箱には途中まで届いています。「保存して送る」で、この端末の控え（最後まで入っているもの）に差し替えます。`));
+    const ans = await modalAsk('途中で止まった録音があります', box, [['捨てる', 'drop', 'ghost'], ['この端末に保存だけ', 'save', ''], ['保存して送る', 'send', 'primary']]);
     if (ans === 'drop') { await rec.discardBackup(r.id); continue; }
     saveFile(r.blob, `COMPASS-taimen_recovered_${meta.visitId}.${/mp4/.test(r.mime) ? 'm4a' : 'webm'}`);
     if (ans === 'send') {
       try {
-        const nv = (await api('/api/visits', { method: 'POST', body: JSON.stringify({ customerName: meta.customer || '不明', title: meta.kind || '対面の打ち合わせ' }) })).visit;
+        // 受け渡し箱に途中まで届いている録音なら、端末の控え（最後まで入っている）で送り直す
+        let nv = null;
+        try { nv = (await api(`/api/visits/${meta.visitId}/reopen`, { method: 'POST' })).visit || null; } catch (_) { nv = null; }
+        if (!nv || nv.status !== 'recording') nv = (await api('/api/visits', { method: 'POST', body: JSON.stringify({ customerName: meta.customer || '不明', title: `${meta.kind || '対面の打ち合わせ'}（端末の控え）` }) })).visit;
         visit = nv; parts.clear();
         const all = new Uint8Array(await r.blob.arrayBuffer());
         let n = 0; for (let i = 0; i < all.length; i += FLUSH_BYTES, n++) { parts.set(n, { bytes: all.subarray(i, i + FLUSH_BYTES), sent: false }); await sendPart(n, 4); }
         await api(`/api/visits/${nv.id}/finish`, { method: 'POST', body: JSON.stringify({ chunks: parts.size, mime: r.mime, durationMs: 0, bytes: r.blob.size }) });
-        toast('受け渡し箱に送りました');
+        if (driveSt.connected) await api(`/api/visits/${nv.id}/drive`, { method: 'POST' }).catch(() => {});
+        toast(driveSt.connected ? '受け渡し箱に送り、ドライブに置きました' : '受け渡し箱に送りました');
       } catch (_) { toast('送れませんでした。この端末には保存してあります'); continue; }
     }
     await rec.discardBackup(r.id);
@@ -407,6 +482,8 @@ async function init() {
 $('vStart').onclick = start;
 $('vPause').onclick = togglePause;
 $('vStop').onclick = stop;
+$('vDim').onclick = () => dim(true);
+$('dimLayer').onclick = () => dim(false);
 $('vAgain').onclick = () => { show('setup'); $('vCustomer').value = ''; $('vCustomer').focus(); };
 $('vMicChip').onclick = (e) => { e.stopPropagation(); micMenu(e.currentTarget); };
 document.addEventListener('click', (e) => { if (!e.target.closest('.devmenu')) $('devMenu').classList.add('hidden'); });

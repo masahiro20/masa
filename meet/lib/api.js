@@ -290,6 +290,13 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
     if (p1 === 'meetings') return handleMeetings(req, parts);
     if (p1 === 'visits') return visits.handle(req, parts);
     if (p1 === 'drive') return handleDrive(req, parts);
+    // 1 日 1 回の見回り（Vercel の定期実行）：途中で止まった録音を締め、ドライブに置き直す
+    if (p1 === 'cron' && method === 'GET') {
+      const secret = env.CRON_SECRET || '';
+      const got = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+      if (!secret || !sec.safeEqual(got, secret)) return fail(401, '見つかりません');
+      return ok(await visits.sweep({ upload: true, limit: 20 }));
+    }
     if (p1 !== 'rooms') return fail(404, '見つかりません');
 
     // ルームの作成・一覧（スタッフだけ）

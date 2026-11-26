@@ -6,8 +6,24 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const LANG = 'ja-JP';
 
 // 返り値：'available'（すぐ使える）/ 'downloadable'（初回だけ準備が要る）/ 'downloading' / 'unavailable'
+// 音声認識の部品が入っていないブラウザ（Chromium 系の一部）では、確かめる処理そのものでページが落ちることがある。
+// 本物の Google Chrome でだけ確かめ、確かめる途中で落ちたことがあれば、その端末では二度と確かめない。
+const PROBE = 'meet.capProbe';
+function isGoogleChrome() {
+  const brands = (navigator.userAgentData && navigator.userAgentData.brands) || [];
+  return brands.some((b) => b.brand === 'Google Chrome');
+}
 export async function captionSupport() {
-  if (!SR) return 'unavailable';
+  if (!SR || !isGoogleChrome()) return 'unavailable';
+  let prev = '';
+  try { prev = localStorage.getItem(PROBE) || ''; } catch (_) { /* 何もしない */ }
+  if (prev === 'pending' || prev === 'crashed') { try { localStorage.setItem(PROBE, 'crashed'); } catch (_) { /* 何もしない */ } return 'unavailable'; }
+  try { localStorage.setItem(PROBE, 'pending'); } catch (_) { /* 何もしない */ }
+  const r = await probe();
+  try { localStorage.setItem(PROBE, r); } catch (_) { /* 何もしない */ }
+  return r;
+}
+async function probe() {
   try {
     if (typeof SR.available === 'function') {
       const r = await SR.available({ langs: [LANG], processLocally: true });

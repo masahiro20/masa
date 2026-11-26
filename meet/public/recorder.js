@@ -87,15 +87,18 @@ export class Recorder {
       if (!this.active) return resolve(null);
       if (this.pausedAt) this.resume(); // 一時停止中に止めた場合も、録れた長さを正しく数える
       const durationMs = this.elapsed;
-      this.mr.onstop = async () => {
+      const finish = () => {
         const blob = new Blob(this.chunks, { type: this.mime });
         for (const id of [...this.sources.keys()]) this.removeTrack(id);
         this.active = false; try { this.bus.disconnect(); } catch (_) { /* 何もしない */ } this.dest = null; this.bus = null; this.localTrack = null;
         const meta = { id: this.id, title: this.title, mime: this.mime, startedAt: this.startedAt, durationMs };
         resolve({ blob, ...meta });
       };
+      // すでに止まっていた（端末が録音を止めた）場合は、録れている分でまとめる
+      if (this.mr.state === 'inactive') { finish(); return; }
+      this.mr.onstop = finish;
       try { this.mr.requestData(); } catch (_) { /* 何もしない */ }
-      this.mr.stop();
+      try { this.mr.stop(); } catch (_) { finish(); }
     });
     this.stopping.then(() => { this.stopping = null; });
     return this.stopping;

@@ -81,6 +81,7 @@
       <button class="btn lg" id="vPause" type="button">一時停止</button>
       <button class="btn lg danger" id="vStop" type="button">終了して保存</button>
     </div>
+    <button class="dim-btn" id="vDim" type="button">画面を暗くする（電池の節約・録音は続きます）</button>
   </section>
 
   <!-- 保存できた -->
@@ -102,6 +103,7 @@
   </section>
 </main>
 
+<div class="dim-layer hidden" id="dimLayer" role="button" aria-label="触ると元の画面に戻ります"><span class="dim-dot"></span><span class="dim-time" id="dimTimer">0:00</span><span class="dim-hint">録音中・触ると戻ります</span></div>
 <div class="devmenu hidden" id="devMenu" role="menu"></div>
 <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="sheet-modal"><h3 id="modalTitle"></h3><div id="modalBody"></div><div class="row end" id="modalActions"></div></div>

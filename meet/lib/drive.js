@@ -5,8 +5,9 @@
 //   1) 担当者が一度だけ「ドライブにつなぐ」を押す → Google の同意画面（会社のアカウントだけ）
 //      → 戻ってきたら、更新用の鍵（refresh token）を暗号化して保存する
 //   2) 対面の録音が終わると、サーバーが受け渡し箱の音声をつなげて、その人のドライブに置く
-//      置き場所：その人の「マイドライブ」にあるお客様のフォルダ（中に「録音」フォルダがあればそこ）。
-//      見つからなければ マイドライブ直下の「録音」フォルダ（無ければ作る）
+//      置き場所：その人の「マイドライブ」にあるお客様のフォルダ（例「006.東瀬広大様」）の中の
+//      打合せのフォルダ（例「⑥打合せ関係」→「①打合せ資料 議事録」。契約の録音は「④契約前議事録」があればそこ）。
+//      お客様のフォルダが見つからなければ、マイドライブの「録音」フォルダ（例「007.録音」。無ければ作る）
 //      共有ドライブには書き込まない（会社の決まり）
 //   3) 置けたら、受け渡し箱の音声は消す
 //
@@ -30,6 +31,7 @@ const FALLBACK = '録音';
 
 // お名前の比べ方：「様」・空白・記号を除く
 const norm = (s) => String(s || '').normalize('NFKC').replace(/様|さま|殿|邸|御中/g, '').replace(/[\s_\-・,，.、。()（）［］[\]【】「」]/g, '').toLowerCase();
+const MEET_OR_REC = /議事録|録音$/;
 const q = (s) => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
 function createDrive({ env, keys, store, seal, unseal, fetchImpl = fetch }) {
@@ -147,18 +149,45 @@ function createDrive({ env, keys, store, seal, unseal, fetchImpl = fetch }) {
     const surname = norm(String(customerName).normalize('NFKC').trim().split(/[\s　]+/)[0]) || full.slice(0, 2);
     let list = await folders(token, `name contains '${q(surname)}'`);
     if (!list.length) list = await folders(token, '', 3); // 日本語は前方一致の検索で拾えないことがあるので、手元で絞る
-    const strong = list.filter((f) => norm(f.name).includes(full) && norm(f.name) !== norm(FALLBACK));
-    if (strong.length) return strong[0];
+    const strong = list.filter((f) => norm(f.name).includes(full) && !MEET_OR_REC.test(f.name));
+    if (strong.length) return strong.find((f) => /様|邸/.test(f.name)) || strong[0];
     const weak = list.filter((f) => surname.length >= 2 && norm(f.name).includes(surname));
     return weak.length === 1 ? weak[0] : null;
   }
-  async function child(token, parentId, name) {
-    const j = await folders(token, `'${q(parentId)}' in parents and name='${q(name)}'`);
-    return (j || [])[0] || null;
+  const MEET = /打ち?合わ?せ|打合/;
+  const children = (token, parentId) => folders(token, `'${q(parentId)}' in parents`);
+  // お客様のフォルダの中の、打合せのフォルダを選ぶ
+  async function meetingFolder(token, cust, title) {
+    const kids = await children(token, cust.id);
+    const lvl1 = kids.find((f) => MEET.test(f.name) && /関係|関連/.test(f.name)) || kids.find((f) => MEET.test(f.name) && !/写真/.test(f.name));
+    if (lvl1) {
+      const k2 = await children(token, lvl1.id);
+      const pick = (/契約/.test(title) && k2.find((f) => /契約前/.test(f.name)))
+        || k2.find((f) => /議事録/.test(f.name) && MEET.test(f.name))
+        || k2.find((f) => /議事録|録音/.test(f.name));
+      return pick ? { ...pick, name: `${cust.name}/${lvl1.name}/${pick.name}` } : { ...lvl1, name: `${cust.name}/${lvl1.name}` };
+    }
+    const rec = kids.find((f) => /録音|議事録/.test(f.name));
+    return rec ? { ...rec, name: `${cust.name}/${rec.name}` } : cust;
   }
+  // 予備の「録音」フォルダ（「007.録音」のように番号が付いていてもよい）
   async function fallbackFolder(token) {
-    const found = await folders(token, `'root' in parents and name='${q(FALLBACK)}'`);
-    if (found.length) return found[0];
+    const isRec = (f) => /^[\d０-９①-⑳]*[.．、_\s)）]*録音$/.test(String(f.name).normalize('NFKC').trim());
+    // 「007.録音」のような名前は前方一致の検索で拾えないことがあるので、手元でも絞る
+    const seen = new Map();
+    for (const f of [...await folders(token, `name contains '${q(FALLBACK)}'`), ...await folders(token, '', 3)]) if (isRec(f)) seen.set(f.id, f);
+    let found = [...seen.values()];
+    // お客様のフォルダの中の「録音」は予備に使わない
+    const ok = [];
+    for (const f of found) {
+      const pid = (f.parents || [])[0];
+      if (!pid || pid === 'root') { ok.push(f); continue; }
+      try { const p = await gapi(token, `/files/${encodeURIComponent(pid)}`, { fields: 'id,name' }); if (!/様|邸/.test(p.name || '')) ok.push(f); } catch (_) { /* 親が読めなければ使わない */ }
+    }
+    found = ok;
+    // 局長たちが自分で作った番号付き（例「007.録音」）を先に、次にマイドライブ直下、あとは新しい順
+    const numbered = (f) => /^[\d０-９①-⑳]/.test(String(f.name).normalize('NFKC'));
+    if (found.length) return found.sort((a, b) => (numbered(b) - numbered(a)) || ((b.parents || []).includes('root') - (a.parents || []).includes('root')) || String(b.modifiedTime).localeCompare(String(a.modifiedTime)))[0];
     const r = await fetchImpl(`${API}/files?fields=id,name`, {
       method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: FALLBACK, mimeType: FOLDER, parents: ['root'] }),
@@ -182,11 +211,11 @@ function createDrive({ env, keys, store, seal, unseal, fetchImpl = fetch }) {
   }
 
   // 録音（と文字起こし）を置く
-  async function save(staffId, { customerName, fileName, mime, audio, textName, text, description }) {
+  async function save(staffId, { customerName, title, fileName, mime, audio, textName, text, description }) {
     const token = await accessToken(staffId);
     let folder = await findCustomerFolder(token, customerName);
     let where = 'customer';
-    if (folder) { const sub = await child(token, folder.id, FALLBACK); if (sub) folder = { ...sub, name: `${folder.name}/${sub.name}` }; }
+    if (folder) folder = await meetingFolder(token, folder, title || '');
     else { folder = await fallbackFolder(token); where = 'fallback'; }
     const f = await uploadFile(token, { name: fileName, mime, data: audio, parentId: folder.id, description });
     let t = null;

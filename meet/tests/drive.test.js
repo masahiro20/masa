@@ -24,6 +24,8 @@ const fakeFetch = async (url, opts = {}) => {
   }
   if (url === 'https://openidconnect.googleapis.com/v1/userinfo') return json(g.userinfo);
   if (u.hostname === 'oauth2.googleapis.com' && u.pathname === '/revoke') { g.revoked++; return json({}); }
+  const one = u.pathname.match(/^\/drive\/v3\/files\/([^/]+)$/);
+  if (one && (opts.method || 'GET') === 'GET') { const f = g.folders.find((x) => x.id === decodeURIComponent(one[1])); return f ? json(f) : { ok: false, status: 404, json: async () => ({}) }; }
   if (u.origin + u.pathname === 'https://www.googleapis.com/drive/v3/files' && (opts.method || 'GET') === 'GET') {
     assert.match(opts.headers.Authorization, /^Bearer at/);
     const q = u.searchParams.get('q');
@@ -118,15 +120,23 @@ test('会社以外の Google アカウントでは、つながらない', async 
   assert.equal((await s.as('GET', '/api/drive')).body.connected, false);
 });
 
-test('お客様のフォルダがあれば、そこ（中の「録音」フォルダ）に録音と文字起こしを置き、受け渡し箱の音声は消す', async () => {
-  g.folders.push({ id: 'cust1', name: '大崎 純 様', parents: ['root'] }, { id: 'cust1rec', name: '録音', parents: ['cust1'] });
+test('お客様のフォルダがあれば、打合せのフォルダ（⑥打合せ関係 → ①打合せ資料 議事録）に録音と文字起こしを置き、受け渡し箱の音声は消す', async () => {
+  g.folders.push(
+    { id: 'custs', name: '001.お客様', parents: ['root'] },
+    { id: 'cust1', name: '006.大崎純様', parents: ['custs'] },
+    { id: 'c1m', name: '⑥打合せ関係', parents: ['cust1'] },
+    { id: 'c1other', name: '④設計図書', parents: ['cust1'] },
+    { id: 'cust1rec', name: '①打合せ資料 議事録', parents: ['c1m'] },
+    { id: 'c1keiyaku', name: '④契約前議事録', parents: ['c1m'] },
+    { id: 'c1rec2', name: '録音', parents: ['cust1'] },
+  );
   const s = await t.login();
   const { v, audio } = await record(s, '大崎 純 様', '[0:01] よろしくお願いします\n[0:05] 間取りの件ですが');
   assert.equal(v.hasText, true);
   const r = await s.as('POST', `/api/visits/${v.id}/drive`);
   assert.equal(r.status, 200, JSON.stringify(r.body));
   assert.equal(r.body.visit.drive.where, 'customer');
-  assert.equal(r.body.visit.drive.folder, '大崎 純 様/録音');
+  assert.equal(r.body.visit.drive.folder, '006.大崎純様/⑥打合せ関係/①打合せ資料 議事録');
   const [au, tx] = g.uploads.slice(-2);
   assert.deepEqual(au.meta.parents, ['cust1rec']);
   assert.match(au.meta.name, /^\d{4}-\d{2}-\d{2} \d{4} 大崎純様 打ち合わせ\.m4a$/);
@@ -143,7 +153,16 @@ test('お客様のフォルダがあれば、そこ（中の「録音」フォ�
   assert.equal((await (await t.login('tanaka')).as('GET', `/api/visits/${v.id}/text`)).status, 404);
 });
 
-test('お客様のフォルダが無ければ、マイドライブの「録音」フォルダを作って置く', async () => {
+test('契約の録音は「④契約前議事録」に置く', async () => {
+  const s = await t.login();
+  const v = (await s.as('POST', '/api/visits', { customerName: '大崎 純', title: '契約' })).body.visit;
+  await s.as('POST', `/api/visits/${v.id}/chunk`, { seq: 0, data: Buffer.from('x').toString('base64') });
+  await s.as('POST', `/api/visits/${v.id}/finish`, { chunks: 1, mime: 'audio/mp4' });
+  const r = await s.as('POST', `/api/visits/${v.id}/drive`);
+  assert.equal(r.body.visit.drive.folder, '006.大崎純様/⑥打合せ関係/④契約前議事録');
+});
+
+test('お客様のフォルダが無ければ、マイドライブの「録音」フォルダを作って置く（お客様フォルダの中の「録音」は使わない）', async () => {
   const s = await t.login();
   const before = g.created.length;
   const { v } = await record(s, '寺川 花子');
@@ -158,6 +177,44 @@ test('お客様のフォルダが無ければ、マイドライブの「録音�
   await s.as('POST', `/api/visits/${v2.id}/drive`);
   assert.equal(g.created.length, before + 1);
   assert.deepEqual(g.uploads.at(-1).meta.parents, [g.created.at(-1).id]);
+});
+
+test('番号付きの「007.録音」があれば、そこを予備に使う', async () => {
+  g.folders.push({ id: 'shiryo', name: '002.資料関係', parents: ['root'] }, { id: 'rec007', name: '007.録音', parents: ['shiryo'], modifiedTime: '2099-01-01T00:00:00Z' });
+  const s = await t.login();
+  const { v } = await record(s, '山本 一郎');
+  const r = await s.as('POST', `/api/visits/${v.id}/drive`);
+  assert.equal(r.body.visit.drive.folder, '007.録音');
+  assert.deepEqual(g.uploads.at(-1).meta.parents, ['rec007']);
+});
+
+test('電池切れなどで止まった録音は、届いたところまでで締めて、途中までの文字起こしと一緒にドライブに置く', async () => {
+  const s = await t.login();
+  const v = (await s.as('POST', '/api/visits', { customerName: '大崎 純', title: '打ち合わせ' })).body.visit;
+  await s.as('POST', `/api/visits/${v.id}/chunk`, { seq: 0, data: Buffer.from('aaa').toString('base64'), mime: 'audio/mp4', elapsedMs: 10000, text: '[0:01] こんにちは' });
+  await s.as('POST', `/api/visits/${v.id}/chunk`, { seq: 1, data: Buffer.from('bbb').toString('base64'), elapsedMs: 20000, text: '[0:01] こんにちは\n[0:12] 間取りの話' });
+  // まだ締めていない（finish が来ない）。10 分たったことにする
+  const realNow = Date.now; Date.now = () => realNow() + 11 * 60 * 1000;
+  try {
+    const list = (await s.as('GET', '/api/visits')).body.visits;
+    const x = list.find((y) => y.id === v.id);
+    assert.equal(x.status, 'ready');
+    assert.equal(x.interrupted, true);
+    assert.equal(x.chunks, 2);
+    assert.equal(x.durationMs, 20000);
+    const r = await s.as('POST', `/api/visits/${v.id}/drive`);
+    assert.equal(r.status, 200, JSON.stringify(r.body));
+    const [au, tx] = g.uploads.slice(-2);
+    assert.equal(au.data.toString(), 'aaabbb');
+    assert.match(au.meta.name, /（途中まで）\.m4a$/);
+    assert.match(tx.data.toString('utf8'), /間取りの話/);
+    assert.match(tx.data.toString('utf8'), /途中で止まった/);
+  } finally { Date.now = realNow; }
+});
+
+test('1 日 1 回の見回りは、合言葉が無いと動かない', async () => {
+  assert.equal((await t.call('GET', '/api/cron')).status, 401);
+  assert.equal((await t.call('GET', '/api/cron', undefined, { Authorization: 'Bearer wrong' })).status, 401);
 });
 
 test('つないでいない人の録音は受け渡し箱に残り、つないだ後の「まとめて置く」で置かれる', async () => {

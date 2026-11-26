@@ -476,3 +476,10 @@ body.g .live-actions { margin-top: 18px; }
   body.g .modes-nav .mn { padding: 6px 12px; font-size: 12px; }
   body.g.visit-page .topbar { padding-top: 18px; }
 }
+body.g .dim-btn { display: block; margin: 14px auto 0; border: none; background: none; color: #8a8f95; font: inherit; font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 6px; }
+body.g .dim-btn:hover { color: #c9cdd2; }
+.dim-layer { position: fixed; inset: 0; z-index: 100; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; user-select: none; }
+.dim-layer.hidden { display: none; }
+.dim-dot { width: 8px; height: 8px; border-radius: 50%; background: #7a2a24; animation: blink 2.4s ease-in-out infinite; }
+.dim-time { font-family: Inter, sans-serif; font-weight: 200; font-size: 28px; color: #3a3d42; font-variant-numeric: tabular-nums; }
+.dim-hint { font-size: 11px; color: #2f3236; }

@@ -17,6 +17,7 @@ const VISIT_ID_RE = /^v[a-z0-9]{16}$/;
 const CHUNK_MAX = 600 * 1024;          // 1 回に送れる量（base64 の文字数。保管先の 1 件の上限に収まるように）
 const MAX_CHUNKS = 600;                // 約 3 時間分まで
 const TEXT_MAX = 200000;               // 文字起こしの上限（文字数）
+const STALE_MS = 10 * 60 * 1000;       // これだけ送られてこなければ「途中で止まった」とみなし、そこまでを保存する
 const AUDIO_TTL = 14 * 86400;
 const META_TTL = 180 * 86400;
 
@@ -40,7 +41,7 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
     id: v.id, customerName: v.customerName, compassId: v.compassId, title: v.title, startedAt: v.startedAt, endedAt: v.endedAt || 0,
     durationMs: v.durationMs || 0, mime: v.mime, chunks: v.chunks || 0, bytes: v.bytes || 0, status: v.status,
     drive: v.drive || null, compass: v.compass || 'pending', ownerName: v.ownerName, audioKept: !v.purged,
-    hasText: !!v.hasText, textChars: v.textChars || 0, driveError: v.driveError || '',
+    hasText: !!v.hasText, textChars: v.textChars || 0, driveError: v.driveError || '', interrupted: !!v.interrupted,
   });
 
   async function staffFor(req, write) {
@@ -65,6 +66,7 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
         for (const id of ids) {
           const v = await load(id);
           if (!v) { await store.pipeline([['HDEL', INDEX, id]]); continue; }
+          await finalizeStale(v);
           if (v.status === 'ready' && (!v.drive || v.compass === 'pending')) out.push(pub(v));
         }
         out.sort((a, b) => a.startedAt - b.startedAt);
@@ -112,7 +114,9 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
         const out = [];
         for (const [id, owner] of Object.entries(idx)) {
           if (owner !== staff.id && staff.role !== 'admin') continue;
-          const v = await load(id); if (v) out.push(pub(v));
+          const v = await load(id); if (!v) continue;
+          await finalizeStale(v);
+          if (v.status !== 'empty') out.push(pub(v));
         }
         out.sort((a, b) => b.startedAt - a.startedAt);
         return ok({ visits: out.slice(0, 50) });
@@ -138,11 +142,12 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
     // ドライブにまだ置いていない自分の録音を、まとめて置く（ページを開いたときに呼ぶ）
     if (sub === 'sync' && m === 'POST') {
       const st = drive ? await drive.status(staff.id) : { enabled: false };
-      if (!st.connected) return ok({ done: [], drive: st });
+      if (!st.connected) { await sweep({ upload: false, onlyOwner: staff.id }); return ok({ done: [], drive: st }); }
       const idx = await hgetall(INDEX); const done = [];
       for (const [id, owner] of Object.entries(idx)) {
         if (owner !== staff.id || done.length >= 2) continue;
         const x = await load(id);
+        await finalizeStale(x);
         if (!x || x.status !== 'ready' || x.drive || x.purged) continue;
         const r = await toDrive(x, staff);
         done.push({ id, ok: !r.error, error: r.error || '' });
@@ -163,7 +168,18 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
       const seq = b.seq;
       if (!Number.isInteger(seq) || seq < 0 || seq >= MAX_CHUNKS) return fail(400, '番号が正しくありません');
       if (typeof b.data !== 'string' || !b.data || b.data.length > CHUNK_MAX || !/^[A-Za-z0-9+/=]+$/.test(b.data)) return fail(400, '音声の形式が正しくありません');
-      await store.pipeline([['SET', chunkKey(v.id, seq), seal(b.data, `vc:${v.id}:${seq}`), 'EX', AUDIO_TTL]]);
+      const cmds = [['SET', chunkKey(v.id, seq), seal(b.data, `vc:${v.id}:${seq}`), 'EX', AUDIO_TTL]];
+      // 途中で電池が切れても、そこまでを保存できるように、進み具合と途中までの文字起こしも残す
+      v.lastChunkAt = Date.now(); v.maxSeq = Math.max(v.maxSeq ?? -1, seq);
+      if (!v.mime && typeof b.mime === 'string') v.mime = clean(b.mime, 60);
+      if (Number.isFinite(b.elapsedMs)) v.elapsedMs = Math.max(v.elapsedMs || 0, Math.min(Number(b.elapsedMs), 6 * 3600e3));
+      if (typeof b.text === 'string' && b.text.trim()) {
+        const text = b.text.replace(/\r\n?/g, '\n').slice(0, TEXT_MAX);
+        cmds.push(['SET', textKey(v.id), seal(text, `vt:${v.id}`), 'EX', META_TTL]);
+        v.hasText = true; v.textChars = text.length;
+      }
+      await store.pipeline(cmds);
+      await save(v);
       return ok({ ok: true, seq });
     }
     if (m === 'POST' && parts[3] === 'finish') {
@@ -179,12 +195,19 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
       v.durationMs = Math.max(0, Math.min(Number(b.durationMs) || 0, 6 * 3600 * 1000));
       v.bytes = Math.max(0, Number(b.bytes) || 0);
       v.endedAt = Date.now();
-      v.status = 'ready';
+      v.status = 'ready'; v.interrupted = false;
       if (typeof b.text === 'string' && b.text.trim()) {
         const text = b.text.replace(/\r\n?/g, '\n').slice(0, TEXT_MAX);
         await store.pipeline([['SET', textKey(v.id), seal(text, `vt:${v.id}`), 'EX', META_TTL]]);
         v.hasText = true; v.textChars = text.length;
       }
+      await save(v);
+      return ok({ ok: true, visit: pub(v) });
+    }
+    // 端末の控え（全部そろったもの）で送り直す：まだドライブに置いていなければ、受け付け直す
+    if (m === 'POST' && parts[3] === 'reopen') {
+      if (v.drive || v.purged) return fail(409, 'この録音はもうドライブに置いてあります');
+      v.status = 'recording'; v.interrupted = false; v.lastChunkAt = Date.now();
       await save(v);
       return ok({ ok: true, visit: pub(v) });
     }
@@ -208,6 +231,38 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
     return fail(404, '見つかりません');
   }
 
+  // 途中で止まった録音（電池切れ・端末が落ちた等）を、届いているところまでで締める
+  async function finalizeStale(v, now = Date.now()) {
+    if (!v || v.status !== 'recording') return false;
+    const last = v.lastChunkAt || v.startedAt;
+    if (now - last < STALE_MS) return false;
+    if ((v.maxSeq ?? -1) < 0) { v.status = 'empty'; await save(v); return false; }
+    const n = v.maxSeq + 1;
+    const got = await store.pipeline(Array.from({ length: n }, (_, i) => ['EXISTS', chunkKey(v.id, i)]));
+    let count = 0; while (count < n && Number(got[count])) count++;
+    if (!count) { v.status = 'empty'; await save(v); return false; }
+    v.chunks = count; v.status = 'ready'; v.interrupted = true; v.endedAt = last;
+    v.durationMs = v.elapsedMs || Math.max(0, last - v.startedAt);
+    v.mime = v.mime || 'audio/mp4';
+    await save(v);
+    return true;
+  }
+  // 全員分の見回り（1 日 1 回の定期実行と、画面を開いたときに呼ぶ）
+  async function sweep({ upload = true, onlyOwner = null, limit = 5 } = {}) {
+    const idx = await hgetall(INDEX); const out = { finalized: 0, uploaded: 0, failed: 0 };
+    for (const [id, owner] of Object.entries(idx)) {
+      if (onlyOwner && owner !== onlyOwner) continue;
+      const v = await load(id); if (!v) continue;
+      if (await finalizeStale(v)) out.finalized++;
+      if (!upload || out.uploaded + out.failed >= limit) continue;
+      if (v.status !== 'ready' || v.drive || v.purged || !drive || !drive.enabled) continue;
+      const st = await drive.status(owner); if (!st.connected) continue;
+      const r = await toDrive(v, { id: owner });
+      if (r.error) out.failed++; else out.uploaded++;
+    }
+    return out;
+  }
+
   async function loadText(id) {
     const [raw] = await store.pipeline([['GET', textKey(id)]]);
     return raw ? unseal(raw, `vt:${id}`) : null;
@@ -225,7 +280,7 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
     const d = new Date(v.startedAt + 9 * 3600e3); // 日本時間
     const p = (n) => String(n).padStart(2, '0');
     const who = String(v.customerName).replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '').replace(/様$/, '');
-    return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}${p(d.getUTCMinutes())} ${who}様 ${String(v.title).replace(/[\\/:*?"<>|]/g, '')}.${ext}`;
+    return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}${p(d.getUTCMinutes())} ${who}様 ${String(v.title).replace(/[\\/:*?"<>|]/g, '')}${v.interrupted ? '（途中まで）' : ''}.${ext}`;
   }
   async function toDrive(v, staff) {
     if (!drive || !drive.enabled) return { error: 'disabled', message: 'ドライブへの自動保存は、まだ設定されていません' };
@@ -240,9 +295,9 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
       const audio = Buffer.concat(bufs);
       const ext = /mp4|m4a|aac/.test(v.mime) ? 'm4a' : 'webm';
       const text = v.hasText ? await loadText(v.id) : null;
-      const head = `${v.customerName} ${v.title}\n${new Date(v.startedAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}　担当：${v.ownerName}\n（この端末の中だけで作った文字起こしです。聞き間違いがあります。正しくは録音を確かめてください）\n\n`;
+      const head = `${v.customerName} ${v.title}\n${new Date(v.startedAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}　担当：${v.ownerName}\n（この端末の中だけで作った文字起こしです。聞き間違いがあります。正しくは録音を確かめてください）\n${v.interrupted ? '（電池切れなどで途中で止まったため、届いたところまでを保存しています）\n' : ''}\n`;
       const saved = await drive.save(staff.id, {
-        customerName: v.customerName, fileName: driveName(v, ext), mime: ext === 'm4a' ? 'audio/mp4' : 'audio/webm', audio,
+        customerName: v.customerName, title: v.title, fileName: driveName(v, ext), mime: ext === 'm4a' ? 'audio/mp4' : 'audio/webm', audio,
         textName: driveName(v, 'txt').replace(/\.txt$/, ' 文字起こし.txt'), text: text ? head + text : '',
         description: `COMPASS Meet 対面の録音（${v.customerName}・${v.title}・担当 ${v.ownerName}）`,
       });
@@ -264,7 +319,7 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
     return o;
   }
 
-  return { handle };
+  return { handle, sweep, _finalizeStale: finalizeStale };
 }
 
 module.exports = { createVisits };
