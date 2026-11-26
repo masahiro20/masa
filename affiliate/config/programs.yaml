@@ -292,6 +292,22 @@ programs:
     hold: true
     # スキルコンパスの読者（社会人のITスキル・転職）とは別の層。広告コードの保管用で、記事の自動選定には使わない
 
+  - id: learning-canva
+    name: "Canvaデザインプログラム（デジタルハリウッドのオンライン講座）"
+    category: fukugyo
+    asp: "moshimo"
+    url: "https://af.moshimo.com/af/c/click?a_id=5928213&p_id=7666&pc_id=22165&pl_id=95713"
+    pixel: "https://i.moshimo.com/af/i/impression?a_id=5928213&p_id=7666&pc_id=22165&pl_id=95713"
+    banner_url: "https://af.moshimo.com/af/c/click?a_id=5928213&p_id=7666&pc_id=22165&pl_id=95752"
+    banner_pixel: "https://i.moshimo.com/af/i/impression?a_id=5928213&p_id=7666&pc_id=22165&pl_id=95752"
+    banner_height: 280
+    banner_width: 336
+    banner: "https://image.moshimo.com/af-img/2262/000000095752.png"
+    est_reward_jpy: 1500
+    keywords: ["Canva 講座", "Canva 副業", "Canva 資格", "Canva 使い方", "デザイン 副業 初心者"]
+    cta: "Canvaデザインプログラムの講座内容を見る"
+    # 成果は講座の購入・申込（マスター講座1,000円／プロフェッショナル講座2,000円）。給付金・補助金の対象講座ではないので、スクール一覧には使わない
+
   - id: learning-books
     name: "技術書・学習書（楽天市場）"
     category: learning
