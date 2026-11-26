@@ -55,7 +55,7 @@
   {% for sc in tool.schools %}
     <article class="school-card" data-order="{{ loop.index }}" data-systems="{{ sc.systems | join(' ') }}" data-fields="{{ sc.fields | join(' ') }}" data-format="{{ sc.format | join(' ') }}">
       <header class="school-head">
-        <h2 class="school-name">{{ sc.name }}</h2>
+        <h2 class="school-name"><a href="{{ url }}{{ sc.id }}/">{{ sc.name }}</a></h2>
         <p class="school-tags">{% for f in sc.field_names %}<span>{{ f }}</span>{% endfor %}{% for f in sc.format_names %}<span class="is-format">{{ f }}</span>{% endfor %}</p>
       </header>
       <p class="school-badges">{% for sub in sc.subsidies %}<span class="sb" data-system="{{ sub.system }}">{{ badge(sub) }}</span>{% endfor %}</p>
@@ -71,6 +71,7 @@
             <p class="school-src">{% if sub.stale %}<span class="is-stale">再確認中</span>{% endif %}<a href="{{ sub.source }}" target="_blank" rel="noopener nofollow">公式ページの記載を見る</a>（{{ sub.checked | replace('-', '.') }} 確認）</p>
           </li>{% endfor %}
         </ul>
+        <p class="theme-more"><a href="{{ url }}{{ sc.id }}/">{{ sc.short }}の給付金・補助金をくわしく見る →</a></p>
       </details>
       <div class="school-cta">{% if sc.ad %}
         <span class="cta-label">PR</span><a class="cta-button" href="{{ sc.ad.url }}" rel="sponsored noopener" referrerpolicy="no-referrer-when-downgrade" target="_blank">{{ sc.ad.cta }}</a>{% if sc.ad.pixel %}<img class="aff-pixel" src="{{ sc.ad.pixel }}" width="1" height="1" alt="">{% endif %}
@@ -81,6 +82,8 @@
   {% endfor %}
   </div>
   <p class="school-empty" id="empty" hidden>条件に合うスクールがありません。<button type="button" class="link-button" id="reset2">条件をリセットする</button></p>
+
+  {% if tool.themes %}<nav class="theme-nav" aria-label="分野・制度ごとのまとめ"><span>分野・制度ごとに見る：</span>{% for th in tool.themes %}<a href="{{ url }}{{ th.slug }}/">{{ th.short }}</a>{% endfor %}</nav>{% endif %}
 
   <section class="tool-section systems">
     <h2 class="section-title"><span>2つの制度のちがい</span></h2>

@@ -19,7 +19,7 @@ from .blocks import expand_links, extract_faq, render_blocks
 from .config import PAGES_DIR, PUBLIC_DIR, STATIC_DIR, TEMPLATES_DIR, Config
 from .gsc import load_pages as gsc_pages
 from .links import expand_shortcodes, route_unlinked_ctas, with_early_cta
-from .schools import SYSTEMS as SCHOOL_SYSTEMS, FIELDS as SCHOOL_FIELDS, FORMATS as SCHOOL_FORMATS, enrich as enrich_schools, load_schools
+from .schools import SYSTEMS as SCHOOL_SYSTEMS, FIELDS as SCHOOL_FIELDS, FORMATS as SCHOOL_FORMATS, enrich as enrich_schools, load_schools, school_faq
 from .visuals import logo_png, logo_svg, save_cover, site_cover
 
 COVER_NAME = "cover.png"
@@ -178,6 +178,49 @@ def reading_minutes(body: str) -> int:
 def _dump_ld(data) -> str:
     return json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 
+
+
+def _school_pages(env, write, common: dict, t: dict, list_url: str, base: str) -> list[tuple[str, str]]:
+    """スクールごとのページ（〇〇 給付金 で検索する人向け）と、分野・制度ごとのまとめページを書き出す。"""
+    out = []
+    schools = t["schools"]
+    crumb = lambda name, url: _dump_ld([{
+        "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "ホーム", "item": f"{base}/"},
+            {"@type": "ListItem", "position": 2, "name": "給付金・補助金が使えるITスクール一覧", "item": list_url},
+            {"@type": "ListItem", "position": 3, "name": name, "item": url}]}])
+    for sc in schools:
+        url = f"{list_url}{sc['id']}/"
+        faq = school_faq(sc)
+        systems = "・".join(x["info"]["short"] for x in sc["subsidies"])
+        title = f"{sc['short']}の給付金・補助金｜対象講座と条件・戻る額の目安"
+        desc = (f"{sc['short']}で使える給付金・補助金（{systems}）を、公式ページの記載と確認日つきで整理しました。"
+                f"対象の講座、受けられる条件、受講料から戻る額の目安がわかります。")
+        same = [o for o in schools if o["id"] != sc["id"] and set(o["fields"]) & set(sc["fields"])][:6]
+        ld = crumb(sc["short"], url)[:-1] + "," + _dump_ld([{
+            "@context": "https://schema.org", "@type": "FAQPage",
+            "mainEntity": [{"@type": "Question", "name": q["q"], "acceptedAnswer": {"@type": "Answer", "text": q["a"]}} for q in faq],
+        }])[1:]
+        write(f"tools/{t['slug']}/{sc['id']}/index.html", env.get_template("tools/kyufukin-school-detail.html").render(
+            **common, tool=t, sc=sc, faq=faq, same=same, list_url=list_url, url=url,
+            page_title=title, page_description=desc, json_ld=ld, bare_title=True,
+        ))
+        out.append((url, sc["checked_last"] or str(t.get("updated"))))
+    for th in t.get("themes", []):
+        want_f, want_s = set(th.get("fields", [])), set(th.get("systems", []))
+        members = [sc for sc in schools if (not want_f or want_f & set(sc["fields"])) and (not want_s or want_s & set(sc["systems"]))]
+        if len(members) < 2:
+            continue
+        url = f"{list_url}{th['slug']}/"
+        n = str(len(members))
+        title = th["title"].replace("{n}", n)
+        write(f"tools/{t['slug']}/{th['slug']}/index.html", env.get_template("tools/kyufukin-school-theme.html").render(
+            **common, tool=t, theme={**th, "title": title, "intro": th["intro"].replace("{n}", n)}, members=members,
+            list_url=list_url, url=url, page_title=title, page_description=th["description"].replace("{n}", n),
+            json_ld=crumb(th["short"], url), bare_title=True,
+        ))
+        out.append((url, max(sc["checked_last"] for sc in members)))
+    return out
 
 def _llms_txt(cfg: Config, base: str, guides: list[dict], tools: list[dict], pillars) -> str:
     """AI の検索・回答サービスに、サイトの中身と主なページを伝える llms.txt（https://llmstxt.org/ の形式）。"""
@@ -407,7 +450,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         }] + ([{
             "@context": "https://schema.org", "@type": "ItemList", "name": t["title"],
             "numberOfItems": len(t["schools"]),
-            "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": sc["name"], "url": sc["official"]}
+            "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": sc["name"], "url": f"{url}{sc['id']}/"}
                                 for i, sc in enumerate(t["schools"])],
         }] if t.get("schools") else []) + ([{
             "@context": "https://schema.org", "@type": "FAQPage",
@@ -420,6 +463,8 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
             page_title=t["title"], page_description=t["description"], json_ld=ld, bare_title=True,
         ))
         urls.append((url, str(t.get("updated") or date.today().isoformat())))
+        if t.get("schools"):
+            urls += _school_pages(env, write, common, t, url, base)
 
     for page_file in sorted(pages_dir.glob("*.md")):
         page = _parse_page(page_file.read_text(encoding="utf-8"), cfg)

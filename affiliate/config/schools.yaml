@@ -6,6 +6,9 @@
 #   subsidies の source には、その記載がある公式ページのURLを、checked には確かめた日を書く（ページにそのまま出る）。
 #   checked から120日を過ぎると、ページに「再確認中」と出る。
 #
+# ■ short
+#   スクールの短い名前。スクールごとのページ（/tools/kyufukin-school/<id>/）のタイトル「〇〇の給付金・補助金」に使う。
+#
 # ■ program
 #   広告が入っている案件（config/programs.yaml の id）。申込先がこの制度の対象講座の案件だけにする。
 #   空なら、公式サイトへの普通のリンクになる（広告ではない）。
@@ -21,6 +24,7 @@
 
 schools:
   - id: kredo
+    short: Kredo
     name: Kredo（オンラインキャンプ・セブ島IT留学）
     program: school-kredo
     official: https://kredo.jp/
@@ -39,6 +43,7 @@ schools:
         checked: '2026-11-25'
 
   - id: techcamp
+    short: テックキャンプ
     name: テックキャンプ（エンジニアコース）
     official: https://tech-camp.in/expert
     fields: [programming, ai]
@@ -52,6 +57,7 @@ schools:
         note: 初めて給付金を使う在職者は、雇用保険の加入期間が2年以上。離職中の人は離職から1年以内。
 
   - id: runteq
+    short: RUNTEQ
     name: RUNTEQ（Web開発スタンダードコース）
     official: https://runteq.jp/
     fields: [programming]
@@ -65,6 +71,7 @@ schools:
         note: Python×AIコースは対象外。受講開始の2週間前までにハローワークで手続きが必要。
 
   - id: raretech
+    short: RareTECH
     name: RareTECH
     official: https://raretech.site/
     fields: [programming, ai]
@@ -78,6 +85,7 @@ schools:
         note: 受講開始の2週間前までにハローワークで手続きが必要。
 
   - id: kikagaku
+    short: キカガク
     name: キカガク（AI・データサイエンス人材育成コース）
     official: https://kikagaku.co.jp/personal
     fields: [ai, data]
@@ -90,6 +98,7 @@ schools:
         checked: '2026-11-25'
 
   - id: tokyo-designplex
+    short: 東京デザインプレックス研究所
     name: 東京デザインプレックス研究所
     official: https://www.tokyo-designplex.com/
     fields: [webdesign]
@@ -107,6 +116,7 @@ schools:
         checked: '2026-11-25'
 
   - id: internet-academy
+    short: インターネット・アカデミー
     name: インターネット・アカデミー
     official: https://www.internetacademy.jp/
     fields: [webdesign, marketing, programming, ai]
@@ -120,6 +130,7 @@ schools:
         note: 受講を始める前に申し出が必要。始めたあとのコース変更はできない。
 
   - id: dhw-studio
+    short: デジタルハリウッド
     name: デジタルハリウッド（STUDIO・本校）
     official: https://school.dhw.co.jp/
     fields: [webdesign]
@@ -138,6 +149,7 @@ schools:
         note: 使える校舎は関東・関西の一部。2027年3月31日までに修了する場合に限られ、コースごとに開始の期限がある（すでに募集を終えたコースもある）。
 
   - id: shelikes
+    short: SHElikes
     name: SHElikes（レギュラープラン）
     official: https://shelikes.jp/
     fields: [webdesign, marketing]
@@ -151,6 +163,7 @@ schools:
         note: 雇用契約がある人で、転職を目指す人が対象。無職・専業主婦・フリーランスは対象外。修了条件を満たさないと、先に受けた還元の返金が必要。
 
   - id: samurai
+    short: 侍エンジニア
     name: 侍エンジニア（SAMURAI ENGINEER）
     official: https://sejuku.net/
     fields: [programming, ai, data, webdesign]
@@ -169,6 +182,7 @@ schools:
         note: 受講開始の2週間前までに申請が必要。
 
   - id: human-academy
+    short: ヒューマンアカデミー
     name: ヒューマンアカデミー
     official: https://haa.athuman.com/
     fields: [ai, programming, webdesign, marketing]
@@ -187,6 +201,7 @@ schools:
         note: 初めて使う人は雇用保険の加入期間が1年以上。
 
   - id: datamix
+    short: データミックス
     name: データミックス
     official: https://datamix.co.jp/
     fields: [data, ai]
@@ -200,6 +215,7 @@ schools:
         note: 受講開始前にハローワークで受給資格の確認が必要。
 
   - id: ninjacode
+    short: 忍者CODE
     name: 忍者CODE（転職支援プラン）
     official: https://ninjacode.work/
     fields: [programming, webdesign]

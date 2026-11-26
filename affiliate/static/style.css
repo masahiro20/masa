@@ -562,3 +562,28 @@ video.slide-media.ready { opacity: 1; }
 @media (max-width: 720px) {
   .sc .jump-bar:not([hidden]) { display: flex; justify-content: center; position: fixed; z-index: 40; left: 12px; right: 12px; bottom: 12px; padding: 13px 16px; background: var(--ink); color: #fff; font-size: 14.5px; font-weight: 700; text-decoration: none; box-shadow: 0 8px 20px rgba(0, 0, 0, .25); animation: rise .3s ease; }
 }
+/* スクールごとのページ・まとめページ */
+.sc .answer { border: 1px solid var(--ink); background: var(--white); padding: 18px 20px 14px; margin: 0 0 20px; }
+.sc .answer-title, .sc .calc-title { margin: 0 0 12px; font-family: var(--serif); font-size: 17px; letter-spacing: .04em; }
+.sc .answer-list { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 8px; }
+.sc .answer-list li { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 14.5px; }
+.sc .calc { padding: 16px 0 6px; margin: 0 0 20px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.sc .calc-out { list-style: none; margin: 12px 0 6px; padding: 0; display: grid; gap: 6px; }
+.sc .calc-out li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 12px; background: var(--paper-2); }
+.sc .calc-num { font-family: var(--serif); font-weight: 700; font-size: 20px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.sc .detail-cta { margin: 24px 0; text-align: center; }
+.sc .detail-cta .cta-label { position: static; display: block; background: none; padding: 0; margin-bottom: 4px; }
+.sc .detail-cta .cta-button, .sc .detail-cta .school-official { display: block; max-width: 520px; margin: 0 auto; }
+.sc .detail-subs li { padding: 14px 0; }
+.sc .same-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.sc .same-list a { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 12px; padding: 12px 0; border-bottom: 1px solid var(--rule); text-decoration: none; color: var(--ink); }
+.sc .same-list a:hover .same-name { text-decoration: underline; text-underline-offset: 4px; }
+.sc .same-name { font-family: var(--serif); font-weight: 700; }
+.sc .same-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.sc .school-name a { text-decoration: none; }
+.sc .school-name a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.sc .theme-more { margin: 8px 0 0; font-size: 13.5px; }
+@media (max-width: 720px) { .sc .calc-out li { flex-wrap: wrap; } }
+.sc .theme-nav { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 28px 0 0; padding: 14px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); font-size: 13.5px; }
+.sc .theme-nav span { color: var(--ink-3); }
+.sc .theme-nav a { color: var(--ink); text-underline-offset: 4px; }
