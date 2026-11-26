@@ -3,159 +3,156 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#776c60">
 <title>COMPASS Meet</title>
 <link rel="icon" href="/static/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@200;300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap">
 <link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/theme.css">
 </head>
-<body>
-<div class="home">
-  <header class="topbar">
-    <a class="brand" href="/">
-      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 5.5 19.2 16H12.8Z" fill="#c63d2f"/><path d="M16 26.5 12.8 16h6.4Z" fill="currentColor"/></svg>
-      <span class="word">COMPASS<i>.</i></span>
-      <span class="sub">Meet</span>
-    </a>
-    <nav class="modes-nav hidden" id="modesNav" aria-label="打ち合わせの種類"><a href="/" class="mn on" aria-current="page">オンライン</a><a href="/visit" class="mn">対面</a></nav>
-    <nav class="who hidden" id="whoBox"><span id="whoName"></span><a class="btn ghost sm" href="/records">打ち合わせ記録</a><button class="btn ghost sm hidden" id="pwLink">パスワード変更</button><button class="btn ghost sm" id="logout">ログアウト</button></nav>
-  </header>
+<body class="home2">
 
-  <main class="hero">
-    <div>
-      <div class="eyebrow">Online Meeting</div>
-      <h1>お客様との打ち合わせを、<br>リンクひとつで。</h1>
-      <p class="lead">予定ごとに打ち合わせのリンクを発行します。お客様はリンクを開くだけで参加でき、アプリのインストールやアカウント登録は要りません。</p>
-      <figure class="scene" aria-label="図面に書き込みながら打ち合わせをしている画面のイメージ">
-        <svg viewBox="-24 -12 608 396" role="img" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="sg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1f27"/><stop offset="1" stop-color="#0d1015"/></linearGradient>
-            <linearGradient id="av1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b4a63"/><stop offset="1" stop-color="#232b39"/></linearGradient>
-            <linearGradient id="av2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5c4a3d"/><stop offset="1" stop-color="#2f2620"/></linearGradient>
-            <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0f1b2d" flood-opacity=".22"/></filter>
-          </defs>
-          <rect x="8" y="8" width="544" height="336" rx="18" fill="url(#sg1)" filter="url(#sh)"/>
-          <!-- 共有中の図面 -->
-          <rect x="24" y="24" width="388" height="262" rx="10" fill="#f7f6f2"/>
-          <g fill="none" stroke="#1f2a3a" stroke-width="3">
-            <rect x="60" y="52" width="316" height="206"/>
-            <line x1="200" y1="52" x2="200" y2="150"/><line x1="60" y1="150" x2="250" y2="150"/>
-            <line x1="250" y1="150" x2="250" y2="258"/><line x1="300" y1="52" x2="300" y2="110"/>
-          </g>
-          <g fill="none" stroke="#1f2a3a" stroke-width="1" opacity=".35">
-            <line x1="270" y1="190" x2="356" y2="190"/><line x1="270" y1="214" x2="356" y2="214"/><rect x="88" y="176" width="54" height="34" rx="3"/>
-          </g>
-          <g font-family="Noto Sans JP, sans-serif" font-size="12" fill="#4f5a6b">
-            <text x="112" y="104">洋室</text><text x="236" y="86">WIC</text><text x="318" y="86">洋室</text><text x="140" y="236">LDK 20帖</text><text x="292" y="240">和室</text>
-          </g>
-          <!-- お客様の書き込み -->
-          <path d="M178 118c22-18 66-16 72 8 6 26-38 44-66 32-22-10-26-28-6-40" fill="none" stroke="#c63d2f" stroke-width="3.2" stroke-linecap="round"/>
-          <path d="M252 132 L274 124" stroke="#c63d2f" stroke-width="3" stroke-linecap="round"/><path d="M274 124 l-9 -2 m9 2 l-5 7" stroke="#c63d2f" stroke-width="3" stroke-linecap="round" fill="none"/>
-          <rect x="278" y="106" width="124" height="26" rx="6" fill="#c63d2f"/>
-          <text x="287" y="124" font-family="Noto Sans JP, sans-serif" font-size="12" font-weight="700" fill="#fff">この壁をなくしたい</text>
-          <rect x="182" y="164" width="58" height="18" rx="4" fill="#c63d2f"/><text x="190" y="177" font-family="Noto Sans JP, sans-serif" font-size="10.5" font-weight="700" fill="#fff">山田 様</text>
-          <!-- 参加者 -->
-          <rect x="424" y="24" width="112" height="76" rx="10" fill="url(#av1)"/><circle cx="480" cy="56" r="16" fill="#e9ecf1" opacity=".9"/><text x="474" y="61" font-family="Noto Sans JP, sans-serif" font-size="14" font-weight="700" fill="#2a3446">中</text>
-          <rect x="430" y="82" width="58" height="12" rx="3" fill="#0b0d11" opacity=".6"/><text x="434" y="91" font-family="Noto Sans JP, sans-serif" font-size="8" fill="#fff">中谷（担当）</text>
-          <rect x="424" y="110" width="112" height="76" rx="10" fill="url(#av2)" stroke="#3fbf7f" stroke-width="2"/><circle cx="480" cy="142" r="16" fill="#f1ebe4" opacity=".9"/><text x="474" y="147" font-family="Noto Sans JP, sans-serif" font-size="14" font-weight="700" fill="#4a3a2e">山</text>
-          <rect x="430" y="168" width="44" height="12" rx="3" fill="#0b0d11" opacity=".6"/><text x="434" y="177" font-family="Noto Sans JP, sans-serif" font-size="8" fill="#fff">山田 様</text>
-          <rect x="424" y="196" width="112" height="76" rx="10" fill="#202530"/><circle cx="480" cy="228" r="16" fill="#3a414e"/><text x="474" y="233" font-family="Noto Sans JP, sans-serif" font-size="14" font-weight="700" fill="#d7dbe2">花</text>
-          <!-- 操作の帯 -->
-          <rect x="176" y="298" width="208" height="34" rx="17" fill="#ffffff" opacity=".07"/>
-          <g fill="#2a2f38"><circle cx="198" cy="315" r="11"/><circle cx="228" cy="315" r="11"/><circle cx="258" cy="315" r="11" fill="#eceef1"/><circle cx="288" cy="315" r="11"/></g>
-          <rect x="306" y="304" width="62" height="22" rx="11" fill="#c63d2f"/>
-          <g fill="#cfd4dc"><rect x="194" y="309" width="8" height="11" rx="4"/><rect x="222" y="310" width="12" height="9" rx="2"/><rect x="282" y="309" width="12" height="11" rx="2"/></g>
-          <path d="M252 318l5-6 4 4 5-6" stroke="#0c0e11" stroke-width="2" fill="none"/>
-        </svg>
-      </figure>
+<!-- ===== ひと目で分かる大きな面 ===== -->
+<section class="h2-stage">
+  <div class="h2-field">
+    <header class="h2-top">
+      <a class="h2-brand" href="/">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 2v28M4 16h12M16 2a14 14 0 0 1 14 14v14H16z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="21" cy="24" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span>COMPASS MEET</span>
+      </a>
+      <nav class="h2-nav hidden" id="modesNav" aria-label="メニュー">
+        <a href="#todayPanel">今日の予定</a>
+        <a href="/records">打ち合わせ記録</a>
+        <a href="/visit">対面の録音</a>
+      </nav>
+      <div class="h2-who hidden" id="whoBox">
+        <span class="h2-name" id="whoName"></span>
+        <button class="h2-link hidden" id="pwLink" type="button">パスワード変更</button>
+        <button class="h2-link" id="logout" type="button">ログアウト</button>
+      </div>
+    </header>
+
+    <!-- 大きな文字と主役の画面（飾り） -->
+    <div class="h2-art" aria-hidden="true">
+      <span class="h2-word h2-word-a">TALK</span>
+      <span class="h2-word h2-word-b">BUILD</span>
+      <div class="h2-phone">
+        <div class="h2-screen">
+          <span class="h2-rec"><i></i>録音中</span>
+          <b>山田 太郎 様</b>
+          <small>初回接客 · 小牧店</small>
+          <div class="h2-gauge"><em>ELAPSED</em><strong>24:18</strong></div>
+          <div class="h2-chips"><span>送信 ✓</span><span>控え ✓</span></div>
+          <div class="h2-btns"><span>一時停止</span><span class="w">終了して保存</span></div>
+        </div>
+      </div>
+      <div class="h2-callout h2-callout-a"><b>机に置いて、押すだけ</b><small>対面の打ち合わせをそのまま録音</small><span class="ln"><i></i></span></div>
+      <div class="h2-callout h2-callout-b"><span class="ln"><i></i></span><b>ドライブと COMPASS へ</b><small>お客様のフォルダに仕分け</small></div>
     </div>
 
-    <div class="sheet">
-      <!-- 社員ログイン -->
-      <section id="loginBox" class="hidden">
-        <h2>社員ログイン</h2>
-        <p class="muted small" id="loginLead">打ち合わせのリンクを作るには、会社の Google アカウントでログインしてください。</p>
-        <a class="btn google hidden" id="googleBtn" href="/api/auth/google/start"><svg class="g" viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1S8.7 6 12 6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.5 14.6 2.5 12 2.5 6.8 2.5 2.6 6.7 2.6 12s4.2 9.5 9.4 9.5c5.4 0 9-3.8 9-9.2 0-.6-.1-1.1-.2-1.6H12Z"/></svg><span>Google でログイン</span></a>
-        <p class="muted small error-text hidden" id="googleErr" role="alert"></p>
-        <form id="loginForm" class="hidden" autocomplete="on">
-          <div class="field"><label for="loginId">社員 ID</label><input id="loginId" autocomplete="username" required></div>
-          <div class="field"><label for="loginPw">パスワード</label><input id="loginPw" type="password" autocomplete="current-password" required></div>
-          <button class="btn primary" type="submit">ログイン</button>
+    <!-- 下の白いパネル -->
+    <div class="h2-panels">
+      <div class="h2-card" id="todayPanel">
+        <div class="h2-card-head"><b>今日の予定</b><span id="todayDate"></span></div>
+        <div id="todayList" class="h2-today"><p class="muted small">ログインすると表示されます。</p></div>
+      </div>
+
+      <div class="h2-card h2-center">
+        <!-- ログイン前 -->
+        <section id="loginBox" class="hidden">
+          <b class="h2-lead-title">社員ログイン</b>
+          <p class="muted small" id="loginLead">打ち合わせのリンクを作るには、ログインしてください。</p>
+          <a class="btn google hidden" id="googleBtn" href="/api/auth/google/start"><svg class="g" viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1S8.7 6 12 6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.5 14.6 2.5 12 2.5 6.8 2.5 2.6 6.7 2.6 12s4.2 9.5 9.4 9.5c5.4 0 9-3.8 9-9.2 0-.6-.1-1.1-.2-1.6H12Z"/></svg><span>Google でログイン</span></a>
+          <p class="muted small error-text hidden" id="googleErr" role="alert"></p>
+          <form id="loginForm" class="hidden h2-login" autocomplete="on">
+            <label class="sr-only" for="loginId">社員 ID</label><input id="loginId" autocomplete="username" placeholder="社員 ID" required>
+            <label class="sr-only" for="loginPw">パスワード</label><input id="loginPw" type="password" autocomplete="current-password" placeholder="パスワード" required>
+            <button class="h2-cta" type="submit">ログイン</button>
+          </form>
           <p class="muted small error-text hidden" id="loginErr" role="alert"></p>
-        </form>
-      </section>
-
-      <!-- パスワードの変更（初回は必須） -->
-      <section id="pwBox" class="hidden">
-        <h2 id="pwTitle">パスワードを変更してください</h2>
-        <p class="muted small" id="pwLead">はじめてのログインです。お渡しした初期パスワードは、ご自身だけが知っているパスワードに変えてから使ってください。</p>
-        <form id="pwForm" autocomplete="on">
-          <div class="field"><label for="pwCur">いまのパスワード</label><input id="pwCur" type="password" autocomplete="current-password" required></div>
-          <div class="field"><label for="pwNew">新しいパスワード（10 文字以上・社員 ID を含まない）</label><input id="pwNew" type="password" autocomplete="new-password" minlength="10" required></div>
-          <div class="field"><label for="pwNew2">新しいパスワード（確認）</label><input id="pwNew2" type="password" autocomplete="new-password" minlength="10" required></div>
-          <div class="row"><button class="btn primary" type="submit">変更する</button><button class="btn ghost hidden" type="button" id="pwCancel">やめる</button></div>
-          <p class="muted small error-text hidden" id="pwErr" role="alert"></p>
-        </form>
-      </section>
-
-      <!-- 打ち合わせの作成 -->
-      <section id="createBox" class="hidden">
-        <h2>打ち合わせのリンクを作る</h2>
-        <div class="field"><label for="title">件名</label><input id="title" placeholder="例：間取りのご相談（2 回目）" maxlength="80" autocomplete="off"></div>
-        <div class="row two">
-          <div class="field"><label for="customerName">お客様名（記録用・お客様には表示されません）</label><input id="customerName" maxlength="60" autocomplete="off"></div>
-          <div class="field"><label for="customerId">顧客 ID（任意）</label><input id="customerId" maxlength="64" autocomplete="off" placeholder="COMPASS の顧客 ID"></div>
-        </div>
-        <div class="times">
-          <div class="field"><label for="date">日付</label><input id="date" type="date"></div>
-          <div class="field"><label for="start">開始</label><input id="start" type="time" step="900"></div>
-          <div class="field"><label for="end">終了</label><input id="end" type="time" step="900"></div>
-        </div>
-        <label class="check"><input type="checkbox" id="usePin"> 確認コード（6 桁）を付ける<small>リンクが他の人に転送されても入れないよう、コードを電話などで別にお伝えします</small></label>
-        <div class="row">
-          <button class="btn primary" id="create">リンクを作成</button>
-          <button class="btn" id="now">いますぐ開始</button>
-        </div>
-        <div class="result hidden" id="result">
-          <div class="muted">お客様にお送りするリンク</div>
-          <div class="linkbox"><span id="url"></span><button class="btn sm" id="copy">コピー</button></div>
-          <div class="pinbox hidden" id="pinBox">確認コード <b id="pinVal"></b><small>この画面でしか表示されません。お客様に別の方法でお伝えください。</small></div>
-          <div class="actions">
-            <a class="btn sm" id="gcal" target="_blank" rel="noopener">Google カレンダーに追加</a>
-            <button class="btn sm" id="ics">予定ファイル（.ics）</button>
-            <button class="btn sm" id="copyMemo">COMPASS の予定メモ用にコピー</button>
-            <a class="btn sm primary" id="open">担当者として開く</a>
+        </section>
+        <!-- ログイン後 -->
+        <section id="startBox" class="hidden">
+          <span class="h2-tagline">話すことから、<br>家づくりは始まる。</span>
+          <div class="h2-actions">
+            <a class="h2-cta" href="/visit"><i class="dot"></i>対面で録音</a>
+            <a class="h2-cta ghost" href="#createBox" id="toCreate">オンライン</a>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
-      <section id="listBox" class="hidden">
-        <h2>最近の打ち合わせ</h2>
-        <div id="list" class="mlist"><p class="muted small">まだありません。</p></div>
-      </section>
-
-      <section>
-        <h2>リンクを受け取った方</h2>
-        <div class="join">
-          <div class="field"><label for="code">リンク、または通話コード</label><input id="code" placeholder="abc-defg-hij" autocomplete="off"></div>
-          <button class="btn primary" id="join">参加</button>
-        </div>
-      </section>
+      <div class="h2-card h2-stat">
+        <div><strong id="statWeek">—</strong><span>今週の打ち合わせ</span></div>
+        <div class="h2-stat-foot"><span id="statPending">仕分け待ちの録音 —</span></div>
+      </div>
     </div>
-  </main>
+  </div>
+</section>
 
-  <section class="features">
-    <div><b>入室</b><p>お客様は担当者が許可するまで待合室でお待ちいただきます。知らない人が入ることはありません。</p></div>
-    <div><b>図面</b><p>画面共有やホワイトボードの図面に、お客様と担当者が同時に書き込めます。</p></div>
-    <div><b>記録</b><p>打ち合わせ中のメモ・決定事項・宿題を、あとから見返せます。</p></div>
+<!-- ===== 下：リンクの作成・一覧・パスワード ===== -->
+<main class="h2-sheet">
+  <section id="pwBox" class="h2-block hidden">
+    <h2 id="pwTitle">パスワードを変更してください</h2>
+    <p class="muted small" id="pwLead">はじめてのログインです。お渡しした初期パスワードは、ご自身だけが知っているパスワードに変えてから使ってください。</p>
+    <form id="pwForm" autocomplete="on">
+      <div class="field"><label for="pwCur">いまのパスワード</label><input id="pwCur" type="password" autocomplete="current-password" required></div>
+      <div class="field"><label for="pwNew">新しいパスワード（10 文字以上・社員 ID を含まない）</label><input id="pwNew" type="password" autocomplete="new-password" minlength="10" required></div>
+      <div class="field"><label for="pwNew2">新しいパスワード（確認）</label><input id="pwNew2" type="password" autocomplete="new-password" minlength="10" required></div>
+      <div class="row"><button class="btn primary" type="submit">変更する</button><button class="btn ghost hidden" type="button" id="pwCancel">やめる</button></div>
+      <p class="muted small error-text hidden" id="pwErr" role="alert"></p>
+    </form>
+  </section>
+
+  <section id="createBox" class="h2-block hidden">
+    <div class="h2-block-head"><span class="h2-eyebrow">ONLINE</span><h2>オンラインのリンクを作る</h2></div>
+    <div class="field"><label for="title">件名</label><input id="title" placeholder="例：間取りのご相談（2 回目）" maxlength="80" autocomplete="off"></div>
+    <div class="row two">
+      <div class="field"><label for="customerName">お客様名（記録用・お客様には表示されません）</label><input id="customerName" maxlength="60" autocomplete="off"></div>
+      <div class="field"><label for="customerId">顧客 ID（任意）</label><input id="customerId" maxlength="64" autocomplete="off" placeholder="COMPASS の顧客 ID"></div>
+    </div>
+    <div class="times">
+      <div class="field"><label for="date">日付</label><input id="date" type="date"></div>
+      <div class="field"><label for="start">開始</label><input id="start" type="time" step="900"></div>
+      <div class="field"><label for="end">終了</label><input id="end" type="time" step="900"></div>
+    </div>
+    <label class="check"><input type="checkbox" id="usePin"> 確認コード（6 桁）を付ける<small>リンクが他の人に転送されても入れないよう、コードを電話などで別にお伝えします</small></label>
+    <div class="row">
+      <button class="btn primary" id="create">リンクを作成</button>
+      <button class="btn" id="now">いますぐ開始</button>
+    </div>
+    <div class="result hidden" id="result">
+      <div class="muted">お客様にお送りするリンク</div>
+      <div class="linkbox"><span id="url"></span><button class="btn sm" id="copy">コピー</button></div>
+      <div class="pinbox hidden" id="pinBox">確認コード <b id="pinVal"></b><small>この画面でしか表示されません。お客様に別の方法でお伝えください。</small></div>
+      <div class="actions">
+        <a class="btn sm" id="gcal" target="_blank" rel="noopener">Google カレンダーに追加</a>
+        <button class="btn sm" id="ics">予定ファイル（.ics）</button>
+        <button class="btn sm" id="copyMemo">COMPASS の予定メモ用にコピー</button>
+        <a class="btn sm primary" id="open">担当者として開く</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="listBox" class="h2-block hidden">
+    <div class="h2-block-head"><span class="h2-eyebrow">RECENT</span><h2>最近の打ち合わせ</h2></div>
+    <div id="list" class="mlist"><p class="muted small">まだありません。</p></div>
+  </section>
+
+  <section class="h2-block">
+    <div class="h2-block-head"><span class="h2-eyebrow">GUEST</span><h2>リンクを受け取った方</h2></div>
+    <div class="join">
+      <div class="field"><label for="code">リンク、または通話コード</label><input id="code" placeholder="abc-defg-hij" autocomplete="off"></div>
+      <button class="btn primary" id="join">参加</button>
+    </div>
   </section>
 
   <footer class="foot-note">
-    <span>映像と音声は参加者の端末どうしで直接やりとりされ、録画はされません。</span>
+    <span>映像と音声は参加者の端末どうしで直接やりとりされます。録音は担当者の端末とドライブにだけ保存します。</span>
     <span>COMPASS Meet</span>
   </footer>
-</div>
+</main>
 
 <div class="toast hidden" id="toast" role="status"></div>
 <script src="/static/home.js"></script>

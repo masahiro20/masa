@@ -55,7 +55,7 @@ async function refreshMe() {
   $('pwLead').classList.remove('hidden');
   $('pwLink').classList.toggle('hidden', !(r.ok && r.body.staff.canChangePassword && !must));
   if (must) {
-    for (const id of ['loginBox', 'createBox', 'listBox']) $(id).classList.add('hidden');
+    for (const id of ['loginBox', 'createBox', 'listBox', 'startBox']) $(id).classList.add('hidden');
     $('whoBox').classList.remove('hidden');
     $('whoName').textContent = `${r.body.staff.name} さん`;
     return;
@@ -64,6 +64,7 @@ async function refreshMe() {
   $('loginBox').classList.toggle('hidden', signed);
   $('createBox').classList.toggle('hidden', !signed);
   $('listBox').classList.toggle('hidden', !signed);
+  $('startBox').classList.toggle('hidden', !signed);
   $('whoBox').classList.toggle('hidden', !signed);
   $('modesNav').classList.toggle('hidden', !signed);
   if (signed) { $('whoName').textContent = `${r.body.staff.name} さん`; loadList(); }
@@ -160,10 +161,42 @@ $('ics').onclick = () => {
 };
 
 const STATUS = { open: '予定・開催中', ended: '終了', expired: '期限切れ', gone: '削除済み' };
+// 今日の予定・今週の件数・仕分け待ちの録音（上の大きな面に出す）
+function renderToday(rooms) {
+  const box = $('todayList'); box.textContent = '';
+  const now = new Date(); const d0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()); const d1 = new Date(d0.getTime() + 86400e3);
+  const today = rooms.filter((m) => m.start && new Date(m.start) >= d0 && new Date(m.start) < d1 && m.status !== 'gone').sort((a, b) => new Date(a.start) - new Date(b.start));
+  if (!today.length) box.appendChild(el('p', 'muted small', '今日のオンラインの予定はありません。'));
+  for (const m of today.slice(0, 3)) {
+    const row = el('a', 'h2-row'); row.href = m.status === 'open' ? `/r/${m.id}` : `/records#${m.id}`;
+    row.appendChild(el('b', '', new Date(m.start).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })));
+    row.appendChild(el('span', '', m.customerName ? `${m.customerName} 様` : m.title));
+    row.appendChild(el('small', '', m.status === 'open' ? 'オンライン' : (STATUS[m.status] || '')));
+    box.appendChild(row);
+  }
+  // 今週（月曜から）
+  const monday = new Date(d0); monday.setDate(d0.getDate() - ((d0.getDay() + 6) % 7));
+  const week = rooms.filter((m) => new Date(m.start || m.createdAt) >= monday).length;
+  $('statWeek').textContent = String(week);
+}
+async function loadVisits() {
+  const r = await jfetch('/api/visits');
+  if (!r.ok) return;
+  const pending = r.body.visits.filter((v) => v.status === 'ready').length;
+  $('statPending').textContent = `仕分け待ちの録音 ${pending} 本`;
+}
+(function initToday() {
+  const d = new Date();
+  $('todayDate').textContent = `${d.getMonth() + 1}.${d.getDate()}`;
+})();
+$('toCreate').onclick = (e) => { e.preventDefault(); $('createBox').scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(() => $('title').focus({ preventScroll: true }), 400); };
+
 async function loadList() {
   const r = await jfetch('/api/rooms');
   const box = $('list');
   if (!r.ok) return;
+  renderToday(r.body.rooms);
+  loadVisits();
   box.textContent = '';
   if (!r.body.rooms.length) { box.appendChild(el('p', 'muted small', 'まだありません。')); return; }
   for (const m of r.body.rooms.slice(0, 8)) {

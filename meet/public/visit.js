@@ -168,9 +168,12 @@ async function stop() {
   if (sentOk) await rec.discardBackup(r.id);
   releaseWake();
   const list = $('vDoneList'); list.textContent = '';
-  const item = (okk, text, sub) => { const li = el('li', okk ? 'ok' : 'ng'); li.appendChild(el('b', '', text)); if (sub) li.appendChild(el('small', '', sub)); list.appendChild(li); };
-  item(true, `この端末に保存（${fmt(r.durationMs)}）`, `ブラウザの「ダウンロード」：${name}`);
-  item(sentOk, sentOk ? '受け渡し箱に送りました' : '受け渡し箱に送れませんでした', sentOk ? 'お客様のドライブのフォルダ（無ければ マイドライブ「録音」）と COMPASS に、局長の Claude が置きます' : '回線を確かめて、下の「最近の録音」から送り直せます。この端末の控えは残してあります');
+  const item = (cls, text, sub, state) => { const li = el('li', cls); const t = el('div', 'dl-t'); t.appendChild(el('b', '', text)); if (sub) t.appendChild(el('small', '', sub)); li.appendChild(t); if (state) li.appendChild(el('span', 'dl-s', state)); list.appendChild(li); };
+  $('vDoneSub').textContent = `${visit.customerName || ''}${kind ? ` · ${kind}` : ''} · ${fmt(r.durationMs)}`;
+  item('ok', 'この端末', `ダウンロードに保存：${name}`, '済');
+  item(sentOk ? 'ok' : 'ng', '受け渡し箱', sentOk ? '暗号化して一時保管' : '送れませんでした。下の「最近の録音」から送り直せます（この端末の控えは残してあります）', sentOk ? '済' : '未');
+  item('pend', 'ドライブ', 'お客様のフォルダ（無ければ マイドライブ「録音」）', '仕分け待ち');
+  item('pend', 'COMPASS', 'お客様の録音の置き場所', '仕分け待ち');
   $('vStop').disabled = false; $('vPause').disabled = false; $('vStart').disabled = false;
   visit = finished || visit;
   show('done');
