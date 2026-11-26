@@ -144,7 +144,8 @@ python -m engine post-x --dry-run --slugs …  # X投稿の文面確認（X自�
 - 11/26：スクールごとのページ（/tools/kyufukin-school/<id>/）と、分野・制度ごとのまとめ（ai・programming・webdesign・reskilling・senmon）を自動で作るようにした。
   schools.yaml にスクールを1校足すと、ページも1本増える。
 - 11/26：ブログに貼れる計算ツール（/embed/kyufukin-keisan/、noindex）と、貼り付け用のコード（出典リンクつき）を、計算ツールとスクール一覧に置いた。外部からのリンクを増やすため。
-- 毎週の改善ルーチン：施策Eでスクールを3〜5校足す。施策Fで、月初に「給付金・補助金の最新情報」のテーマを在庫に入れる。
+- 毎日のスクール追加ルーチン（SCHOOL_PLAYBOOK.md、候補は data/school_candidates.yaml）が、公式ページで確かめたスクールを足す。
+- 毎週の改善ルーチン：施策Eで古くなった確認日の見直し、施策Fで月初に「給付金・補助金の最新情報」のテーマを在庫に入れる。
 
 ## 7. 残っている作業（ここから）
 

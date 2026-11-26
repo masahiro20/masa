@@ -78,14 +78,7 @@ config/schools.yaml（/tools/kyufukin-school/ に表示）を点検する。
   申込先が対象講座でない案件（例：対象外のコースの広告）は入れない。
 - 一覧を変えたら、config/site.yaml の kyufukin-school の `updated` を今日の日付にする。
 - 公式ページに書かれていないこと（口コミサイト・比較サイトの情報）は載せない。
-- **新しいスクールを3〜5校足す**（掲載校を増やすほど、「〇〇 給付金」で受けられるページが自動で増える）。
-  - 候補：Winスクール、KENスクール、DMM WEBCAMP、Aidemy Premium、WEBCOACH、テックエリート、たのまな、Tech0、
-    DIVE INTO CODE（専門実践の指定期間の更新を確かめる）、そのほか config/programs.yaml の案件のスクール
-  - 公式ページ（給付金・補助金・リスキリング・料金のページ）を開き、「教育訓練給付金（一般・特定一般・専門実践）の対象」か
-    「経済産業省 リスキリングを通じたキャリアアップ支援事業の対象」と書かれていれば、schools.yaml の書き方どおりに足す
-    （id・short・name・official・fields・format・summary・subsidies の system・course・source・checked・note）。
-  - 開けない、書かれていない、指定期間が切れている、新規受付を終えている場合は足さず、schools.yaml 先頭のコメントに理由を書く。
-  - 公式ページを開くのは1回の実行で10ページまで。
+- 新しいスクールの追加は、毎日のスクール追加ルーチン（SCHOOL_PLAYBOOK.md）が行う。ここでは足さない。
 
 ## 5.6 施策F：毎月の「給付金・補助金の最新情報」（その月の最初の月曜だけ）
 
