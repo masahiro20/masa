@@ -1,0 +1,18 @@
+{# ブログに貼れる計算ツールのコード。外部サイトからのリンク（被リンク）を増やすため、iframe の外に出典リンクを付ける #}
+<section class="embed-box" aria-labelledby="embed-title">
+  <h2 id="embed-title">この計算ツールを、ブログやサイトに貼る（無料）</h2>
+  <p>下のコードをブログの記事に貼ると、教育訓練給付金の計算ツールがそのまま表示されます。出典のリンクは消さずにお使いください。</p>
+  <textarea id="embed-code" readonly rows="4" aria-label="貼り付け用のコード">&lt;iframe src="{{ base_url }}/embed/kyufukin-keisan/" width="100%" height="420" style="border:1px solid #d8d2c6;max-width:640px" loading="lazy" title="教育訓練給付金シミュレーター"&gt;&lt;/iframe&gt;
+&lt;p style="font-size:12px;margin:4px 0 0"&gt;出典：&lt;a href="{{ base_url }}/tools/kyufukin-keisan/"&gt;教育訓練給付金シミュレーター（スキルコンパス）&lt;/a&gt;&lt;/p&gt;</textarea>
+  <p class="embed-actions"><button type="button" id="embed-copy">コードをコピーする</button><a href="{{ base_url }}/embed/kyufukin-keisan/" target="_blank" rel="noopener">表示を確かめる</a></p>
+</section>
+<script>
+(function () {
+  var b = document.getElementById('embed-copy'), t = document.getElementById('embed-code'); if (!b) { return; }
+  b.addEventListener('click', function () {
+    t.select();
+    var done = function () { b.textContent = 'コピーしました'; setTimeout(function () { b.textContent = 'コードをコピーする'; }, 2000); };
+    if (navigator.clipboard) { navigator.clipboard.writeText(t.value).then(done, function () { document.execCommand('copy'); done(); }); } else { document.execCommand('copy'); done(); }
+  });
+})();
+</script>

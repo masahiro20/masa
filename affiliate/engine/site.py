@@ -466,6 +466,10 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         if t.get("schools"):
             urls += _school_pages(env, write, common, t, url, base)
 
+    # ブログに貼れるツール（/embed/<slug>/）。検索には出さない（noindex・サイトマップに入れない）
+    for emb in sorted((TEMPLATES_DIR / "embed").glob("*.html")):
+        write(f"embed/{emb.stem}/index.html", env.get_template(f"embed/{emb.name}").render(**common))
+
     for page_file in sorted(pages_dir.glob("*.md")):
         page = _parse_page(page_file.read_text(encoding="utf-8"), cfg)
         slug = page_file.stem

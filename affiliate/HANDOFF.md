@@ -141,6 +141,10 @@ python -m engine post-x --dry-run --slugs …  # X投稿の文面確認（X自�
 - 審査中のインターネット・アカデミー、デジハリ、東京デザインプレックス、SHElikes などが承認されたら `program` を入れる。
 - `engine check` が schools.yaml の抜け（出典URL・確認日・hold の案件）を止める。毎週の改善ルーチンが施策Eで点検する。
 - あわせて public/llms.txt（AI検索向けのサイト案内）を毎回生成している。
+- 11/26：スクールごとのページ（/tools/kyufukin-school/<id>/）と、分野・制度ごとのまとめ（ai・programming・webdesign・reskilling・senmon）を自動で作るようにした。
+  schools.yaml にスクールを1校足すと、ページも1本増える。
+- 11/26：ブログに貼れる計算ツール（/embed/kyufukin-keisan/、noindex）と、貼り付け用のコード（出典リンクつき）を、計算ツールとスクール一覧に置いた。外部からのリンクを増やすため。
+- 毎週の改善ルーチン：施策Eでスクールを3〜5校足す。施策Fで、月初に「給付金・補助金の最新情報」のテーマを在庫に入れる。
 
 ## 7. 残っている作業（ここから）
 
