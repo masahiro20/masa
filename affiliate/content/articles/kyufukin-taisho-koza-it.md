@@ -16,9 +16,10 @@ programs:
 - school-kyufukin
 - school-general
 published: '2026-11-05'
-updated: '2026-11-05'
+updated: '2026-11-26'
 origin: ai
 editor_score: null
+voice: 2
 sources:
 - title: 教育訓練給付金｜厚生労働省
   url: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/jinzaikaihatsu/kyouiku.html
@@ -68,7 +69,7 @@ sources:
 | 特定一般教育訓練 | 教育訓練経費の40%（上限20万円）を修了後に支給。条件を満たせば50% | 必要 |
 | 一般教育訓練 | 教育訓練経費の20%（上限10万円）を修了後に支給 | 不要 |
 
-**給付率の高い講座ほど、受講前の手続きが必要になる**点に注意しましょう。専門実践教育訓練や特定一般教育訓練では、受講を始める前に受給資格確認の手続きが必要です。手続きの詳細は {{link:kyufukin-jukyu-shikaku-kakuninhyo|教育訓練給付金の受給資格確認票はどこでもらえる？}} で整理しています。
+**給付率の高い講座ほど、受講前の手続きが必要になる**点に注意しましょう。専門実践教育訓練や特定一般教育訓練では、受講を始める前に受給資格確認の手続きが必要です。手続きの詳細は {{link:kyufukin-jukyu-shikaku-kakuninhyo|教育訓練給付金の受給資格確認票はどこでもらえる？}} で整理しています。表の数字が多く見えても、まずは「後払いである」「受講前の手続きが要る講座がある」の2点だけ覚えておけば十分です。
 
 ## 教育訓練講座検索システムでの探し方
 
