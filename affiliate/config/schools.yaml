@@ -18,7 +18,8 @@
 #
 # 2026-11-26 時点で公式ページから確かめられず、載せていないもの：
 #   byTech（給付金・補助金の記載なし）、デジハク（個人の申込は給付金・助成金の対象外と記載）、ポテパンキャンプ（受講料無料のため対象外）、
-#   DIVE INTO CODE（専門実践の指定期間が2026-09-30まで。更新の記載を確かめてから載せる）、
+#   DIVE INTO CODE（専門実践の指定期間が2026-09-30まで。更新の記載を確かめてから載せる）、AVILEN（専門実践の対象外と明記）、
+#   デイトラ（リスキリング事業の採択がトップの実績欄だけで、対象講座が特定できない）、NexSeed（給付金の記載なし）、
 #   TechAcademy（リスキリング事業の支援を「提供してまいりました」と過去形の告知。申込停止の可能性）、
 #   WEBCOACH・テックエリート・DMM WEBCAMP・Winスクール・KENスクール・Tech0（公式ページを開けず未確認）
 
@@ -227,3 +228,31 @@ schools:
         source: https://ninjacode.work/
         checked: '2026-11-26'
         note: 今働いていて（正社員・契約・派遣・パートなど）、転職を目指す人が対象。
+
+  - id: techis
+    short: TECH I.S.
+    name: TECH I.S.（テックアイエス）
+    official: https://techis.jp/
+    fields: [programming, data, ai]
+    format: [online, school]
+    summary: Webエンジニアとデータサイエンティストのコースがあるプログラミングスクール。オンライン校と教室で学べる。
+    subsidies:
+      - system: senmon
+        course: 長期PROスキルコース（686,400円）、データサイエンティストコース（987,800円）
+        source: https://techis.jp/benefit/
+        checked: '2026-11-26'
+        note: 経済産業省の「第四次産業革命スキル習得講座」に認定された講座。初めて使う人は雇用保険の加入期間が通算2年以上（在職中か、離職から1年以内）。
+
+  - id: skillupai
+    short: スキルアップAI
+    name: スキルアップAI（E資格対応のAI講座）
+    official: https://skillupai.com/personal/
+    fields: [ai, data]
+    format: [online]
+    summary: 機械学習・ディープラーニング・データ分析・プロンプトエンジニアリングを学べるオンライン講座。E資格に対応。
+    subsidies:
+      - system: senmon
+        course: 0から学ぶ「機械学習エンジニア」コース（737,000円）、Python未経験からはじめる「機械学習エンジニア」コース、気象データアナリストコース、プロンプトエンジニアコース など
+        source: https://skillupai.com/personal/subsidy-seminar/
+        checked: '2026-11-26'
+        note: 受講開始前にハローワークで受給資格の確認が必要。受講期ごとに対象の期限があるコースもある。経産省のキャリアアップ支援事業は、新規の申込受付を終えたと告知されている。

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>教育訓練給付金シミュレーター（ブログ貼り付け用）｜{{ site.name }}</title>
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="{{ base_url }}/tools/kyufukin-keisan/">
+<style>
+  :root { --ink: #1b1b1b; --ink-2: #4b4b4b; --ink-3: #66625b; --rule: #d8d2c6; --accent: #b3432b; --good: #2f5646; --paper: #f6f4ef; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 14px 16px 10px; font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif; color: var(--ink); background: #fff; font-size: 14px; line-height: 1.7; }
+  h1 { margin: 0 0 10px; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 17px; }
+  .row { margin: 0 0 10px; }
+  .row b { display: block; font-size: 12.5px; color: var(--ink-3); margin-bottom: 4px; }
+  .seg { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--ink); }
+  .seg label { cursor: pointer; border-left: 1px solid var(--ink); }
+  .seg label:first-child { border-left: 0; }
+  .seg input { position: absolute; opacity: 0; }
+  .seg span { display: block; padding: 7px 4px; text-align: center; font-size: 13px; }
+  .seg input:checked + span { background: var(--ink); color: #fff; font-weight: 700; }
+  input[type=number] { width: 100%; font: inherit; font-size: 16px; padding: 7px 9px; border: 1px solid var(--ink-3); }
+  .out { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 12px; background: var(--paper); margin: 4px 0 6px; }
+  .out strong { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 24px; color: var(--accent); }
+  .note { font-size: 11.5px; color: var(--ink-3); margin: 0 0 8px; }
+  .credit { margin: 0; padding-top: 8px; border-top: 1px solid var(--rule); font-size: 12px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .credit a { color: var(--ink); }
+</style>
+</head>
+<body>
+<h1>教育訓練給付金シミュレーター</h1>
+<form id="f" onsubmit="return false">
+  <div class="row"><b>講座の種類</b>
+    <div class="seg">
+      <label><input type="radio" name="k" value="ippan"><span>一般</span></label>
+      <label><input type="radio" name="k" value="tokutei"><span>特定一般</span></label>
+      <label><input type="radio" name="k" value="senmon" checked><span>専門実践</span></label>
+    </div>
+  </div>
+  <div class="row"><b>受講にかかる費用（入学料＋受講料・円）</b><input type="number" id="c" value="500000" min="0" step="10000" inputmode="numeric"></div>
+</form>
+<div class="out"><span>もらえる額の目安（最大）</span><strong id="o">—</strong></div>
+<p class="note" id="n"></p>
+<p class="credit"><span>厚生労働省の案内にもとづく目安です</span><a href="{{ base_url }}/tools/kyufukin-keisan/" target="_blank" rel="noopener">くわしく計算する（{{ site.name }}）</a></p>
+<script>
+(function () {
+  var f = document.getElementById('f'), yen = function (n) { return Math.round(n).toLocaleString('ja-JP') + '円'; };
+  var NOTE = {ippan: '受講費の20%（上限10万円）。', tokutei: '受講費の40%（上限20万円）＋資格取得・就職で10%（上限5万円）。', senmon: '1年分の目安：受講費の50%（年40万円まで）＋就職で20%＋賃金が5%以上上がれば10%（年64万円まで）。'};
+  function calc() {
+    var k = (f.querySelector('input[name=k]:checked') || {}).value, c = Math.max(0, Number(document.getElementById('c').value) || 0), v = 0;
+    if (k === 'ippan') { v = Math.min(c * 0.2, 100000); if (v <= 4000) { v = 0; } }
+    if (k === 'tokutei') { v = Math.min(c * 0.4, 200000) + Math.min(c * 0.1, 50000); }
+    if (k === 'senmon') { v = Math.min(c * 0.5, 400000) + Math.min(c * 0.2, 160000) + Math.min(c * 0.1, 80000); }
+    document.getElementById('o').textContent = yen(v);
+    document.getElementById('n').textContent = NOTE[k] + '受け取れるかは雇用保険の加入期間などの条件があり、ハローワークで確認できます。';
+  }
+  f.addEventListener('input', calc); f.addEventListener('change', calc); calc();
+})();
+</script>
+</body>
+</html>
