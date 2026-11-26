@@ -13,9 +13,11 @@
 # ■ 分野 fields: programming / ai / webdesign / marketing / data
 # ■ 受講形式 format: online / school（通学） / abroad（海外留学）。公式ページで確かめられないときは空にする
 #
-# 2026-11-25 時点で公式ページから確かめられず、載せていないもの：
-#   byTech（給付金・補助金の記載なし）、デジハク（個人の申込は給付金・助成金の対象外と記載）、
-#   WEBCOACH・テックエリート・DMM WEBCAMP（公式ページを開けず未確認）
+# 2026-11-26 時点で公式ページから確かめられず、載せていないもの：
+#   byTech（給付金・補助金の記載なし）、デジハク（個人の申込は給付金・助成金の対象外と記載）、ポテパンキャンプ（受講料無料のため対象外）、
+#   DIVE INTO CODE（専門実践の指定期間が2026-09-30まで。更新の記載を確かめてから載せる）、
+#   TechAcademy（リスキリング事業の支援を「提供してまいりました」と過去形の告知。申込停止の可能性）、
+#   WEBCOACH・テックエリート・DMM WEBCAMP・Winスクール・KENスクール・Tech0（公式ページを開けず未確認）
 
 schools:
   - id: kredo
@@ -118,17 +120,22 @@ schools:
         note: 受講を始める前に申し出が必要。始めたあとのコース変更はできない。
 
   - id: dhw-studio
-    name: デジタルハリウッドSTUDIO
+    name: デジタルハリウッド（STUDIO・本校）
     official: https://school.dhw.co.jp/
     fields: [webdesign]
     format: [school]
-    summary: Webデザイン・グラフィック・動画・UI/UXなどを学ぶスクール。
+    summary: Webデザイン・グラフィック・動画・3DCG・UI/UXなどを学ぶスクール。
     subsidies:
+      - system: senmon
+        course: Webデザイナー専攻（572,000円）、本科UI/UXデザイン専攻、専科 動画クリエイター専攻、グラフィックデザインマスター講座 など
+        source: https://school.dhw.co.jp/prospectus/reskillprogram/
+        checked: '2026-11-26'
+        note: 経済産業省の「第四次産業革命スキル習得講座」に認定された講座。受講開始前にハローワークで手続きが必要。
       - system: reskilling
         course: Webデザイナー専攻（572,000円）、動画クリエイター専攻、グラフィックデザインマスター講座、本科UI/UXデザイン専攻 など
         source: https://school.dhw.co.jp/prospectus/careerup_reskilling.html
         checked: '2026-11-25'
-        note: 使える校舎は関東・関西の一部。2027年3月31日までに修了する場合に限られ、コースごとに開始の期限がある。
+        note: 使える校舎は関東・関西の一部。2027年3月31日までに修了する場合に限られ、コースごとに開始の期限がある（すでに募集を終えたコースもある）。
 
   - id: shelikes
     name: SHElikes（レギュラープラン）
@@ -142,3 +149,65 @@ schools:
         source: https://docs.channel.io/shelikes/ja/articles/%E3%83%AA%E3%82%B9%E3%82%AD%E3%83%AA%E3%83%B3%E3%82%B0%E3%82%92%E9%80%9A%E3%81%98%E3%81%9F%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%82%A2%E3%83%83%E3%83%97%E6%94%AF%E6%8F%B4%E4%BA%8B%E6%A5%AD%E8%B2%BB%E8%A3%9C%E5%8A%A9%E9%87%91%E3%81%A8%E3%81%AF-fff9d8f9
         checked: '2026-11-25'
         note: 雇用契約がある人で、転職を目指す人が対象。無職・専業主婦・フリーランスは対象外。修了条件を満たさないと、先に受けた還元の返金が必要。
+
+  - id: samurai
+    name: 侍エンジニア（SAMURAI ENGINEER）
+    official: https://sejuku.net/
+    fields: [programming, ai, data, webdesign]
+    format: [online]
+    summary: マンツーマン指導のオンラインスクール。AWS・Java・PHP・Python・AI・データサイエンス・Webデザインのコースがある。
+    subsidies:
+      - system: reskilling
+        course: Webエンジニア転職コース、クラウドエンジニア転職コース（AWS）、AIアプリ、データサイエンス、Webデザイナー転職、生成AI実践 など
+        source: https://lp.sejuku.net/careerup-benefits/
+        checked: '2026-11-26'
+        note: 今働いていて、転職を目指す人が対象。修了で受講料（税抜）の50%、紹介を通じた転職後1年続けばさらに20%。
+      - system: senmon
+        course: Webエンジニア実践コース、クラウドエンジニア実践コース（AWS）、AIデータサイエンスコース、Webデザイナー実践コース など
+        source: https://lp.sejuku.net/benefits70/
+        checked: '2026-11-26'
+        note: 受講開始の2週間前までに申請が必要。
+
+  - id: human-academy
+    name: ヒューマンアカデミー
+    official: https://haa.athuman.com/
+    fields: [ai, programming, webdesign, marketing]
+    format: [online, school]
+    summary: 全国に校舎がある社会人向けスクール。AI・Webエンジニア・Webデザインなどの講座がある。
+    subsidies:
+      - system: reskilling
+        course: AI総合講座（440,000円）、生成AI・ノーコード講座（385,000円）、AIスタンダード講座（220,000円）、Webエンジニア総合コース（558,196円）
+        source: https://haa.athuman.com/reskilling/careerup/
+        checked: '2026-11-26'
+        note: 雇用契約があり、転職を目指す人が対象。転職による追加の20%は、ヒューマンアカデミーの支援を通じた転職に限られる。
+      - system: ippan
+        course: AI×Webデザイナー総合講座、AI×Web動画クリエイター総合講座
+        source: https://haa.athuman.com/kyufu/
+        checked: '2026-11-26'
+        note: 初めて使う人は雇用保険の加入期間が1年以上。
+
+  - id: datamix
+    name: データミックス
+    official: https://datamix.co.jp/
+    fields: [data, ai]
+    format: [online, school]
+    summary: データサイエンス・生成AI・機械学習を、平日夜と土曜に学べる社会人向けスクール。
+    subsidies:
+      - system: senmon
+        course: データサイエンティスト育成講座、生成AI・機械学習エンジニア育成講座、プロダクト・データアナリスト育成講座 など
+        source: https://datamix.co.jp/benefits/
+        checked: '2026-11-26'
+        note: 受講開始前にハローワークで受給資格の確認が必要。
+
+  - id: ninjacode
+    name: 忍者CODE（転職支援プラン）
+    official: https://ninjacode.work/
+    fields: [programming, webdesign]
+    format: [online]
+    summary: プログラミング・Web制作・デザインを学べるオンラインスクール。
+    subsidies:
+      - system: reskilling
+        course: 転職支援プラン（448,000円〜）。独学・副業・フリーランスのプランは対象外
+        source: https://ninjacode.work/
+        checked: '2026-11-26'
+        note: 今働いていて（正社員・契約・派遣・パートなど）、転職を目指す人が対象。
