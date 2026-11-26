@@ -18,14 +18,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: canva 講座 オンライン
-  intent: transactional
-  category: fukugyo
-  program: learning-canva
-  score: 15000.0
-  status: queued
-  boost: 2.0
-  source: google-suggest
 - keyword: 教育訓練給付金 不支給
   intent: informational
   category: school
@@ -1017,6 +1009,15 @@ keywords:
   score: 16000.0
   status: published
   slug: wordpress-portfolio-tsukurikata-mikeiken
+- keyword: canva 講座 オンライン
+  intent: transactional
+  category: fukugyo
+  program: learning-canva
+  score: 15000.0
+  status: published
+  boost: 2.0
+  source: google-suggest
+  slug: canva-kouza-online
 - keyword: 会計ソフト 個人事業主 初心者 おすすめ
   intent: transactional
   category: tools
