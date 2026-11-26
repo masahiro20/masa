@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% macro badge(sub) %}<span class="sys-badge sys-{{ sub.system }}">{{ sub.info.short }}</span>{% endmacro %}
+{% block content %}
+<div class="wrap wide sc">
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>/</span><a href="{{ list_url }}">給付金・補助金が使えるITスクール一覧</a><span>/</span>{{ theme.short }}</nav>
+  <header class="tool-hero">
+    <p class="tool-hero-kicker">給付金・補助金が使えるスクール</p>
+    <h1>{{ theme.title }}</h1>
+    <p class="tool-hero-intro">{{ theme.intro }}各スクールのページで、対象の講座・条件・戻る額の目安を確かめられます。</p>
+    <p class="tool-hero-meta">{% if members | selectattr("ad") | list %}<span class="pr-tag">PR</span>一部に広告を含みます・{% endif %}<a href="{{ list_url }}#criteria">載せる基準</a></p>
+  </header>
+  <div class="school-list">{% for sc in members %}
+    <article class="school-card">
+      <header class="school-head">
+        <h2 class="school-name"><a href="{{ list_url }}{{ sc.id }}/">{{ sc.name }}</a></h2>
+        <p class="school-tags">{% for f in sc.field_names %}<span>{{ f }}</span>{% endfor %}{% for f in sc.format_names %}<span class="is-format">{{ f }}</span>{% endfor %}</p>
+      </header>
+      <p class="school-badges">{% for sub in sc.subsidies %}{{ badge(sub) }}{% endfor %}</p>
+      {% if sc.summary %}<p class="school-summary">{{ sc.summary }}</p>{% endif %}
+      <p class="theme-more"><a href="{{ list_url }}{{ sc.id }}/">{{ sc.short }}の対象講座と条件を見る →</a></p>
+      <div class="school-cta">{% if sc.ad %}<span class="cta-label">PR</span><a class="cta-button" href="{{ sc.ad.url }}" rel="sponsored noopener" referrerpolicy="no-referrer-when-downgrade" target="_blank">{{ sc.ad.cta }}</a>{% if sc.ad.pixel %}<img class="aff-pixel" src="{{ sc.ad.pixel }}" width="1" height="1" alt="">{% endif %}{% else %}<a class="school-official" href="{{ sc.official }}" target="_blank" rel="noopener">公式サイトで講座を見る</a>{% endif %}</div>
+    </article>{% endfor %}
+  </div>
+  <section class="tool-section">
+    <a class="tool-link" href="{{ list_url }}"><span class="tool-link-label">無料ツール</span><span class="tool-link-title">3つの質問で、自分が使えるスクールを{{ tool.schools|length }}校から探す（受講料から戻る額もわかる）</span></a>
+  </section>
+</div>
+{% endblock %}

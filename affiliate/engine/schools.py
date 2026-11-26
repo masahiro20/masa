@@ -94,6 +94,7 @@ def enrich(schools: list[dict], programs: dict[str, dict], today: date | None = 
             ad = {"url": program["url"], "pixel": program.get("pixel") or "", "cta": s.get("cta") or program.get("cta") or "公式サイトで詳しく見る"}
         out.append({
             **s,
+            "short": s.get("short") or s["name"],
             "subsidies": subs,
             "systems": sorted({x["system"] for x in subs}),
             "field_names": [FIELDS[f] for f in s.get("fields") or []],
@@ -104,3 +105,45 @@ def enrich(schools: list[dict], programs: dict[str, dict], today: date | None = 
     # 広告のあるスクールを先に出すのではなく、制度の数と名前の順で並べる（中立な一覧にする）
     out.sort(key=lambda x: (-len(x["systems"]), x["name"]))
     return out
+
+
+# 制度ごとの「最大でいくら戻るか」の言い方（スクールのページの見出し・FAQ に使う。出典は一覧ページの「2つの制度のちがい」）
+MAX_TEXT = {
+    "ippan": "受講費の20%（上限10万円）",
+    "tokutei": "受講費の40%（上限20万円）、資格取得・就職でさらに10%（上限5万円）",
+    "senmon": "受講費の50%（年間上限40万円）、修了後1年以内の就職でさらに20%、賃金が5%以上上がればさらに10%。合わせて最大80%（年間上限64万円）",
+    "reskilling": "修了で受講費（税抜）の1/2（上限40万円）、転職して1年続けばさらに1/5（上限16万円）。合わせて最大70%（56万円）",
+}
+BEFORE_TEXT = {
+    "ippan": "受講を始める前に、ハローワークで受給資格の確認をしておくと安心です。申請は修了の翌日から1か月以内に本人がハローワークで行います。",
+    "tokutei": "受講開始の前に、ハローワークで訓練前キャリアコンサルティングを受けるなどの手続きが必要です。",
+    "senmon": "受講開始の前に、ハローワークで訓練前キャリアコンサルティングと受給資格の確認の手続きが必要です。期限はスクールの案内も確かめてください。",
+    "reskilling": "スクール（補助事業者）の無料カウンセリングで、雇用の形や転職の予定から対象になるかを確かめてもらいます。",
+}
+
+
+def school_faq(sc: dict) -> list[dict]:
+    """スクールのページのよくある質問。公式ページで確かめたデータと、制度の決まりだけから作る（推測は書かない）。"""
+    name = sc["short"]
+    subs = sc["subsidies"]
+    systems = [x["info"]["name"] for x in subs]
+    faq = [{
+        "q": f"{name}は給付金・補助金の対象ですか？",
+        "a": f"{name}の公式ページには、{'と'.join(systems)}の対象と書かれています（{max(str(x['checked']) for x in subs)} 確認）。"
+             "対象は講座ごとに決まるため、受けたい講座が対象かを申し込む前に確かめてください。",
+    }]
+    for x in subs:
+        faq.append({
+            "q": f"{name}で{x['info']['short']}の対象になる講座は？",
+            "a": f"公式ページでは、{x['course']}が対象と書かれています。" + (x.get("note") or ""),
+        })
+    faq.append({
+        "q": f"{name}で給付金・補助金を使うと、いくら戻りますか？",
+        "a": "制度の決まりでは、" + "。".join(f"{x['info']['short']}は{MAX_TEXT[x['system']]}" for x in subs)
+             + "です。実際の額は受講料と条件で変わります。",
+    })
+    faq.append({
+        "q": "申し込む前に、何をしておけばいいですか？",
+        "a": " ".join(dict.fromkeys(BEFORE_TEXT[x["system"]] for x in subs)),
+    })
+    return faq

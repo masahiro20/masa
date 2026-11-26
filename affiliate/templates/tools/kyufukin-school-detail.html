@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% macro badge(sub) %}<span class="sys-badge sys-{{ sub.system }}">{{ sub.info.short }}</span>{% endmacro %}
+{% macro cta(sc) %}{% if sc.ad %}<span class="cta-label">PR</span><a class="cta-button" href="{{ sc.ad.url }}" rel="sponsored noopener" referrerpolicy="no-referrer-when-downgrade" target="_blank">{{ sc.ad.cta }}</a>{% if sc.ad.pixel %}<img class="aff-pixel" src="{{ sc.ad.pixel }}" width="1" height="1" alt="">{% endif %}{% else %}<a class="school-official" href="{{ sc.official }}" target="_blank" rel="noopener">{{ sc.short }}の公式サイトで講座を見る</a>{% endif %}{% endmacro %}
+{% block content %}
+<div class="wrap sc sc-detail">
+  <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>/</span><a href="{{ list_url }}">給付金・補助金が使えるITスクール一覧</a><span>/</span>{{ sc.short }}</nav>
+  <header class="tool-hero">
+    <p class="tool-hero-kicker">給付金・補助金が使えるスクール</p>
+    <h1>{{ page_title }}</h1>
+    <p class="tool-hero-intro">{% if sc.summary %}{{ sc.summary }}{% endif %}このページでは、{{ sc.short }}で使える給付金・補助金を、公式ページに書かれていることだけで整理しています。</p>
+    <p class="tool-hero-meta">最終確認 {{ sc.checked_last | replace('-', '.') }}{% if sc.ad %}・<span class="pr-tag">PR</span>広告を含みます{% endif %}</p>
+  </header>
+
+  <section class="answer" aria-labelledby="answer-title">
+    <h2 id="answer-title" class="answer-title">結論：{{ sc.short }}で使える制度</h2>
+    <ul class="answer-list">{% for sub in sc.subsidies %}
+      <li>{{ badge(sub) }}<span>{{ sub.info.name }}（{{ sub.info.org }}）</span></li>{% endfor %}
+    </ul>
+    <p class="school-tags">{% for f in sc.field_names %}<span>{{ f }}</span>{% endfor %}{% for f in sc.format_names %}<span class="is-format">{{ f }}</span>{% endfor %}</p>
+  </section>
+
+  <section class="calc" aria-labelledby="calc-title">
+    <h2 id="calc-title" class="calc-title">受講料から、戻る額の目安を計算する</h2>
+    <div class="cost-row">
+      <div class="presets" role="group" aria-label="よくある受講料">{% for v in [300000, 500000, 800000] %}<button type="button" data-cost="{{ v }}">{{ (v // 10000) }}万円</button>{% endfor %}</div>
+      <label class="finder-yen"><input type="number" id="cost" min="0" step="10000" placeholder="金額を入力" inputmode="numeric"><span>円（税込）</span></label>
+    </div>
+    <ul class="calc-out" id="calc-out">{% for sub in sc.subsidies %}
+      <li data-system="{{ sub.system }}">{{ badge(sub) }}<span class="calc-num">—</span></li>{% endfor %}
+    </ul>
+    <p class="tool-hint">条件をすべて満たした場合の目安です（専門実践は1年分、リスキリング補助金は税抜の受講料で計算）。</p>
+  </section>
+
+  <div class="detail-cta">{{ cta(sc) }}</div>
+
+  <section class="tool-section">
+    <h2 class="section-title"><span>対象の講座と条件（公式ページより）</span></h2>
+    <ul class="school-subs detail-subs">{% for sub in sc.subsidies %}
+      <li>
+        <p class="school-sys">{{ badge(sub) }}<span class="sys-org">{{ sub.info.org }}</span></p>
+        <p class="school-course">{{ sub.course }}</p>
+        {% if sub.note %}<p class="school-note">{{ sub.note }}</p>{% endif %}
+        <p class="school-src">{% if sub.stale %}<span class="is-stale">再確認中</span>{% endif %}<a href="{{ sub.source }}" target="_blank" rel="noopener nofollow">公式ページの記載を見る</a>（{{ sub.checked | replace('-', '.') }} 確認）</p>
+      </li>{% endfor %}
+    </ul>
+  </section>
+
+  <section class="tool-section">
+    <h2 class="section-title"><span>よくある質問</span></h2>
+    <div class="faq">{% for q in faq %}<details{% if loop.first %} open{% endif %}><summary>{{ q.q }}</summary><p>{{ q.a }}</p></details>{% endfor %}</div>
+  </section>
+
+  <div class="detail-cta">{{ cta(sc) }}</div>
+
+  {% if same %}<section class="tool-section">
+    <h2 class="section-title"><span>同じ分野で給付金・補助金が使えるスクール</span></h2>
+    <ul class="same-list">{% for o in same %}<li><a href="{{ list_url }}{{ o.id }}/"><span class="same-name">{{ o.short }}</span><span class="same-badges">{% for sub in o.subsidies %}{{ badge(sub) }}{% endfor %}</span></a></li>{% endfor %}</ul>
+  </section>{% endif %}
+
+  <section class="tool-section">
+    <a class="tool-link" href="{{ list_url }}"><span class="tool-link-label">無料ツール</span><span class="tool-link-title">3つの質問で、自分が使えるスクールを{{ tool.schools|length }}校から探す</span></a>
+  </section>
+</div>
+<script>
+(function () {
+  var costEl = document.getElementById('cost'), yen = function (n) { return Math.round(n).toLocaleString('ja-JP') + '円'; };
+  function amount(sys, cost) {
+    if (sys === 'ippan') { var a = Math.min(cost * 0.2, 100000); return a > 4000 ? a : 0; }
+    if (sys === 'tokutei') { return Math.min(cost * 0.4, 200000) + Math.min(cost * 0.1, 50000); }
+    if (sys === 'senmon') { return Math.min(cost * 0.5, 400000) + Math.min(cost * 0.2, 160000) + Math.min(cost * 0.1, 80000); }
+    if (sys === 'reskilling') { var ex = cost / 1.1; return Math.min(ex / 2, 400000) + Math.min(ex / 5, 160000); }
+    return 0;
+  }
+  function render() {
+    var cost = Math.max(0, Number(costEl.value) || 0);
+    [].slice.call(document.querySelectorAll('.presets button')).forEach(function (b) { b.classList.toggle('on', Number(b.getAttribute('data-cost')) === cost); });
+    [].slice.call(document.querySelectorAll('#calc-out li')).forEach(function (li) {
+      li.querySelector('.calc-num').textContent = cost > 0 ? '最大 ' + yen(amount(li.getAttribute('data-system'), cost)) : '受講料を選ぶと表示されます';
+    });
+  }
+  costEl.addEventListener('input', render);
+  [].slice.call(document.querySelectorAll('.presets button')).forEach(function (b) { b.addEventListener('click', function () { costEl.value = b.getAttribute('data-cost'); render(); }); });
+  render();
+})();
+</script>
+{% endblock %}
