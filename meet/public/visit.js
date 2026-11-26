@@ -1,7 +1,9 @@
 // 対面の打ち合わせの録音
 // 録った分は約 20 秒ごとに受け渡し箱（/api/visits）へ送り、同時にこの端末のブラウザ内にも控えを書く。
-// 終了すると、この端末にもファイルを保存する。ドライブ・COMPASS への仕分けは局長の Claude が行う。
+// 終了すると、この端末にもファイルを保存し、サーバーから本人の Google ドライブへ置く。
+// 文字起こしは端末の中だけで行う（使えない端末では表示しない。声は外に送らない）。
 import { Recorder, recSupported, leftovers, saveFile } from './recorder.js';
+import { Caption, captionSupport, prepareCaption } from './caption.js';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -18,6 +20,9 @@ let visit = null; let wakeLock = null; let tick = null;
 let buf = []; let bufBytes = 0; let lastFlush = 0; let seq = 0;
 const parts = new Map(); // seq → { bytes, sent }
 let sending = Promise.resolve();
+// 文字起こし・ドライブ
+let capSupport = 'unavailable'; let cap = null; let driveSt = { enabled: false, connected: false };
+const wave = []; let waveAt = 0;
 
 function toast(msg, ms = 4000) {
   const t = $('toast'); t.textContent = msg; t.classList.remove('hidden');
@@ -47,6 +52,7 @@ async function openMic(id) {
   micId = (t.getSettings && t.getSettings().deviceId) || id || '';
   $('vMicName').textContent = (t.label || 'マイク').replace(/^(既定|Default)\s*-\s*/i, '').replace(/\s*\([0-9a-f]{4}:[0-9a-f]{4}\)\s*$/i, '');
   if (rec.active) rec.setLocal(t);
+  if (cap) cap.setTrack(t);
   meter($('vMeter'), t);
   try { localStorage.setItem('meet.visit.mic', micId); } catch (_) { /* 何もしない */ }
 }
@@ -62,10 +68,17 @@ function meter(bar, track) {
       lv = Math.max(p / 64, lv * 0.86); const v = Math.min(1, lv);
       bar.style.setProperty('--lv', rec.paused ? 0 : v.toFixed(3));
       $('vRing').style.setProperty('--lv', rec.paused ? 0 : v.toFixed(3));
+      if (rec.active && Date.now() - waveAt > 90) { waveAt = Date.now(); wave.push(rec.paused ? 0 : v); if (wave.length > 40) wave.shift(); drawWave(); }
       requestAnimationFrame(loop);
     };
     loop();
   } catch (_) { /* 表示できなくても録音はできる */ }
+}
+function drawWave() {
+  const box = $('vWave');
+  if (box.childElementCount !== 40) { box.textContent = ''; for (let i = 0; i < 40; i++) box.appendChild(document.createElement('i')); }
+  const bars = box.children; const off = 40 - wave.length;
+  for (let i = 0; i < 40; i++) { const lv = i < off ? 0 : wave[i - off]; bars[i].style.height = `${Math.max(3, Math.round(lv * 30))}px`; bars[i].classList.toggle('on', lv > 0.06); }
 }
 async function micMenu(anchor) {
   const m = $('devMenu');
@@ -127,6 +140,8 @@ async function start() {
   if (!customer) { $('vCustomer').focus(); return toast('お客様のお名前を入れてください'); }
   if (!recSupported() || !stream) return toast('この端末では録音できません');
   $('vStart').disabled = true;
+  // 文字起こしの初回準備は、ボタンを押した流れの中で始める
+  const capReady = capSupport === 'downloadable' ? prepareCaption() : Promise.resolve(capSupport === 'available' || capSupport === 'downloading');
   try {
     const r = await api('/api/visits', { method: 'POST', body: JSON.stringify({ customerName: customer, title: kind }) });
     visit = r.visit;
@@ -135,6 +150,7 @@ async function start() {
   try {
     await rec.start({ title: `${customer} ${kind}`, local: stream.getAudioTracks()[0], remotes: [], bitrate: 48000, onChunk, meta: { visitId: visit.id, customer, kind } });
   } catch (e) { console.error(e); $('vStart').disabled = false; return toast('録音を始められませんでした'); }
+  startCaption(capReady);
   $('vWho').textContent = `${customer}`; $('vKindLabel').textContent = kind;
   $('vPause').textContent = '一時停止'; $('vState').classList.remove('paused');
   show('live'); $('history').classList.add('hidden');
@@ -144,13 +160,15 @@ async function start() {
 }
 
 function togglePause() {
-  if (rec.paused) { rec.resume(); $('vPause').textContent = '一時停止'; $('vState').classList.remove('paused'); $('vState').lastChild.textContent = '録音中'; }
-  else { rec.pause(); $('vPause').textContent = '再開'; $('vState').classList.add('paused'); $('vState').lastChild.textContent = '一時停止中'; }
+  if (rec.paused) { rec.resume(); if (cap) cap.resume(); $('vPause').textContent = '一時停止'; $('vState').classList.remove('paused'); $('vState').lastChild.textContent = '録音中'; }
+  else { rec.pause(); if (cap) cap.pause(); $('vPause').textContent = '再開'; $('vState').classList.add('paused'); $('vState').lastChild.textContent = '一時停止中'; }
 }
 
 async function stop() {
   $('vStop').disabled = true; $('vPause').disabled = true;
   clearInterval(tick);
+  if (cap) cap.stop();
+  const text = cap ? cap.text() : '';
   const r = await rec.stop();
   flush();
   await sending;
@@ -158,24 +176,41 @@ async function stop() {
   for (const [n, p] of parts) if (!p.sent) await sendPart(n, 4);
   let finished = null; let sentOk = false;
   try {
-    let f = await api(`/api/visits/${visit.id}/finish`, { method: 'POST', body: JSON.stringify({ chunks: parts.size, mime: r.mime, durationMs: r.durationMs, bytes: r.blob.size }) });
-    if (f.status === 409 && f.missing) { for (const n of f.missing) await sendPart(n, 4); f = await api(`/api/visits/${visit.id}/finish`, { method: 'POST', body: JSON.stringify({ chunks: parts.size, mime: r.mime, durationMs: r.durationMs, bytes: r.blob.size }) }); }
+    const body = JSON.stringify({ chunks: parts.size, mime: r.mime, durationMs: r.durationMs, bytes: r.blob.size, text });
+    let f = await api(`/api/visits/${visit.id}/finish`, { method: 'POST', body });
+    if (f.status === 409 && f.missing) { for (const n of f.missing) await sendPart(n, 4); f = await api(`/api/visits/${visit.id}/finish`, { method: 'POST', body }); }
     sentOk = !!f.ok; finished = f.visit;
   } catch (_) { sentOk = false; }
   // この端末にも保存（いつでも手元に残す）
   const name = fileName(visit.customerName, kind, r.startedAt, r.mime);
   saveFile(r.blob, name);
+  if (text && !sentOk) saveFile(new Blob([text], { type: 'text/plain' }), name.replace(/\.\w+$/, '.txt'));
   if (sentOk) await rec.discardBackup(r.id);
+  // ドライブへ（サーバーが本人のドライブに置く）
+  let dr = null;
+  if (sentOk && driveSt.connected) {
+    $('vSync').textContent = 'ドライブに置いています…';
+    try { dr = await api(`/api/visits/${visit.id}/drive`, { method: 'POST' }); } catch (e) { dr = { ok: false, error: e.message }; }
+    if (dr.visit) finished = dr.visit;
+    if (dr.need === 'connect') { driveSt.connected = false; renderDrive(); }
+  }
   releaseWake();
   const list = $('vDoneList'); list.textContent = '';
   const item = (cls, text, sub, state) => { const li = el('li', cls); const t = el('div', 'dl-t'); t.appendChild(el('b', '', text)); if (sub) t.appendChild(el('small', '', sub)); li.appendChild(t); if (state) li.appendChild(el('span', 'dl-s', state)); list.appendChild(li); };
-  $('vDoneSub').textContent = `${visit.customerName || ''}${kind ? ` · ${kind}` : ''} · ${fmt(r.durationMs)}`;
+
   item('ok', 'この端末', `ダウンロードに保存：${name}`, '済');
   item(sentOk ? 'ok' : 'ng', '受け渡し箱', sentOk ? '暗号化して一時保管' : '送れませんでした。下の「最近の録音」から送り直せます（この端末の控えは残してあります）', sentOk ? '済' : '未');
-  item('pend', 'ドライブ', 'お客様のフォルダ（無ければ マイドライブ「録音」）', '仕分け待ち');
-  item('pend', 'COMPASS', 'お客様の録音の置き場所', '仕分け待ち');
+  const fv = finished || {};
+  if (fv.drive) item('ok', 'ドライブ', `${fv.drive.where === 'customer' ? 'お客様のフォルダ' : 'マイドライブ'}「${fv.drive.folder}」${fv.hasText ? '（文字起こしも一緒に）' : ''}`, '済');
+  else if (!sentOk) item('pend', 'ドライブ', '受け渡し箱に届いてから置きます', '待ち');
+  else if (!driveSt.enabled) item('pend', 'ドライブ', '自動で置く設定がまだです（管理者の設定待ち）。受け渡し箱に 14 日間残ります', '設定待ち');
+  else if (!driveSt.connected) item('pend', 'ドライブ', '「ドライブにつなぐ」を押すと、この録音も自動で置きます', '未接続');
+  else item('ng', 'ドライブ', `${(dr && dr.error) || '置けませんでした'}。次にこの画面を開いたとき、自動で置き直します`, '再送待ち');
+  if (text) item(fv.drive && fv.hasText ? 'ok' : 'pend', '文字起こし', `${text.split('\n').length} 行（この端末の中だけで作成）`, fv.drive && fv.hasText ? '済' : '一緒に置きます');
+  item('pend', 'COMPASS', 'お客様の録音の置き場所（局長のパソコンの Chrome 経由）', '仕分け待ち');
   $('vStop').disabled = false; $('vPause').disabled = false; $('vStart').disabled = false;
   visit = finished || visit;
+  $('vDoneSub').textContent = `${visit.customerName || ''}${kind ? ` · ${kind}` : ''} · ${fmt(r.durationMs)}`;
   show('done');
   loadHistory();
 }
@@ -198,8 +233,11 @@ window.addEventListener('beforeunload', (e) => { if (rec.active) { e.preventDefa
 const STATUS = (v) => {
   if (v.status === 'recording') return ['録音中か、途中で止まった録音', 'warn'];
   if (v.status === 'filed') return ['置き終わり', 'ok'];
-  if (v.drive && v.compass === 'pending') return ['ドライブ済・COMPASS待ち', 'mid'];
-  return ['仕分け待ち', 'mid'];
+  if (v.drive && v.compass === 'pending') return ['ドライブ済・COMPASS待ち', 'ok'];
+  if (v.driveError) return ['ドライブ再送待ち', 'warn'];
+  if (!driveSt.enabled) return ['ドライブ設定待ち', 'mid'];
+  if (!driveSt.connected) return ['ドライブ未接続', 'mid'];
+  return ['ドライブ待ち', 'mid'];
 };
 async function loadHistory() {
   try {
@@ -213,7 +251,8 @@ async function loadHistory() {
       const left = el('div', 'vrow-main');
       left.appendChild(el('b', '', `${v.customerName}`));
       left.appendChild(el('small', 'muted', `${new Date(v.startedAt).toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}・${v.title}${v.durationMs ? `・${fmt(v.durationMs)}` : ''}`));
-      if (v.drive && v.drive.folder) left.appendChild(el('small', 'muted', `ドライブ：${v.drive.folder}`));
+      if (v.drive && v.drive.folder) left.appendChild(el('small', 'muted', `ドライブ：${v.drive.folder}${v.hasText ? '（文字起こし付き）' : ''}`));
+      else if (v.driveError) left.appendChild(el('small', 'muted', v.driveError));
       row.appendChild(left);
       const [label, cls] = STATUS(v);
       row.appendChild(el('span', `vpill ${cls}`, label));
@@ -258,6 +297,87 @@ function modalAsk(title, body, actions) {
   });
 }
 
+// ---------- 文字起こし ----------
+function capLine(line) {
+  const box = $('vCapLines');
+  const p = el('p'); const s = Math.floor(line.at / 1000);
+  p.appendChild(el('time', '', `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`));
+  p.appendChild(el('span', '', line.text));
+  box.appendChild(p);
+  while (box.childElementCount > 200) box.firstChild.remove();
+  box.scrollTop = box.scrollHeight;
+}
+async function startCaption(ready) {
+  $('vCapLines').textContent = ''; $('vCapInterim').textContent = '';
+  cap = null;
+  const box = $('vCapBox');
+  if (capSupport === 'unavailable') {
+    box.classList.add('off');
+    $('vCapNote').textContent = 'この端末では使えません';
+    $('vCapInterim').textContent = 'この端末は「端末の中だけで文字にする」機能に対応していないため、文字は出ません。録音は上の波形のとおり続いています。';
+    return;
+  }
+  box.classList.remove('off');
+  $('vCapNote').textContent = capSupport === 'downloadable' ? 'はじめての準備中（日本語の認識データを端末に入れています）…' : 'この端末の中だけで処理しています';
+  $('vCapInterim').textContent = '話し始めると、ここに文字が出ます';
+  const okk = await ready;
+  if (!rec.active) return;
+  if (!okk) { box.classList.add('off'); $('vCapNote').textContent = '準備できませんでした'; $('vCapInterim').textContent = '文字起こしの準備ができませんでした。録音は続いています。'; return; }
+  cap = new Caption({
+    onLine: capLine,
+    onInterim: (t) => { $('vCapInterim').textContent = t; },
+    onState: (st, why) => {
+      if (st === 'on') $('vCapNote').textContent = 'この端末の中だけで処理しています';
+      if (st === 'paused') $('vCapNote').textContent = '一時停止中';
+      if (st === 'error') { $('vCapNote').textContent = why === 'not-local' ? 'この端末では使えません' : '止まりました'; $('vCapInterim').textContent = '文字起こしが止まりました。録音は続いています。'; }
+    },
+  });
+  cap.start(stream && stream.getAudioTracks()[0]);
+  if (rec.paused) cap.pause();
+}
+async function checkCaption() {
+  capSupport = await captionSupport();
+  $('vCapState').textContent = {
+    available: 'この端末の中だけで文字にします（声は外に送りません）',
+    downloading: 'この端末の中だけで文字にします（準備中）',
+    downloadable: 'この端末の中だけで文字にします（初回だけ、録音開始時に準備します）',
+    unavailable: 'この端末では使えません（録音は問題なくできます）',
+  }[capSupport];
+  $('vCapState').classList.toggle('dim', capSupport === 'unavailable');
+}
+
+// ---------- ドライブ ----------
+function renderDrive() {
+  const st = $('vDriveState'); const b = $('vDriveBtn');
+  b.classList.add('hidden'); st.classList.remove('dim');
+  if (!driveSt.enabled) { st.textContent = 'この端末と受け渡し箱（ドライブへの自動保存は管理者の設定待ち）'; st.classList.add('dim'); return; }
+  if (!driveSt.connected) { st.textContent = 'ドライブにつなぐと、終わったあと自動で置きます'; b.textContent = 'ドライブにつなぐ'; b.classList.remove('hidden'); return; }
+  st.textContent = `${driveSt.email} のドライブ（お客様のフォルダ／無ければ「録音」）`;
+  b.textContent = '切る'; b.classList.remove('hidden');
+}
+async function checkDrive() {
+  try { driveSt = await api('/api/drive'); } catch (_) { driveSt = { enabled: false, connected: false }; }
+  renderDrive();
+  if (driveSt.connected) {
+    // ドライブにまだ置いていない分を、まとめて置く
+    try { const r = await api('/api/visits/sync', { method: 'POST' }); if (r.done && r.done.some((d) => d.ok)) { toast(`${r.done.filter((d) => d.ok).length} 件の録音をドライブに置きました`); loadHistory(); } } catch (_) { /* あとでまた */ }
+  }
+}
+$('vDriveBtn').onclick = async () => {
+  if (!driveSt.connected) { location.href = '/api/drive/connect'; return; }
+  const box = el('p', '', `${driveSt.email} のドライブとの接続を切ります。切ったあとの録音は、受け渡し箱にだけ残ります。`);
+  if (await modalAsk('ドライブとの接続を切りますか', box, [['やめる', 'no', 'ghost'], ['切る', 'yes', 'danger']]) !== 'yes') return;
+  await api('/api/drive/disconnect', { method: 'POST' }).catch(() => {});
+  driveSt.connected = false; renderDrive(); loadHistory();
+};
+function driveNotice() {
+  const q = new URLSearchParams(location.search); const d = q.get('drive');
+  if (!d) return;
+  const msg = { ok: 'ドライブにつなぎました。これからの録音は自動でドライブに置きます', disabled: 'ドライブへの自動保存は、まだ設定されていません', login: 'ログインしてから、もう一度お試しください', error_cancelled: 'ドライブへの接続をやめました', error_domain: '会社の Google アカウントでつないでください', error_scope: 'ドライブの許可にチェックを入れて、もう一度お試しください' }[d] || 'ドライブにつなげませんでした。もう一度お試しください';
+  toast(msg, 7000);
+  q.delete('drive'); history.replaceState(null, '', `${location.pathname}${q.toString() ? `?${q}` : ''}`);
+}
+
 // ---------- はじめ ----------
 async function init() {
   const me = await fetch('/api/auth/me').then((r) => (r.ok ? r.json() : null)).catch(() => null);
@@ -277,6 +397,9 @@ async function init() {
   try { await openMic(saved); } catch (_) {
     try { await openMic(''); } catch (e2) { $('vMicName').textContent = 'マイクが使えません'; $('vMicHint').textContent = 'ブラウザのアドレス欄の左にある鍵のマークから、マイクを許可してください。'; $('vStart').disabled = true; }
   }
+  driveNotice();
+  checkCaption();
+  await checkDrive();
   loadHistory();
   offerLeftovers();
 }
@@ -287,5 +410,5 @@ $('vStop').onclick = stop;
 $('vAgain').onclick = () => { show('setup'); $('vCustomer').value = ''; $('vCustomer').focus(); };
 $('vMicChip').onclick = (e) => { e.stopPropagation(); micMenu(e.currentTarget); };
 document.addEventListener('click', (e) => { if (!e.target.closest('.devmenu')) $('devMenu').classList.add('hidden'); });
-window.__visit = { rec, parts };
+window.__visit = { rec, parts, get cap() { return cap; } };
 init();

@@ -38,7 +38,7 @@
   <section class="v-card hidden" id="setup">
     <div class="eyebrow">In-person</div>
     <h1>対面の打ち合わせを録音</h1>
-    <p class="lead">録音は、この端末と受け渡し箱の両方に保存します。あとで局長の Claude が、お客様のドライブのフォルダと COMPASS に置きます。</p>
+    <p class="lead">録音は、この端末と受け渡し箱に保存します。ドライブにつないでおくと、終わったあと自動で、あなたの Google ドライブのお客様のフォルダ（無ければ「録音」フォルダ）に置きます。</p>
 
     <div class="field">
       <label for="vCustomer">お客様</label>
@@ -54,6 +54,10 @@
       <div class="meterbar light" id="vMeter" aria-hidden="true"><i></i></div>
     </div>
     <p class="muted small" id="vMicHint">話すと、右の線が動きます。机の真ん中に端末を置くと、両方の声がきれいに入ります。</p>
+    <div class="v-opts">
+      <div class="v-opt"><span class="v-opt-k">文字起こし</span><span class="v-opt-v" id="vCapState">確認中…</span></div>
+      <div class="v-opt"><span class="v-opt-k">保存先</span><span class="v-opt-v" id="vDriveState">確認中…</span><button class="btn sm hidden" id="vDriveBtn" type="button">ドライブにつなぐ</button></div>
+    </div>
 
     <button class="rec-big" id="vStart" type="button"><span class="dot"></span><span>録音を始める</span></button>
     <p class="muted small center" id="vPhoneHint">スマートフォンでは、録音中は画面を開いたままにしてください。</p>
@@ -66,7 +70,13 @@
       <span class="live-who" id="vWho"></span>
     </div>
     <div class="ring" id="vRing"><div class="ring-in"><div class="timer" id="vTimer">0:00</div><div class="muted small" id="vKindLabel"></div></div></div>
+    <div class="wave" id="vWave" aria-hidden="true"></div>
     <div class="live-status" id="vSync">受け渡し箱へ送信中…</div>
+    <div class="cap-box" id="vCapBox">
+      <div class="cap-head"><span>文字起こし</span><small id="vCapNote">この端末の中だけで処理しています</small></div>
+      <div class="cap-lines" id="vCapLines" aria-live="polite"></div>
+      <div class="cap-interim" id="vCapInterim"></div>
+    </div>
     <div class="live-actions">
       <button class="btn lg" id="vPause" type="button">一時停止</button>
       <button class="btn lg danger" id="vStop" type="button">終了して保存</button>

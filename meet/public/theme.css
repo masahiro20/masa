@@ -445,3 +445,34 @@ body.g .tile .name .role { background: transparent; color: #c9cdd2; border: 1px 
   body.g .split .round { background: #3a3d42; }
   body.g .split .round.off { background: #eef0f2; }
 }
+
+/* ---------- 対面：文字起こし・保存先・波形 ---------- */
+body.g .v-opts { margin-top: 18px; border: 1px solid #34373c; border-radius: 16px; overflow: hidden; }
+body.g .v-opt { display: flex; align-items: center; gap: 14px; padding: 12px 16px; font-size: 13px; }
+body.g .v-opt + .v-opt { border-top: 1px solid #34373c; }
+body.g .v-opt-k { flex: none; width: 5.5em; color: #7d838a; font-size: 12px; }
+body.g .v-opt-v { flex: 1; min-width: 0; color: #dfe2e6; line-height: 1.6; }
+body.g .v-opt-v.dim { color: #8a8f95; }
+body.g .v-opt .btn { flex: none; height: 34px; }
+body.g .wave { display: flex; align-items: center; justify-content: center; gap: 3px; height: 34px; margin: -6px auto 14px; }
+body.g .wave i { width: 3px; height: 3px; border-radius: 2px; background: #4a4e55; transition: height .09s linear; }
+body.g .wave i.on { background: #eef0f2; }
+body.g .cap-box { margin: 18px 0 4px; text-align: left; border: 1px solid #34373c; border-radius: 18px; background: #1f2124; padding: 12px 14px 14px; }
+body.g .cap-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+body.g .cap-head span { font-size: 12px; color: #c9cdd2; letter-spacing: .08em; }
+body.g .cap-head small { font-size: 11px; color: #8fd19e; }
+body.g .cap-box.off .cap-head small { color: #8a8f95; }
+body.g .cap-lines { max-height: 168px; overflow-y: auto; display: grid; gap: 6px; scroll-behavior: smooth; }
+body.g .cap-lines:empty { display: none; }
+body.g .cap-lines p { margin: 0; display: grid; grid-template-columns: 3.2em 1fr; gap: 8px; font-size: 14px; line-height: 1.6; color: #eef0f2; }
+body.g .cap-lines time { font-family: Inter, sans-serif; font-size: 11px; color: #7d838a; padding-top: 3px; }
+body.g .cap-interim { font-size: 13.5px; color: #8a8f95; line-height: 1.6; min-height: 1.6em; margin-top: 4px; }
+body.g .cap-lines:not(:empty) + .cap-interim { padding-left: calc(3.2em + 8px); }
+body.g .cap-box.off .cap-interim { padding-left: 0; font-size: 12.5px; }
+body.g .live-actions { margin-top: 18px; }
+.modes-nav .mn { white-space: nowrap; }
+@media (max-width: 480px) {
+  body.g .brand .sub { display: none; }
+  body.g .modes-nav .mn { padding: 6px 12px; font-size: 12px; }
+  body.g.visit-page .topbar { padding-top: 18px; }
+}

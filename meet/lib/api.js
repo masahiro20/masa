@@ -17,6 +17,7 @@ const { createTurn } = require('./turn');
 const { createAi } = require('./ai');
 const { createGoogle } = require('./google');
 const { createVisits } = require('./visits');
+const { createDrive } = require('./drive');
 
 const ROOM_ID_RE = /^[a-z]{3}-[a-z]{4}-[a-z]{3}$/;
 const ALPHA = 'abcdefghijkmnpqrstuvwxyz';
@@ -60,7 +61,8 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
   const ok = (body, status = 200, headers) => ({ status, body, headers });
   const fail = (status, error, headers) => ({ status, body: { error }, headers });
   const tooMany = (r) => fail(429, '操作が多すぎます。少し時間をおいてお試しください。', { 'Retry-After': String(Math.max(1, r.retryAfter || 30)) });
-  const visits = createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, clean });
+  const drive = createDrive({ env, keys, store, seal, unseal, fetchImpl });
+  const visits = createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, clean, drive });
 
   // ---------- ルーム ----------
   function newRoomId() {
@@ -287,6 +289,7 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
     if (p1 === 'auth') return handleAuth(req, parts);
     if (p1 === 'meetings') return handleMeetings(req, parts);
     if (p1 === 'visits') return visits.handle(req, parts);
+    if (p1 === 'drive') return handleDrive(req, parts);
     if (p1 !== 'rooms') return fail(404, '見つかりません');
 
     // ルームの作成・一覧（スタッフだけ）
@@ -379,6 +382,37 @@ function createApi({ store, env = process.env, fetchImpl = fetch }) {
   }
 
   function urlFor(req, id) { return `${PUBLIC_URL || req.origin}/r/${id}`; }
+
+  // ---------- ドライブ（担当者本人の Google ドライブに録音を置く）----------
+  async function handleDrive(req, parts) {
+    const a = parts[2] || '';
+    const staff = await auth.staffOf(req);
+    const back = (q) => ({ status: 302, body: null, headers: { Location: `/visit?drive=${q}`, 'Set-Cookie': drive.clearCookie } });
+    if (req.method === 'GET' && a === '') {
+      if (!staff) return fail(401, 'ログインが必要です');
+      return ok(await drive.status(staff.id));
+    }
+    if (req.method === 'GET' && a === 'connect') {
+      if (!staff) return { status: 302, body: null, headers: { Location: '/' } };
+      if (!drive.enabled) return back('disabled');
+      const s = drive.start(req, staff);
+      return { status: 302, body: null, headers: { Location: s.location, 'Set-Cookie': s.cookie } };
+    }
+    if (req.method === 'GET' && a === 'callback') {
+      if (!staff) return back('login');
+      if (!drive.enabled) return back('disabled');
+      let r;
+      try { r = await drive.callback(req, staff); } catch (_) { r = { error: 'token' }; }
+      return back(r.error ? `error_${r.error}` : 'ok');
+    }
+    if (req.method === 'POST' && a === 'disconnect') {
+      if (!staff) return fail(401, 'ログインが必要です');
+      if (staff.cookie && !auth.sameOrigin(req)) return fail(403, '不正な送信元です');
+      await drive.disconnect(staff.id);
+      return ok({ ok: true });
+    }
+    return fail(404, '見つかりません');
+  }
 
   // ---------- 認証 ----------
   async function handleAuth(req, parts) {

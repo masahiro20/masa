@@ -24,6 +24,7 @@ const RULES = {
   api_ip: [600, 60],
   visit_create: [60, 3600],
   visit_chunk: [900, 3600],   // 対面の録音の受け渡し（約 20 秒ごとに 1 回）
+  visit_drive: [60, 3600],    // 録音をドライブへ置く
 };
 
 function createLimiter(store) {
