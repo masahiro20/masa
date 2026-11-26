@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% macro icon(name) %}{% if name == "school" %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>{% elif name == "calc" %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="3"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h8"/></svg>{% elif name == "compass" %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 8-2 6-6 2 2-6 6-2Z"/></svg>{% else %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2Z"/><path d="M8 7h6M8 11h6"/></svg>{% endif %}{% endmacro %}
 {% block content %}
 <div class="wrap wide">
   <section class="hero" id="hero">
@@ -20,21 +19,9 @@
       <p class="hero-kicker">SKILL COMPASS</p>
       <p class="hero-copy">迷う時間を、<br>少しだけ短く。</p>
       <h1 class="hero-lead">{{ site.tagline }}</h1>
-      <p class="hero-actions"><a class="btn" href="{{ base_url }}/tools/kyufukin-school/">給付金が使えるスクールを探す</a><a class="btn ghost" href="{{ base_url }}/articles/">記事一覧を見る</a></p>
+      <p class="hero-actions"><a class="btn" href="{{ base_url }}/articles/">記事一覧を見る</a><a class="btn ghost" href="{{ base_url }}/category/career/">IT転職のはじめ方</a></p>
     </div>
     <p class="hero-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></p>
-  </section>
-
-  <section class="quick" aria-label="目的から探す">
-    <ul class="quick-grid">
-      {% for t in tools if t.short %}<li><a href="{{ base_url }}/tools/{{ t.slug }}/"><span class="quick-icon">{{ icon(t.icon) }}</span><span class="quick-kicker">{{ t.kicker }}</span><span class="quick-title">{{ t.short }}</span><span class="quick-go">無料で使う</span></a></li>{% endfor %}
-      {% for g in guides if g.slug == "mikeiken-it-tenshoku" %}<li><a href="{{ base_url }}/guide/{{ g.slug }}/"><span class="quick-icon">{{ icon("guide") }}</span><span class="quick-kicker">{{ g.count }}本の記事を順番に</span><span class="quick-title">未経験からのIT転職を、順番に進める</span><span class="quick-go">ガイドを見る</span></a></li>{% endfor %}
-    </ul>
-    <div class="stats">
-      <p class="stat"><span class="stat-num" data-count="{{ articles|length }}">{{ articles|length }}</span><span class="stat-label">公的な情報で確かめた記事</span></p>
-      <p class="stat"><span class="stat-num" data-count="{{ school_count }}" data-suffix="校">{{ school_count }}校</span><span class="stat-label">給付金・補助金が使えるスクール</span></p>
-      <p class="stat"><span class="stat-num" data-count="{{ tools|length }}">{{ tools|length }}</span><span class="stat-label">無料ツール</span></p>
-    </div>
   </section>
 
   {% if articles %}
