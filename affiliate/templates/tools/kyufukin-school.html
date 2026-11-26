@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% macro badge(sub) %}<span class="sys-badge sys-{{ sub.system }}">{{ sub.info.short }}</span>{% endmacro %}
 {% block content %}
-<div class="wrap wide">
+<div class="wrap wide sc">
   <nav class="breadcrumb" aria-label="パンくずリスト"><a href="{{ base_url }}/">ホーム</a><span>/</span>無料ツール</nav>
 
   <header class="tool-hero">
@@ -154,6 +154,24 @@
 </div>
 
 <script>
+(function () {
+  // このページだけの動き：数字が数えあがる・カードがふわっと現れる（動きを減らす設定では動かさない）
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function countUp(el) {
+    var to = parseFloat(el.getAttribute('data-count')) || 0, suf = el.getAttribute('data-suffix') || '', t0 = null;
+    if (reduce) { el.textContent = to.toLocaleString('ja-JP') + suf; return; }
+    function step(ts) { if (!t0) { t0 = ts; } var k = Math.min(1, (ts - t0) / 1100), e = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(to * e).toLocaleString('ja-JP') + suf; if (k < 1) { requestAnimationFrame(step); } }
+    requestAnimationFrame(step);
+  }
+  var nums = [].slice.call(document.querySelectorAll('.sc [data-count]'));
+  if (reduce || !('IntersectionObserver' in window)) { nums.forEach(countUp); return; }
+  var els = [].slice.call(document.querySelectorAll('.sc .featured, .sc .system-card, .sc .school-card, .sc .criteria li, .sc .faq details, .sc .tool-section'));
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }); }, {rootMargin: '0px 0px -6% 0px', threshold: 0.04});
+  els.forEach(function (el, i) { el.classList.add('rv'); el.style.setProperty('--d', ((i % 4) * 70) + 'ms'); io.observe(el); });
+  var ic = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { countUp(e.target); ic.unobserve(e.target); } }); }, {threshold: 0.4});
+  nums.forEach(function (el) { ic.observe(el); });
+  setTimeout(function () { els.forEach(function (el) { el.classList.add('in'); }); }, 3500);
+})();
 (function () {
   var f = document.getElementById('filter'), cards = [].slice.call(document.querySelectorAll('.school-card'));
   var costEl = document.getElementById('cost');
