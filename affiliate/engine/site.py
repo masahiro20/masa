@@ -314,7 +314,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
             if not schools:
                 continue
             # タイトルなどの {n} は掲載校数にする（スクールを足すたびに書き換えなくてよいように）
-            for k in ("title", "description", "intro", "cta"):
+            for k in ("title", "description", "intro", "cta", "kicker"):
                 if isinstance(t.get(k), str):
                     t[k] = t[k].replace("{n}", str(len(schools)))
             t["schools"] = schools
@@ -328,6 +328,7 @@ def build_site(cfg: Config, *, articles: list[Article] | None = None, out_dir: P
         g["tool"] = g["tools"][0] if g["tools"] else None
     common["guides"] = guides
     common["tools"] = tools
+    common["school_count"] = len(schools)
     targets = money_targets(articles, live_ad_articles(articles, cfg.programs_by_id))
     for a in articles:
         cat = cats.get(a.category, {"name": a.category, "color": "#162238", "slug": a.category})
