@@ -18,6 +18,30 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
+- keyword: canva 講座 オンライン
+  intent: transactional
+  category: fukugyo
+  program: learning-canva
+  score: 15000.0
+  status: queued
+  boost: 2.0
+  source: google-suggest
+- keyword: canva 副業 初心者
+  intent: commercial
+  category: fukugyo
+  program: learning-canva
+  score: 12000.0
+  status: queued
+  boost: 2.0
+  source: google-suggest
+- keyword: canva 資格
+  intent: commercial
+  category: fukugyo
+  program: learning-canva
+  score: 9000.0
+  status: queued
+  boost: 1.5
+  source: google-suggest
 - keyword: ブログ 確定申告 いくらから
   intent: informational
   category: fukugyo
