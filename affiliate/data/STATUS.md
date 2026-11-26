@@ -1,8 +1,8 @@
 # 運用ステータス（自動更新）
 
-- 最終更新: 2026-11-25 21:49 UTC
-- 公開記事数: 173
-- キーワード在庫: 20件（見送り 39件）
+- 最終更新: 2026-11-26 03:50 UTC
+- 公開記事数: 174
+- キーワード在庫: 17件（見送り 41件）
 - 今月のAPI費用（概算）: $0.00 / 上限 $50
 - 提携済み案件: 24 / 30
 
@@ -20,10 +20,10 @@
 ## 伸ばしどころ（毎晩の書き直しで優先している記事）
 
 - reskilling-hojokin-itsu-moraeru（平均13.3位・表示269回）
+- kyufukin-denshi-shinsei-yarikata（平均6.8位・表示180回）
 - rental-server-hiyou-kanjoukamoku（平均10.3位・表示158回）
+- tenshoku-soudan-muryo-chat（平均15.7位・表示141回）
 - mukiteiru-shigoto-wakaranai-shindan（平均10.7位・表示105回）
-- hello-training-hyouban（平均9.1位・表示68回）
-- webdesigner-mikeiken-30dai-muri（平均17.3位・表示62回）
 
 ## 最近の改善（毎週の改善ルーチン）
 
@@ -55,6 +55,9 @@ ASPで提携したら `config/programs.yaml` の `url` に広告リンクを貼�
 
 | 日時 | 公開 | 改善 | 見送り | エラー |
 |---|---|---|---|---|
+| 2026-11-26T03:50:12+00:00 | 1 | 0 | 0 |  |
+| 2026-11-26T03:48:56+00:00 | 0 | 0 | 1 | 既存記事makers-job-hyouban・maker-tenshoku-mikeiken・koujou-engineer-tenshokuと検索意図が重複 |
+| 2026-11-26T03:48:47+00:00 | 0 | 0 | 1 | 既存記事seisei-ai-school-hojokin・reskilling-hojokin-50daiと検索意図が重複 |
 | 2026-11-25T21:49:22+00:00 | 1 | 0 | 0 |  |
 | 2026-11-25T09:49:18+00:00 | 1 | 0 | 0 |  |
 | 2026-11-25T03:50:46+00:00 | 1 | 0 | 0 |  |
@@ -62,6 +65,3 @@ ASPで提携したら `config/programs.yaml` の `url` に広告リンクを貼�
 | 2026-11-24T21:52:57+00:00 | 1 | 0 | 0 |  |
 | 2026-11-24T21:51:25+00:00 | 0 | 0 | 1 | 既存記事kredo-it-ryugaku-hyouban・eigo-programming-schoolと検索意図が重複 |
 | 2026-11-24T21:49:23+00:00 | 1 | 0 | 0 |  |
-| 2026-11-24T03:50:47+00:00 | 1 | 0 | 0 |  |
-| 2026-11-24T03:49:11+00:00 | 0 | 0 | 1 | 既存記事kikai-sekkei-tenshoku-agent（未経験の節を含む）と検索意図が重複 |
-| 2026-11-24T03:48:57+00:00 | 0 | 0 | 1 | 既存記事kyoiku-kunren-kyufukin-shinsei-nagare（郵送の流れを含む）と検索意図が重複 |
