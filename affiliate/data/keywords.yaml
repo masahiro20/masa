@@ -2,22 +2,6 @@
 # status: queued（未着手） / published（公開済み） / rejected（品質基準を満たせず見送り）
 # intent: transactional（申込直前） / commercial（比較検討） / informational（情報収集）
 keywords:
-- keyword: claude code 何ができる
-  intent: informational
-  category: learning
-  program: learning-ai-coding
-  score: 15000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
-- keyword: 会計ソフト 個人事業主 初心者 おすすめ
-  intent: transactional
-  category: tools
-  program: tools-accounting
-  score: 15000.0
-  status: queued
-  boost: 2.0
-  source: google-suggest
 - keyword: claude code と cursor 違い
   intent: informational
   category: learning
@@ -945,6 +929,15 @@ keywords:
   score: 16000.0
   status: published
   slug: wordpress-portfolio-tsukurikata-mikeiken
+- keyword: 会計ソフト 個人事業主 初心者 おすすめ
+  intent: transactional
+  category: tools
+  program: tools-accounting
+  score: 15000.0
+  status: published
+  boost: 2.0
+  source: google-suggest
+  slug: kaikei-soft-kojinjigyounushi-shoshinsha
 - keyword: claude code 使い方
   intent: informational
   category: learning
@@ -1857,6 +1850,16 @@ keywords:
   source: google-suggest
   issues:
   - 既存記事wordpress-blog-start-server-domain-stepsと検索意図が重複
+- keyword: claude code 何ができる
+  intent: informational
+  category: learning
+  program: learning-ai-coding
+  score: 15000.0
+  status: rejected
+  boost: 1.5
+  source: google-suggest
+  issues:
+  - 既存記事claude-code-tsukaikata・claude-code-fukugyoと検索意図が重複
 - keyword: キャリアコーチング 高い
   intent: commercial
   category: career

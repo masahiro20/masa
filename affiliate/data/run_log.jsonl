@@ -212,3 +212,5 @@
 {"ts": "2026-11-26T03:48:47+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["リスキリング 補助金 70%"], "errors": ["既存記事seisei-ai-school-hojokin・reskilling-hojokin-50daiと検索意図が重複"]}
 {"ts": "2026-11-26T03:48:56+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["ものづくり 転職 エージェント"], "errors": ["既存記事makers-job-hyouban・maker-tenshoku-mikeiken・koujou-engineer-tenshokuと検索意図が重複"]}
 {"ts": "2026-11-26T03:50:12+00:00", "source": "routine", "published": ["maker-tenshoku-muzukashii"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-26T09:48:53+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["claude code 何ができる"], "errors": ["既存記事claude-code-tsukaikata・claude-code-fukugyoと検索意図が重複"]}
+{"ts": "2026-11-26T09:50:50+00:00", "source": "routine", "published": ["kaikei-soft-kojinjigyounushi-shoshinsha"], "refreshed": [], "rejected": [], "errors": []}
