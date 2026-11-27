@@ -215,3 +215,4 @@
 {"ts": "2026-11-26T09:48:53+00:00", "source": "routine", "published": [], "refreshed": [], "rejected": ["claude code 何ができる"], "errors": ["既存記事claude-code-tsukaikata・claude-code-fukugyoと検索意図が重複"]}
 {"ts": "2026-11-26T09:50:50+00:00", "source": "routine", "published": ["kaikei-soft-kojinjigyounushi-shoshinsha"], "refreshed": [], "rejected": [], "errors": []}
 {"ts": "2026-11-26T21:50:41+00:00", "source": "routine", "published": ["canva-kouza-online"], "refreshed": [], "rejected": [], "errors": []}
+{"ts": "2026-11-27T03:49:07+00:00", "source": "routine", "published": ["claude-code-cursor-chigai"], "refreshed": [], "rejected": [], "errors": []}
