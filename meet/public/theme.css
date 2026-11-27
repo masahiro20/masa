@@ -539,3 +539,46 @@ body.cr .records .center-msg .muted { color: var(--ink-3); }
 /* 白いカードと重なるところは、大きな文字を薄くする（録音中のスマートフォンの後ろだけ白） */
 body.cr.visit-page .cr-word, body.cr .records .cr-word { color: rgba(255,255,255,.2); }
 body.cr.visit-page[data-view="live"] .cr-word { color: #fff; }
+
+/* =================== スマートフォンの見直し =================== */
+/* トープの面は、画面ではなくページ全体に敷く（長いページでも途切れない） */
+body.cr { position: relative; overflow-x: hidden; }
+body.cr::before { position: absolute; }
+body.cr .cr-word { max-width: calc(100vw - 40px); overflow: hidden; white-space: nowrap; }
+body.cr .cap-head span { white-space: nowrap; flex: none; }
+body.cr .cap-head small { text-align: right; }
+@media (max-width: 900px) {
+  /* ホーム：TALK だけにして、上の帯と重ならないように */
+  .h2-word-b { display: none; }
+  .h2-art { height: 124px; }
+  .h2-field:has(#modesNav:not(.hidden)) { padding-top: 132px; }
+  .h2-field:has(#whoBox.hidden) .h2-stat { display: none; }
+  /* 入室前 */
+  body.cr .lobby .cr-word { display: none; }
+  body.cr .preview .meter { top: 22px; right: 20px; left: auto; bottom: auto; width: 60px; }
+  body.cr .lobby .devchips { flex-wrap: wrap; justify-content: center; }
+  body.cr .lobby .devchip { max-width: calc(50% - 4px); }
+  /* 記録 */
+  body.cr .records #whoName { display: none; }
+  body.cr .rec-detail { min-height: 0; }
+}
+@media (max-width: 720px) {
+  /* 通話中：操作が画面からはみ出さないよう、画面共有・ホワイトボード・メモは「その他」へ */
+  body.cr .bar #screen, body.cr .bar #wbBtn, body.cr .bar #reactBtn { display: none !important; }
+  body.cr.is-staff .bar #notesBtn { display: none !important; }
+  body.cr .bar { justify-content: center; flex-wrap: nowrap; gap: 6px; }
+  body.cr .bar .center { flex: none; }
+  body.cr .bar .right { flex: none; gap: 4px; }
+  body.cr .caret { display: none; }
+  body.cr .split { padding: 0; }
+  /* 横の欄は回線表示より手前に、操作の帯と重ならないように */
+  body.cr .call .side { position: fixed; inset: 0 0 calc(66px + env(safe-area-inset-bottom)) 0; z-index: 12; border-radius: 0 0 22px 22px; }
+  body.cr.in-call .popover { max-width: calc(100vw - 20px); }
+}
+@media (max-width: 380px) {
+  body.cr .round { width: 38px; height: 38px; }
+  body.cr .bar .right .round { width: 38px; height: 38px; }
+  body.cr .round.leave { padding: 0 12px; }
+}
+html:has(body.cr), body.cr { height: auto; min-height: 100%; }
+@media (max-width: 560px) { .cr-word { font-size: 80px; } }

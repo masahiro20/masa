@@ -2,8 +2,8 @@
 // 録った分は約 20 秒ごとに受け渡し箱（/api/visits）へ送り、同時にこの端末のブラウザ内にも控えを書く。
 // 終了すると、この端末にもファイルを保存し、サーバーから本人の Google ドライブへ置く。
 // 文字起こしは端末の中だけで行う（使えない端末では表示しない。声は外に送らない）。
-import { Recorder, recSupported, leftovers, saveFile } from './recorder.js';
-import { Caption, captionSupport, prepareCaption } from './caption.js';
+import { Recorder, recSupported, leftovers, saveFile, dateTag, safeName } from './recorder.js';
+import { Caption, captionSupport, prepareCaption, markConflict } from './caption.js';
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
@@ -51,7 +51,8 @@ async function openMic(id) {
   if (stream) stream.getTracks().forEach((t) => t.stop());
   stream = s;
   const t = s.getAudioTracks()[0];
-  t.addEventListener('ended', () => { if (rec.active && document.visibilityState === 'visible') healMic(); });
+  t.addEventListener('ended', () => { if (capConflict()) return; if (rec.active && document.visibilityState === 'visible') healMic(); });
+  t.addEventListener('mute', () => { setTimeout(() => { if (t.muted) capConflict(); }, 1500); });
   micId = (t.getSettings && t.getSettings().deviceId) || id || '';
   $('vMicName').textContent = (t.label || 'マイク').replace(/^(既定|Default)\s*-\s*/i, '').replace(/\s*\([0-9a-f]{4}:[0-9a-f]{4}\)\s*$/i, '');
   if (rec.active) rec.setLocal(t);
@@ -122,7 +123,7 @@ async function sendPart(n, tries = 3) {
   const p = parts.get(n); if (!p || p.sent) return true;
   for (let i = 0; i < tries; i++) {
     try {
-      const extra = { mime: rec.mime || '', elapsedMs: rec.elapsed || 0 };
+      const extra = { mime: rec.mime || '', elapsedMs: rec.elapsed || 0, textSource: cap ? cap.mode : '' };
       const text = cap ? cap.text() : '';
       if (text && text !== lastSentText) { extra.text = text; }
       await api(`/api/visits/${visit.id}/chunk`, { method: 'POST', body: JSON.stringify({ seq: n, data: b64(p.bytes), ...extra }) });
@@ -185,15 +186,15 @@ async function closeOut({ quiet = false } = {}) {
   for (const [n, p] of parts) if (!p.sent) await sendPart(n, 4);
   let finished = null; let sentOk = false;
   try {
-    const body = JSON.stringify({ chunks: parts.size, mime: r.mime, durationMs: r.durationMs, bytes: r.blob.size, text });
+    const body = JSON.stringify({ chunks: parts.size, mime: r.mime, durationMs: r.durationMs, bytes: r.blob.size, text, textSource: cap ? cap.mode : '' });
     let f = await api(`/api/visits/${visit.id}/finish`, { method: 'POST', body });
     if (f.status === 409 && f.missing) { for (const n of f.missing) await sendPart(n, 4); f = await api(`/api/visits/${visit.id}/finish`, { method: 'POST', body }); }
     sentOk = !!f.ok; finished = f.visit;
   } catch (_) { sentOk = false; }
   // この端末にも保存（いつでも手元に残す）
-  const name = fileName(visit.customerName, kind, r.startedAt, r.mime);
+  const name = fileName(visit.customerName, visit.title || kind, r.startedAt, r.mime);
   saveFile(r.blob, name);
-  if (text && !sentOk) saveFile(new Blob([text], { type: 'text/plain' }), name.replace(/\.\w+$/, '.txt'));
+  if (text && !sentOk) saveFile(new Blob([text], { type: 'text/plain' }), fileName(visit.customerName, visit.title || kind, r.startedAt, 'text', '文字起こし').replace(/\.webm$/, '.txt'));
   if (sentOk) await rec.discardBackup(r.id);
   // ドライブへ（サーバーが本人のドライブに置く）
   let dr = null;
@@ -222,7 +223,7 @@ async function stop() {
   else if (!driveSt.enabled) item('pend', 'ドライブ', '自動で置く設定がまだです（管理者の設定待ち）。受け渡し箱に 14 日間残ります', '設定待ち');
   else if (!driveSt.connected) item('pend', 'ドライブ', '「ドライブにつなぐ」を押すと、この録音も自動で置きます', '未接続');
   else item('ng', 'ドライブ', `${(dr && dr.error) || '置けませんでした'}。次にこの画面を開いたとき、自動で置き直します`, '再送待ち');
-  if (text) item(fv.drive && fv.hasText ? 'ok' : 'pend', '文字起こし', `${text.split('\n').length} 行（この端末の中だけで作成）`, fv.drive && fv.hasText ? '済' : '一緒に置きます');
+  if (text) item(fv.drive && fv.hasText ? 'ok' : 'pend', '文字起こし', `${text.split('\n').length} 行（${cap && cap.mode === 'cloud' ? 'スマホの音声認識で作成' : 'この端末の中だけで作成'}）`, fv.drive && fv.hasText ? '済' : '一緒に置きます');
   if (segments.length) item('ok', '分けて保存した分', `途中で録音が止まったため、ほかに ${segments.length} 本に分けて保存しました（${segments.map((x) => fmt(x.r.durationMs)).join('・')}）`, '済');
   item('pend', 'COMPASS', 'お客様の録音の置き場所（局長のパソコンの Chrome 経由）', '仕分け待ち');
   $('vStop').disabled = false; $('vPause').disabled = false; $('vStart').disabled = false;
@@ -232,10 +233,13 @@ async function stop() {
   loadHistory();
 }
 
-// ファイル名：英数字だけ（日本語の名前はブラウザによって「download」になるため）。お客様名は受け渡し箱の記録に残る
-function fileName(_customer, _kind, startedAt, mime) {
-  const d = new Date(startedAt); const p = (n) => String(n).padStart(2, '0');
-  return `COMPASS-taimen_${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}_${visit.id}.${/mp4/.test(mime) ? 'm4a' : 'webm'}`;
+// ファイル名：「大崎純様 打ち合わせ 26.11.23.m4a」（打ち合わせの名前＋録り始めた日）
+function meetingName(customer, title) {
+  const who = safeName(customer).replace(/\s+/g, '').replace(/(様|さま)$/, '');
+  return `${who ? `${who}様 ` : ''}${safeName(title) || '打ち合わせ'}`;
+}
+function fileName(customer, title, startedAt, mime, suffix = '') {
+  return `${meetingName(customer, title)}${suffix ? ` ${suffix}` : ''} ${dateTag(startedAt)}.${/mp4/.test(mime) ? 'm4a' : 'webm'}`;
 }
 
 // 画面が消えると録音が止まる端末があるので、録音中は画面をつけたままにする
@@ -336,7 +340,7 @@ async function offerLeftovers() {
       // オンラインの打ち合わせの録音（パソコンが落ちた等）
       const box = el('p', '', `オンラインの打ち合わせ「${r.title || ''}」（${new Date(r.startedAt).toLocaleString('ja-JP')}）の録音が、保存されないまま残っています。`);
       const ans = await modalAsk('保存されていない録音があります', box, [['捨てる', 'drop', 'ghost'], ['この端末に保存する', 'save', 'primary']]);
-      if (ans === 'save') saveFile(r.blob, `COMPASS-Meet_recovered_${new Date(r.startedAt).toISOString().slice(0, 16).replace(/[-:T]/g, '')}.${/mp4/.test(r.mime) ? 'm4a' : 'webm'}`);
+      if (ans === 'save') saveFile(r.blob, `${safeName(r.title) || '打ち合わせ'}（控え） ${dateTag(r.startedAt)}.${/mp4/.test(r.mime) ? 'm4a' : 'webm'}`);
       await rec.discardBackup(r.id);
       continue;
     }
@@ -344,7 +348,7 @@ async function offerLeftovers() {
     box.appendChild(el('p', '', `${meta.customer || ''}（${new Date(r.startedAt).toLocaleString('ja-JP')}）の録音が、途中で止まったまま残っています。受け渡し箱には途中まで届いています。「保存して送る」で、この端末の控え（最後まで入っているもの）に差し替えます。`));
     const ans = await modalAsk('途中で止まった録音があります', box, [['捨てる', 'drop', 'ghost'], ['この端末に保存だけ', 'save', ''], ['保存して送る', 'send', 'primary']]);
     if (ans === 'drop') { await rec.discardBackup(r.id); continue; }
-    saveFile(r.blob, `COMPASS-taimen_recovered_${meta.visitId}.${/mp4/.test(r.mime) ? 'm4a' : 'webm'}`);
+    saveFile(r.blob, fileName(meta.customer, meta.kind, r.startedAt, r.mime, '（控え）'));
     if (ans === 'send') {
       try {
         // 受け渡し箱に途中まで届いている録音なら、端末の控え（最後まで入っている）で送り直す
@@ -373,6 +377,16 @@ function modalAsk(title, body, actions) {
 }
 
 // ---------- 文字起こし ----------
+// スマートフォンの音声認識が録音のマイクを止めてしまう端末では、録音を優先して文字起こしを止める
+function capConflict() {
+  if (!cap || cap.mode !== 'cloud' || !cap.running || !rec.active || document.visibilityState !== 'visible') return false;
+  cap.stop(); markConflict(); capSupport = 'unavailable';
+  $('vCapBox').classList.add('off'); $('vCapNote').textContent = 'この端末では止めました';
+  $('vCapInterim').textContent = 'この端末では、録音と文字起こしを同時にできなかったため、録音を優先しました。録音は続いています。';
+  toast('この端末では文字起こしと録音を同時にできないため、録音を優先しました', 8000);
+  healMic();
+  return true;
+}
 function capLine(line) {
   const box = $('vCapLines');
   const p = el('p'); const s = Math.floor(line.at / 1000);
@@ -393,16 +407,19 @@ async function startCaption(ready) {
     return;
   }
   box.classList.remove('off');
-  $('vCapNote').textContent = capSupport === 'downloadable' ? 'はじめての準備中（日本語の認識データを端末に入れています）…' : 'この端末の中だけで処理しています';
+  const LOCAL_NOTE = 'この端末の中だけで処理しています'; const CLOUD_NOTE = 'スマホの音声認識（声は Google／Apple へ）';
+  $('vCapNote').textContent = capSupport === 'cloud' ? CLOUD_NOTE : capSupport === 'downloadable' ? 'はじめての準備中（日本語の認識データを端末に入れています）…' : LOCAL_NOTE;
+  $('vCapBox').classList.toggle('cloud', capSupport === 'cloud');
   $('vCapInterim').textContent = '話し始めると、ここに文字が出ます';
-  const okk = await ready;
+  const okk = capSupport === 'cloud' ? true : await ready;
   if (!rec.active) return;
   if (!okk) { box.classList.add('off'); $('vCapNote').textContent = '準備できませんでした'; $('vCapInterim').textContent = '文字起こしの準備ができませんでした。録音は続いています。'; return; }
   cap = new Caption({
+    mode: capSupport === 'cloud' ? 'cloud' : 'local',
     onLine: capLine,
     onInterim: (t) => { $('vCapInterim').textContent = t; },
     onState: (st, why) => {
-      if (st === 'on') $('vCapNote').textContent = 'この端末の中だけで処理しています';
+      if (st === 'on') $('vCapNote').textContent = capSupport === 'cloud' ? CLOUD_NOTE : LOCAL_NOTE;
       if (st === 'paused') $('vCapNote').textContent = '一時停止中';
       if (st === 'error') { $('vCapNote').textContent = why === 'not-local' ? 'この端末では使えません' : '止まりました'; $('vCapInterim').textContent = '文字起こしが止まりました。録音は続いています。'; }
     },
@@ -416,6 +433,7 @@ async function checkCaption() {
     available: 'この端末の中だけで文字にします（声は外に送りません）',
     downloading: 'この端末の中だけで文字にします（準備中）',
     downloadable: 'この端末の中だけで文字にします（初回だけ、録音開始時に準備します）',
+    cloud: 'スマホの音声認識で文字にします（認識のため、声は Google／Apple に送られます）',
     unavailable: 'この端末では使えません（録音は問題なくできます）',
   }[capSupport];
   $('vCapState').classList.toggle('dim', capSupport === 'unavailable');

@@ -173,6 +173,7 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
       v.lastChunkAt = Date.now(); v.maxSeq = Math.max(v.maxSeq ?? -1, seq);
       if (!v.mime && typeof b.mime === 'string') v.mime = clean(b.mime, 60);
       if (Number.isFinite(b.elapsedMs)) v.elapsedMs = Math.max(v.elapsedMs || 0, Math.min(Number(b.elapsedMs), 6 * 3600e3));
+      if (['local', 'cloud'].includes(b.textSource)) v.textSource = b.textSource;
       if (typeof b.text === 'string' && b.text.trim()) {
         const text = b.text.replace(/\r\n?/g, '\n').slice(0, TEXT_MAX);
         cmds.push(['SET', textKey(v.id), seal(text, `vt:${v.id}`), 'EX', META_TTL]);
@@ -196,6 +197,7 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
       v.bytes = Math.max(0, Number(b.bytes) || 0);
       v.endedAt = Date.now();
       v.status = 'ready'; v.interrupted = false;
+      if (['local', 'cloud'].includes(b.textSource)) v.textSource = b.textSource;
       if (typeof b.text === 'string' && b.text.trim()) {
         const text = b.text.replace(/\r\n?/g, '\n').slice(0, TEXT_MAX);
         await store.pipeline([['SET', textKey(v.id), seal(text, `vt:${v.id}`), 'EX', META_TTL]]);
@@ -276,11 +278,15 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
     v.status = v.drive && v.compass !== 'pending' ? 'filed' : 'ready';
   }
   // ドライブ用のファイル名：「2026-11-26 1400 大崎純様 打ち合わせ.m4a」
-  function driveName(v, ext) {
-    const d = new Date(v.startedAt + 9 * 3600e3); // 日本時間
+  // ドライブ用のファイル名：「大崎純様 打ち合わせ 26.11.23.m4a」（打ち合わせの名前＋録り始めた日。日本時間）
+  function driveName(v, ext, suffix = '') {
+    const d = new Date(v.startedAt + 9 * 3600e3);
     const p = (n) => String(n).padStart(2, '0');
-    const who = String(v.customerName).replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, '').replace(/様$/, '');
-    return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}${p(d.getUTCMinutes())} ${who}様 ${String(v.title).replace(/[\\/:*?"<>|]/g, '')}${v.interrupted ? '（途中まで）' : ''}.${ext}`;
+    const bad = /[\\/:*?"<>|\u0000-\u001f]/g;
+    const who = String(v.customerName).replace(bad, '').replace(/\s+/g, '').replace(/(様|さま)$/, '');
+    const title = String(v.title || '打ち合わせ').replace(bad, '').trim();
+    const date = `${String(d.getUTCFullYear()).slice(2)}.${p(d.getUTCMonth() + 1)}.${p(d.getUTCDate())}`;
+    return `${who}様 ${title}${v.interrupted ? '（途中まで）' : ''}${suffix ? ` ${suffix}` : ''} ${date}.${ext}`;
   }
   async function toDrive(v, staff) {
     if (!drive || !drive.enabled) return { error: 'disabled', message: 'ドライブへの自動保存は、まだ設定されていません' };
@@ -295,10 +301,10 @@ function createVisits({ store, seal, unseal, auth, limiter, ok, fail, tooMany, c
       const audio = Buffer.concat(bufs);
       const ext = /mp4|m4a|aac/.test(v.mime) ? 'm4a' : 'webm';
       const text = v.hasText ? await loadText(v.id) : null;
-      const head = `${v.customerName} ${v.title}\n${new Date(v.startedAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}　担当：${v.ownerName}\n（この端末の中だけで作った文字起こしです。聞き間違いがあります。正しくは録音を確かめてください）\n${v.interrupted ? '（電池切れなどで途中で止まったため、届いたところまでを保存しています）\n' : ''}\n`;
+      const head = `${v.customerName} ${v.title}\n${new Date(v.startedAt).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}　担当：${v.ownerName}\n（${v.textSource === 'cloud' ? 'スマートフォンの音声認識で作った' : 'この端末の中だけで作った'}文字起こしです。聞き間違いがあります。正しくは録音を確かめてください）\n${v.interrupted ? '（電池切れなどで途中で止まったため、届いたところまでを保存しています）\n' : ''}\n`;
       const saved = await drive.save(staff.id, {
         customerName: v.customerName, title: v.title, fileName: driveName(v, ext), mime: ext === 'm4a' ? 'audio/mp4' : 'audio/webm', audio,
-        textName: driveName(v, 'txt').replace(/\.txt$/, ' 文字起こし.txt'), text: text ? head + text : '',
+        textName: driveName(v, 'txt', '文字起こし'), text: text ? head + text : '',
         description: `COMPASS Meet 対面の録音（${v.customerName}・${v.title}・担当 ${v.ownerName}）`,
       });
       v.drive = { fileId: saved.fileId, name: saved.name, folder: saved.folder, where: saved.where, link: saved.link, textFileId: saved.textFileId, at: Date.now() };

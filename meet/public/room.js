@@ -1355,7 +1355,7 @@ async function stopRecording(quiet) {
   if (me.peerId) post('audio-rec', { on: false }).catch(() => {});
   updateAudioRec();
   if (!r || !r.blob.size) return;
-  saveFile(r.blob, fileName(r.title, r.startedAt, r.mime, roomId));
+  saveFile(r.blob, fileName(r.title, r.startedAt, r.mime));
   await rec.discardBackup(r.id);
   if (!quiet) toast(`録音を保存しました（${fmtDur(Date.now() - r.startedAt)}）。ブラウザの「ダウンロード」に入っています`, null, 7000);
 }
@@ -1366,7 +1366,7 @@ async function toggleRecording() { if (rec.active) await stopRecording(); else a
 async function offerLeftovers() {
   const list = await leftovers();
   for (const r of list) {
-    toast(`保存されていない録音があります（${new Date(r.startedAt).toLocaleString('ja-JP')}）`, [['保存する', async () => { saveFile(r.blob, fileName(r.title, r.startedAt, r.mime, roomId)); await rec.discardBackup(r.id); }], ['捨てる', () => rec.discardBackup(r.id)]], 30000);
+    toast(`保存されていない録音があります（${new Date(r.startedAt).toLocaleString('ja-JP')}）`, [['保存する', async () => { saveFile(r.blob, fileName(r.title, r.startedAt, r.mime)); await rec.discardBackup(r.id); }], ['捨てる', () => rec.discardBackup(r.id)]], 30000);
   }
 }
 window.addEventListener('beforeunload', (e) => { if (rec.active) { e.preventDefault(); e.returnValue = '録音が保存されていません'; } });
@@ -1629,6 +1629,10 @@ function buildMoreMenu() {
     // スマートフォンでは、リアクション・挙手をこのメニューに入れる（ボタンが画面からはみ出さないように）
     for (const k of config.reactions || Object.keys(REACT_LABEL)) add(`リアクション：${REACT_LABEL[k] || k}`, () => post('react', { kind: k }).catch((e) => toast(e.message)));
     add(handUp ? '手を下げる' : '手を挙げる', () => { handUp = !handUp; post('hand', { up: handUp }).catch((e) => toast(e.message)); });
+    // 画面の幅が足りないので、画面共有・ホワイトボード・メモはこのメニューから
+    if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia && !$('screen').disabled) add($('screen').classList.contains('on') ? '画面共有を止める' : '画面を共有する', () => $('screen').click());
+    add($('wbBtn').classList.contains('on') ? 'ホワイトボードを閉じる' : 'ホワイトボード', () => $('wbBtn').click());
+    if (document.body.classList.contains('is-staff')) add('メモ', () => $('notesBtn').click());
   }
   add('背景とエフェクト', fxDialog);
   add('カメラ・マイクの設定', deviceDialog);

@@ -1,6 +1,7 @@
-// 端末の中だけで行う文字起こし（声を外に送らない）
-// Chrome の「端末内の音声認識」（processLocally）が使えるときだけ動かす。
-// 使えない端末では動かさない（クラウドの音声認識には切り替えない）。
+// 文字起こし
+//  ・パソコン：Chrome の「端末内の音声認識」（processLocally）だけを使う。声は外に送らない
+//  ・スマートフォン：ブラウザの音声認識を使う（局長の判断で可。認識のため声が Google／Apple に送られる。画面に表示する）
+//  ・録音と同時に使えない端末（録音のマイクが止まる）では、その端末では二度と使わない
 
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 const LANG = 'ja-JP';
@@ -13,8 +14,19 @@ function isGoogleChrome() {
   const brands = (navigator.userAgentData && navigator.userAgentData.brands) || [];
   return brands.some((b) => b.brand === 'Google Chrome');
 }
+const CONFLICT = 'meet.capConflict';
+export function isPhone() {
+  const ua = navigator.userAgent || '';
+  return /Android|iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+}
+export function markConflict() { try { localStorage.setItem(CONFLICT, '1'); } catch (_) { /* 何もしない */ } }
+// 返り値：'available' / 'downloadable' / 'downloading'（端末の中だけ）、'cloud'（スマートフォンの音声認識）、'unavailable'
 export async function captionSupport() {
-  if (!SR || !isGoogleChrome()) return 'unavailable';
+  if (!SR) return 'unavailable';
+  let conflict = ''; try { conflict = localStorage.getItem(CONFLICT) || ''; } catch (_) { /* 何もしない */ }
+  if (conflict) return 'unavailable';
+  if (isPhone()) return 'cloud';
+  if (!isGoogleChrome()) return 'unavailable';
   let prev = '';
   try { prev = localStorage.getItem(PROBE) || ''; } catch (_) { /* 何もしない */ }
   if (prev === 'pending' || prev === 'crashed') { try { localStorage.setItem(PROBE, 'crashed'); } catch (_) { /* 何もしない */ } return 'unavailable'; }
@@ -47,7 +59,8 @@ export async function prepareCaption() {
 }
 
 export class Caption {
-  constructor({ onLine, onInterim, onState }) {
+  constructor({ onLine, onInterim, onState, mode = 'local' }) {
+    this.mode = mode === 'cloud' ? 'cloud' : 'local';
     this.onLine = onLine; this.onInterim = onInterim; this.onState = onState || (() => {});
     this.lines = []; this.running = false; this.r = null; this.t0 = 0; this.offset = 0; this.track = null; this.fails = 0;
   }
@@ -56,10 +69,12 @@ export class Caption {
   _make() {
     const r = new SR();
     r.lang = LANG; r.continuous = true; r.interimResults = true; r.maxAlternatives = 1;
-    let local = false;
-    if ('processLocally' in r) { r.processLocally = true; local = r.processLocally === true; }
-    else if ('mode' in r) { r.mode = 'ondevice-only'; local = r.mode === 'ondevice-only'; }
-    if (!local) return null;
+    if (this.mode === 'local') {
+      let local = false;
+      if ('processLocally' in r) { r.processLocally = true; local = r.processLocally === true; }
+      else if ('mode' in r) { r.mode = 'ondevice-only'; local = r.mode === 'ondevice-only'; }
+      if (!local) return null;
+    }
     r.onresult = (e) => {
       let interim = '';
       for (let i = e.resultIndex; i < e.results.length; i++) {

@@ -141,9 +141,14 @@ export function saveFile(blob, name) {
 }
 
 // ファイル名は英数字だけにする（日本語の名前は、ブラウザによって「download」に置き換えられてしまうため）
-export function fileName(_title, startedAt, mime, roomId = '') {
-  const d = new Date(startedAt);
-  const p = (n) => String(n).padStart(2, '0');
-  const id = String(roomId).replace(/[^a-z0-9-]/gi, '');
-  return `COMPASS-Meet_${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${id ? `_${id}` : ''}.${extFor(mime)}`;
+// 保存するファイルの名前：「打ち合わせの名前 26.11.23.m4a」（日付は録り始めた日）
+export function dateTag(ts) {
+  const d = new Date(ts); const p = (n) => String(n).padStart(2, '0');
+  return `${String(d.getFullYear()).slice(2)}.${p(d.getMonth() + 1)}.${p(d.getDate())}`;
+}
+export function safeName(s) {
+  return String(s || '').replace(/[\\/:*?"<>|\u0000-\u001f]/g, '').replace(/\s+/g, ' ').trim().slice(0, 80);
+}
+export function fileName(title, startedAt, mime) {
+  return `${safeName(title) || '打ち合わせ'} ${dateTag(startedAt)}.${extFor(mime)}`;
 }

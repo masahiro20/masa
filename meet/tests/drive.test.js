@@ -139,10 +139,10 @@ test('お客様のフォルダがあれば、打合せのフォルダ（⑥打�
   assert.equal(r.body.visit.drive.folder, '006.大崎純様/⑥打合せ関係/①打合せ資料 議事録');
   const [au, tx] = g.uploads.slice(-2);
   assert.deepEqual(au.meta.parents, ['cust1rec']);
-  assert.match(au.meta.name, /^\d{4}-\d{2}-\d{2} \d{4} 大崎純様 打ち合わせ\.m4a$/);
+  assert.match(au.meta.name, /^大崎純様 打ち合わせ \d{2}\.\d{2}\.\d{2}\.m4a$/);
   assert.equal(au.type, 'audio/mp4');
   assert.ok(au.data.equals(audio), '録った音声がそのまま届く');
-  assert.match(tx.meta.name, /文字起こし\.txt$/);
+  assert.match(tx.meta.name, /^大崎純様 打ち合わせ 文字起こし \d{2}\.\d{2}\.\d{2}\.txt$/);
   assert.match(tx.data.toString('utf8'), /間取りの件ですが/);
   assert.match(tx.data.toString('utf8'), /端末の中だけで作った/);
   // 受け渡し箱の音声は消えている（Claude からも取り出せない）
@@ -206,7 +206,7 @@ test('電池切れなどで止まった録音は、届いたところまでで�
     assert.equal(r.status, 200, JSON.stringify(r.body));
     const [au, tx] = g.uploads.slice(-2);
     assert.equal(au.data.toString(), 'aaabbb');
-    assert.match(au.meta.name, /（途中まで）\.m4a$/);
+    assert.match(au.meta.name, /^大崎純様 打ち合わせ（途中まで） \d{2}\.\d{2}\.\d{2}\.m4a$/);
     assert.match(tx.data.toString('utf8'), /間取りの話/);
     assert.match(tx.data.toString('utf8'), /途中で止まった/);
   } finally { Date.now = realNow; }
