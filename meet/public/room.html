@@ -2,17 +2,17 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="theme-color" content="#1f2124">
+<meta name="theme-color" content="#776c60">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>COMPASS Meet</title>
 <link rel="icon" href="/static/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@200;300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap">
 <link rel="stylesheet" href="/static/style.css">
 <link rel="stylesheet" href="/static/theme.css">
 </head>
-<body class="g">
+<body class="cr">
 
 <!-- 読み込み中・終了・エラー -->
 <div class="center-msg" id="loading"><div><div class="spinner"></div><span class="muted">準備しています</span></div></div>
@@ -27,6 +27,7 @@
 
 <!-- 入室前 -->
 <div class="lobby hidden" id="lobby">
+  <span class="cr-word" aria-hidden="true">MEET</span>
   <header class="topbar">
     <a class="brand" href="/">
       <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 5.5 19.2 16H12.8Z" fill="#c63d2f"/><path d="M16 26.5 12.8 16h6.4Z" fill="currentColor"/></svg>

@@ -30,7 +30,7 @@ function toast(msg, ms = 4000) {
   const t = $('toast'); t.textContent = msg; t.classList.remove('hidden');
   clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.add('hidden'), ms);
 }
-function show(id) { for (const s of ['loading', 'needLogin', 'setup', 'live', 'done']) $(s).classList.toggle('hidden', s !== id); }
+function show(id) { for (const s of ['loading', 'needLogin', 'setup', 'live', 'done']) $(s).classList.toggle('hidden', s !== id); document.body.dataset.view = id; }
 const fmt = (ms) => { const t = Math.floor(ms / 1000); const h = Math.floor(t / 3600); const m = Math.floor((t % 3600) / 60); const s = t % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}` : `${m}:${String(s).padStart(2, '0')}`; };
 const api = async (path, opts = {}) => {
   const r = await fetch(path, { ...opts, headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) } });
