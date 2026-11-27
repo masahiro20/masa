@@ -16,9 +16,10 @@ programs:
 - school-kyufukin
 - career-coaching
 published: '2026-11-05'
-updated: '2026-11-05'
+updated: '2026-11-27'
 origin: ai
 editor_score: null
+voice: 2
 sources:
 - title: 専門実践教育訓練の教育訓練給付金及び教育訓練支援給付金の支給申請手続について｜厚生労働省
   url: https://www.hellowork.mhlw.go.jp/doc/senmonjissenkyouikukunrennokyuuhunogoannai.pdf
@@ -48,7 +49,7 @@ sources:
 | 電子申請 | パソコンから申請できる。一部の書類は郵送が必要 |
 | 郵送 | 期限内に送れば消印有効。書類の不備に気づきにくい |
 
-**電子申請は、窓口に行く時間を減らせる一方で、準備や郵送の手間も残る方法**だと考えておくとよいでしょう。申請全体の流れは {{link:kyoiku-kunren-kyufukin-shinsei-nagare|教育訓練給付金の申請の流れと必要書類}} で整理しています。
+**電子申請は、窓口に行く時間を減らせる一方で、準備や郵送の手間も残る方法**だと考えておくとよいでしょう。申請全体の流れは {{link:kyoiku-kunren-kyufukin-shinsei-nagare|教育訓練給付金の申請の流れと必要書類}} で整理しています。3つの方法のどれを選んでも間違いではないので、自分の生活に合うものを選べば十分です。
 
 ## e-Gov電子申請を使う準備
 
