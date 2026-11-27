@@ -10,14 +10,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: 教育訓練給付金 不支給
-  intent: informational
-  category: school
-  program: school-kredo
-  score: 15000.0
-  status: queued
-  boost: 1.5
-  source: google-suggest
 - keyword: 教育訓練給付金 追加給付 期限
   intent: informational
   category: school
@@ -1001,6 +993,15 @@ keywords:
   score: 16000.0
   status: published
   slug: wordpress-portfolio-tsukurikata-mikeiken
+- keyword: 教育訓練給付金 不支給
+  intent: informational
+  category: school
+  program: school-kredo
+  score: 15000.0
+  status: published
+  boost: 1.5
+  source: google-suggest
+  slug: kyufukin-fushikyu
 - keyword: claude code と cursor 違い
   intent: informational
   category: learning
