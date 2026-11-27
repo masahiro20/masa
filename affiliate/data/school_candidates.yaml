@@ -13,71 +13,49 @@ candidates:
   reason: 2026-11-26 は公式サイトが開けなかった
   checked: '2026-11-26'
 - name: DMM WEBCAMP
-  url: https://web-camp.io/
+  url: https://teracam.jp/
+  status: skipped
+  reason: DMM WEBCAMP は SHIFT TERAS CAMPUS（teracam.jp）に変わり、トップページに給付金・補助金の記載なし
+  checked: '2026-11-27'
+- name: IT道場
+  url: https://it-dojo.net/reskilling
+  status: skipped
+  reason: リスキリング事業の対象と書かれているが、支援の条件に「2026年10月1日までに入校した方」とあり期限を過ぎている。更新が書かれたら足す
+  checked: '2026-11-27'
+- name: Famm（Fammスクール）
+  url: https://famm.us/ja/school/woman/career-shift
+  status: added
+  checked: '2026-11-27'
+- name: COACHTECH
+  url: https://coachtech.site/reskilling/
+  status: added
+  checked: '2026-11-27'
+- name: WorX
+  url: https://worx.jp/
+  status: retry
+  reason: 2026-11-27 は公式サイトが403で開けなかった（経産省の事業開始事業者一覧には開始済と掲載）
+  checked: '2026-11-27'
+- name: コードキャンプ
+  url: https://codecamp.jp/
   status: todo
-  reason: web-camp.io は別サービス（teracam.jp）へ転送された。DMM WEBCAMP の今の公式URLを探す
-- name: Aidemy Premium
-  url: https://aidemy.net/
-  status: retry
-  reason: 個人向けのページが見つからなかった
-  checked: '2026-11-26'
-- name: WEBCOACH
-  url: https://www.webcoach.jp/
-  status: retry
-  reason: 本文が読めなかった。よくある質問 https://www.webcoach.jp/faq/ を確かめる
-  checked: '2026-11-26'
-- name: テックエリート
-  url: https://stock-sun.com/school/hp/techelite/
-  status: retry
-  reason: 403で開けなかった
-  checked: '2026-11-26'
-- name: たのまな
-  url: https://www.tanomana.com/
-  status: retry
-  reason: 開けなかった
-  checked: '2026-11-26'
-- name: Tech0
-  url: https://bootcamp.tech0-jp.com/
-  status: retry
-  reason: 本文が読めなかった
-  checked: '2026-11-26'
-- name: DIVE INTO CODE
-  url: https://diveintocode.jp/
-  status: skipped
-  reason: 専門実践の指定期間が2026-09-30まで。更新が公式ページに書かれたら足す
-  checked: '2026-11-26'
-- name: デイトラ
-  url: https://www.daily-trial.com/
-  status: skipped
-  reason: リスキリング事業の採択がトップの実績欄だけで、対象講座が特定できない
-  checked: '2026-11-26'
-- name: AVILEN
-  url: https://avilen.co.jp/
-  status: skipped
-  reason: 専門実践の対象外と明記
-  checked: '2026-11-26'
-- name: NexSeed
-  url: https://nexseed.net/
-  status: skipped
-  reason: 給付金・補助金の記載なし
-  checked: '2026-11-26'
-- name: TechAcademy
-  url: https://techacademy.jp/
-  status: skipped
-  reason: リスキリング事業の支援を「提供してまいりました」と過去形。申込停止の可能性
-  checked: '2026-11-26'
-- name: byTech
-  url: https://geek.bytech.jp/
-  status: skipped
-  reason: 給付金・補助金の記載なし
-  checked: '2026-11-26'
-- name: デジハク
-  url: https://digital-hacks.jp/
-  status: skipped
-  reason: 個人の申込は給付金・助成金の対象外と記載
-  checked: '2026-11-26'
-- name: ポテパンキャンプ
-  url: https://camp.potepan.com/
-  status: skipped
-  reason: 受講料無料のため給付金の対象外
-  checked: '2026-11-26'
+  reason: トップページに給付金・補助金の記載なし。経産省の一覧に掲載。給付金・リスキリングのページを探す
+- name: テックアイエス（リスキル）
+  url: https://techis.jp/re-skill/
+  status: todo
+  reason: 経産省の事業開始事業者一覧に掲載。schools.yaml の techis と重なるか確かめる
+- name: HER TECH
+  url: https://her-tech.jp/
+  status: todo
+  reason: 経産省の事業開始事業者一覧に掲載
+- name: HelpTech
+  url: https://helptech.jp/reskillacademy
+  status: todo
+  reason: 経産省の事業開始事業者一覧に掲載
+- name: WEBMARKS
+  url: https://webmarks.co.jp/
+  status: todo
+  reason: 経産省の事業開始事業者一覧に掲載
+- name: ウィルフォワード（AI REBOOT）
+  url: https://ai-reboot.io/academy
+  status: todo
+  reason: 経産省の事業開始事業者一覧に掲載

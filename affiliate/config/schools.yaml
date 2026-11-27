@@ -21,7 +21,9 @@
 #   DIVE INTO CODE（専門実践の指定期間が2026-09-30まで。更新の記載を確かめてから載せる）、AVILEN（専門実践の対象外と明記）、
 #   デイトラ（リスキリング事業の採択がトップの実績欄だけで、対象講座が特定できない）、NexSeed（給付金の記載なし）、
 #   TechAcademy（リスキリング事業の支援を「提供してまいりました」と過去形の告知。申込停止の可能性）、
-#   WEBCOACH・テックエリート・DMM WEBCAMP・Winスクール・KENスクール・Tech0（公式ページを開けず未確認）
+#   WEBCOACH・テックエリート・Winスクール・KENスクール・Tech0・WorX（公式ページを開けず未確認）
+# 2026-11-27 時点で載せていないもの：
+#   DMM WEBCAMP（SHIFT TERAS CAMPUS に変わり、給付金・補助金の記載なし）、IT道場（リスキリング事業の入校期限が2026-10-01と記載）
 
 schools:
   - id: kredo
@@ -256,3 +258,30 @@ schools:
         source: https://skillupai.com/personal/subsidy-seminar/
         checked: '2026-11-26'
         note: 受講開始前にハローワークで受給資格の確認が必要。受講期ごとに対象の期限があるコースもある。経産省のキャリアアップ支援事業は、新規の申込受付を終えたと告知されている。
+
+  - id: famm
+    short: Fammスクール
+    name: Fammスクール キャリアシフトコース（女性専用・Webデザイン）
+    official: https://famm.us/ja/school/woman/career-shift
+    fields: [webdesign]
+    format: []
+    summary: 女性専用の1ヶ月完結のITスキルスクール。経済産業省の補助金対象コースとして、キャリアシフトコースがある。
+    subsidies:
+      - system: reskilling
+        course: Fammスクール キャリアシフトコース（1ヶ月・全5回、1回3時間）
+        source: https://famm.us/ja/school/woman/career-shift
+        checked: '2026-11-27'
+        note: 受講時点で企業に雇用されており、転職意向がある人だけが受講できる。経済産業省の補助金で受講料が最大70%OFF。通常のFammスクールのキャンペーンは対象外。受付期限は公式ページに記載がない。
+  - id: coachtech
+    short: COACHTECH
+    name: COACHTECH（プログラミング・リスキリング補助金対応コース）
+    official: https://coachtech.site/reskilling/
+    fields: [programming]
+    format: []
+    summary: 未経験からのエンジニア転職やフリーランスなどを目指すプログラミングスクール。リスキリング補助金対応コースがある。
+    subsidies:
+      - system: reskilling
+        course: COACHTECH リスキリング補助金対応コース（受講料は公式ページに記載なし）
+        source: https://coachtech.site/reskilling/
+        checked: '2026-11-27'
+        note: 企業と雇用契約を結んでおり、雇用主の変更を伴う転職を目指す人が対象（パート・派遣・学生も条件を満たせば可、年齢制限なし）。申込時・キャリア相談開始時に雇用契約があればよい。分割払いも対象だが、クレジット会社への手数料は対象外。他社の転職サービスで転職した場合は追加の20%は対象外。受付期限は公式ページに記載がない。

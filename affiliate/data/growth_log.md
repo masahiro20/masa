@@ -18,3 +18,4 @@
 - 2026-11-23: CTR改善は見送り（順位10位以内・表示30回以上・CTRが目安未満の候補は、いずれも直近21日以内に更新済み。最古は hello-training-hyouban の11-04）
 - 2026-11-23: 内部リンク3本（→ kyufukin-denshi-shinsei-yarikata〈表示180回・リンク0本〉、tenshoku-agent-line-henshin〈表示176回・リンク2本〉、reskilling-hojokin-itsu-moraeru〈表示269回・リンク3本〉）
 - 2026-11-23: テーマ別ガイドの振り分けを調整（スクール・コーチング・Claude Code／AI駆動の記事など約30本が、どのガイドにも入っていなかったため既存ガイドに振り分け）
+- 2026-11-27: スクール追加 2校（Fammスクール、COACHTECH。ともにリスキリング事業の対象）。見送り2校（DMM WEBCAMP：SHIFT TERAS CAMPUSに変わり給付金の記載なし／IT道場：入校期限2026-10-01と記載）、再確認1校（WorX：403）。経産省の事業開始事業者一覧PDFから、次回以降の候補6校を追加
