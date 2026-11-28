@@ -58,14 +58,6 @@ keywords:
   status: queued
   boost: 1.5
   source: google-suggest
-- keyword: canva 副業 初心者
-  intent: commercial
-  category: fukugyo
-  program: learning-canva
-  score: 12000.0
-  status: queued
-  boost: 2.0
-  source: google-suggest
 - keyword: canva 資格
   intent: commercial
   category: fukugyo
@@ -1093,6 +1085,15 @@ keywords:
   boost: 1.5
   source: google-suggest
   slug: programming-school-shakaijin-muryo
+- keyword: canva 副業 初心者
+  intent: commercial
+  category: fukugyo
+  program: learning-canva
+  score: 12000.0
+  status: published
+  boost: 2.0
+  source: google-suggest
+  slug: canva-fukugyo-shoshinsha
 - keyword: it 転職 未経験 30代 女性
   intent: commercial
   category: career
