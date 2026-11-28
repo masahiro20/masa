@@ -37,20 +37,23 @@ candidates:
   checked: '2026-11-27'
 - name: コードキャンプ
   url: https://codecamp.jp/
-  status: todo
-  reason: トップページに給付金・補助金の記載なし。経産省の一覧に掲載。給付金・リスキリングのページを探す
+  status: retry
+  reason: 個人向けページ（https://codecamp.jp/personal）のコース一覧に「補助金 対象」と表示があるが、どの制度かを説明するページ（zendesk）が403で開けなかった。制度名が確かめられたら足す
+  checked: '2026-11-28'
 - name: テックアイエス（リスキル）
   url: https://techis.jp/re-skill/
   status: todo
   reason: 経産省の事業開始事業者一覧に掲載。schools.yaml の techis と重なるか確かめる
 - name: HER TECH
   url: https://her-tech.jp/
-  status: todo
-  reason: 経産省の事業開始事業者一覧に掲載
+  status: skipped
+  reason: リスキリング事業の採択事業者と書かれているが、「対象講座や利用条件は運営事務局へお問い合わせください」とあり、対象講座が特定できない
+  checked: '2026-11-28'
 - name: HelpTech
   url: https://helptech.jp/reskillacademy
-  status: todo
-  reason: 経産省の事業開始事業者一覧に掲載
+  status: skipped
+  reason: 法人向けの研修・補助金申請支援のページで、個人が受講できる対象講座の記載なし
+  checked: '2026-11-28'
 - name: WEBMARKS
   url: https://webmarks.co.jp/
   status: todo
@@ -59,3 +62,15 @@ candidates:
   url: https://ai-reboot.io/academy
   status: todo
   reason: 経産省の事業開始事業者一覧に掲載
+- name: if（tech-mentor）
+  url: https://tech-mentor.dev/
+  status: todo
+  reason: 経産省の事業開始事業者一覧に掲載（Webエンジニア育成・生成AI活用の講座）
+- name: D4cアカデミー（AI CONNECT）
+  url: https://ai-c.net/
+  status: todo
+  reason: 経産省の事業開始事業者一覧に掲載（データサイエンス）
+- name: bgagent（AWS資格・IT転職）
+  url: https://bgagent.jp/reskilling
+  status: todo
+  reason: 経産省の事業開始事業者一覧に掲載（AWS資格・IT転職）
